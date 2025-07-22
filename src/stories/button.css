@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@layer base {
+  button {
+    @apply bg-transparent cursor-pointer select-none transition-all duration-75
+  }
+}
+
+@layer components {
+  .btn {
+    @apply bg-transparent shadow-xs text-gray-800 rounded-md px-2 py-1
+  }
+
+  .btn.filled-btn {
+    @apply bg-purple-200 hover:bg-purple-300
+  }
+
+  .btn.outlined-btn {
+    @apply bg-transparent border-2 border-purple-200 hover:bg-purple-100/50
+  }
+
+  .btn.text-btn {
+    @apply text-purple-400 hover:bg-purple-100/50
+  }
+}
