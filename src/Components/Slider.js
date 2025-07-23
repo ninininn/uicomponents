@@ -16,51 +16,50 @@ export class Slider extends BaseComponent {
         this.UItype = 'Slider';
         this.options = { ...this.defaultOptions, ...options };
 
-        // State 測試
-        const [getValue, setValue, subscribe] = bindState(this.options.value);
-        this.getValue = getValue();
-        this.setValue = setValue;
-        this.subscribe = subscribe;
+        // State 綁定
+        const [getValue, setValue, subscribe] = bindState(this.options.initValue);
+        this.getValue = getValue;
+        this.setValue = setValue;//避免傳入子元件造成data更新變亂(統一由父元件來控制)
+        this.subscribe = subscribe;//傳遞下去子元件，讓子元件也能綁定該狀態
 
 
         //子元件 - thumb + bar
-        // 傳入 get/set/subscribe 給 child
         this.thumb = new SliderThumb(this.getValue, this.subscribe);
         this.bar = new SliderBar(this.getValue, this.subscribe);
         this.childrens = [this.thumb.getElem(), this.bar.getElem()];
-        this.init();
+        this._init();
     }
 
     // 封裝基本(預設)設定
     get defaultOptions() {
         return {
+            min: 0,             //最小值
+            max: 100,           //最大值
+            initValue: 0,       //初始預設值
+            step: 1,            //間隔
+            input: false,       //是否顯示輸入框
+            range: false,       //範圍功能
+            theme: "#878787",   //顏色
             classes: ["slider"],
-            variant: 'single',
-            value: 0,
-            step: 5,
-            max: 100,
         };
     }
 
-    init() {
+    _init() {
         this.render();
         //加入children:
         for (let child of this.childrens) {
             this.getElem().appendChild(child);
         }
-        this.bindEvents();
+        this._bindEvents();
     }
 
+    // 渲染
     render() {
         UIUtils.addClass(this.getElem(), this.options.classes);
-        UIUtils.setAttribute(this.UItype, this.getElem(), this.options.text);
     }
 
-    setSliderValue(customValue) {
-        this.value = customValue;
-    }
-
-    bindEvents() {
+    _bindEvents() {
+        //僅在init時綁定一次
         const sliderElem = this.getElem();
         let isDragging = false;
 
@@ -69,8 +68,8 @@ export class Slider extends BaseComponent {
 
             const sliderRect = sliderElem.getBoundingClientRect();
             const percentage = ((e.clientX - sliderRect.left) / sliderRect.width) * 100;
-            const snapped = Math.round(percentage / this.options.step) * this.options.step;
-            const clamped = Math.min(95, Math.max(0, snapped));
+            const moveSteps = Math.round(percentage / this.options.step) * this.options.step;
+            const clamped = Math.min(95, Math.max(0, moveSteps));
             //95的部分可以改為設定其他數值->決定最大值位置(可能因置換圖片或是thumb尺寸有改來調整)
             this.setValue(clamped);
         };
@@ -90,7 +89,11 @@ export class Slider extends BaseComponent {
         });
     }
 
-
+    _checkRange() {
+        if (this.options.range) {
+            console.log("range!");
+        }
+    }
 }
 
 
@@ -98,6 +101,7 @@ export class SliderThumb extends BaseComponent {
     constructor(value, subscribe) {
         const thumb = document.createElement("div");
         super(thumb);
+        this._thumbValue = value;
         this.options = { ...this.defaultOptions };
         this.init();
 
@@ -119,6 +123,7 @@ export class SliderThumb extends BaseComponent {
         UIUtils.addClass(this.getElem(), this.options.classes);
     }
     setThumbValue(value) {
+        this._thumbValue = value;
         this.getElem().style.left = `${value}%`;
     }
 
@@ -134,7 +139,7 @@ export class SliderBar extends BaseComponent {
         mask.classList.add("mask");
         super(bar);
         this.mask = mask;
-        this._value = value;
+        this._barValue = value;
         this.options = { ...this.defaultOptions };
         this.init();
         subscribe(value => {
@@ -155,7 +160,9 @@ export class SliderBar extends BaseComponent {
     render() {
         UIUtils.addClass(this.getElem(), this.options.classes);
     }
+
     setBarValue(value) {
+        this._barValue = value;
         this.mask.style.setProperty("--slider-width", `${value}%`);
     }
 }

@@ -49,7 +49,7 @@ export class BaseComponent {
     }
 
 
-    init() {
+    _init() {
         this.render();
     }
 
@@ -79,30 +79,30 @@ export class BaseComponent {
  * @param {any} initialValue 
  * @returns {[fn,fn,fn]} - array within 3 functions
  * 回傳陣列裡依序為 : 
- * 1. 取值method
- * 2. 更改值的方法 method
- * 3. 
+ * 1. 取得 state 的 method
+ * 2. 更新 state 並通知所有監聽者
+ * 3. 讓某個函式可以在 state 變動時收到通知
  */
-export function bindState(initialValue) {
-    let value = initialValue;
-    const listeners = new Set(); //監聽器記錄列表
+export function bindState(initState) {
+    let state = initState;
+    const relateListeners = new Set(); //用 set 避免重複加入同樣的監聽函式
 
-    function get() {
-        return value;
+    function getState() {
+        return state;
     }
 
-    function set(newValue) {
-        value = newValue;
-        for (const listener of listeners) {
-            listener(value);
+    function setState(newState) {
+        state = newState;
+        for (const listener of relateListeners) {
+            listener(state);//把這個 state 傳給所有相關監聽者
         }
     }
 
     function subscribe(fn) {
-        listeners.add(fn);
-        fn(value); // 初始推送一次
-        return () => listeners.delete(fn); // 取消綁定
+        relateListeners.add(fn);
+        fn(state); // 初始時先執行一次，取得初始 state
+        return () => relateListeners.delete(fn); // 取消綁定避免監聽器疊加
     }
 
-    return [get, set, subscribe];
+    return [getState, setState, subscribe];
 }

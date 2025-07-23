@@ -17,7 +17,9 @@ let testBtn = new Button('primary-btn', { text: 'Shown Btn', classes: ['btn', 'f
 // console.log(testdropdown);
 
 // Slider-components
-let testSlider = new Slider({ value: 55 });
-console.log(testBtn, testSlider);
+let testSlider = new Slider({ initValue: 55 });
+let testSlider2 = new Slider({ initValue: 66, range: true });
+console.log(testBtn, testSlider, testSlider2);
 body.appendChild(testBtn._elem);
 body.appendChild(testSlider.getElem());
+body.appendChild(testSlider2.getElem());
