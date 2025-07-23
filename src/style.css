@@ -38,7 +38,12 @@
   }
 
   .slider {
-    @apply relative content-center
+    @apply relative content-center w-min mt-20
+  }
+
+  .slider-thumb {
+    background-image: url('../public/sticker.png');
+    @apply w-5 h-5 rounded-full absolute top-[50%] bg-yellow-500 hover:bg-yellow-600 transition-all translate-y-[-50%] cursor-grab
   }
 
   .mask {

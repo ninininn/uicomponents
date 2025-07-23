@@ -1,3 +1,6 @@
+/**
+ * 工具Functions
+ */
 
 export class UIUtils {
     static addClass(element, classes) {
@@ -16,6 +19,10 @@ export class UIUtils {
  * @param {any[]} args
  * @param {string} tagName 預設的HTMLtag
  * @returns {{element:HTMLElement,options:Object}}
+ * 支援使用方式:
+ * new Component()
+ * new Component({ options })
+ * new Component(domElement, { options })
  */
 export function defineArgs(args, tagName = 'div') {
     let element;
@@ -66,3 +73,36 @@ export class BaseComponent {
     // }
 }
 
+
+/**
+ * State 控制器
+ * @param {any} initialValue 
+ * @returns {[fn,fn,fn]} - array within 3 functions
+ * 回傳陣列裡依序為 : 
+ * 1. 取值method
+ * 2. 更改值的方法 method
+ * 3. 
+ */
+export function bindState(initialValue) {
+    let value = initialValue;
+    const listeners = new Set(); //監聽器記錄列表
+
+    function get() {
+        return value;
+    }
+
+    function set(newValue) {
+        value = newValue;
+        for (const listener of listeners) {
+            listener(value);
+        }
+    }
+
+    function subscribe(fn) {
+        listeners.add(fn);
+        fn(value); // 初始推送一次
+        return () => listeners.delete(fn); // 取消綁定
+    }
+
+    return [get, set, subscribe];
+}
