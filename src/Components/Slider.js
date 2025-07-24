@@ -16,17 +16,43 @@ export class Slider extends BaseComponent {
         this.UItype = 'Slider';
         this.options = { ...this._defaultOptions, ...options };
 
-        // State 綁定
+        // 檢查是否為雙向
+        this._checkRange();
+
+        // 設定state
         const [getValue, setValue, subscribe] = bindState(this.options.initValue);
         this.getValue = getValue;
         this.setValue = setValue;//避免傳入子元件造成data更新變亂(統一由父元件來控制)
         this.subscribe = subscribe;//傳遞下去子元件，讓子元件也能綁定該狀態
 
-
-        //子元件 - thumb + bar
-        this.thumb = new SliderThumb(this.getValue(), this.subscribe, this.options.thumbImg);
+        // 初始化UI相關
         this.bar = new SliderBar(this.getValue(), this.subscribe);
-        this.childrens = [this.thumb.getElem(), this.bar.getElem()];
+        if (this.options.range) {
+            this.thumb = [
+                new SliderThumb(this.getValue()[0], this.subscribe, this.options.thumbImg, 0),
+                new SliderThumb(this.getValue()[1], this.subscribe, this.options.thumbImg, 1),
+            ];
+            this.childrens = [
+                ...this.thumb.map(t => t.getElem()),
+                this.bar.getElem()
+            ];
+        } else {
+            this.thumb = new SliderThumb(this.getValue(), this.subscribe, this.options.thumbImg);
+            this.childrens = [this.thumb.getElem(), this.bar.getElem()];
+        }
+        // if (this.options.range) {
+        //     //子元件 - thumb + bar
+        //     this.bar = new SliderBar(this.getValue(), this.subscribe);
+
+        //     let sliderValue = this.getValue();
+        //     this.thumb = [new SliderThumb(sliderValue[0], this.subscribe, this.options.thumbImg), new SliderThumb(sliderValue[1], this.subscribe, this.options.thumbImg)];
+        //     this.childrens = [...this.thumb.map(elem => elem.getElem()),
+        //     this.bar.getElem()];
+        // } else {
+        //     this.thumb = new SliderThumb(this.getValue()[0], this.subscribe, this.options.thumbImg);
+        //     this.childrens = [this.thumb.getElem(),
+        //     this.bar.getElem()];
+        // }
         this._init();
     }
 
@@ -65,6 +91,14 @@ export class Slider extends BaseComponent {
         const sliderElem = this.getElem();
         let isDragging = false;
 
+        (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
+            thumb.getElem().addEventListener('mousedown', (e) => {
+                e.preventDefault(); // 避免選取文字
+                isDragging = true;
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        });
         const onMouseMove = (e) => {
             if (!isDragging) return;
 
@@ -73,16 +107,18 @@ export class Slider extends BaseComponent {
             const moveSteps = Math.round(percentage / this.options.step) * this.options.step;
             const clamped = Math.min(95, Math.max(0, moveSteps));
             //95的部分可以改為設定其他數值->決定最大值位置(可能因置換圖片或是thumb尺寸有改來調整)
+            // return clamped;
             this.setValue(clamped);
         };
 
-        const onMouseUp = () => {
+        const onMouseUp = (e) => {
             isDragging = false;
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
+            e.target.removeEventListener('mousemove', onMouseMove);
+            e.target.removeEventListener('mouseup', onMouseUp);
         };
 
         // 設定 mousedown（滑鼠按下）時開始拖曳
+
         this.thumb.getElem().addEventListener('mousedown', (e) => {
             e.preventDefault(); // 避免選取文字
             isDragging = true;
@@ -92,8 +128,12 @@ export class Slider extends BaseComponent {
     }
 
     _checkRange() {
-        if (this.options.range) {
-            console.log(this, "range!");
+        const { initValue, range, min, max } = this.options;
+        if (range) {
+            this.options.initValue = Array.isArray(initValue) ? initValue : [initValue, max];
+        } else {
+            // 防呆(range是false但傳入陣列)
+            this.options.initValue = Array.isArray(initValue) ? initValue[0] : initValue;
         }
     }
 }
