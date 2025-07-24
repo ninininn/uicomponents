@@ -14,7 +14,7 @@ export class Slider extends BaseComponent {
         const { element, options } = defineArgs(args, 'div');
         super(element);
         this.UItype = 'Slider';
-        this.options = { ...this.defaultOptions, ...options };
+        this.options = { ...this._defaultOptions, ...options };
 
         // State 綁定
         const [getValue, setValue, subscribe] = bindState(this.options.initValue);
@@ -24,14 +24,14 @@ export class Slider extends BaseComponent {
 
 
         //子元件 - thumb + bar
-        this.thumb = new SliderThumb(this.getValue, this.subscribe);
-        this.bar = new SliderBar(this.getValue, this.subscribe);
+        this.thumb = new SliderThumb(this.getValue(), this.subscribe, this.options.thumbImg);
+        this.bar = new SliderBar(this.getValue(), this.subscribe);
         this.childrens = [this.thumb.getElem(), this.bar.getElem()];
         this._init();
     }
 
     // 封裝基本(預設)設定
-    get defaultOptions() {
+    get _defaultOptions() {
         return {
             min: 0,             //最小值
             max: 100,           //最大值
@@ -40,6 +40,7 @@ export class Slider extends BaseComponent {
             input: false,       //是否顯示輸入框
             range: false,       //範圍功能
             theme: "#878787",   //顏色
+            thumbImg: null,     //thumb圖標
             classes: ["slider"],
         };
     }
@@ -55,6 +56,7 @@ export class Slider extends BaseComponent {
 
     // 渲染
     render() {
+        this._checkRange();
         UIUtils.addClass(this.getElem(), this.options.classes);
     }
 
@@ -91,48 +93,44 @@ export class Slider extends BaseComponent {
 
     _checkRange() {
         if (this.options.range) {
-            console.log("range!");
+            console.log(this, "range!");
         }
     }
 }
 
-
-export class SliderThumb extends BaseComponent {
-    constructor(value, subscribe) {
+class SliderThumb extends BaseComponent {
+    constructor(value, subscribe, thumbImg = null) {
         const thumb = document.createElement("div");
         super(thumb);
         this._thumbValue = value;
-        this.options = { ...this.defaultOptions };
-        this.init();
+        this._thumbImg = thumbImg;
+        this._init();
 
         subscribe(value => {
-            this.setThumbValue(value);
+            this._setThumbValue(value);
         });
     }
 
-    get defaultOptions() {
-        return {
-            classes: ["slider-thumb"]
-        };
-    }
-
-    init() {
+    _init() {
         this.render();
     }
+
     render() {
-        UIUtils.addClass(this.getElem(), this.options.classes);
+        UIUtils.addClass(this.getElem(), ["slider-thumb"]);
+
+        //是否有傳入客製圖標路徑
+        if (this._thumbImg) {
+            this.getElem().style.setProperty('--tmb-img', `url(${this._thumbImg})`);
+            UIUtils.addClass(this.getElem(), ["custom-thumb"]);
+        }
     }
-    setThumbValue(value) {
+    _setThumbValue(value) {
         this._thumbValue = value;
         this.getElem().style.left = `${value}%`;
     }
-
-    bindEvent() {
-
-    }
 }
 
-export class SliderBar extends BaseComponent {
+class SliderBar extends BaseComponent {
     constructor(value, subscribe) {
         const bar = document.createElement("div");
         const mask = document.createElement("span");
@@ -141,9 +139,9 @@ export class SliderBar extends BaseComponent {
         this.mask = mask;
         this._barValue = value;
         this.options = { ...this.defaultOptions };
-        this.init();
+        this._init();
         subscribe(value => {
-            this.setBarValue(value);
+            this._setBarValue(value);
         });
     }
 
@@ -153,7 +151,7 @@ export class SliderBar extends BaseComponent {
         };
     }
 
-    init() {
+    _init() {
         this.render();
         this.getElem().appendChild(this.mask);
     }
@@ -161,8 +159,14 @@ export class SliderBar extends BaseComponent {
         UIUtils.addClass(this.getElem(), this.options.classes);
     }
 
-    setBarValue(value) {
+    _setBarValue(value) {
         this._barValue = value;
         this.mask.style.setProperty("--slider-width", `${value}%`);
+    }
+}
+
+class Input extends BaseComponent {
+    constructor(type,) {
+
     }
 }

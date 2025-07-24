@@ -19,7 +19,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@theme {}
+@theme {
+  --inset-shadow-md: inset 0 0 0 3px var(--color-yellow-50);
+}
 
 @layer base {
   body {
@@ -42,8 +44,12 @@
   }
 
   .slider-thumb {
-    background-image: url('/sticker.png');
-    @apply w-5 h-5 rounded-full absolute top-[50%] bg-yellow-500 hover:bg-yellow-600 transition-all translate-y-[-50%] cursor-grab
+    background: var(--tmb-img);
+    @apply w-5 h-5 bg-yellow-500 rounded-full absolute top-[50%] transition-all translate-y-[-50%] bg-cover cursor-grab inset-shadow-md shadow-yellow-50
+  }
+
+  .custom-thumb {
+    @apply bg-transparent w-10 h-10 inset-shadow-none
   }
 
   .mask {
