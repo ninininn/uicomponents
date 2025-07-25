@@ -17,8 +17,8 @@ let testBtn = new Button('primary-btn', { text: 'Shown Btn', classes: ['btn', 'f
 
 // Slider-components
 let testSlider = new Slider({ initValue: 55 });
-// let testSlider2 = new Slider({ initValue: [66, 100], range: true, thumbImg: '/sticker.png' });
-console.log(testBtn, testSlider);
+let testSlider2 = new Slider({ initValue: [66, 95], range: true, thumbImg: '/sticker.png' });
+console.log(testSlider, testSlider2);
 body.appendChild(testBtn._elem);
 body.appendChild(testSlider.getElem());
-// body.appendChild(testSlider2.getElem());
+body.appendChild(testSlider2.getElem());

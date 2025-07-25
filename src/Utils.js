@@ -106,3 +106,12 @@ export function bindState(initState) {
 
     return [getState, setState, subscribe];
 }
+
+
+/**
+ * compare number 工具函式
+ * @param {array} - number array
+ */
+export function compareNum(array) {
+    return array[1] > array[0] ? array.reverse() : array;
+}

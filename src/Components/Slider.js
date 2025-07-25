@@ -1,4 +1,4 @@
-import { UIUtils, BaseComponent, defineArgs, bindState } from '../Utils';
+import { UIUtils, BaseComponent, defineArgs, bindState, compareNum } from '../Utils';
 
 // custom Slider components
 // props:
@@ -28,9 +28,10 @@ export class Slider extends BaseComponent {
         // 初始化UI相關
         this.bar = new SliderBar(this.getValue(), this.subscribe);
         if (this.options.range) {
+            let v = this.getValue();
             this.thumb = [
-                new SliderThumb(this.getValue()[0], this.subscribe, this.options.thumbImg, 0),
-                new SliderThumb(this.getValue()[1], this.subscribe, this.options.thumbImg, 1),
+                new SliderThumb(v[0], this.subscribe, this.options.thumbImg, 0),
+                new SliderThumb(v[1], this.subscribe, this.options.thumbImg, 1),
             ];
             this.childrens = [
                 ...this.thumb.map(t => t.getElem()),
@@ -40,19 +41,7 @@ export class Slider extends BaseComponent {
             this.thumb = new SliderThumb(this.getValue(), this.subscribe, this.options.thumbImg);
             this.childrens = [this.thumb.getElem(), this.bar.getElem()];
         }
-        // if (this.options.range) {
-        //     //子元件 - thumb + bar
-        //     this.bar = new SliderBar(this.getValue(), this.subscribe);
 
-        //     let sliderValue = this.getValue();
-        //     this.thumb = [new SliderThumb(sliderValue[0], this.subscribe, this.options.thumbImg), new SliderThumb(sliderValue[1], this.subscribe, this.options.thumbImg)];
-        //     this.childrens = [...this.thumb.map(elem => elem.getElem()),
-        //     this.bar.getElem()];
-        // } else {
-        //     this.thumb = new SliderThumb(this.getValue()[0], this.subscribe, this.options.thumbImg);
-        //     this.childrens = [this.thumb.getElem(),
-        //     this.bar.getElem()];
-        // }
         this._init();
     }
 
@@ -84,6 +73,7 @@ export class Slider extends BaseComponent {
     render() {
         this._checkRange();
         UIUtils.addClass(this.getElem(), this.options.classes);
+        this.options.range && UIUtils.setAttribute("slider", this.getElem(), "range");
     }
 
     _bindEvents() {
@@ -93,10 +83,11 @@ export class Slider extends BaseComponent {
 
         (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
             thumb.getElem().addEventListener('mousedown', (e) => {
+                console.log(e.currentTarget, "mousedown");
                 e.preventDefault(); // 避免選取文字
                 isDragging = true;
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
+                e.currentTarget.addEventListener('mousemove', onMouseMove);
+                e.currentTarget.addEventListener('mouseup', onMouseUp);
             });
         });
         const onMouseMove = (e) => {
@@ -107,24 +98,23 @@ export class Slider extends BaseComponent {
             const moveSteps = Math.round(percentage / this.options.step) * this.options.step;
             const clamped = Math.min(95, Math.max(0, moveSteps));
             //95的部分可以改為設定其他數值->決定最大值位置(可能因置換圖片或是thumb尺寸有改來調整)
-            // return clamped;
             this.setValue(clamped);
         };
 
         const onMouseUp = (e) => {
             isDragging = false;
-            e.target.removeEventListener('mousemove', onMouseMove);
-            e.target.removeEventListener('mouseup', onMouseUp);
+            e.currentTarget.removeEventListener('mousemove', onMouseMove);
+            e.currentTarget.removeEventListener('mouseup', onMouseUp);
         };
 
         // 設定 mousedown（滑鼠按下）時開始拖曳
 
-        this.thumb.getElem().addEventListener('mousedown', (e) => {
-            e.preventDefault(); // 避免選取文字
-            isDragging = true;
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
+        // this.thumb.getElem().addEventListener('mousedown', (e) => {
+        //     e.preventDefault(); // 避免選取文字
+        //     isDragging = true;
+        //     document.addEventListener('mousemove', onMouseMove);
+        //     document.addEventListener('mouseup', onMouseUp);
+        // });
     }
 
     _checkRange() {
@@ -139,14 +129,16 @@ export class Slider extends BaseComponent {
 }
 
 class SliderThumb extends BaseComponent {
-    constructor(value, subscribe, thumbImg = null) {
+    constructor(value, subscribe, thumbImg = null, index = 0) {
         const thumb = document.createElement("div");
         super(thumb);
-        this._thumbValue = value;
+        this._thumbIndex = index;
+        this._thumbValue = Array.isArray(value) ? value[index] : [value];
         this._thumbImg = thumbImg;
         this._init();
 
         subscribe(value => {
+            value = Array.isArray(value) ? value[index] : value;
             this._setThumbValue(value);
         });
     }
@@ -178,9 +170,11 @@ class SliderBar extends BaseComponent {
         super(bar);
         this.mask = mask;
         this._barValue = value;
+        this.startValue = value[0];
         this.options = { ...this.defaultOptions };
         this._init();
         subscribe(value => {
+            value = Array.isArray(value) ? value[1] - value[0] : value;
             this._setBarValue(value);
         });
     }
@@ -202,6 +196,7 @@ class SliderBar extends BaseComponent {
     _setBarValue(value) {
         this._barValue = value;
         this.mask.style.setProperty("--slider-width", `${value}%`);
+        this.mask.style.setProperty("--start-point", `${value}%`);
     }
 }
 
