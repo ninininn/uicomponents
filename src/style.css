@@ -3,7 +3,6 @@
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
 
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -40,25 +39,24 @@
   }
 
   .slider {
-    @apply relative content-center w-min mt-20
+    @apply relative content-center w-min mt-20;
   }
 
   .slider-thumb {
     background: var(--tmb-img);
-    @apply w-5 h-5 bg-yellow-500 rounded-full absolute top-[50%] transition-all translate-y-[-50%] bg-cover cursor-grab inset-shadow-md shadow-yellow-50
+    @apply w-5 h-5 bg-yellow-500 rounded-full absolute top-[50%] transition-all translate-y-[-50%] bg-cover cursor-grab inset-shadow-md shadow-yellow-50 z-2;
   }
 
   .custom-thumb {
-    @apply bg-transparent w-10 h-10 inset-shadow-none
+    @apply bg-transparent w-10 h-10 inset-shadow-none;
   }
 
   .mask {
     width: var(--slider-width);
-    height: 500%;
-    @apply inline-block bg-orange-200 pointer-events-none transition-all
+    @apply inline-block bg-orange-200 pointer-events-none  rounded-full transition-all absolute h-full;
   }
 
   .slider[data-slider="range"] .mask {
-    transform: translateX(var(--start-point))
+    left: var(--start-point);
   }
 }

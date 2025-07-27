@@ -1,4 +1,10 @@
-import { UIUtils, BaseComponent, defineArgs, bindState, compareNum } from '../Utils';
+import {
+  UIUtils,
+  BaseComponent,
+  defineArgs,
+  bindState,
+  compareNum,
+} from "../Utils";
 
 // custom Slider components
 // props:
@@ -10,198 +16,231 @@ import { UIUtils, BaseComponent, defineArgs, bindState, compareNum } from '../Ut
  */
 
 export class Slider extends BaseComponent {
-    constructor(...args) {
-        const { element, options } = defineArgs(args, 'div');
-        super(element);
-        this.UItype = 'Slider';
-        this.options = { ...this._defaultOptions, ...options };
+  constructor(...args) {
+    const { element, options } = defineArgs(args, "div");
+    super(element);
+    this.UItype = "Slider";
+    this.options = { ...this._defaultOptions, ...options };
 
-        // 檢查是否為雙向
-        this._checkRange();
+    // 檢查是否為雙向
+    this._checkRange();
 
-        // 設定state
-        const [getValue, setValue, subscribe] = bindState(this.options.initValue);
-        this.getValue = getValue;
-        this.setValue = setValue;//避免傳入子元件造成data更新變亂(統一由父元件來控制)
-        this.subscribe = subscribe;//傳遞下去子元件，讓子元件也能綁定該狀態
+    // 設定state
+    const [getValue, setValue, subscribe] = bindState(this.options.initValue);
+    this.getValue = getValue;
+    this.setValue = setValue; //避免傳入子元件造成data更新變亂(統一由父元件來控制)
+    this.subscribe = subscribe; //傳遞下去子元件，讓子元件也能綁定該狀態
 
-        // 初始化UI相關
-        this.bar = new SliderBar(this.getValue(), this.subscribe);
-        if (this.options.range) {
-            let v = this.getValue();
-            this.thumb = [
-                new SliderThumb(v[0], this.subscribe, this.options.thumbImg, 0),
-                new SliderThumb(v[1], this.subscribe, this.options.thumbImg, 1),
-            ];
-            this.childrens = [
-                ...this.thumb.map(t => t.getElem()),
-                this.bar.getElem()
-            ];
-        } else {
-            this.thumb = new SliderThumb(this.getValue(), this.subscribe, this.options.thumbImg);
-            this.childrens = [this.thumb.getElem(), this.bar.getElem()];
-        }
-
-        this._init();
+    // 初始化UI相關
+    this.bar = new SliderBar(this.getValue(), this.subscribe);
+    if (this.options.range) {
+      let v = this.getValue();
+      this.thumb = [
+        new SliderThumb(v[0], this.subscribe, this.options.thumbImg, 0),
+        new SliderThumb(v[1], this.subscribe, this.options.thumbImg, 1),
+      ];
+      this.childrens = [
+        ...this.thumb.map((t) => t.getElem()),
+        this.bar.getElem(),
+      ];
+    } else {
+      this.thumb = new SliderThumb(
+        this.getValue(),
+        this.subscribe,
+        this.options.thumbImg
+      );
+      this.childrens = [this.thumb.getElem(), this.bar.getElem()];
     }
 
-    // 封裝基本(預設)設定
-    get _defaultOptions() {
-        return {
-            min: 0,             //最小值
-            max: 100,           //最大值
-            initValue: 0,       //初始預設值
-            step: 1,            //間隔
-            input: false,       //是否顯示輸入框
-            range: false,       //範圍功能
-            theme: "#878787",   //顏色
-            thumbImg: null,     //thumb圖標
-            classes: ["slider"],
-        };
+    this._init();
+  }
+
+  // 封裝基本(預設)設定
+  get _defaultOptions() {
+    return {
+      min: 0, //最小值
+      max: 100, //最大值
+      initValue: 0, //初始預設值
+      step: 1, //間隔
+      input: false, //是否顯示輸入框
+      range: false, //範圍功能
+      theme: "#878787", //顏色
+      thumbImg: null, //thumb圖標
+      classes: ["slider"],
+    };
+  }
+
+  _init() {
+    this.render();
+    //加入children:
+    for (let child of this.childrens) {
+      this.getElem().appendChild(child);
     }
+    this._bindEvents();
+  }
 
-    _init() {
-        this.render();
-        //加入children:
-        for (let child of this.childrens) {
-            this.getElem().appendChild(child);
-        }
-        this._bindEvents();
-    }
+  // 渲染
+  render() {
+    this._checkRange();
+    UIUtils.addClass(this.getElem(), this.options.classes);
+    this.options.range &&
+      UIUtils.setAttribute("slider", this.getElem(), "range");
+  }
 
-    // 渲染
-    render() {
-        this._checkRange();
-        UIUtils.addClass(this.getElem(), this.options.classes);
-        this.options.range && UIUtils.setAttribute("slider", this.getElem(), "range");
-    }
+  _bindEvents() {
+    //僅在init時綁定一次
+    const sliderElem = this.getElem();
+    let isDragging = false;
 
-    _bindEvents() {
-        //僅在init時綁定一次
-        const sliderElem = this.getElem();
-        let isDragging = false;
-
-        (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
-            thumb.getElem().addEventListener('mousedown', (e) => {
-                console.log(e.currentTarget, "mousedown");
-                e.preventDefault(); // 避免選取文字
-                isDragging = true;
-                e.currentTarget.addEventListener('mousemove', onMouseMove);
-                e.currentTarget.addEventListener('mouseup', onMouseUp);
-            });
+    (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
+      thumb.getElem().addEventListener("mousedown", (e, index) => {
+        e.preventDefault(); // 避免選取文字
+        isDragging = true;
+        let draggingIndex = index;
+        document.addEventListener("mousemove", (e, draggingIndex) => {
+          onMouseMove(e, draggingIndex);
         });
-        const onMouseMove = (e) => {
-            if (!isDragging) return;
+        document.addEventListener("mouseup", (e, draggingIndex) => {
+          onMouseUp(e, draggingIndex);
+        });
+      });
+    });
+    const onMouseMove = (e, index) => {
+      if (!isDragging) return;
+      let moved = this.getValue();
 
-            const sliderRect = sliderElem.getBoundingClientRect();
-            const percentage = ((e.clientX - sliderRect.left) / sliderRect.width) * 100;
-            const moveSteps = Math.round(percentage / this.options.step) * this.options.step;
-            const clamped = Math.min(95, Math.max(0, moveSteps));
-            //95的部分可以改為設定其他數值->決定最大值位置(可能因置換圖片或是thumb尺寸有改來調整)
-            this.setValue(clamped);
-        };
+      const sliderRect = sliderElem.getBoundingClientRect();
+      const percentage =
+        ((e.clientX - sliderRect.left) / sliderRect.width) * 100;
+      const moveSteps =
+        Math.round(percentage / this.options.step) * this.options.step;
+      const clamped = Math.min(95, Math.max(0, moveSteps));
+      //95的部分可以改為設定其他數值->決定最大值位置(可能因置換圖片或是thumb尺寸有改來調整)
+      if (this.options.range) {
+        const newVal = [...moved];
+        newVal[index] = clamped;
+        // 強制排序，確保 thumb 不交叉
+        if (newVal[0] > newVal[1]) newVal.reverse();
+        //   [newVal[0], newVal[1]] = [newVal[1], newVal[0]];
+        this.setValue(newVal);
+      } else {
+        this.setValue(clamped);
+      }
+    };
 
-        const onMouseUp = (e) => {
-            isDragging = false;
-            e.currentTarget.removeEventListener('mousemove', onMouseMove);
-            e.currentTarget.removeEventListener('mouseup', onMouseUp);
-        };
+    const onMouseUp = (e, index) => {
+      isDragging = false;
 
-        // 設定 mousedown（滑鼠按下）時開始拖曳
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
 
-        // this.thumb.getElem().addEventListener('mousedown', (e) => {
-        //     e.preventDefault(); // 避免選取文字
-        //     isDragging = true;
-        //     document.addEventListener('mousemove', onMouseMove);
-        //     document.addEventListener('mouseup', onMouseUp);
-        // });
+    // 設定 mousedown（滑鼠按下）時開始拖曳
+
+    // this.thumb.getElem().addEventListener('mousedown', (e) => {
+    //     e.preventDefault(); // 避免選取文字
+    //     isDragging = true;
+    //     document.addEventListener('mousemove', onMouseMove);
+    //     document.addEventListener('mouseup', onMouseUp);
+    // });
+  }
+
+  _checkRange() {
+    const { initValue, range, min, max } = this.options;
+    if (range) {
+      this.options.initValue = Array.isArray(initValue)
+        ? initValue
+        : [initValue, max];
+    } else {
+      // 防呆(range是false但傳入陣列)
+      this.options.initValue = Array.isArray(initValue)
+        ? initValue[0]
+        : initValue;
     }
-
-    _checkRange() {
-        const { initValue, range, min, max } = this.options;
-        if (range) {
-            this.options.initValue = Array.isArray(initValue) ? initValue : [initValue, max];
-        } else {
-            // 防呆(range是false但傳入陣列)
-            this.options.initValue = Array.isArray(initValue) ? initValue[0] : initValue;
-        }
-    }
+  }
 }
 
 class SliderThumb extends BaseComponent {
-    constructor(value, subscribe, thumbImg = null, index = 0) {
-        const thumb = document.createElement("div");
-        super(thumb);
-        this._thumbIndex = index;
-        this._thumbValue = Array.isArray(value) ? value[index] : [value];
-        this._thumbImg = thumbImg;
-        this._init();
+  constructor(value, subscribe, thumbImg = null, index = 0) {
+    const thumb = document.createElement("div");
+    super(thumb);
+    this._thumbIndex = index;
+    this._thumbValue = Array.isArray(value) ? value[index] : [value];
+    this._thumbImg = thumbImg;
+    this._init();
 
-        subscribe(value => {
-            value = Array.isArray(value) ? value[index] : value;
-            this._setThumbValue(value);
-        });
-    }
+    subscribe((value) => {
+      value = Array.isArray(value) ? value[index] : value;
+      this._setThumbValue(value);
+    });
+  }
 
-    _init() {
-        this.render();
-    }
+  _init() {
+    this.render();
+  }
 
-    render() {
-        UIUtils.addClass(this.getElem(), ["slider-thumb"]);
+  render() {
+    UIUtils.addClass(this.getElem(), ["slider-thumb"]);
 
-        //是否有傳入客製圖標路徑
-        if (this._thumbImg) {
-            this.getElem().style.setProperty('--tmb-img', `url(${this._thumbImg})`);
-            UIUtils.addClass(this.getElem(), ["custom-thumb"]);
-        }
+    //是否有傳入客製圖標路徑
+    if (this._thumbImg) {
+      this.getElem().style.setProperty("--tmb-img", `url(${this._thumbImg})`);
+      UIUtils.addClass(this.getElem(), ["custom-thumb"]);
     }
-    _setThumbValue(value) {
-        this._thumbValue = value;
-        this.getElem().style.left = `${value}%`;
-    }
+  }
+  _setThumbValue(value) {
+    this._thumbValue = value;
+    let offset = 2; //圖標定位點偏移(%)
+    this.getElem().style.left = `${value - offset}%`;
+  }
 }
 
 class SliderBar extends BaseComponent {
-    constructor(value, subscribe) {
-        const bar = document.createElement("div");
-        const mask = document.createElement("span");
-        mask.classList.add("mask");
-        super(bar);
-        this.mask = mask;
-        this._barValue = value;
-        this.startValue = value[0];
-        this.options = { ...this.defaultOptions };
-        this._init();
-        subscribe(value => {
-            value = Array.isArray(value) ? value[1] - value[0] : value;
-            this._setBarValue(value);
-        });
-    }
+  constructor(value, subscribe) {
+    const bar = document.createElement("div");
+    const mask = document.createElement("span");
+    mask.classList.add("mask");
+    super(bar);
+    this.mask = mask;
+    this._barValue = value;
+    this.startValue = value[0];
+    this.options = { ...this.defaultOptions };
+    this._init();
+    subscribe((value) => {
+      value = Array.isArray(value) ? value[1] - value[0] : value;
+      this._setBarValue(value);
+    });
+  }
 
-    get defaultOptions() {
-        return {
-            classes: ["w-90", "h-1.5", "bg-gray-300", "rounded-full", "my-auto", "overflow-hidden", "cursor-grab"],
-        };
-    }
+  get defaultOptions() {
+    return {
+      classes: [
+        "w-90",
+        "h-1.5",
+        "bg-gray-300",
+        "rounded-full",
+        "my-auto",
+        "overflow-hidden",
+        "cursor-grab",
+      ],
+    };
+  }
 
-    _init() {
-        this.render();
-        this.getElem().appendChild(this.mask);
-    }
-    render() {
-        UIUtils.addClass(this.getElem(), this.options.classes);
-    }
+  _init() {
+    this.render();
+    this.getElem().appendChild(this.mask);
+  }
+  render() {
+    UIUtils.addClass(this.getElem(), this.options.classes);
+  }
 
-    _setBarValue(value) {
-        this._barValue = value;
-        this.mask.style.setProperty("--slider-width", `${value}%`);
-        this.mask.style.setProperty("--start-point", `${value}%`);
-    }
+  _setBarValue(value) {
+    this._barValue = value;
+    this.mask.style.setProperty("--slider-width", `${value}%`);
+    this.mask.style.setProperty("--start-point", `${this.startValue}%`);
+  }
 }
 
 class Input extends BaseComponent {
-    constructor(type,) {
-
-    }
+  constructor(type) {}
 }
