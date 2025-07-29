@@ -24,15 +24,16 @@ let testSlider2 = new Slider({
   thumbImg: "/sticker.png",
 });
 
-function testCallback(value) {
-  console.log("callback", value);
+function targetfunction(value) {
+  //取得value並操作...
+  console.log(value);
 }
-
-
 const sliderdom = document.querySelector(".sliderdom");
 
-let slider3 = new Slider(sliderdom, { initValue: 79, callback: testCallback });
-
+let slider3 = new Slider(sliderdom, {
+  initValue: 79,
+  handlers: targetfunction,
+});
 
 console.log(testSlider, testSlider2, slider3);
 body.appendChild(testBtn._elem);

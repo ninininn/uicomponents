@@ -43,6 +43,7 @@
   }
 
   .slider-thumb {
+    touch-action: none;
     --bgColor: var(--themeColor, var(--color-yellow-500));
     background: var(--tmb-img);
     @apply w-5 h-5 bg-(--bgColor) rounded-full absolute top-[50%] transition-all translate-y-[-50%] bg-cover cursor-grab inset-shadow-md shadow-yellow-50 z-2;
