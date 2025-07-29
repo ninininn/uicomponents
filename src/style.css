@@ -43,8 +43,9 @@
   }
 
   .slider-thumb {
+    --bgColor: var(--themeColor, var(--color-yellow-500));
     background: var(--tmb-img);
-    @apply w-5 h-5 bg-yellow-500 rounded-full absolute top-[50%] transition-all translate-y-[-50%] bg-cover cursor-grab inset-shadow-md shadow-yellow-50 z-2;
+    @apply w-5 h-5 bg-(--bgColor) rounded-full absolute top-[50%] transition-all translate-y-[-50%] bg-cover cursor-grab inset-shadow-md shadow-yellow-50 z-2;
   }
 
   .custom-thumb {
@@ -52,8 +53,9 @@
   }
 
   .mask {
+    --bgColor: var(--themeColor, var(--color-yellow-500));
     width: var(--slider-width);
-    @apply inline-block bg-orange-200 pointer-events-none  rounded-full transition-all absolute h-full;
+    @apply inline-block bg-(--bgColor)/50 pointer-events-none rounded-full transition-all absolute h-full left-0;
   }
 
   .slider[data-slider="range"] .mask {

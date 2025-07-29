@@ -6,11 +6,17 @@ export class UIUtils {
     static addClass(element, classes) {
         element.classList.add(...classes);
     }
+    static removeClass(element, classes) {
+        element.classList.remove(...classes);
+    }
     static setText(element, text) {
         element.textContent = text;
     }
     static setAttribute(UItype, element, attributeName) {
         element.setAttribute(`data-${UItype}`, attributeName);
+    }
+    static setProperty(element, propertyName, propertyValue) {
+        element.style.setProperty(propertyName, propertyValue);
     }
 }
 

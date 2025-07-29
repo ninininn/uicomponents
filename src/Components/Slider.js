@@ -36,12 +36,12 @@ export class Slider extends BaseComponent {
         this.subscribe = subscribe; //傳遞下去子元件，讓子元件也能綁定該狀態
 
         // 初始化UI相關
-        this.bar = new SliderBar(this.getValue(), this.subscribe);
+        this.bar = new SliderBar(this.getValue(), this.subscribe, this.options.theme);
         if (this.options.range) {
             let v = this.getValue();
             this.thumb = [
-                new SliderThumb(v[0], this.subscribe, this.options.thumbImg, 0),
-                new SliderThumb(v[1], this.subscribe, this.options.thumbImg, 1),
+                new SliderThumb(v[0], this.subscribe, this.options.thumbImg, this.options.theme, 0),
+                new SliderThumb(v[1], this.subscribe, this.options.thumbImg, this.options.theme, 1),
             ];
             this.childrens = [
                 ...this.thumb.map((t) => t.getElem()),
@@ -51,7 +51,7 @@ export class Slider extends BaseComponent {
             this.thumb = new SliderThumb(
                 this.getValue(),
                 this.subscribe,
-                this.options.thumbImg
+                this.options.thumbImg, this.options.theme
             );
             this.childrens = [this.thumb.getElem(), this.bar.getElem()];
         }
@@ -68,7 +68,7 @@ export class Slider extends BaseComponent {
             step: 1, //間隔
             input: false, //是否顯示輸入框
             range: false, //範圍功能
-            theme: "#878787", //顏色
+            theme: "var(--color-yellow-500)", //預設顏色
             thumbImg: null, //thumb圖標
             classes: ["slider"],
         };
@@ -99,6 +99,7 @@ export class Slider extends BaseComponent {
     }
 
     _onMouseMove(event) {
+        event.stopImmediatePropagation();
         if (this._draggingIndex === null) return;
         const originVal = this.getValue();
         const rect = this.getElem().getBoundingClientRect();
@@ -151,12 +152,13 @@ export class Slider extends BaseComponent {
 }
 
 class SliderThumb extends BaseComponent {
-    constructor(value, subscribe, thumbImg = null, index = 0) {
+    constructor(value, subscribe, thumbImg = null, theme, index = 0) {
         const thumb = document.createElement("div");
         super(thumb);
         this._thumbIndex = index;
         this._thumbValue = Array.isArray(value) ? value[index] : [value];
         this._thumbImg = thumbImg;
+        this.theme = theme;
         this._init();
 
         subscribe((value) => {
@@ -171,6 +173,7 @@ class SliderThumb extends BaseComponent {
 
     render() {
         UIUtils.addClass(this.getElem(), ["slider-thumb"]);
+        UIUtils.setProperty(this.getElem(), "--bgColor", this.theme);
 
         //是否有傳入客製圖標路徑
         if (this._thumbImg) {
@@ -186,12 +189,13 @@ class SliderThumb extends BaseComponent {
 }
 
 class SliderBar extends BaseComponent {
-    constructor(value, subscribe) {
+    constructor(value, subscribe, theme) {
         const bar = document.createElement("div");
         const mask = document.createElement("span");
         mask.classList.add("mask");
         super(bar);
         this.mask = mask;
+        this.theme = theme;
         this._barValue = value;
         this.startValue = value[0];
         this.options = { ...this.defaultOptions };
@@ -223,6 +227,7 @@ class SliderBar extends BaseComponent {
     }
     render() {
         UIUtils.addClass(this.getElem(), this.options.classes);
+        UIUtils.setProperty(this.mask, "--bgColor", this.theme);
     }
 
     _setBarValue(value) {

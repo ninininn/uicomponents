@@ -17,13 +17,24 @@ let testBtn = new Button("primary-btn", {
 // console.log(testdropdown);
 
 // Slider-components
-let testSlider = new Slider({ initValue: 55 });
+let testSlider = new Slider({ initValue: 55, theme: "#c55acaff" });
 let testSlider2 = new Slider({
   initValue: [66, 95],
   range: true,
   thumbImg: "/sticker.png",
 });
-console.log(testSlider, testSlider2);
+
+function testCallback(value) {
+  console.log("callback", value);
+}
+
+
+const sliderdom = document.querySelector(".sliderdom");
+
+let slider3 = new Slider(sliderdom, { initValue: 79, callback: testCallback });
+
+
+console.log(testSlider, testSlider2, slider3);
 body.appendChild(testBtn._elem);
 body.appendChild(testSlider.getElem());
 body.appendChild(testSlider2.getElem());
