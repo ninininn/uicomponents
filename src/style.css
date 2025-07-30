@@ -62,4 +62,13 @@
   .slider[data-slider="range"] .mask {
     left: var(--start-point);
   }
+
+  /* input */
+  .input {
+    @apply border-none px-2 py-3 outline-none active:border-none
+  }
+
+  .input-group {
+    @apply inline-block
+  }
 }

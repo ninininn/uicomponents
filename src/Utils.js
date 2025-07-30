@@ -49,8 +49,9 @@ export function defineArgs(args, tagName = "div") {
  * 共用原型方法
  */
 export class BaseComponent {
-    constructor(elem) {
+    constructor(elem, theme) {
         this._elem = elem; //子類別instance的渲染DOM節點
+        this._theme = theme;
     }
 
     _init() {

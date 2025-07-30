@@ -18,7 +18,7 @@ import {
 export class Slider extends BaseComponent {
   constructor(...args) {
     const { element, options } = defineArgs(args, "div");
-    super(element);
+    super(element, options.theme || "var(--color-yellow-500)");
     this.UItype = "Slider";
     this.options = { ...this._defaultOptions, ...options };
 
@@ -26,15 +26,20 @@ export class Slider extends BaseComponent {
     this._draggingIndex = null;
     this.onPointerMove = this._onPointerMove.bind(this);
     this.onPointerUp = this._onPointerUp.bind(this);
-    this.onPointerDown = this._onPointerDown.bind(this);
+    // this.onPointerDown = this._onPointerDown.bind(this);
     // 檢查是否為雙向
     this._checkRange();
 
     // 設定state
-    const [getValue, setValue, subscribe] = bindState(this.options.initValue);
+    const [getValue, setValue, subscribeValue] = bindState(this.options.initValue);
     this.getValue = getValue;
     this.setValue = setValue; //避免傳入子元件造成data更新變亂(統一由父元件來控制)
-    this.subscribe = subscribe; //傳遞下去子元件，讓子元件也能綁定該狀態
+    this.subscribeValue = subscribeValue; //傳遞下去子元件，讓子元件也能綁定該狀態
+
+    const [getTheme, setTheme, subscribeTheme] = bindState(this.options.theme);
+    this.getTheme = getTheme;
+    this.setTheme = setTheme;
+    this.subscribeTheme = subscribeTheme;
 
     // callback handlers
     if (this.options.handlers) {
@@ -44,24 +49,24 @@ export class Slider extends BaseComponent {
     // 初始化UI相關
     this.bar = new SliderBar(
       this.getValue(),
-      this.subscribe,
-      this.options.theme
+      this.subscribeValue,
+      this._theme
     );
     if (this.options.range) {
       let v = this.getValue();
       this.thumb = [
         new SliderThumb(
           v[0],
-          this.subscribe,
+          this.subscribeValue,
           this.options.thumbImg,
-          this.options.theme,
+          this._theme,
           0
         ),
         new SliderThumb(
           v[1],
-          this.subscribe,
+          this.subscribeValue,
           this.options.thumbImg,
-          this.options.theme,
+          this._theme,
           1
         ),
       ];
@@ -72,9 +77,9 @@ export class Slider extends BaseComponent {
     } else {
       this.thumb = new SliderThumb(
         this.getValue(),
-        this.subscribe,
+        this.subscribeValue,
         this.options.thumbImg,
-        this.options.theme
+        this._theme
       );
       this.childrens = [this.thumb.getElem(), this.bar.getElem()];
     }
@@ -113,6 +118,10 @@ export class Slider extends BaseComponent {
     UIUtils.addClass(this.getElem(), this.options.classes);
     this.options.range &&
       UIUtils.setAttribute("slider", this.getElem(), "range");
+  }
+
+  changeTheme(value) {
+    this.setTheme(value);
   }
 
   _onPointerDown(event, index) {
@@ -179,11 +188,10 @@ export class Slider extends BaseComponent {
 class SliderThumb extends BaseComponent {
   constructor(value, subscribe, thumbImg = null, theme, index = 0) {
     const thumb = document.createElement("div");
-    super(thumb);
+    super(thumb, theme);
     this._thumbIndex = index;
     this._thumbValue = Array.isArray(value) ? value[index] : [value];
     this._thumbImg = thumbImg;
-    this.theme = theme;
     this._init();
 
     subscribe((value) => {
@@ -198,7 +206,7 @@ class SliderThumb extends BaseComponent {
 
   render() {
     UIUtils.addClass(this.getElem(), ["slider-thumb"]);
-    UIUtils.setProperty(this.getElem(), "--bgColor", this.theme);
+    UIUtils.setProperty(this.getElem(), "--bgColor", this._theme);
 
     //是否有傳入客製圖標路徑
     if (this._thumbImg) {
@@ -218,9 +226,8 @@ class SliderBar extends BaseComponent {
     const bar = document.createElement("div");
     const mask = document.createElement("span");
     mask.classList.add("mask");
-    super(bar);
+    super(bar, theme);
     this.mask = mask;
-    this.theme = theme;
     this._barValue = value;
     this.startValue = value[0];
     this.options = { ...this.defaultOptions };
@@ -252,7 +259,7 @@ class SliderBar extends BaseComponent {
   }
   render() {
     UIUtils.addClass(this.getElem(), this.options.classes);
-    UIUtils.setProperty(this.mask, "--bgColor", this.theme);
+    UIUtils.setProperty(this.mask, "--bgColor", this._theme);
   }
 
   _setBarValue(value) {
@@ -262,6 +269,52 @@ class SliderBar extends BaseComponent {
   }
 }
 
-class Input extends BaseComponent {
-  constructor(type) { }
+
+// 未來擴充成完整input元件
+export class Input extends BaseComponent {
+  constructor(...args) {
+    const { element, options } = defineArgs(args, "div");
+    const input = document.createElement("input");
+    element.appendChild(input);
+    super(input);
+    this.UItype = "Input";
+    this.options = { ...this._defaultOptions, ...options };
+
+    this._elem.type = this.options.type;
+    this._elem.placeholder = this.options.placeholder;
+
+    // number-type input
+    if (this.options.type === 'number') {
+      this.min = this.options.min;
+      this.max = this.options.max;
+      this.step = this.options.step;
+    }
+
+
+    this.children = [this._elem.querySelector("input")];
+    this._init();
+  }
+
+  // 封裝基本(預設)設定
+  get _defaultOptions() {
+    return {
+      type: 'text', //input類
+      placeholder: "預設文字",
+      initValue: 0, //初始預設值
+      position: 'top', //位置
+      theme: "var(--color-yellow-500)", //預設顏色
+      icon: null, //是否使用icon
+      iconPosition: 'start',//icon位置
+      classes: ["input"],
+      handlers: null,
+    };
+  }
+
+  _init() {
+    this.render();
+  }
+
+  render() {
+    UIUtils.addClass(this.getElem(), this.options.classes);
+  }
 }
