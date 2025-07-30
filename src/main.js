@@ -1,7 +1,7 @@
 import "./style.css";
 import { Button } from "./Components/Button";
 import { Dropdown } from "./Components/Dropdown";
-import { Slider } from "./Components/Slider";
+import { Slider, Input } from "./Components/Slider";
 
 let body = document.querySelector("body");
 
@@ -24,17 +24,23 @@ let testSlider2 = new Slider({
   thumbImg: "/sticker.png",
 });
 
-function testCallback(value) {
-  console.log("callback", value);
+function targetfunction() {
+  //取得value並操作...
+  console.log("value:", this.getValue());
 }
-
-
 const sliderdom = document.querySelector(".sliderdom");
 
-let slider3 = new Slider(sliderdom, { initValue: 79, callback: testCallback });
+let slider3 = new Slider(sliderdom, {
+  initValue: 79,
+  handlers: targetfunction,
+});
 
-
+let testInput = new Input({
+  type: 'text',
+});
 console.log(testSlider, testSlider2, slider3);
+console.log(testInput);
 body.appendChild(testBtn._elem);
 body.appendChild(testSlider.getElem());
 body.appendChild(testSlider2.getElem());
+body.appendChild(testInput.getElem());
