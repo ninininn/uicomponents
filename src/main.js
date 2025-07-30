@@ -24,9 +24,9 @@ let testSlider2 = new Slider({
   thumbImg: "/sticker.png",
 });
 
-function targetfunction(value) {
+function targetfunction() {
   //取得value並操作...
-  console.log(value);
+  console.log("value:", this.geValue());
 }
 const sliderdom = document.querySelector(".sliderdom");
 

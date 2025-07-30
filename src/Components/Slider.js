@@ -24,9 +24,9 @@ export class Slider extends BaseComponent {
 
     //events
     this._draggingIndex = null;
-    this.onMouseMove = this._onMouseMove.bind(this);
-    this.onMouseUp = this._onMouseUp.bind(this);
-    this.onMouseDown = this._onMouseDown.bind(this);
+    this.onPointerMove = this._onPointerMove.bind(this);
+    this.onPointerUp = this._onPointerUp.bind(this);
+    this.onPointerDown = this._onPointerDown.bind(this);
     // 檢查是否為雙向
     this._checkRange();
 
@@ -115,15 +115,15 @@ export class Slider extends BaseComponent {
       UIUtils.setAttribute("slider", this.getElem(), "range");
   }
 
-  _onMouseDown(event, index) {
+  _onPointerDown(event, index) {
     event.preventDefault();
 
     this._draggingIndex = index;
-    event.currentTarget.addEventListener("pointermove", this.onMouseMove);
-    event.currentTarget.addEventListener("pointerup", this.onMouseUp);
+    event.currentTarget.addEventListener("pointermove", this.onPointerMove);
+    event.currentTarget.addEventListener("pointerup", this.onPointerUp);
   }
 
-  _onMouseMove(event) {
+  _onPointerMove(event) {
     event.preventDefault();
     if (this._draggingIndex === null) return;
     const originVal = this.getValue();
@@ -146,17 +146,17 @@ export class Slider extends BaseComponent {
     }
   }
 
-  _onMouseUp(event) {
+  _onPointerUp(event) {
     this._draggingIndex = null;
-    event.currentTarget.removeEventListener("pointermove", this.onMouseMove);
-    event.currentTarget.removeEventListener("pointerup", this.onMouseUp);
+    event.currentTarget.removeEventListener("pointermove", this.onPointerMove);
+    event.currentTarget.removeEventListener("pointerup", this.onPointerUp);
   }
   _bindEvents() {
     //僅在init時綁定一次
     (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
       thumb.getElem().addEventListener("pointerdown", (e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
-        this._onMouseDown(e, index);
+        this._onPointerDown(e, index);
       });
     });
   }
@@ -263,5 +263,5 @@ class SliderBar extends BaseComponent {
 }
 
 class Input extends BaseComponent {
-  constructor(type) {}
+  constructor(type) { }
 }
