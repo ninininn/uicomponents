@@ -113,3 +113,12 @@ export function bindState(initState) {
 export function compareNum(array) {
     return array[1] > array[0] ? array.reverse() : array;
 }
+
+
+/**
+ * checkDevice 判斷裝置尺寸 工具函式
+ */
+
+export function checkDevice() {
+
+}
