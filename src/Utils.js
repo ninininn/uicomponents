@@ -65,6 +65,7 @@ export class BaseComponent {
 
   // events handler
   on(target, event, handler) {
+    console.log("add listener!", this);
     target.addEventListener(event, handler);
     this._eventListeners.push({ target, event, handler });
   }

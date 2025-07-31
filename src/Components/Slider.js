@@ -121,7 +121,7 @@ export class Slider extends BaseComponent {
       this.getElem().appendChild(child);
     }
     this._bindEvents();
-    this.setDisabled(this.disabled);
+    // this.setDisabled(this.disabled);
   }
 
   // 渲染
