@@ -32,8 +32,10 @@ export class Slider extends BaseComponent {
     // 檢查是否為雙向
     this._checkRange();
 
-    // 設定state
-    const [getValue, setValue, subscribeValue] = bindState(this.options.initValue);
+    // 設定value state
+    const [getValue, setValue, subscribeValue] = bindState(
+      this.options.initValue
+    );
     this.getValue = getValue;
     this.setValue = setValue; //避免傳入子元件造成data更新變亂(統一由父元件來控制)
     this.subscribeValue = subscribeValue; //傳遞下去子元件，讓子元件也能綁定該狀態
@@ -239,6 +241,8 @@ class SliderThumb extends BaseComponent {
       this.getElem().style.setProperty("--tmb-img", `url(${this._thumbImg})`);
       UIUtils.addClass(this.getElem(), ["custom-thumb"]);
     }
+
+    super.setTheme();
   }
   _setThumbValue(value) {
     this._thumbValue = value;
@@ -290,6 +294,7 @@ class SliderBar extends BaseComponent {
   render() {
     UIUtils.addClass(this.getElem(), this.options.classes);
     UIUtils.setProperty(this.mask, "--bgColor", this._theme);
+    super.setTheme();
   }
 
   _setBarValue(value) {
@@ -298,7 +303,6 @@ class SliderBar extends BaseComponent {
     this.mask.style.setProperty("--start-point", `${this.startValue}%`);
   }
 }
-
 
 // 未來擴充成完整input元件
 export class Input extends BaseComponent {
@@ -314,12 +318,11 @@ export class Input extends BaseComponent {
     this._elem.placeholder = this.options.placeholder;
 
     // number-type input
-    if (this.options.type === 'number') {
+    if (this.options.type === "number") {
       this.min = this.options.min;
       this.max = this.options.max;
       this.step = this.options.step;
     }
-
 
     this.children = [this._elem.querySelector("input")];
     this._init();
@@ -328,13 +331,13 @@ export class Input extends BaseComponent {
   // 封裝基本(預設)設定
   get _defaultOptions() {
     return {
-      type: 'text', //input類
+      type: "text", //input類
       placeholder: "預設文字",
       initValue: 0, //初始預設值
-      position: 'top', //位置
+      position: "top", //位置
       theme: "var(--color-yellow-500)", //預設顏色
       icon: null, //是否使用icon
-      iconPosition: 'start',//icon位置
+      iconPosition: "start", //icon位置
       classes: ["input"],
       handlers: null,
     };

@@ -2,6 +2,7 @@ import "./style.css";
 import { Button } from "./Components/Button";
 import { Dropdown } from "./Components/Dropdown";
 import { Slider, Input } from "./Components/Slider";
+import { BaseComponent } from "./Utils";
 
 let body = document.querySelector("body");
 
@@ -37,7 +38,11 @@ let slider3 = new Slider(sliderdom, {
   handlers: targetfunction,
 });
 
+let testInput = new Input({
+  type: "text",
+});
 console.log(testSlider, testSlider2, slider3);
 body.appendChild(testBtn._elem);
 body.appendChild(testSlider.getElem());
 body.appendChild(testSlider2.getElem());
+body.appendChild(testInput.getElem());
