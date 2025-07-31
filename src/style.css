@@ -71,4 +71,8 @@
   .input-group {
     @apply inline-block
   }
+
+  .disabled {
+    @apply hover:cursor-not-allowed pointer-events-none
+  }
 }

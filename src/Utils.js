@@ -60,8 +60,12 @@ export class BaseComponent {
 
     render() { }
 
-    // destroy component instance, includes listeners.
-    destroy() { }
+    destroy() {
+        console.log("super_destroy");
+        console.log(this);
+        console.log(this.getElem().getEventListeners);
+        this.getElem();
+    }
 
     //提供可以取得實際渲染DOM節點的入口
     getElem() {
@@ -74,7 +78,6 @@ export class BaseComponent {
     // }
 
     setTheme(themeValue) {
-        console.log("super theme()");
         this._theme = themeValue;
         this.render();
     }

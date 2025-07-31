@@ -18,10 +18,12 @@ import {
 export class Slider extends BaseComponent {
   constructor(...args) {
     const { element, options } = defineArgs(args, "div");
-    super(element, options.theme || "var(--color-yellow-500)");
+    const defaultTheme = options.disabled ? "var(--color-gray-500)" : options.theme || "var(--color-yellow-500)";
+    super(element, defaultTheme);
     this.UItype = "Slider";
     this.options = { ...this._defaultOptions, ...options };
-
+    this.disabled = this.options.disabled;
+    this.defaultTheme = options.theme || defaultTheme;
     //events
     this._draggingIndex = null;
     this.onPointerMove = this._onPointerMove.bind(this);
@@ -36,7 +38,7 @@ export class Slider extends BaseComponent {
     this.setValue = setValue; //避免傳入子元件造成data更新變亂(統一由父元件來控制)
     this.subscribeValue = subscribeValue; //傳遞下去子元件，讓子元件也能綁定該狀態
 
-    const [getTheme, setTheme, subscribeTheme] = bindState(this.options.theme);
+    const [getTheme, setTheme, subscribeTheme] = bindState(defaultTheme);
     this.getTheme = getTheme;
     this.setTheme = setTheme;
     this.subscribeTheme = subscribeTheme;
@@ -104,6 +106,7 @@ export class Slider extends BaseComponent {
       thumbImg: null, //thumb圖標
       classes: ["slider"],
       handlers: null,
+      disabled: false,
     };
   }
 
@@ -114,6 +117,7 @@ export class Slider extends BaseComponent {
       this.getElem().appendChild(child);
     }
     this._bindEvents();
+    this.setDisabled(this.disabled);
   }
 
   // 渲染
@@ -122,14 +126,28 @@ export class Slider extends BaseComponent {
     UIUtils.addClass(this.getElem(), this.options.classes);
     this.options.range &&
       UIUtils.setAttribute("slider", this.getElem(), "range");
+    // this._bindEvents();
   }
 
   changeTheme(value) {
-    console.log("changeTheme!");
+    if (this.disabled) {
+      console.error("請將disabled設定為false");
+      return;
+    }
     this.setTheme(value);
     super.setTheme(value);
   }
 
+  setDisabled(isDisabled) {
+    this.disabled = isDisabled;
+    this.changeTheme(this.disabled ? "var(--color-gray-500)" : this.defaultTheme);
+    if (isDisabled) {
+      UIUtils.addClass(this.getElem(), ["disabled"]);
+    } else {
+      UIUtils.removeClass(this.getElem(), ["disabled"]);
+    }
+    // super.destroy();
+  }
   _onPointerDown(event, index) {
     event.preventDefault();
 
@@ -167,7 +185,6 @@ export class Slider extends BaseComponent {
     event.currentTarget.removeEventListener("pointerup", this.onPointerUp);
   }
   _bindEvents() {
-    //僅在init時綁定一次
     (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
       thumb.getElem().addEventListener("pointerdown", (e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
