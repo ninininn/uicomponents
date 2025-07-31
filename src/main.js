@@ -45,3 +45,5 @@ body.appendChild(testBtn._elem);
 body.appendChild(testSlider.getElem());
 body.appendChild(testSlider2.getElem());
 body.appendChild(testInput.getElem());
+
+console.log(new Checkbox());
