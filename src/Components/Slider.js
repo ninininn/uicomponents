@@ -50,7 +50,8 @@ export class Slider extends BaseComponent {
     this.bar = new SliderBar(
       this.getValue(),
       this.subscribeValue,
-      this._theme
+      this._theme,
+      this.subscribeTheme,
     );
     if (this.options.range) {
       let v = this.getValue();
@@ -60,6 +61,7 @@ export class Slider extends BaseComponent {
           this.subscribeValue,
           this.options.thumbImg,
           this._theme,
+          this.subscribeTheme,
           0
         ),
         new SliderThumb(
@@ -67,6 +69,7 @@ export class Slider extends BaseComponent {
           this.subscribeValue,
           this.options.thumbImg,
           this._theme,
+          this.subscribeTheme,
           1
         ),
       ];
@@ -79,7 +82,8 @@ export class Slider extends BaseComponent {
         this.getValue(),
         this.subscribeValue,
         this.options.thumbImg,
-        this._theme
+        this._theme,
+        this.subscribeTheme,
       );
       this.childrens = [this.thumb.getElem(), this.bar.getElem()];
     }
@@ -121,7 +125,9 @@ export class Slider extends BaseComponent {
   }
 
   changeTheme(value) {
+    console.log("changeTheme!");
     this.setTheme(value);
+    super.setTheme(value);
   }
 
   _onPointerDown(event, index) {
@@ -186,7 +192,7 @@ export class Slider extends BaseComponent {
 }
 
 class SliderThumb extends BaseComponent {
-  constructor(value, subscribe, thumbImg = null, theme, index = 0) {
+  constructor(value, subscribeValue, thumbImg = null, theme, subscribeTheme, index = 0) {
     const thumb = document.createElement("div");
     super(thumb, theme);
     this._thumbIndex = index;
@@ -194,9 +200,12 @@ class SliderThumb extends BaseComponent {
     this._thumbImg = thumbImg;
     this._init();
 
-    subscribe((value) => {
+    subscribeValue((value) => {
       value = Array.isArray(value) ? value[index] : value;
       this._setThumbValue(value);
+    });
+    subscribeTheme((theme) => {
+      super.setTheme(theme);
     });
   }
 
@@ -222,7 +231,7 @@ class SliderThumb extends BaseComponent {
 }
 
 class SliderBar extends BaseComponent {
-  constructor(value, subscribe, theme) {
+  constructor(value, subscribeValue, theme, subscribeTheme) {
     const bar = document.createElement("div");
     const mask = document.createElement("span");
     mask.classList.add("mask");
@@ -232,10 +241,14 @@ class SliderBar extends BaseComponent {
     this.startValue = value[0];
     this.options = { ...this.defaultOptions };
     this._init();
-    subscribe((value) => {
+    subscribeValue((value) => {
       this.startValue = value[0] ?? value;
       value = Array.isArray(value) ? value[1] - value[0] : value;
       this._setBarValue(value);
+    });
+
+    subscribeTheme((theme) => {
+      super.setTheme(theme);
     });
   }
 

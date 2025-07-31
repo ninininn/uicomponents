@@ -72,6 +72,12 @@ export class BaseComponent {
     // getChild() {
     //     return this.
     // }
+
+    setTheme(themeValue) {
+        console.log("super theme()");
+        this._theme = themeValue;
+        this.render();
+    }
 }
 
 /**
