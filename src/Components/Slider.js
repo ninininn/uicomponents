@@ -149,17 +149,30 @@ export class Slider extends BaseComponent {
     );
     if (isDisabled) {
       UIUtils.addClass(this.getElem(), ["disabled"]);
+      this.thumb.destroy();
     } else {
       UIUtils.removeClass(this.getElem(), ["disabled"]);
+      this._bindEvents();
     }
-    // super.destroy();
   }
   _onPointerDown(event, index) {
     event.preventDefault();
-
+    console.log("_onPointerDown:", event.currentTarget, this);
     this._draggingIndex = index;
     event.currentTarget.addEventListener("pointermove", this.onPointerMove);
     event.currentTarget.addEventListener("pointerup", this.onPointerUp);
+    if (
+      this.thumb[index]._eventListeners.filter(
+        (el) => el.event === "pointermove"
+      ).length < 1
+    ) {
+      this.thumb[index].on(
+        event.currentTarget,
+        "pointermove",
+        this.onPointerMove
+      );
+    }
+    this.thumb[index].on(event.currentTarget, "pointerup", this.onPointerUp);
   }
 
   _onPointerMove(event) {
@@ -191,11 +204,18 @@ export class Slider extends BaseComponent {
     event.currentTarget.removeEventListener("pointerup", this.onPointerUp);
   }
   _bindEvents() {
+    this.pointerDownHandler = [];
     (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
-      thumb.getElem().addEventListener("pointerdown", (e) => {
+      const handler = (e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
         this._onPointerDown(e, index);
-      });
+      };
+      // thumb.getElem().addEventListener("pointerdown", (e) => {
+      //   e.currentTarget.setPointerCapture(e.pointerId);
+      //   this._onPointerDown(e, index);
+      // });
+      // this.pointerDownHandler.push({ elem: thumb.getElem(), handler });
+      thumb.on(thumb.getElem(), "pointerdown", handler);
     });
   }
 

@@ -52,6 +52,7 @@ export class BaseComponent {
   constructor(elem, theme) {
     this._elem = elem; //子類別instance的渲染DOM節點
     this._theme = theme;
+    this._eventListeners = []; // record eventListeners
   }
 
   // 資料初始化
@@ -63,12 +64,17 @@ export class BaseComponent {
   render() {}
 
   // events handler
-  on(target,event,handler) {}
+  on(target, event, handler) {
+    target.addEventListener(event, handler);
+    this._eventListeners.push({ target, event, handler });
+  }
 
   //清除狀態及監聽器
   destroy() {
-    console.log("super_destroy");
-    console.log(this);
+    this._eventListeners.forEach(({ target, event, handler }) => {
+      target.removeEventListener(event, handler);
+    });
+    this._eventListeners = [];
   }
 
   //提供可以取得實際渲染DOM節點的入口
