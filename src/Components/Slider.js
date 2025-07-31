@@ -18,7 +18,9 @@ import {
 export class Slider extends BaseComponent {
   constructor(...args) {
     const { element, options } = defineArgs(args, "div");
-    const defaultTheme = options.disabled ? "var(--color-gray-500)" : options.theme || "var(--color-yellow-500)";
+    const defaultTheme = options.disabled
+      ? "var(--color-gray-500)"
+      : options.theme || "var(--color-yellow-500)";
     super(element, defaultTheme);
     this.UItype = "Slider";
     this.options = { ...this._defaultOptions, ...options };
@@ -55,7 +57,7 @@ export class Slider extends BaseComponent {
       this.getValue(),
       this.subscribeValue,
       this._theme,
-      this.subscribeTheme,
+      this.subscribeTheme
     );
     if (this.options.range) {
       let v = this.getValue();
@@ -87,7 +89,7 @@ export class Slider extends BaseComponent {
         this.subscribeValue,
         this.options.thumbImg,
         this._theme,
-        this.subscribeTheme,
+        this.subscribeTheme
       );
       this.childrens = [this.thumb.getElem(), this.bar.getElem()];
     }
@@ -142,7 +144,9 @@ export class Slider extends BaseComponent {
 
   setDisabled(isDisabled) {
     this.disabled = isDisabled;
-    this.changeTheme(this.disabled ? "var(--color-gray-500)" : this.defaultTheme);
+    this.changeTheme(
+      this.disabled ? "var(--color-gray-500)" : this.defaultTheme
+    );
     if (isDisabled) {
       UIUtils.addClass(this.getElem(), ["disabled"]);
     } else {
@@ -211,7 +215,14 @@ export class Slider extends BaseComponent {
 }
 
 class SliderThumb extends BaseComponent {
-  constructor(value, subscribeValue, thumbImg = null, theme, subscribeTheme, index = 0) {
+  constructor(
+    value,
+    subscribeValue,
+    thumbImg = null,
+    theme,
+    subscribeTheme,
+    index = 0
+  ) {
     const thumb = document.createElement("div");
     super(thumb, theme);
     this._thumbIndex = index;
@@ -242,7 +253,7 @@ class SliderThumb extends BaseComponent {
       UIUtils.addClass(this.getElem(), ["custom-thumb"]);
     }
 
-    super.setTheme();
+    // super.setTheme();
   }
   _setThumbValue(value) {
     this._thumbValue = value;
@@ -294,7 +305,7 @@ class SliderBar extends BaseComponent {
   render() {
     UIUtils.addClass(this.getElem(), this.options.classes);
     UIUtils.setProperty(this.mask, "--bgColor", this._theme);
-    super.setTheme();
+    // super.setTheme();
   }
 
   _setBarValue(value) {

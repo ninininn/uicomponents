@@ -54,33 +54,37 @@ export class BaseComponent {
     this._theme = theme;
   }
 
+  // 資料初始化
   _init() {
     this.render();
   }
 
+  // DOM節點渲染
   render() {}
 
-    destroy() {
-        console.log("super_destroy");
-        console.log(this);
-        console.log(this.getElem().getEventListeners);
-        this.getElem();
-    }
+  // events handler
+  on(target,event,handler) {}
+
+  //清除狀態及監聽器
+  destroy() {
+    console.log("super_destroy");
+    console.log(this);
+  }
 
   //提供可以取得實際渲染DOM節點的入口
   getElem() {
     return this._elem;
   }
 
-    //取得childrenElem節點入口
-    // getChild() {
-    //     return this.
-    // }
+  //取得childrenElem節點入口
+  // getChild() {
+  //     return this.
+  // }
 
-    setTheme(themeValue) {
-        this._theme = themeValue;
-        this.render();
-    }
+  setTheme(themeValue) {
+    this._theme = themeValue;
+    this.render();
+  }
 }
 
 /**

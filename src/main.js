@@ -38,11 +38,7 @@ let slider3 = new Slider(sliderdom, {
   handlers: targetfunction,
 });
 
-let testInput = new Input({
-  type: "text",
-});
 console.log(testSlider, testSlider2, slider3);
 body.appendChild(testBtn._elem);
 body.appendChild(testSlider.getElem());
 body.appendChild(testSlider2.getElem());
-body.appendChild(testInput.getElem());
