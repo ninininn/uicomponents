@@ -74,7 +74,6 @@ export class BaseComponent {
     // }
 
     setTheme(themeValue) {
-        console.log("super theme()");
         this._theme = themeValue;
         this.render();
     }

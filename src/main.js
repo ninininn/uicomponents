@@ -2,6 +2,7 @@ import "./style.css";
 import { Button } from "./Components/Button";
 import { Dropdown } from "./Components/Dropdown";
 import { Slider, Input } from "./Components/Slider";
+import { Checkbox } from "./Components/Checkbox";
 
 let body = document.querySelector("body");
 

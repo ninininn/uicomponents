@@ -125,7 +125,6 @@ export class Slider extends BaseComponent {
   }
 
   changeTheme(value) {
-    console.log("changeTheme!");
     this.setTheme(value);
     super.setTheme(value);
   }
