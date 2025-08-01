@@ -80,18 +80,19 @@ export class BaseComponent {
     //移除指定監聽器
     offevent(target, event, handler) {
         this._eventListeners = this._eventListeners.filter((listener) => {
-            const shouldRemove =
+            const removeTarget =
                 listener.target === target &&
                 listener.event === event &&
                 listener.handler === handler;
 
-            if (shouldRemove) {
+            if (removeTarget) {
                 listener.target.removeEventListener(listener.event, listener.handler);
             }
 
-            return !shouldRemove; // 保留未刪除者
+            return !removeTarget; // 回傳沒有被移除監聽器的事件
         });
     }
+
     //清除狀態及監聽器
     destroy() {
         this._eventListeners.forEach(({ target, event, handler }) => {
