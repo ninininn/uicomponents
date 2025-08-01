@@ -120,8 +120,8 @@ export class Slider extends BaseComponent {
     for (let child of this.childrens) {
       this.getElem().appendChild(child);
     }
-    this._bindEvents();
     // this.setDisabled(this.disabled);
+    this._bindEvents();
   }
 
   // 渲染
@@ -157,22 +157,11 @@ export class Slider extends BaseComponent {
   }
   _onPointerDown(event, index) {
     event.preventDefault();
-    console.log("_onPointerDown:", event.currentTarget, this);
     this._draggingIndex = index;
-    event.currentTarget.addEventListener("pointermove", this.onPointerMove);
-    event.currentTarget.addEventListener("pointerup", this.onPointerUp);
-    if (
-      this.thumb[index]._eventListeners.filter(
-        (el) => el.event === "pointermove"
-      ).length < 1
-    ) {
-      this.thumb[index].on(
-        event.currentTarget,
-        "pointermove",
-        this.onPointerMove
-      );
-    }
-    this.thumb[index].on(event.currentTarget, "pointerup", this.onPointerUp);
+    this.onevent(event.currentTarget, "pointermove", this.onPointerMove);
+    this.onevent(event.currentTarget, "pointerup", this.onPointerUp);
+    // event.currentTarget.addEventListener("pointermove", this.onPointerMove);
+    // event.currentTarget.addEventListener("pointerup", this.onPointerUp);
   }
 
   _onPointerMove(event) {
@@ -197,17 +186,20 @@ export class Slider extends BaseComponent {
       this.handlers(this.getValue());
     }
   }
-
   _onPointerUp(event) {
-    this._draggingIndex = null;
-    event.currentTarget.removeEventListener("pointermove", this.onPointerMove);
-    event.currentTarget.removeEventListener("pointerup", this.onPointerUp);
+    this.draggingIndex = null;
+    this.offevent(event.currentTarget, 'pointermove', this.onPointerMove);
+    this.offevent(event.currentTarget, 'pointerup', this.onPointerUp);
+    // event.currentTarget.removeEventListener('pointermove', this.onPointerMove);
+    // event.currentTarget.removeEventListener('pointerup', this.onPointerUp);
   }
+
   _bindEvents() {
-    this.pointerDownHandler = [];
     (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
       const handler = (e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
+
+        // this=Slider{}
         this._onPointerDown(e, index);
       };
       // thumb.getElem().addEventListener("pointerdown", (e) => {
@@ -215,7 +207,7 @@ export class Slider extends BaseComponent {
       //   this._onPointerDown(e, index);
       // });
       // this.pointerDownHandler.push({ elem: thumb.getElem(), handler });
-      thumb.on(thumb.getElem(), "pointerdown", handler);
+      this.onevent(thumb.getElem(), "pointerdown", handler);
     });
   }
 
