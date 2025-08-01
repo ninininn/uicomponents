@@ -34,14 +34,14 @@ let slider3 = new Slider(sliderdom, {
   handlers: targetfunction,
 });
 
-
 let sliderbind = new Slider({ initValue: 55, theme: "#69c17bff" });
 
 //Checkbox Comonent
 let testCheckbox = new Checkbox({
-  style: "switch", handlers: function (checkedValue) {
+  style: "switch",
+  handlers: function (checkedValue) {
     sliderbind.setDisabled(checkedValue);
-  }
+  },
 });
 body.appendChild(testCheckbox.container);
 console.log(testCheckbox);
