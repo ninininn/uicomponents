@@ -159,7 +159,8 @@ export class Slider extends BaseComponent {
     this.changeTheme(
       this.disabled ? "var(--color-gray-500)" : this.defaultTheme
     );
-    this.render();
+    this.disabled ? this.destroy() :
+      this.render();
   }
 
 

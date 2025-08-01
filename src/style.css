@@ -40,7 +40,7 @@
   label:has(input[type="checkbox"][data-checkbox="switch"]) {
     &::before {
       content: "";
-      @apply rounded-full aspect-square border-2 border-green-800 inline-block w-1/2 bg-green-300 absolute transform top-[50%] -translate-y-[50%] transition-all
+      @apply rounded-full aspect-square border-2 border-gray-500 inline-block w-1/2 bg-gray-300 absolute transform top-[50%] -translate-y-[50%] transition-all
     }
 
     @apply relative p-0.5 bg-white rounded-full w-12 min-h-7 h-full inline-block cursor-pointer hover:bg-gray-50 transition duration-75
@@ -48,7 +48,7 @@
 
   label:has(input[data-checkbox="switch"]:is(:checked)) {
     &::before {
-      @apply translate-x-[85%]
+      @apply translate-x-[85%] bg-green-300 border-green-500
     }
   }
 }
@@ -96,7 +96,7 @@
   }
 
   .disabled {
-    @apply hover:cursor-not-allowed pointer-events-none
+    @apply hover:cursor-not-allowed
   }
 
   .checkbox {

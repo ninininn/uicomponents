@@ -56,18 +56,28 @@ export class Checkbox extends BaseComponent {
         this._elem.checked = this.options.checked;
         UIUtils.addClass(this.getElem(), this.options.classes);
 
-        //1. 判斷是否有標題文字
+        //1. 判斷初始化節點(如果有傳入)
+
+        //待新增
+        // new Checkbox建立時，一樣要可以用傳入DOM節點的方式啟用，但因為結構比較特別
+        // (有 < label > 跟 < input >，但主要元件是以 < input > 來記錄)，所以會需要判斷
+
+        //  - a.傳入節點是 < label > 則儲存為container，新增 < input > 並插入
+        //  - b.傳入節點是 < input > 則跟Slider一樣，綁在該節點，然後把外層的 < label > 存為container;
+
+        //2. 判斷是否有標題文字
         if (this.options.title && this.options.title !== "") {
 
         }
-        //2. 判斷樣式
-        //3. 判斷是否設定為禁止操作
+        //3. 判斷樣式
+        //4. 判斷是否設定為禁止操作
         if (!this.disabled) {
             UIUtils.removeClass(this.getElem(), ["disabled"]);
         } else {
             UIUtils.addClass(this.getElem(), ["disabled"]);
         }
 
+        //5. 綁定事件
         this._bindEvents();
     }
 
@@ -121,11 +131,3 @@ export class Checkbox extends BaseComponent {
         this.onevent(this.getElem(), "change", this.onChange);
     }
 }
-
-
-//待新增
-// new Checkbox建立時，一樣要可以用傳入DOM節點的方式啟用，但因為結構比較特別
-//     (有 < label > 跟 < input >，但主要元件是以 < input > 來記錄)，所以會需要判斷
-
-//         - a.傳入節點是 < label > 則儲存為container，新增 < input > 並插入
-//             - b.傳入節點是 < input > 則跟Slider一樣，綁在該節點，然後把外層的 < label > 存為container;
