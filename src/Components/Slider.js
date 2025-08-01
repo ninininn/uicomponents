@@ -144,10 +144,10 @@ export class Slider extends BaseComponent {
 
   // 外部控制-更改顏色
   changeTheme(value) {
-    if (this.disabled) {
-      console.error("請將disabled設定為false");
-      return;
-    }
+    // if (this.disabled) {
+    //   console.error("請將disabled設定為false");
+    //   return;
+    // }
     this.setTheme(value);
     super.setTheme(value);
   }

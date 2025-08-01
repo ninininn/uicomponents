@@ -1,7 +1,8 @@
 import "./style.css";
 import { Button } from "./Components/Button";
 import { Dropdown } from "./Components/Dropdown";
-import { Slider, Input } from "./Components/Slider";
+import { Slider } from "./Components/Slider";
+import { Checkbox } from "./Components/Checkbox";
 import { BaseComponent } from "./Utils";
 
 let body = document.querySelector("body");
@@ -11,11 +12,6 @@ let testBtn = new Button("primary-btn", {
   text: "Shown Btn",
   classes: ["btn", "filled-btn"],
 });
-
-// dropdown-component
-// let dropdown = document.getElementById("map-out");
-// let testdropdown = new Dropdown(dropdown, "dropdown-btn", { selectOptions: ['options01', 'options02'] });
-// console.log(testdropdown);
 
 // Slider-components
 let testSlider = new Slider({ initValue: 55, theme: "#c55acaff" });
@@ -34,11 +30,24 @@ const sliderdom = document.querySelector(".sliderdom");
 let slider3 = new Slider(sliderdom, {
   initValue: 79,
   theme: "#c55acaff",
-  disabled: true,
+  // disabled: true,
   handlers: targetfunction,
 });
 
-console.log(testSlider, testSlider2, slider3);
-body.appendChild(testBtn._elem);
-body.appendChild(testSlider.getElem());
-body.appendChild(testSlider2.getElem());
+
+let sliderbind = new Slider({ initValue: 55, theme: "#69c17bff" });
+
+//Checkbox Comonent
+let testCheckbox = new Checkbox({
+  style: "switch", handlers: function (checkedValue) {
+    sliderbind.setDisabled(checkedValue);
+  }
+});
+body.appendChild(testCheckbox.container);
+console.log(testCheckbox);
+console.log(sliderbind);
+// console.log(testSlider, testSlider2, slider3);
+// body.appendChild(testBtn._elem);
+// body.appendChild(testSlider.getElem());
+// body.appendChild(testSlider2.getElem());
+body.appendChild(sliderbind.getElem());

@@ -28,6 +28,29 @@
     min-width: 320px;
     min-height: 100vh;
   }
+
+  input[type="checkbox"] {
+    @apply checked:text-gray-500 h-4 w-4 cursor-pointer rounded-md border border-gray-300 bg-gray-50 focus:border-0 focus:ring-0 active:ring-0;
+  }
+
+  input[type="checkbox"][data-checkbox="switch"] {
+    @apply appearance-none hidden
+  }
+
+  label:has(input[type="checkbox"][data-checkbox="switch"]) {
+    &::before {
+      content: "";
+      @apply rounded-full aspect-square border-2 border-green-800 inline-block w-1/2 bg-green-300 absolute transform top-[50%] -translate-y-[50%] transition-all
+    }
+
+    @apply relative p-0.5 bg-white rounded-full w-12 min-h-7 h-full inline-block cursor-pointer hover:bg-gray-50 transition duration-75
+  }
+
+  label:has(input[data-checkbox="switch"]:is(:checked)) {
+    &::before {
+      @apply translate-x-[85%]
+    }
+  }
 }
 
 @layer components {
@@ -75,4 +98,35 @@
   .disabled {
     @apply hover:cursor-not-allowed pointer-events-none
   }
+
+  .checkbox {
+    @apply mr-1;
+  }
+
+  .checkbox-group,
+  .radio-group {
+    @apply w-full items-center rounded-sm border border-gray-200 bg-white text-sm font-medium text-gray-900 sm:flex [&_.group-item]:w-full [&_.group-item]:border-b [&_.group-item]:border-gray-200 [&_.group-item]:ps-3 [&_select.group-item]:grow-[0.3] overflow-hidden;
+  }
+
+  /* 0731 整合check-group內部樣式 */
+  :is(.checkbox-group, .radio-group) li.item {
+    @apply ps-3 w-full border-b border-r border-gray-200 py-2 h-full content-center
+  }
+
+  .input-tag-group {
+    @apply relative flex w-fit items-center gap-1 rounded-sm bg-blue-200 px-3 py-1 text-gray-700 hover:bg-blue-400 has-[.tag-input:checked]:bg-yellow-200 has-[.tag-input:checked]:text-gray-900 [&_.tag-input]:hidden;
+  }
+
+  .input-tag-group:has(.tag-input:checked) .icon:nth-child(1) {
+    @apply rotate-90 opacity-0 transition-all duration-100;
+  }
+
+  .input-tag-group:has(.tag-input:checked) .icon:nth-child(2) {
+    @apply rotate-360 opacity-100;
+  }
+
+  .input-tag-group .icon:nth-child(2) {
+    @apply absolute opacity-0 transition-all duration-200;
+  }
+
 }
