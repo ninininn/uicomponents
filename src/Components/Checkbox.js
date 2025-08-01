@@ -121,3 +121,11 @@ export class Checkbox extends BaseComponent {
         this.onevent(this.getElem(), "change", this.onChange);
     }
 }
+
+
+//待新增
+// new Checkbox建立時，一樣要可以用傳入DOM節點的方式啟用，但因為結構比較特別
+//     (有 < label > 跟 < input >，但主要元件是以 < input > 來記錄)，所以會需要判斷
+
+//         - a.傳入節點是 < label > 則儲存為container，新增 < input > 並插入
+//             - b.傳入節點是 < input > 則跟Slider一樣，綁在該節點，然後把外層的 < label > 存為container;
