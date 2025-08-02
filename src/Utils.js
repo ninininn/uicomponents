@@ -12,8 +12,9 @@ export class UIUtils {
   static setText(element, text) {
     element.textContent = text;
   }
-  static setAttribute(UItype, element, attributeName) {
-    element.setAttribute(`data-${UItype}`, attributeName);
+  static setAttribute(element, attributeName, attributeValue) {
+    console.log(element, attributeName, attributeValue);
+    element.setAttribute(`data-${attributeName}`, attributeValue);
   }
   static setProperty(element, propertyName, propertyValue) {
     element.style.setProperty(propertyName, propertyValue);

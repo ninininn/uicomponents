@@ -33,22 +33,22 @@
     @apply checked:text-gray-500 h-4 w-4 cursor-pointer rounded-md border border-gray-300 bg-gray-50 focus:border-0 focus:ring-0 active:ring-0;
   }
 
-  input[type="checkbox"][data-checkbox="switch"] {
-    @apply appearance-none hidden
+  input[type="checkbox"][data-checkstyle="switch"] {
+    @apply appearance-none hidden;
   }
 
-  label:has(input[type="checkbox"][data-checkbox="switch"]) {
+  label:has(input[type="checkbox"][data-checkstyle="switch"]) {
     &::before {
       content: "";
-      @apply rounded-full aspect-square border-2 border-gray-500 inline-block w-1/2 bg-gray-300 absolute transform top-[50%] -translate-y-[50%] transition-all
+      @apply rounded-full aspect-square border-2 border-gray-500 inline-block w-1/2 bg-gray-300 absolute transform top-[50%] -translate-y-[50%] transition-all;
     }
 
-    @apply relative p-0.5 bg-white rounded-full w-12 min-h-7 h-full inline-block cursor-pointer hover:bg-gray-50 transition duration-75
+    @apply relative p-0.5 bg-white rounded-full w-12 min-h-7 h-full inline-block cursor-pointer hover:bg-gray-50 transition duration-75;
   }
 
   label:has(input[data-checkbox="switch"]:is(:checked)) {
     &::before {
-      @apply translate-x-[85%] bg-green-300 border-green-500
+      @apply translate-x-[85%] bg-green-300 border-green-500;
     }
   }
 }
@@ -88,15 +88,15 @@
 
   /* input */
   .input {
-    @apply border-none px-2 py-3 outline-none active:border-none
+    @apply border-none px-2 py-3 outline-none active:border-none;
   }
 
   .input-group {
-    @apply inline-block
+    @apply inline-block;
   }
 
   .disabled {
-    @apply hover:cursor-not-allowed
+    @apply hover:cursor-not-allowed;
   }
 
   .checkbox {
@@ -110,7 +110,7 @@
 
   /* 0731 整合check-group內部樣式 */
   :is(.checkbox-group, .radio-group) li.item {
-    @apply ps-3 w-full border-b border-r border-gray-200 py-2 h-full content-center
+    @apply ps-3 w-full border-b border-r border-gray-200 py-2 h-full content-center;
   }
 
   .input-tag-group {
@@ -128,5 +128,4 @@
   .input-tag-group .icon:nth-child(2) {
     @apply absolute opacity-0 transition-all duration-200;
   }
-
 }

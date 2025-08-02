@@ -9,24 +9,45 @@ import {
 export class Checkbox extends BaseComponent {
   constructor(...args) {
     //1. 判斷初始化節點
+    //如果不是 <input> 或 <label> 則視為容器
     const { element, options } = defineArgs(args, "input");
+
+    let inputElem = null,
+      label = null,
+      container = null;
+
+    switch (element?.nodeName) {
+      case "INPUT":
+        inputElem = element;
+        break;
+      case "LABEL":
+        label = element;
+        // 從 <label> 裡找 input，如果沒有就建立一個 input
+        inputElem =
+          label.querySelector("input") || document.createElement("input");
+        break;
+      default:
+        container = element;
+        // 從容器找 input，如果沒有就建立一個 input
+        inputElem =
+          container.querySelector("input") || document.createElement("input");
+        break;
+    }
+
     const defaultTheme = options.disabled
       ? "var(--color-gray-500)"
       : options.theme || "var(--color-yellow-500)";
 
-    super(element, defaultTheme);
+    // 把 inputElem 傳入作為 this._elem
+    super(inputElem, defaultTheme);
     this.UItype = "Checkbox";
     this.options = { ...this._defaultOptions, ...options };
     this.defaultTheme = options.theme || defaultTheme;
 
-    //待新增
-    // new Checkbox建立時，一樣要可以用傳入DOM節點的方式啟用，但因為結構比較特別
-    // (有 < label > 跟 < input >，但主要元件是以 < input > 來記錄)，所以會需要判斷
+    this.label = this._createLabelGroup(label, this.options?.style);
+    this.container = this._createContainerGroup(container, this.label);
 
-    //  - a.傳入節點是 < label > 則儲存為container，新增 < input > 並插入
-    //  - b.傳入節點是 < input > 則跟Slider一樣，綁在該節點，然後把外層的 < label > 存為container;
-
-    this.container = this._createContainer(this.options.style || "default");
+    // this.container = this._createLabelGroup(this.options.style || "default");
 
     // callback handlers
     if (this.options.handlers) {
@@ -56,7 +77,7 @@ export class Checkbox extends BaseComponent {
   _init() {
     this.render();
     // this.setDisabled(this.disabled);
-    // this._bindEvents();
+    this._bindEvents();
   }
 
   // 元件渲染
@@ -66,62 +87,54 @@ export class Checkbox extends BaseComponent {
     this._elem.checked = this.options.checked;
     UIUtils.addClass(this._elem, this.options.classes);
 
-    //1. 判斷初始化節點(如果有傳入)
-
-    //待新增
-    // new Checkbox建立時，一樣要可以用傳入DOM節點的方式啟用，但因為結構比較特別
-    // (有 < label > 跟 < input >，但主要元件是以 < input > 來記錄)，所以會需要判斷
-
-    //  - a.傳入節點是 < label > 則儲存為container，新增 < input > 並插入
-    //  - b.傳入節點是 < input > 則跟Slider一樣，綁在該節點，然後把外層的 < label > 存為container;
-
     //2. 判斷是否有標題文字
     if (this.options.title && this.options.title !== "") {
     }
     //3. 判斷樣式
+    switch (this.options.style) {
+      case "switch":
+        UIUtils.addClass(this.label, ["label"]);
+        break;
+      case "toggle":
+        break;
+      case "filled":
+        this.label.textContent = this.options?.title;
+        break;
+      case "tag":
+        //label classes:input-label,input-tag-group
+        UIUtils.addClass(this.label, ["input-label", "input-tag-group"]);
+        UIUtils.addClass(this._elem, ["tag-input"]);
+        this.label.textContent = this.options.title;
+        break;
+      default:
+        this.label.textContent = this.options?.title;
+        break;
+    }
     //4. 判斷是否設定為禁止操作
     if (!this.disabled) {
       UIUtils.removeClass(this._elem, ["disabled"]);
     } else {
       UIUtils.addClass(this._elem, ["disabled"]);
     }
-
-    //5. 綁定事件
-    this._bindEvents();
   }
 
-  _createContainer(style) {
-    let label = document.createElement("label");
-    UIUtils.setAttribute(this.UItype, this._elem, style);
-    switch (style) {
-      case "switch":
-        UIUtils.addClass(label, ["label"]);
-        label.appendChild(this._elem);
-        break;
-      case "toggle":
-        break;
-      case "filled":
-        label.textContent = this.options.title;
-        break;
-      case "tag":
-        //label classes:input-label,input-tag-group
-        UIUtils.addClass(label, ["input-label", "input-tag-group"]);
-        UIUtils.addClass(this._elem, ["tag-input"]);
-        label.textContent = this.options.title;
-        label.appendChild(this._elem);
-        break;
-      default:
-        label.textContent = this.options.title;
-        break;
-    }
-    return label;
+  // 內部控制用
+  // 建立完整結構
+  _createLabelGroup(label, style) {
+    let labelElem = label || document.createElement("label");
+    const checkboxStyle = style || "default";
+    UIUtils.setAttribute(this._elem, "checkstyle", checkboxStyle);
+    labelElem.appendChild(this._elem);
+    return labelElem;
   }
-  //一般checkboxgroup
-  _createCheckboxGroup() {}
 
-  //toggle樣式
-  //如果是toggle樣式，就要把<input>綁定container
-  _createToggleGroup() {}
+  //內部控制-容器設定
+  //如果初始化時傳入不是<label>或<input>節點，就把該節點視為container
+  _createContainerGroup(outterContainer, labelgroup) {
+    let containergroup = outterContainer || labelgroup;
+    outterContainer && containergroup.appendChild(labelgroup);
+    return containergroup;
+  }
 
   //外部控制-取得checked狀態
   getValue() {

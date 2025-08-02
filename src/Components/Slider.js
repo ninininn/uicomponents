@@ -122,23 +122,23 @@ export class Slider extends BaseComponent {
       this.getElem().appendChild(child);
     }
     // this.setDisabled(this.disabled);
-    // this._bindEvents();
+    this._bindEvents();
   }
 
   // 元件渲染
+  //-update-負責視覺更新/DOM 樣式更新，移除事件部分function
   render() {
     //1. 判斷是否為雙向
     this._checkRange();
     UIUtils.addClass(this.getElem(), this.options.classes);
     this.options.range &&
-      UIUtils.setAttribute("slider", this.getElem(), "range");
+      UIUtils.setAttribute(this.getElem(), "slider", "range");
 
-    //2. 判斷是否設定為禁止操作
-    if (!this.disabled) {
-      this._bindEvents();
-      UIUtils.removeClass(this.getElem(), ["disabled"]);
-    } else {
+    //2. 判斷操作與否(僅操作DOM相關動作)
+    if (this.disabled) {
       UIUtils.addClass(this.getElem(), ["disabled"]);
+    } else {
+      UIUtils.removeClass(this.getElem(), ["disabled"]);
     }
   }
 
@@ -152,18 +152,17 @@ export class Slider extends BaseComponent {
     super.setTheme(value);
   }
 
-
   // 外部控制-操作與否
   setDisabled(isDisabled) {
     this.disabled = isDisabled;
     this.changeTheme(
       this.disabled ? "var(--color-gray-500)" : this.defaultTheme
     );
-    this.disabled ? this.destroy() :
-      this.render();
+    this._updateState();
+    // this.disabled ? this.destroy() : this.render();
   }
 
-
+  //內部控制方法
   _onPointerDown(event, index) {
     event.preventDefault();
     this._draggingIndex = index;
@@ -195,8 +194,8 @@ export class Slider extends BaseComponent {
   }
   _onPointerUp(event) {
     this.draggingIndex = null;
-    this.offevent(event.currentTarget, 'pointermove', this.onPointerMove);
-    this.offevent(event.currentTarget, 'pointerup', this.onPointerUp);
+    this.offevent(event.currentTarget, "pointermove", this.onPointerMove);
+    this.offevent(event.currentTarget, "pointerup", this.onPointerUp);
   }
 
   _bindEvents() {
@@ -221,6 +220,18 @@ export class Slider extends BaseComponent {
       this.options.initValue = Array.isArray(initValue)
         ? initValue[0]
         : initValue;
+    }
+  }
+
+  //狀態更新後(ex.disabled)的邏輯更新相關
+  _updateState() {
+    //1. disabled更新要切換監聽器綁定
+    if (this.disabled) {
+      super.destroy(); //clear all pointer listener
+      UIUtils.addClass(this.getElem(), ["disabled"]);
+    } else {
+      this._bindEvents();
+      UIUtils.removeClass(this.getElem(), ["disabled"]);
     }
   }
 }
