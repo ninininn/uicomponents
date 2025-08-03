@@ -13,7 +13,6 @@ export class UIUtils {
     element.textContent = text;
   }
   static setAttribute(element, attributeName, attributeValue) {
-    console.log(element, attributeName, attributeValue);
     element.setAttribute(`data-${attributeName}`, attributeValue);
   }
   static setProperty(element, propertyName, propertyValue) {

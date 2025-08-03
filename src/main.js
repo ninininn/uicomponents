@@ -39,7 +39,8 @@ let sliderbind = new Slider({ initValue: 55, theme: "#69c17bff" });
 let label = document.createElement("ul");
 //Checkbox Comonent
 let testCheckbox = new Checkbox(label, {
-  style: "switch",
+  style: "",
+  title: "testing",
   handlers: function (checkedValue) {
     sliderbind.setDisabled(checkedValue);
   },

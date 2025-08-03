@@ -46,7 +46,7 @@
     @apply relative p-0.5 bg-white rounded-full w-12 min-h-7 h-full inline-block cursor-pointer hover:bg-gray-50 transition duration-75;
   }
 
-  label:has(input[data-checkbox="switch"]:is(:checked)) {
+  label:has(input[data-checkstyle="switch"]:is(:checked)) {
     &::before {
       @apply translate-x-[85%] bg-green-300 border-green-500;
     }
@@ -108,7 +108,6 @@
     @apply w-full items-center rounded-sm border border-gray-200 bg-white text-sm font-medium text-gray-900 sm:flex [&_.group-item]:w-full [&_.group-item]:border-b [&_.group-item]:border-gray-200 [&_.group-item]:ps-3 [&_select.group-item]:grow-[0.3] overflow-hidden;
   }
 
-  /* 0731 整合check-group內部樣式 */
   :is(.checkbox-group, .radio-group) li.item {
     @apply ps-3 w-full border-b border-r border-gray-200 py-2 h-full content-center;
   }
