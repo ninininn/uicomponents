@@ -60,11 +60,10 @@ export class Checkbox extends BaseComponent {
     return {
       style: "default", //樣式
       title: "", //文字
-      value: "",
+      value: "", //<input/>的value attribute
       checked: true,
       theme: "var(--color-yellow-500)", //預設顏色
-      checkImg: null, //check圖標
-      container: null, //容器
+      checkImg: "/sticker.png", //check圖標
       classes: ["checkbox"],
       disabled: false,
     };
@@ -79,10 +78,17 @@ export class Checkbox extends BaseComponent {
 
   // 元件渲染
   render() {
+    //1. <input/> attribute settings
     this._elem.type = "checkbox";
     this._elem.title = this.options.title;
     this._elem.checked = this.options.checked;
+    this._elem.value = this.options.value;
     UIUtils.addClass(this._elem, this.options.classes);
+    UIUtils.setAttribute(
+      this._elem,
+      "checkstyle",
+      this.options.style || "default"
+    );
 
     //2. 判斷樣式
     switch (this.options.style) {
@@ -90,6 +96,11 @@ export class Checkbox extends BaseComponent {
         UIUtils.addClass(this.label, ["label"]);
         break;
       case "toggle":
+        UIUtils.setProperty(
+          this.label,
+          "--toggle-img",
+          `url(${this.options.checkImg})`
+        );
         break;
       case "filled":
         break;
@@ -115,10 +126,9 @@ export class Checkbox extends BaseComponent {
   _createLabelGroup(label, style) {
     let labelElem = label || document.createElement("label");
     const checkboxStyle = style || "default";
-    UIUtils.setAttribute(this._elem, "checkstyle", checkboxStyle);
     labelElem.appendChild(this._elem);
-    // 如果有title文字：
-    if (this.options.title) {
+    // 如果有title文字(style=switch/toggle時一律不加)：
+    if (this.options.title && !["switch", "toggle"].includes(checkboxStyle)) {
       let titlenode = document.createTextNode(this.options.title);
       labelElem.appendChild(titlenode);
     }
@@ -136,17 +146,29 @@ export class Checkbox extends BaseComponent {
   }
 
   //外部控制-取得checked狀態
-  getValue() {
+  getChecked() {
     return this.options.checked;
   }
   //外部控制-設定checked狀態
-  setValue(checked) {
+  setChecked(checked) {
     this.options.checked = checked;
     this._elem.checked = checked;
 
     this.handlers(!checked);
     this.render();
   }
+  //外部控制-取得value狀態
+  getValue() {
+    return this.options.value;
+  }
+  //外部控制-設定value狀態
+  setValue(value) {
+    this.options.value = value;
+    this._elem.value = value;
+    this.render();
+  }
+
+  // Event-relate
   _onChange() {
     console.log("this._onChange");
     this.options.checked = this._elem.checked;

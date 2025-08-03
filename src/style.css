@@ -32,8 +32,11 @@
   input[type="checkbox"] {
     @apply checked:text-gray-500 h-4 w-4 cursor-pointer rounded-md border border-gray-300 bg-gray-50 focus:border-0 focus:ring-0 active:ring-0;
   }
-
-  input[type="checkbox"][data-checkstyle="switch"] {
+  /* switch style */
+  input[type="checkbox"]:is(
+      [data-checkstyle="switch"],
+      [data-checkstyle="toggle"]
+    ) {
     @apply appearance-none hidden;
   }
 
@@ -51,6 +54,18 @@
       @apply translate-x-[85%] bg-green-300 border-green-500;
     }
   }
+
+  /* toggle style */
+  label:has(input[type="checkbox"][data-checkstyle="toggle"]) {
+    background: var(--toggle-img);
+    @apply relative bg-cover bg-center bg-no-repeat p-0.5 bg-transparent rounded-full w-7 min-h-7 h-full inline-block cursor-pointer transition duration-75;
+  }
+
+  /* label:has(input[data-checkstyle="toggle"]:is(:checked)) {
+    &::before {
+      @apply translate-x-[85%] bg-green-300 border-green-500;
+    }
+  } */
 }
 
 @layer components {
