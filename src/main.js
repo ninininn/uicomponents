@@ -14,7 +14,7 @@ let testBtn = new Button("primary-btn", {
 });
 
 // Slider-components
-let testSlider = new Slider({ initValue: 55, theme: "#c55acaff" });
+let testSlider = new Slider({ initValue: 55, theme: "#c55acaff", disabled: true, });
 let testSlider2 = new Slider({
   initValue: [66, 95],
   range: true,
@@ -30,7 +30,7 @@ const sliderdom = document.querySelector(".sliderdom");
 let slider3 = new Slider(sliderdom, {
   initValue: 79,
   theme: "#c55acaff",
-  // disabled: true,
+  disabled: true,
   handlers: targetfunction,
 });
 
@@ -40,12 +40,14 @@ let label = document.createElement("ul");
 //Checkbox Comonent
 let testCheckbox = new Checkbox(label, {
   style: "toggle",
+  checkImg: ["/eye.svg", "/eye-off.svg"],
   title: "testing",
   handlers: function (checkedValue) {
     sliderbind.setDisabled(checkedValue);
   },
 });
 body.appendChild(testCheckbox.container);
+console.log(slider3);
 console.log(testCheckbox);
 console.log(sliderbind);
 // console.log(testSlider, testSlider2, slider3);

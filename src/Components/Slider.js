@@ -121,8 +121,8 @@ export class Slider extends BaseComponent {
     for (let child of this.childrens) {
       this.getElem().appendChild(child);
     }
-    // this.setDisabled(this.disabled);
     this._bindEvents();
+    this.setDisabled(this.disabled);
   }
 
   // 元件渲染
@@ -144,10 +144,6 @@ export class Slider extends BaseComponent {
 
   // 外部控制-更改顏色
   changeTheme(value) {
-    // if (this.disabled) {
-    //   console.error("請將disabled設定為false");
-    //   return;
-    // }
     this.setTheme(value);
     super.setTheme(value);
   }
@@ -159,7 +155,7 @@ export class Slider extends BaseComponent {
       this.disabled ? "var(--color-gray-500)" : this.defaultTheme
     );
     this._updateState();
-    // this.disabled ? this.destroy() : this.render();
+    this.render();
   }
 
   //內部控制方法
