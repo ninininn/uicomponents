@@ -174,7 +174,12 @@ export class Slider extends BaseComponent {
     const percentage = ((event.clientX - rect.left) / rect.width) * 100;
     const moveSteps =
       Math.round(percentage / this.options.step) * this.options.step;
-    const clamped = Math.min(this.options.max, Math.max(0, moveSteps));
+    let clamped = Math.min(this.options.max, Math.max(0, moveSteps));
+
+    //最小值設定
+    if (clamped < this.options.min) {
+      clamped = this.options.min;
+    }
 
     if (this.options.range) {
       const newVal = [...originVal];
