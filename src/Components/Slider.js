@@ -168,6 +168,7 @@ export class Slider extends BaseComponent {
 
   _onPointerMove(event) {
     event.preventDefault();
+    event.stopImmediatePropagation();
     if (this._draggingIndex === null) return;
     const originVal = this.getValue();
     const rect = this.getElem().getBoundingClientRect();
