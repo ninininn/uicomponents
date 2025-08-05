@@ -42,15 +42,15 @@
   label:has(input[type="checkbox"][data-checkstyle="switch"]) {
     &::before {
       content: "";
-      @apply rounded-full aspect-square border-2 border-gray-500 inline-block w-1/2 bg-gray-300 absolute transform top-[50%] -translate-y-[50%] transition-all;
+      @apply rounded-full aspect-square border-2 border-gray-500 inline-block max-w-1/2 w-8 bg-gray-300 absolute transform top-[50%] -translate-y-[50%] transition-all left-1
     }
 
-    @apply relative p-0.5 bg-white rounded-full w-12 min-h-7 h-full inline-block cursor-pointer hover:bg-gray-50 transition duration-75;
+    @apply relative pl-0.5 pr-10 py-0.5 bg-white rounded-full max-w-30 min-w-12 min-h-7 h-full inline-block cursor-pointer hover:bg-gray-50 transition duration-75;
   }
 
   label:has(input[data-checkstyle="switch"]:is(:checked)) {
     &::before {
-      @apply translate-x-[85%] bg-green-300 border-green-500;
+      @apply bg-green-300 border-green-500;
     }
   }
 
@@ -147,4 +147,23 @@
   .input-tag-group .icon:nth-child(2) {
     @apply absolute opacity-0 transition-all duration-200;
   }
+
+  /* 0805 switch-style */
+  .label {
+    @apply text-gray-500 py-1.5 text-nowrap
+  }
+
+  .label:has(input[type="checkbox"][data-checkstyle="switch"]) {
+    @apply pl-10 pr-3 transition-all duration-100
+  }
+
+  .label:has(input[type="checkbox"][data-checkstyle="switch"]:checked) {
+    &::before {
+      @apply left-auto right-1
+    }
+
+    @apply pl-3 pr-10 text-green-600
+  }
+
+  /* 0805 ------------------------- */
 }

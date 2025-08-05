@@ -117,8 +117,6 @@ export class Checkbox extends BaseComponent {
                     `url(${this.activeImg})`
                 );
                 break;
-            case "filled":
-                break;
             case "tag":
                 //label classes:input-label,input-tag-group
                 UIUtils.addClass(this.label, ["input-label", "input-tag-group"]);
@@ -142,9 +140,14 @@ export class Checkbox extends BaseComponent {
         let labelElem = label || document.createElement("label");
         const checkboxStyle = style || "default";
         labelElem.appendChild(this._elem);
-        // 如果有title文字(style=switch/toggle時一律不加)：
-        if (this.options.title && !["switch", "toggle"].includes(checkboxStyle)) {
-            let titlenode = document.createTextNode(this.options.title);
+        // 如果有title文字(style=toggle時一律不加)：
+        if (this.options.title && !["toggle"].includes(checkboxStyle)) {
+            let titlenode = document.createTextNode(this._switchTitle(this.activeTitle || this.options.title));
+            labelElem.childNodes.forEach((node) => {
+                if (node.nodeName === "#text") {
+                    labelElem.removeChild(node);
+                }
+            });
             labelElem.appendChild(titlenode);
         }
         return labelElem;
@@ -165,6 +168,14 @@ export class Checkbox extends BaseComponent {
 
         let state = checkedState ? 0 : 1;
         return this.options.checkImg[state];
+    }
+
+    //內部控制-switch內部文字切換
+    _switchTitle(titleText) {
+        if (this.options.style !== "switch") return titleText;
+        let switchText = this.options.title.split("|");
+        let switchState = this.options.checked ? 0 : 1;
+        return switchText[switchState];
     }
 
     //外部控制-取得checked狀態
@@ -218,7 +229,9 @@ export class Checkbox extends BaseComponent {
         if (this.options.style === "toggle") {
             this.activeImg = this._toggleImg("toggle", this.options.checked);
         }
-        // this.relateElem.setDisabled(this.options.checked);
+        if (this.options.style === "switch") {
+            this.label = this._createLabelGroup(this.label, "switch");
+        }
         this.render();
     }
 

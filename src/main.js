@@ -36,6 +36,7 @@ let slider3 = new Slider(sliderdom, {
 
 let sliderbind = new Slider({ initValue: 55, theme: "#69c17bff" });
 
+// 如果是手動新增的元素就要append!
 let label = document.createElement("ul");
 //Checkbox Comonent
 let testCheckbox = new Checkbox(label, {
@@ -54,11 +55,11 @@ console.log(sliderbind);
 // body.appendChild(testSlider.getElem());
 // body.appendChild(testSlider2.getElem());
 body.appendChild(sliderbind.getElem());
+body.appendChild(label);
 
 
 let indexCheckbox = document.getElementById("indexCheckbox");
-console.log(indexCheckbox.value);
 
-const indexcheckCom = new Checkbox(indexCheckbox, { style: "toggle" });
+const indexcheckCom = new Checkbox(indexCheckbox, { style: "switch", title: "A|B" });
 
 console.log(indexcheckCom);
