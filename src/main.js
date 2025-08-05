@@ -61,9 +61,8 @@ console.log(sliderbind);
 body.appendChild(sliderbind.getElem());
 body.appendChild(label);
 
-
 let indexCheckbox = document.getElementById("indexCheckbox");
 
-const indexcheckCom = new Checkbox(indexCheckbox, { style: "switch", title: "A|B" });
+const indexcheckCom = new Checkbox(indexCheckbox, { style: "switch" });
 
 console.log(indexcheckCom);

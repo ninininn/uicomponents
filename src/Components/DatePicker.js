@@ -1,3 +1,3 @@
-// custom Date Picker components
-// props:
-// parentElement | btnType | settings
+export class DatePicker {
+  constructor(...args) {}
+}
