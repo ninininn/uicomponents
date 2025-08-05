@@ -14,8 +14,10 @@ export class Checkbox extends BaseComponent {
 
         let inputElem = null,
             label = null,
-            container = null;
+            container = null,
+            originParent = null;
 
+        originParent = element.parentNode;
         switch (element?.nodeName) {
             case "INPUT":
                 inputElem = element;
@@ -46,6 +48,12 @@ export class Checkbox extends BaseComponent {
         this.label = this._createLabelGroup(label, this.options?.style);
         this.container = this._createContainerGroup(container, this.label);
 
+        //放入原本的位置
+        this.originParent = originParent;
+        if (originParent) {
+            originParent.appendChild(this.container);
+        }
+
         //當前Img
         this.activeImg = this._toggleImg(this.options.style, this.options.checked);
         // callback handlers
@@ -61,11 +69,11 @@ export class Checkbox extends BaseComponent {
     get _defaultOptions() {
         return {
             style: "default", //樣式
-            title: "", //文字
-            value: "", //<input/>的value attribute
-            checked: true,
+            title: this._elem.title || "", //文字
+            value: this._elem.value || "", //<input/>的value attribute
+            checked: this._elem.checked || false,
             theme: "var(--color-yellow-500)", //預設顏色
-            checkImg: null, //check圖標
+            checkImg: ["/eye.svg", "/eye-off.svg"], //check圖標
             classes: ["checkbox"],
             disabled: false,
         };

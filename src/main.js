@@ -46,7 +46,6 @@ let testCheckbox = new Checkbox(label, {
     sliderbind.setDisabled(checkedValue);
   },
 });
-body.appendChild(testCheckbox.container);
 console.log(slider3);
 console.log(testCheckbox);
 console.log(sliderbind);
@@ -55,3 +54,11 @@ console.log(sliderbind);
 // body.appendChild(testSlider.getElem());
 // body.appendChild(testSlider2.getElem());
 body.appendChild(sliderbind.getElem());
+
+
+let indexCheckbox = document.getElementById("indexCheckbox");
+console.log(indexCheckbox.value);
+
+const indexcheckCom = new Checkbox(indexCheckbox, { style: "toggle" });
+
+console.log(indexcheckCom);
