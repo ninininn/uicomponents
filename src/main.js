@@ -4,6 +4,7 @@ import { Dropdown } from "./Components/Dropdown";
 import { Slider } from "./Components/Slider";
 import { Checkbox } from "./Components/Checkbox";
 import { BaseComponent } from "./Utils";
+import { Datepicker } from "./Components/DatePicker";
 
 let body = document.querySelector("body");
 
@@ -66,3 +67,12 @@ let indexCheckbox = document.getElementById("indexCheckbox");
 const indexcheckCom = new Checkbox(indexCheckbox, { style: "switch" });
 
 console.log(indexcheckCom);
+const dateInputElem = document.getElementById("datepicker");
+
+const datepicker = new Datepicker(dateInputElem, {
+  buttons: true,
+  autoSelectToday: 1,
+  language: "zh-TW",
+});
+
+console.log(datepicker);
