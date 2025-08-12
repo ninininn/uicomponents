@@ -72,7 +72,7 @@ const dateInputElem = document.getElementById("datepicker");
 const datepicker = new Datepicker(dateInputElem, {
   buttons: true,
   autoSelectToday: 1,
-  language: "zh-TW",
+  format: "yyyy/mm/dd",
 });
 
 console.log(datepicker);

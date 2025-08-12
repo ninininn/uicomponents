@@ -1,6 +1,6 @@
 import { Datepicker as FlowbiteDatepicker } from "flowbite";
 const customLocales = {
-  days: ["日", "一", "二", "三", "四", "五", "六"],
+  days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
   daysShort: ["日", "一", "二", "三", "四", "五", "六"],
   daysMin: ["日", "一", "二", "三", "四", "五", "六"],
   months: [
@@ -31,19 +31,23 @@ const customLocales = {
     "十一月",
     "十二月",
   ],
-  today: "Today",
-  clear: "Clear",
+  today: "今日",
+  clear: "清除",
   titleFormat: "y MM",
 };
 export class Datepicker extends FlowbiteDatepicker {
   constructor(element, options) {
     super(element, options);
-    console.log("this.constructor.prototype:", this.constructor.prototype);
+
+    //設定picker結構
+    this._setCustomPicker();
+    //初始化
     this._init();
   }
   _init() {
-    // super.setOptions();
-    console.log(this._datepickerInstance.config);
+  }
+
+  _setCustomPicker() {
     this._datepickerInstance.config = {
       ...this._datepickerInstance.config,
       language: "zh-TW",
@@ -51,8 +55,23 @@ export class Datepicker extends FlowbiteDatepicker {
     };
     this._datepickerInstance.picker.setOptions(this._datepickerInstance.config);
   }
-}
 
-export class Calendar {
-  constructor(...args) {}
+  getDate() {
+    let value = super.getDate();
+    const ROCvalue = {
+      year: value.getFullYear() - 1911,
+      month: value.getMonth() + 1,
+      day: value.getDay(),
+      date: value.getDate(),
+    };
+    return ROCvalue;
+  }
+
+  setDate(fulldateValue) {
+    this._datepickerEl.value = fulldateValue;
+    // let value = fulldateValue.split("/");
+    // let updateValue = new Date((Number(value[0]) + 1911).flat(value.splice(0, -2)).join("/"));
+    // console.log(updateValue);
+    super.setDate(fulldateValue);
+  }
 }
