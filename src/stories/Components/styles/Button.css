@@ -1,0 +1,147 @@
+@reference "../../../style.css";
+
+@layer base {
+
+    /* BUTTON */
+    button {
+        /* 0825 配合調整 */
+        @apply h-fit cursor-pointer text-sm font-medium active:ring-0 active:ring-transparent active:outline-none;
+    }
+}
+
+@layer components {
+
+    /* 按鈕樣式 */
+    /* Button 預設是 filled 樣式 */
+    .btn {
+        --theme-hover-light: var(--custom-bg, var(--color-blue-100));
+        --theme-text-color: var(--theme-text-color, var(--color-white));
+        --theme-border-color: var(var(--theme), transparent);
+        --size: 1;
+        padding-inline: --spacing(4);
+        padding-block: --spacing(2);
+        @apply cursor-pointer rounded-md bg-[var(--theme)] text-sm font-medium text-[var(--theme-text-color,var(--color-white))] transition-colors duration-75 hover:bg-[var(--theme-hover)] active:ring-2 active:ring-[var(--theme-active)] active:outline-none border-[--(theme-border-color)] text-nowrap;
+    }
+
+    .btn-xs {
+        --size: 0.5;
+        padding-inline: calc(--spacing(2) * var(--size));
+        padding-block: calc(--spacing(1) * var(--size));
+        @apply text-xs rounded-xs;
+    }
+
+    .btn-sm {
+        --size: 0.8;
+        padding-inline: calc(--spacing(4) * var(--size));
+        padding-block: calc(--spacing(1) * var(--size));
+        @apply text-sm rounded-sm;
+    }
+
+    .btn-lg {
+        --size: 1.2;
+        padding-inline: calc(--spacing(4) * var(--size));
+        padding-block: calc(--spacing(2) * var(--size));
+        @apply text-lg;
+    }
+
+    .btn-xl {
+        --size: 1.5;
+        padding-inline: calc(--spacing(4) * var(--size));
+        padding-block: calc(--spacing(2) * var(--size));
+        @apply text-xl;
+    }
+
+    .outline-btn {
+        --theme-text-color: var(--theme, var(--color-blue-400));
+        --theme: var(--theme, var(--color-blue-400));
+        @apply border border-[var(--theme)] bg-transparent text-[var(--theme-text-color)] hover:bg-[var(--theme-hover-light)]/70 active:ring-2 active:ring-[var(--theme-active)] active:outline-none;
+    }
+
+    .text-btn {
+        --theme-text-color: var(--theme, var(--color-blue-400));
+        --theme-active: var(--theme, var(--color-blue-400));
+        @apply border-0 bg-transparent text-[var(--theme-text-color)] hover:bg-[var(--theme-hover-light)] active:ring-2 active:ring-[var(--theme-active)] active:outline-none;
+    }
+
+    .radius-btn {
+        @apply rounded-full;
+    }
+
+    .icon-btn {
+        --size: var(var(--size), 6);
+        padding: calc(--spacing(2) * var(--size));
+    }
+
+    .icon-text-btn {
+        @apply flex items-center justify-center gap-2 p-2 text-sm bg-transparent [&_.icon]:text-[var(--theme)];
+    }
+
+    .btn.icon-btn .icon,
+    .btn.outline-btn .icon {
+        --size: var(var(--size), 6);
+        --theme-text-color: var(--theme-text-color, var(--color-white));
+        width: calc(--spacing(6) * var(--size));
+        height: calc(--spacing(6) * var(--size));
+    }
+
+    .btn[disabled] .icon {
+        @apply text-[var(--theme)];
+    }
+
+    .btn-primary {
+        --theme: var(--color-primary-500);
+        --theme-hover: var(--color-primary-800);
+        --theme-hover-light: var(--color-primary-50);
+        --theme-active: var(--color-primary-300);
+    }
+
+    .btn-secondary {
+        --theme: var(--color-secondary-500);
+        --theme-hover: var(--color-secondary-800);
+        --theme-hover-light: var(--color-secondary-100);
+        --theme-active: var(--color-secondary-300);
+    }
+
+    .btn-danger {
+        --theme: var(--color-red-500);
+        --theme-hover: var(--color-red-600);
+        --theme-hover-light: var(--color-red-100);
+        --theme-active: var(--color-red-300);
+    }
+
+    .btn-success {
+        --theme: var(--color-green-600);
+        --theme-hover: var(--color-green-800);
+        --theme-hover-light: var(--color-green-100);
+        --theme-active: var(--color-green-300);
+    }
+
+    /* 0825 */
+    .btn-success-drawing {
+        --theme: var(--color-green-500);
+        --theme-hover: var(--color-green-600);
+        --theme-hover-light: var(--color-green-100);
+        --theme-active: var(--color-green-300);
+        margin: 2px;
+    }
+
+    .btn-success-query {
+        --theme: var(--color-blue-400);
+        --theme-hover: var(--color-blue-500);
+        --theme-hover-light: var(--color-blue-100);
+        --theme-active: var(--color-blue-300);
+        margin: 2px;
+    }
+
+    .btn[disabled] {
+        --theme: var(--color-gray-300);
+        --theme-hover: var(--color-gray-800);
+        --theme-hover-light: var(--color-gray-100);
+        --theme-active: var(--color-gray-300);
+        @apply pointer-events-none cursor-not-allowed;
+    }
+
+    .disabled {
+        @apply hover:cursor-not-allowed;
+    }
+}

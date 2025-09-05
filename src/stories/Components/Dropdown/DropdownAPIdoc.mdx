@@ -1,0 +1,72 @@
+import {
+  Meta,
+  Title,
+  Primary,
+  Controls,
+  Stories,
+  Source,
+} from "@storybook/addon-docs/blocks";
+
+<Meta isTemplate />
+
+<Title />
+適用 : 下拉選單(如`<select />`)；
+繼承 Flowbite 的 Dropdown 元件
+
+<Primary />
+
+# Usage API
+
+初始化 Dropdown 元件，帶入參數 `options` 物件，並設定內部屬性
+
+```javascript
+new Dropdown(target, trigger, filterFn = null, selectOptions);
+```
+    ### target 目標節點(結構)
+    ### trigger 觸發節點 || selectOptions 下拉選單項目
+
+    ### options 屬性
+    各屬性傳入型別可參考下方 Control 說明
+    ```javascript
+    const sliderConfig = {
+      min:1,
+      max:100,
+      initValue:0,
+      step:1,
+      range:false,
+      theme:'var(--color-primary-500)',
+      thumbImg:null,
+      classes:['slider'],
+      handler:null,
+      disabled:false
+    }
+    ```
+
+    ### methods 物件方法
+
+    - `Dropdown.getElem()` 回傳該元件渲染的 DOM 節點元素
+
+    - `Dropdown.getValue()` 回傳該元件的 slider 數值
+
+    - `Dropdown.setValue(val)` 傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`
+
+    - `Dropdown.changeTheme(HEXstring)` 更改主題色
+
+    - `Dropdown.setDisabled(boolean)` 更改顯示/操作與否
+
+
+    ### properties 內部屬性
+
+    - `options` 該 Dropdown 元件的 options 參數設定
+
+    - `childrens` 指向該 Dropdown 元件的兩個子元件 [ `Dropdownbar`, `DropdownThumb`] (外部不可更改子元件設定)
+
+    - `thumb` 指向 DropdownThumb 子元件
+
+    - `bar` 指向 DropdownBar 子元件
+
+---
+
+# Controls
+
+<Controls />

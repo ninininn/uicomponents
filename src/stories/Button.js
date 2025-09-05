@@ -1,5 +1,5 @@
-import './button.css';
-import { Button } from '../Components/Button';
+import './Components/styles/Button.css';
+import { Button } from "./Components/Button";
 
 export const createButton = ({
   variant = 'filled',
@@ -17,5 +17,5 @@ export const createButton = ({
   btn.options.classes.push(variant + '-btn');
   btn.render();//更動option要記得render()
 
-  return btn.element;
+  return btn._elem;
 };

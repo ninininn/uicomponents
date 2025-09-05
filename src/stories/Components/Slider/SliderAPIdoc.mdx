@@ -1,0 +1,69 @@
+import {
+  Meta,
+  Title,
+  Primary,
+  Controls,
+  Stories,
+  Source,
+} from "@storybook/addon-docs/blocks";
+
+<Meta isTemplate />
+
+<Title />
+適用 : 圖層清單、透明度、數值選擇；可以搭配其他元件如 Checkbox 來使用
+
+<Primary />
+
+# Usage API
+
+初始化 Slider 元件，帶入參數 `options` 物件，並設定內部屬性
+
+```javascript
+new Slider((options = {}));
+```
+
+    ### options 屬性
+    各屬性傳入型別可參考下方 Control 說明
+    ```javascript
+    const sliderConfig = {
+      min:1,
+      max:100,
+      initValue:0,
+      step:1,
+      range:false,
+      theme:'var(--color-primary-500)',
+      thumbImg:null,
+      classes:['slider'],
+      handler:null,
+      disabled:false
+    }
+    ```
+
+    ### methods 物件方法
+
+    - `Slider.getElem()` 回傳該元件渲染的 DOM 節點元素
+
+    - `Slider.getValue()` 回傳該元件的 slider 數值
+
+    - `Slider.setValue(val)` 傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`
+
+    - `Slider.changeTheme(HEXstring)` 更改主題色
+
+    - `Slider.setDisabled(boolean)` 更改顯示/操作與否
+
+
+    ### properties 內部屬性
+
+    - `options` 該 Slider 元件的 options 參數設定
+
+    - `childrens` 指向該 Slider 元件的兩個子元件 [ `Sliderbar`, `SliderThumb`] (外部不可更改子元件設定)
+
+    - `thumb` 指向 SliderThumb 子元件
+
+    - `bar` 指向 SliderBar 子元件
+
+---
+
+# Controls
+
+<Controls />

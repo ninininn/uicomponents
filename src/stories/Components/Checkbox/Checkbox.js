@@ -4,7 +4,7 @@ import {
     defineArgs,
     bindState,
     compareNum,
-} from "../Utils";
+} from "../../../Utils";
 
 export class Checkbox extends BaseComponent {
     constructor(...args) {
@@ -18,6 +18,7 @@ export class Checkbox extends BaseComponent {
             originParent = null;
 
         originParent = element.parentNode;
+
         switch (element?.nodeName) {
             case "INPUT":
                 inputElem = element;
@@ -48,7 +49,7 @@ export class Checkbox extends BaseComponent {
         this.label = this._createLabelGroup(label, this.options?.style);
         this.container = this._createContainerGroup(container, this.label);
 
-        //放入原本的位置
+        //0805
         this.originParent = originParent;
         if (originParent) {
             originParent.appendChild(this.container);
@@ -69,11 +70,11 @@ export class Checkbox extends BaseComponent {
     get _defaultOptions() {
         return {
             style: "default", //樣式
-            title: this._elem.title || "", //文字
-            value: this._elem.value || "", //<input/>的value attribute
-            checked: this._elem.checked || false,
+            title: "", //文字
+            value: "", //<input/>的value attribute
+            checked: true,
             theme: "var(--color-yellow-500)", //預設顏色
-            checkImg: ["/eye.svg", "/eye-off.svg"], //check圖標
+            checkImg: null, //check圖標
             classes: ["checkbox"],
             disabled: false,
         };
@@ -84,7 +85,6 @@ export class Checkbox extends BaseComponent {
         this.render();
         // this.setDisabled(this.disabled);
         this._bindEvents();
-        this.setDisabled(this.options.disabled);
     }
 
     // 元件渲染
@@ -98,14 +98,11 @@ export class Checkbox extends BaseComponent {
         UIUtils.setAttribute(
             this._elem,
             "checkstyle",
-            this.options.style || "default"
+            this.options.style || "default",
         );
-
-        // theme設定
-        UIUtils.setProperty(this.label, "--themeColor",
-            this._theme);
-
-        //2. 判斷樣式
+        // 2. theme設定
+        UIUtils.setProperty(this.label, "--themeColor", this._theme);
+        //3. 判斷樣式
         switch (this.options.style) {
             case "switch":
                 UIUtils.addClass(this.label, ["label"]);
@@ -114,8 +111,10 @@ export class Checkbox extends BaseComponent {
                 UIUtils.setProperty(
                     this.label,
                     "--toggle-img",
-                    `url(${this.activeImg})`
+                    `url(${this.activeImg})`,
                 );
+                break;
+            case "filled":
                 break;
             case "tag":
                 //label classes:input-label,input-tag-group
@@ -140,14 +139,9 @@ export class Checkbox extends BaseComponent {
         let labelElem = label || document.createElement("label");
         const checkboxStyle = style || "default";
         labelElem.appendChild(this._elem);
-        // 如果有title文字(style=toggle時一律不加)：
-        if (this.options.title && !["toggle"].includes(checkboxStyle)) {
-            let titlenode = document.createTextNode(this._switchTitle(this.activeTitle || this.options.title));
-            labelElem.childNodes.forEach((node) => {
-                if (node.nodeName === "#text") {
-                    labelElem.removeChild(node);
-                }
-            });
+        // 如果有title文字(style=switch/toggle時一律不加)：
+        if (this.options.title && !["switch", "toggle"].includes(checkboxStyle)) {
+            let titlenode = document.createTextNode(this.options.title);
             labelElem.appendChild(titlenode);
         }
         return labelElem;
@@ -170,14 +164,6 @@ export class Checkbox extends BaseComponent {
         return this.options.checkImg[state];
     }
 
-    //內部控制-switch內部文字切換
-    _switchTitle(titleText) {
-        if (this.options.style !== "switch") return titleText;
-        let switchText = this.options.title.split("|");
-        let switchState = this.options.checked ? 0 : 1;
-        return switchText[switchState];
-    }
-
     //外部控制-取得checked狀態
     getChecked() {
         return this.options.checked;
@@ -187,7 +173,11 @@ export class Checkbox extends BaseComponent {
         this.options.checked = checked;
         this._elem.checked = checked;
 
-        this.handlers(!checked);
+        //如果是toggle樣式，要切換checkImg
+        if (this.options.style === "toggle") {
+            this.activeImg = this._toggleImg("toggle", this.options.checked);
+        }
+        // this.handlers(checked);
         this.render();
     }
     //外部控制-取得value狀態
@@ -200,54 +190,34 @@ export class Checkbox extends BaseComponent {
         this._elem.value = value;
         this.render();
     }
-
     // 外部控制-更改顏色
     changeTheme(value) {
+        // if (this.disabled) {
+        //   console.error("請將disabled設定為false");
+        //   return;
+        // }
         super.setTheme(value);
         this.render();
     }
-
-    // 外部控制-操作與否
-    setDisabled(isDisabled) {
-        this.options.disabled = isDisabled;
-        this.changeTheme(
-            this.options.disabled ? "var(--color-gray-500)" : this.defaultTheme
-        );
-        this._updateState();
-        this.render();
-    }
-
     // Event-relate
-    _onChange() {
-        console.log("this._onChange");
-        this.options.checked = this._elem.checked;
+    _onChange(e) {
+        console.log("checkbox this._onChange");
+        this.options.checked = e.target.checked;
+        // this.options.checked = this._elem.checked;
         if (this.handlers) {
-            this.handlers(!this.options.checked);
+            this.handlers(this.options.checked);
         }
 
         //如果是toggle樣式，要切換checkImg
         if (this.options.style === "toggle") {
             this.activeImg = this._toggleImg("toggle", this.options.checked);
         }
-        if (this.options.style === "switch") {
-            this.label = this._createLabelGroup(this.label, "switch");
-        }
+        // this.relateElem.setDisabled(this.options.checked);
         this.render();
     }
 
     _bindEvents() {
         this.onevent(this._elem, "change", this.onChange);
-    }
-    //狀態更新後(ex.disabled)的邏輯更新相關
-    _updateState() {
-        //1. disabled更新要切換監聽器綁定
-        if (this.options.disabled) {
-            super.destroy(); //clear all listener
-            this.getElem().disabled = true;
-        } else {
-            this._bindEvents();
-            this.getElem().disabled = false;
-        }
     }
 }
 

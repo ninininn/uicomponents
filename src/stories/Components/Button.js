@@ -1,4 +1,4 @@
-import { UIUtils, BaseComponent } from '../Utils';
+import { UIUtils, BaseComponent } from '../../Utils';
 
 // custom btn components
 // props:

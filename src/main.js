@@ -1,9 +1,10 @@
 import "./style.css";
 import { Button } from "./Components/Button";
-import { Dropdown } from "./Components/Dropdown";
+import { Gdropdown } from "./Components/Dropdown";
 import { Slider } from "./Components/Slider";
 import { Checkbox } from "./Components/Checkbox";
 import { BaseComponent } from "./Utils";
+import { Datepicker } from "./Components/DatePicker";
 
 let body = document.querySelector("body");
 
@@ -61,9 +62,17 @@ console.log(sliderbind);
 body.appendChild(sliderbind.getElem());
 body.appendChild(label);
 
-
 let indexCheckbox = document.getElementById("indexCheckbox");
 
-const indexcheckCom = new Checkbox(indexCheckbox, { style: "switch", title: "A|B" });
+const indexcheckCom = new Checkbox(indexCheckbox, { style: "switch" });
 
 console.log(indexcheckCom);
+const dateInputElem = document.getElementById("datepicker");
+
+const datepicker = new Datepicker(dateInputElem, {
+  buttons: true,
+  autoSelectToday: 1,
+  format: "yyyy/mm/dd",
+});
+
+console.log(datepicker);
