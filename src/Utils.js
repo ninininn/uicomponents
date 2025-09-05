@@ -173,7 +173,6 @@ export function hexTorgb(hexString) {
     let R = Array.from(hexString.slice(1, 3));
     let G = Array.from(hexString.slice(3, 5));
     let B = Array.from(hexString.slice(5, 7));
-    console.log("R:", R);
 
     let toR = changeDigit(R);
     let toG = changeDigit(G);
@@ -190,7 +189,7 @@ export function hexTorgb(hexString) {
         });
         return digit[0] * 16 + digit[1];
     }
-    console.log(toR);
+
     let hexDigit = [R, G, B].map((color) => { return color.toString(16).padStart(2, '0'); });
 
     return `rgb(${toR},${toG},${toB})`;

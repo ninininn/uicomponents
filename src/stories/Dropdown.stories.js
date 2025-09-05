@@ -2,10 +2,9 @@ import { fn } from 'storybook/test';
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from 'storybook/actions';
 
-// import { createDropdown } from './DropdownStory.js';
-import { Dropdown } from './Components/Dropdown/Dropdown';
-import '../stories/Components/Slider/Slider.css';
-import SliderAPIdoc from './Components/Slider/SliderAPIdoc.mdx';
+// import { createDropdown } from './DropdownStory';
+// import '../stories/Components/Dropdown/Dropdown.css';
+import DropdownAPIdoc from './Components/Dropdown/DropdownAPIdoc.mdx';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -16,30 +15,27 @@ export default {
       source: {
         format: true, language: 'html',
       },
-      page: SliderAPIdoc
+      page: DropdownAPIdoc
     }
   },
   // decorators: [withActions],
   render: ({ ...args }) => {
     // You can either use a function to create DOM elements or use a plain html string!
     // return `<div>${label}</div>`;
-    let container = document.createElement("div");
-    container.classList.add("w-70");
-    let dropdown = Dropdown({ ...args });
-    container.appendChild(dropdown.getElem());
-    return container;
+    return `<div></div>`;
   },
   argTypes: {
     handlers: { action: 'callback' },
-    initValue: {
-      control: 'number',
+    target: {
+      control: 'DOMElement',
       description: '初始值，如果有開啟range功能則傳入Array',
       table: {
+        readOnly: true,
         defaultValue: { summary: '0' },
         type: { summary: 'number | array' },
       },
     },
-    range: {
+    trigger: {
       control: 'boolean',
       description: '控制雙向slider功能',
       table: {
@@ -47,40 +43,22 @@ export default {
         type: { summary: 'boolean' },
       },
     },
-    thumbImg: {
-      control: { type: 'file' },
-      description: '客製thumb圖示，可以放入圖片路徑來使用',
+    bindFilteroption: {
+      control: { type: 'boolean' },
+      description: '自訂過濾function',
       table: {
         defaultValue: { summary: 'null' },
         type: { summary: '/path-to-img.png' }
       }
     },
-    step: {
-      control: { type: 'number' },
+    changeHandler: {
+      control: { type: 'function' },
       table: {
-        defaultValue: { summary: '1' },
-        type: { summary: 'number' },
+        // type: { required: true },
+        defaultValue: { summary: 'null' },
+        type: { summary: 'function' },
       },
     },
-    theme: {
-      control: { type: 'color', presetColors: ['var(--color-yellow-500)'] },
-      description: 'Slider主題色，可以傳入css variables 或是 HEX 色碼',
-      table: {
-        defaultValue: { summary: 'var(--color-yellow-500)' },
-        type: { summary: 'string' },
-      },
-    },
-    min: { control: { type: 'number' } },
-    max: { control: { type: 'number' } },
-    disabled: {
-      control: 'boolean',
-      // type: { required: true },
-      description: '是否為disabled狀態，可以搭配Checkbox元件(傳入checked值)使用',
-      table: {
-        defaultValue: { summary: 'false' },
-        type: { summary: 'boolean' },
-      },
-    }
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: { handlers: action('getValue') },
@@ -89,12 +67,15 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const defaultDropdown = {
   args: {
-    initValue: 30,
-    range: false,
-    step: 1,
-    disabled: false,
-    theme: '#8bd7bb',
-    min: 1,
-    max: 100
+    target: 'target',
+    trigger: 'trigger',
+    selectOptions: [
+      { value: "1", text: "近1年交易" },
+      { value: "2", text: "近2年交易" },
+      { value: "3", text: "近3年交易" },
+      { value: "4", text: "近4年交易" },
+      { value: "5", text: "近5年交易" },
+      { value: "0", text: "交易時間不拘", selected: true }, //0827配合調整
+    ],
   },
 };
