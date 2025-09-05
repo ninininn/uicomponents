@@ -1,6 +1,6 @@
 import "./style.css";
 import { Button } from "./Components/Button";
-import { Dropdown } from "./Components/Dropdown";
+import { Gdropdown } from "./Components/Dropdown";
 import { Slider } from "./Components/Slider";
 import { Checkbox } from "./Components/Checkbox";
 import { BaseComponent } from "./Utils";

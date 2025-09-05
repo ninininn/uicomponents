@@ -4,7 +4,7 @@ import {
   defineArgs,
   bindState,
   compareNum,
-} from "../Utils";
+} from "../../Utils";
 
 // custom Slider components
 // props:
@@ -36,7 +36,7 @@ export class Slider extends BaseComponent {
 
     // 設定value state
     const [getValue, setValue, subscribeValue] = bindState(
-      this.options.initValue
+      this.options.initValue,
     );
     this.getValue = getValue;
     this.setValue = setValue; //避免傳入子元件造成data更新變亂(統一由父元件來控制)
@@ -57,7 +57,7 @@ export class Slider extends BaseComponent {
       this.getValue(),
       this.subscribeValue,
       this._theme,
-      this.subscribeTheme
+      this.subscribeTheme,
     );
     if (this.options.range) {
       let v = this.getValue();
@@ -68,7 +68,7 @@ export class Slider extends BaseComponent {
           this.options.thumbImg,
           this._theme,
           this.subscribeTheme,
-          0
+          0,
         ),
         new SliderThumb(
           v[1],
@@ -76,7 +76,7 @@ export class Slider extends BaseComponent {
           this.options.thumbImg,
           this._theme,
           this.subscribeTheme,
-          1
+          1,
         ),
       ];
       this.childrens = [
@@ -89,7 +89,7 @@ export class Slider extends BaseComponent {
         this.subscribeValue,
         this.options.thumbImg,
         this._theme,
-        this.subscribeTheme
+        this.subscribeTheme,
       );
       this.childrens = [this.thumb.getElem(), this.bar.getElem()];
     }
@@ -152,10 +152,9 @@ export class Slider extends BaseComponent {
   setDisabled(isDisabled) {
     this.disabled = isDisabled;
     this.changeTheme(
-      this.disabled ? "var(--color-gray-500)" : this.defaultTheme
+      this.disabled ? "var(--color-gray-500)" : this.defaultTheme,
     );
-    this._updateState();
-    this.render();
+    this._updateDisabled();
   }
 
   //內部控制方法
@@ -168,16 +167,39 @@ export class Slider extends BaseComponent {
 
   _onPointerMove(event) {
     event.preventDefault();
-    event.stopImmediatePropagation();
     if (this._draggingIndex === null) return;
+    this._setPointValue(event);
+  }
+
+  _onPointerUp(event) {
+    this.draggingIndex = null;
+    this.offevent(event.currentTarget, "pointermove", this.onPointerMove);
+    this.offevent(event.currentTarget, "pointerup", this.onPointerUp);
+  }
+
+  _bindEvents() {
+    (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
+      const handler = (e) => {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        // this=Slider{}
+        this._onPointerDown(e, index);
+      };
+      this.onevent(thumb.getElem(), "pointerdown", handler);
+    });
+    this.onevent(
+      this.bar.getElem(),
+      "pointerdown",
+      this._setPointValue.bind(this),
+    );
+  }
+
+  _setPointValue(event) {
     const originVal = this.getValue();
     const rect = this.getElem().getBoundingClientRect();
     const percentage = ((event.clientX - rect.left) / rect.width) * 100;
     const moveSteps =
       Math.round(percentage / this.options.step) * this.options.step;
     let clamped = Math.min(this.options.max, Math.max(0, moveSteps));
-
-    //最小值設定
     if (clamped < this.options.min) {
       clamped = this.options.min;
     }
@@ -194,23 +216,6 @@ export class Slider extends BaseComponent {
       this.handlers(this.getValue());
     }
   }
-  _onPointerUp(event) {
-    this.draggingIndex = null;
-    this.offevent(event.currentTarget, "pointermove", this.onPointerMove);
-    this.offevent(event.currentTarget, "pointerup", this.onPointerUp);
-  }
-
-  _bindEvents() {
-    (this.options.range ? this.thumb : [this.thumb]).forEach((thumb, index) => {
-      const handler = (e) => {
-        e.currentTarget.setPointerCapture(e.pointerId);
-        // this=Slider{}
-        this._onPointerDown(e, index);
-      };
-      this.onevent(thumb.getElem(), "pointerdown", handler);
-    });
-  }
-
   _checkRange() {
     const { initValue, range, min, max } = this.options;
     if (range) {
@@ -226,7 +231,7 @@ export class Slider extends BaseComponent {
   }
 
   //狀態更新後(ex.disabled)的邏輯更新相關
-  _updateState() {
+  _updateDisabled() {
     //1. disabled更新要切換監聽器綁定
     if (this.disabled) {
       super.destroy(); //clear all pointer listener
@@ -245,7 +250,7 @@ class SliderThumb extends BaseComponent {
     thumbImg = null,
     theme,
     subscribeTheme,
-    index = 0
+    index = 0,
   ) {
     const thumb = document.createElement("div");
     super(thumb, theme);
@@ -276,12 +281,10 @@ class SliderThumb extends BaseComponent {
       this.getElem().style.setProperty("--tmb-img", `url(${this._thumbImg})`);
       UIUtils.addClass(this.getElem(), ["custom-thumb"]);
     }
-
-    // super.setTheme();
   }
   _setThumbValue(value) {
     this._thumbValue = value;
-    let offset = 2; //圖標定位點偏移(%)
+    let offset = 5; //圖標定位點偏移(%)
     this.getElem().style.left = `${value - offset}%`;
   }
 }
@@ -302,7 +305,6 @@ class SliderBar extends BaseComponent {
       value = Array.isArray(value) ? value[1] - value[0] : value;
       this._setBarValue(value);
     });
-
     subscribeTheme((theme) => {
       super.setTheme(theme);
     });
@@ -310,15 +312,7 @@ class SliderBar extends BaseComponent {
 
   get defaultOptions() {
     return {
-      classes: [
-        "w-90",
-        "h-1.5",
-        "bg-gray-300",
-        "rounded-full",
-        "my-auto",
-        "overflow-hidden",
-        "cursor-grab",
-      ],
+      classes: ["slider-bar"],
     };
   }
 
@@ -329,60 +323,11 @@ class SliderBar extends BaseComponent {
   render() {
     UIUtils.addClass(this.getElem(), this.options.classes);
     UIUtils.setProperty(this.mask, "--bgColor", this._theme);
-    // super.setTheme();
   }
 
   _setBarValue(value) {
     this._barValue = value;
     this.mask.style.setProperty("--slider-width", `${value}%`);
     this.mask.style.setProperty("--start-point", `${this.startValue}%`);
-  }
-}
-
-// 未來擴充成完整input元件
-export class Input extends BaseComponent {
-  constructor(...args) {
-    const { element, options } = defineArgs(args, "div");
-    const input = document.createElement("input");
-    element.appendChild(input);
-    super(input);
-    this.UItype = "Input";
-    this.options = { ...this._defaultOptions, ...options };
-
-    this._elem.type = this.options.type;
-    this._elem.placeholder = this.options.placeholder;
-
-    // number-type input
-    if (this.options.type === "number") {
-      this.min = this.options.min;
-      this.max = this.options.max;
-      this.step = this.options.step;
-    }
-
-    this.children = [this._elem.querySelector("input")];
-    this._init();
-  }
-
-  // 封裝基本(預設)設定
-  get _defaultOptions() {
-    return {
-      type: "text", //input類
-      placeholder: "預設文字",
-      initValue: 0, //初始預設值
-      position: "top", //位置
-      theme: "var(--color-yellow-500)", //預設顏色
-      icon: null, //是否使用icon
-      iconPosition: "start", //icon位置
-      classes: ["input"],
-      handlers: null,
-    };
-  }
-
-  _init() {
-    this.render();
-  }
-
-  render() {
-    UIUtils.addClass(this.getElem(), this.options.classes);
   }
 }

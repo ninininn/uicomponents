@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@reference "../../../style.css";
+
+@layer components {
+
+    /* Slider 元件相關 */
+    .slider {
+        @apply relative mt-4 w-full max-w-full content-center;
+    }
+
+    .slider-bar {
+        @apply w-full h-1.5 bg-gray-300 rounded-full my-auto overflow-hidden cursor-grab
+    }
+
+    .slider-thumb {
+        touch-action: none;
+        --bgColor: var(--themeColor, var(--color-yellow-500));
+        background: var(--tmb-img);
+        @apply inset-shadow-md absolute top-[50%] z-2 h-5 w-5 translate-y-[-50%] cursor-grab rounded-full bg-(--bgColor) bg-cover shadow-yellow-50 transition-all;
+    }
+
+    .custom-thumb {
+        @apply h-10 w-10 bg-transparent inset-shadow-none;
+    }
+
+    .mask {
+        --bgColor: var(--themeColor, var(--color-yellow-500));
+        width: var(--slider-width);
+        @apply pointer-events-none absolute left-0 inline-block h-full rounded-full bg-(--bgColor)/50 transition-all;
+    }
+
+    .slider[data-slider="range"] .mask {
+        left: var(--start-point);
+    }
+}

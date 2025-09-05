@@ -1,6 +1,7 @@
 import { fn } from 'storybook/test';
 
-import { createButton } from './Button';
+import { createButton } from './Button.js';
+import './Components/styles/Button.css';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
