@@ -2,13 +2,14 @@ import { fn } from 'storybook/test';
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from 'storybook/actions';
 
-import { createSlider } from './SliderStory.js';
+// import { createDropdown } from './DropdownStory.js';
+import { Dropdown } from './Components/Dropdown/Dropdown';
 import '../stories/Components/Slider/Slider.css';
 import SliderAPIdoc from './Components/Slider/SliderAPIdoc.mdx';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: 'Components/Slider',
+  title: 'Components/Dropdown',
   tags: ['autodocs'],
   parameters: {
     docs: {
@@ -24,8 +25,8 @@ export default {
     // return `<div>${label}</div>`;
     let container = document.createElement("div");
     container.classList.add("w-70");
-    let slider = createSlider({ ...args });
-    container.appendChild(slider.getElem());
+    let dropdown = Dropdown({ ...args });
+    container.appendChild(dropdown.getElem());
     return container;
   },
   argTypes: {
@@ -86,7 +87,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const defaultSlider = {
+export const defaultDropdown = {
   args: {
     initValue: 30,
     range: false,
@@ -95,28 +96,5 @@ export const defaultSlider = {
     theme: '#8bd7bb',
     min: 1,
     max: 100
-  },
-};
-export const customSlider = {
-  args: {
-    initValue: 30,
-    range: false,
-    step: 1,
-    disabled: false,
-    theme: '#8bd7bb',
-    min: 1,
-    max: 100,
-    thumbImg: '../../public/sticker.png'
-  },
-};
-export const rangeSlider = {
-  args: {
-    initValue: [24, 64],
-    range: true,
-    step: 1,
-    disabled: false,
-    theme: '#8bd7bb',
-    min: 1,
-    max: 100,
   },
 };

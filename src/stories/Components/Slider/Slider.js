@@ -4,7 +4,7 @@ import {
   defineArgs,
   bindState,
   compareNum,
-} from "../../Utils";
+} from "../../../Utils.js";
 
 // custom Slider components
 // props:

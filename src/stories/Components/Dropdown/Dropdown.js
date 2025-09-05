@@ -1,5 +1,6 @@
-import { Dropdown } from "flowbite";
-export class Gdropdown extends Dropdown {
+import { Dropdown as flowbiteDropdown } from "flowbite";
+
+export class Dropdown extends flowbiteDropdown {
     constructor(target, trigger, bindFilteroption = null, changeHandler = null) {
         //0826 擴充調整-------------
         let bindtarget, bindtrigger;

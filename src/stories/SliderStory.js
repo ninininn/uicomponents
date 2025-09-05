@@ -1,8 +1,7 @@
-import './Components/styles/Slider.css';
-import { Slider } from "./Components/Slider";
-let test = document.createElement("div");
+import './Components/Slider/Slider.css';
+import { hexTorgb } from '../Utils';
+import { Slider } from "./Components/Slider/Slider";
 export const createSlider = (options) => {
     const slider = new Slider(options);
-    console.log(options, slider);
     return slider;
 };

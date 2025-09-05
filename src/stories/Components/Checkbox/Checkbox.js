@@ -4,7 +4,7 @@ import {
     defineArgs,
     bindState,
     compareNum,
-} from "../../Utils";
+} from "../../../Utils";
 
 export class Checkbox extends BaseComponent {
     constructor(...args) {
