@@ -9,7 +9,7 @@
     }
 
     .dropdown-item[data-drop] {
-        @apply bg-[#f6f6f6] w-full max-w-[min(500px, 70%)] max-h-50 md:max-h-70 rounded-sm shadow-md text-center text-lg overflow-y-auto z-30 overscroll-contain;
+        @apply bg-[#f6f6f6] w-full max-w-[min(500px,70%)] max-h-50 md:max-h-70 rounded-sm shadow-md text-center text-lg overflow-y-auto z-30 overscroll-contain;
     }
 
     .dropdown-item li {

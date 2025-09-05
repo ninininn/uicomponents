@@ -7,12 +7,18 @@ import {
   Source,
 } from "@storybook/addon-docs/blocks";
 
-<Meta isTemplate />
+<Meta title='How to use Slider' />
 
 <Title />
 適用 : 圖層清單、透明度、數值選擇；可以搭配其他元件如 Checkbox 來使用
 
 <Primary />
+
+# Controls
+
+<Controls />
+
+---
 
 # Usage API
 
@@ -22,10 +28,69 @@ import {
 new Slider((options = {}));
 ```
 
-    ### options 屬性
-    各屬性傳入型別可參考下方 Control 說明
+    <style>
+      {`
+        .data-type{
+          font-size:12px;
+          margin-right:2px;
+          background-color:var(--color-blue-50);
+          padding:2px 4px;
+          border-radius:4px;
+          color:var(--color-blue-600);
+        }
+
+        .methods{
+          font-family:"Google Sans Code", monospace;
+          background-color:var(--color-gray-100);
+          border:1px solid var(--color-gray-300);
+          border-radius:4px;
+          padding:2px 4px;
+          color:var(--color-gray-500);
+          font-weight:500;
+        }
+
+        .alert-msg{
+          &::before{
+            content:"📣";
+            margin-right:4px;
+          }
+          background-color:var(--color-red-50);
+          border-radius:4px;
+          color:var(--color-red-400);
+          padding:0.5rem 1rem;
+        }
+
+        .table-container{
+          margin:1rem 0 2rem 0;
+          border:1px solid rgba(38, 85, 115, 0.15);
+          border-radius:6px;
+          box-shadow:rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
+        }
+
+        .table-content{
+          width:100%;
+          & tr{
+            border-bottom:1px solid var(--color-gray-100);
+          }
+          & td{
+            padding:0.5rem ;
+            &:first-child{
+              border-right:1px solid var(--color-gray-100);
+            }
+          }
+
+        }
+      `}
+    </style>
+
+    >### parameters 參數設定
+    <span className="sb-unstyled font-black"> options</span>
+    <span className="sb-unstyled data-type">object</span>
+
+
+    各屬性傳入型別可參考上方 Control 說明
     ```javascript
-    const sliderConfig = {
+    const sliderOptions = {
       min:1,
       max:100,
       initValue:0,
@@ -39,31 +104,64 @@ new Slider((options = {}));
     }
     ```
 
-    ### methods 物件方法
+    >### methods 方法
 
-    - `Slider.getElem()` 回傳該元件渲染的 DOM 節點元素
+     <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+     <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>methods</td><td>descriptions</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td></tr>
+          <tr><td className="font-bold">`.getValue()`</td><td>回傳該元件的 slider 數值</td></tr>
+          <tr><td className="font-bold">`.setValue(val)`</td><td>傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`</td></tr>
+          <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
+          <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
 
-    - `Slider.getValue()` 回傳該元件的 slider 數值
+        </tbody>
+      </table>
+     </div>
 
-    - `Slider.setValue(val)` 傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`
+      <span className="sb-unstyled methods">.getElem()</span>
+      ``` javascript
+        let sliderElem = Slider.getElem(); // return an DOM HTMLElement
+      ```
+      <span className="sb-unstyled methods">.getValue()</span>
+      ``` javascript
+        let value = Slider.getValue(); // 30
+      ```
+      <span className="sb-unstyled methods">.setValue(val)</span>
+      ``` javascript
+        Slider.setValue(45);
+      console.log(Slider.getValue()); // 45
+      ```
+      <span className="sb-unstyled methods">.changeTheme(HEX)</span>
+      ``` javascript
+        Slider.changeTheme("#878787");
+      ```
+      <span className="sb-unstyled methods">.setDisabled(boolean)</span>
+      ``` javascript
+        Slider.setDisabled(true); //Slider will become disabled
+      ```
 
-    - `Slider.changeTheme(HEXstring)` 更改主題色
+    >### properties 內部屬性
+    <p className="sb-unstyled alert-msg">Read-only 可以操作的屬性皆須使用methods來更改</p>
 
-    - `Slider.setDisabled(boolean)` 更改顯示/操作與否
-
-
-    ### properties 內部屬性
-
-    - `options` 該 Slider 元件的 options 參數設定
-
-    - `childrens` 指向該 Slider 元件的兩個子元件 [ `Sliderbar`, `SliderThumb`] (外部不可更改子元件設定)
-
-    - `thumb` 指向 SliderThumb 子元件
-
-    - `bar` 指向 SliderBar 子元件
-
----
-
-# Controls
-
-<Controls />
+     <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>property</td><td>descriptions</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td className="font-bold">options</td><td>該 Slider 元件的 options 參數設定</td></tr>
+          <tr><td className="font-bold">childrens</td><td>指向該 Slider 元件的兩個子元件 [ `Sliderbar`, `SliderThumb`] (禁止從外部更改子元件設定)</td></tr>
+          <tr><td className="font-bold">thumb</td><td>指向 `SliderThumb` 子元件</td></tr>
+          <tr><td className="font-bold">bar</td><td>指向 `SliderBar` 子元件</td></tr>
+        </tbody>
+      </table>
+     </div>

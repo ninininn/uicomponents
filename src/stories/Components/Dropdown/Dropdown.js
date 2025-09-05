@@ -304,7 +304,7 @@ export class Dropdown extends flowbiteDropdown {
 }
 
 //掛到全域window上供外部使用
-window.Gdropdown = Gdropdown;
+// window.Gdropdown = Gdropdown;
 
 //0814 過濾value用，後續可增加
 function swipeValue(value) {
