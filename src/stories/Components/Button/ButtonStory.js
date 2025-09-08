@@ -1,5 +1,5 @@
-import './Components/styles/Button.css';
-import { Button } from "./Components/Button";
+import './Button.css';
+import { Button } from "./Button";
 
 export const createButton = ({
   variant = 'filled',

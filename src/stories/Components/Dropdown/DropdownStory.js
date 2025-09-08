@@ -1,4 +1,4 @@
-import { Dropdown } from "./Components/Dropdown/Dropdown";
+import { Dropdown } from "./Dropdown";
 
 export const createDropdown = ({ ...args }) => {
     const dropdown = new Dropdown(target, trigger, null, selectOptions);

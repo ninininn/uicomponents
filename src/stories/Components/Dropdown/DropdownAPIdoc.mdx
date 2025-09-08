@@ -7,12 +7,18 @@ import {
   Source,
 } from "@storybook/addon-docs/blocks";
 
-<Meta title='How to use Dropdown' />
+<Meta isTemplate title="How to use Dropdown" />
 
 <Title />
 適用 : 下拉選單項目；繼承自 Flowbite `Dropdown` 元件
 
 <Primary />
+
+# Controls
+
+<Controls />
+
+---
 
 # Usage API
 
@@ -22,64 +28,18 @@ import {
 new Dropdown((options = {}));
 ```
 
-    <style>
-      {`
-        .data-type{
-          font-size:12px;
-          margin-right:2px;
-          background-color:var(--color-blue-50);
-          padding:2px 4px;
-          border-radius:4px;
-          color:var(--color-blue-600);
-        }
-
-        .methods{
-          font-family:"Google Sans Code", monospace;
-          background-color:var(--color-gray-100);
-          border:1px solid var(--color-gray-300);
-          border-radius:4px;
-          padding:2px 4px;
-          color:var(--color-gray-500);
-          font-weight:500;
-        }
-
-        .alert-msg{
-          &::before{
-            content:"📣";
-            margin-right:4px;
-          }
-          background-color:var(--color-red-50);
-          border-radius:4px;
-          color:var(--color-red-400);
-          padding:0.5rem 1rem;
-        }
-
-        .table-container{
-          margin:1rem 0 2rem 0;
-          border:1px solid rgba(38, 85, 115, 0.15);
-          border-radius:6px;
-          box-shadow:rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
-        }
-
-        .table-content{
-          width:100%;
-          & tr{
-            border-bottom:1px solid var(--color-gray-100);
-          }
-          & td{
-            padding:0.5rem ;
-            &:first-child{
-              border-right:1px solid var(--color-gray-100);
-            }
-          }
-
-        }
-      `}
-    </style>
-
     >### parameters 參數設定
-    <span className="sb-unstyled font-black"> options</span>
+    <span className="sb-unstyled font-black">target</span>
+    <span className="sb-unstyled data-type element">HTMLElement</span>
+
+    <span className="sb-unstyled font-black">trigger</span>
+    <span className="sb-unstyled data-type element">HTMLElement</span>
+
+    <span className="sb-unstyled font-black">bindFilteroption</span>
     <span className="sb-unstyled data-type">object</span>
+
+    <span className="sb-unstyled font-black">changeHandler</span>
+    <span className="sb-unstyled data-type">function</span>
 
 
     各屬性傳入型別可參考下方 Control 說明
@@ -105,21 +65,30 @@ new Dropdown((options = {}));
       <table className="sb-unstyled table-content">
         <thead>
           <tr className="text-center">
-            <td>methods</td><td>descriptions</td>
+            <td>methods</td><td>descriptions</td><td>inherit</td>
           </tr>
         </thead>
         <tbody>
-          <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td></tr>
-          <tr><td className="font-bold">`.getValue()`</td><td>回傳該元件的 slider 數值</td></tr>
-          <tr><td className="font-bold">`.setValue(val)`</td><td>傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`</td></tr>
-          <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
-          <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
+          <tr><td className="font-bold">`.show()`</td><td>顯示綁定的下拉選單</td><td>`flowbiteDropdown`</td></tr>
+          <tr><td className="font-bold">`.hide()`</td><td>隱藏綁定的下拉選單</td><td>`flowbiteDropdown`</td></tr>
+          <tr><td className="font-bold">`.toggle()`</td><td>切換綁定的下拉選單顯示與否</td><td>`flowbiteDropdown`</td></tr>
+          <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
+          <tr><td className="font-bold">`.getdropDownInstance()`</td><td>回傳該元件instance object</td></tr>
+          <tr><td className="font-bold">`.getDropdownChildren()`</td><td>回傳 `dropdownChildren` 屬性</td></tr>
+          <tr><td className="font-bold">`.getTargetDropdown()`</td><td>回傳 `<ul>` 節點</td></tr>
+          <tr><td className="font-bold">`.getBindSelect()`</td><td>回傳 `<select>` 節點</td></tr>
+          <tr><td className="font-bold">`.clearDropdown()`</td><td>清除 `<ul>`&`<select>`子節點</td></tr>
+          <tr><td className="font-bold">`.renderDropdownChildren(...args)`</td><td>重新渲染節點(單純渲染節點、不改value)</td></tr>
+          <tr><td className="font-bold">`.updateValue()`</td><td>更新預設 `<select>` 的value值(通常render完設定為第一項，如果`<select>`本身有selected option 則以它為主)</td></tr>
 
         </tbody>
       </table>
      </div>
 
-      <span className="sb-unstyled methods">.getElem()</span>
+      <span className="sb-unstyled methods">.show()</span>
+      <span className="sb-unstyled methods">.hide()</span>
+      <span className="sb-unstyled methods">.toggle()</span>
+      <a className="sb-unstyled linkout" href="https://flowbite.com/docs/components/dropdowns/">more in flowbite docs</a>
       ``` javascript
         let sliderElem = Slider.getElem(); // return an DOM HTMLElement
       ```
@@ -141,8 +110,8 @@ new Dropdown((options = {}));
         Slider.setDisabled(true); //Slider will become disabled
       ```
 
-    >### properties 內部屬性
-    <p className="sb-unstyled alert-msg">Read-only 可以操作的屬性皆須使用methods來更改</p>
+    >### properties 內部屬性 <span class="sb-unstyled data-type readonly">Read-only</span>
+    <p className="sb-unstyled alert-msg">可以操作的屬性皆須使用methods來更改</p>
 
      <div className="sb-unstyled table-container overflow-hidden">
       <table className="sb-unstyled table-content">
@@ -159,9 +128,3 @@ new Dropdown((options = {}));
         </tbody>
       </table>
      </div>
-
----
-
-# Controls
-
-<Controls />

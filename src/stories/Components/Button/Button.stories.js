@@ -1,11 +1,11 @@
 import { fn } from 'storybook/test';
 
-import { createButton } from './Button.js';
-import './Components/styles/Button.css';
+import { createButton } from './ButtonStory.js';
+import './Button.css';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: 'Example/Button',
+  title: 'Components/Button',
   tags: ['autodocs'],
   render: ({ label, ...args }) => {
     // You can either use a function to create DOM elements or use a plain html string!

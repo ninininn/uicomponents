@@ -7,7 +7,7 @@ import {
   Source,
 } from "@storybook/addon-docs/blocks";
 
-<Meta title='How to use Slider' />
+<Meta isTemplate title="How to use Slider" />
 
 <Title />
 適用 : 圖層清單、透明度、數值選擇；可以搭配其他元件如 Checkbox 來使用
@@ -22,73 +22,28 @@ import {
 
 # Usage API
 
-初始化 Slider 元件，帶入參數 `options` 物件，並設定內部屬性
+初始化 Slider 元件，帶入參數 `parentDOM` 及 `options` 物件，並設定內部屬性。
+(兩參數皆為可選值，若沒有帶入則會套用內部預設值)
 
 ```javascript
-new Slider((options = {}));
+new Slider(parentDOM, (options = {}));
 ```
-
-    <style>
-      {`
-        .data-type{
-          font-size:12px;
-          margin-right:2px;
-          background-color:var(--color-blue-50);
-          padding:2px 4px;
-          border-radius:4px;
-          color:var(--color-blue-600);
-        }
-
-        .methods{
-          font-family:"Google Sans Code", monospace;
-          background-color:var(--color-gray-100);
-          border:1px solid var(--color-gray-300);
-          border-radius:4px;
-          padding:2px 4px;
-          color:var(--color-gray-500);
-          font-weight:500;
-        }
-
-        .alert-msg{
-          &::before{
-            content:"📣";
-            margin-right:4px;
-          }
-          background-color:var(--color-red-50);
-          border-radius:4px;
-          color:var(--color-red-400);
-          padding:0.5rem 1rem;
-        }
-
-        .table-container{
-          margin:1rem 0 2rem 0;
-          border:1px solid rgba(38, 85, 115, 0.15);
-          border-radius:6px;
-          box-shadow:rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;
-        }
-
-        .table-content{
-          width:100%;
-          & tr{
-            border-bottom:1px solid var(--color-gray-100);
-          }
-          & td{
-            padding:0.5rem ;
-            &:first-child{
-              border-right:1px solid var(--color-gray-100);
-            }
-          }
-
-        }
-      `}
-    </style>
-
     >### parameters 參數設定
+    <span className="sb-unstyled font-black">parentDOM</span>
+    <span className="sb-unstyled data-type element">HTMLElement</span>
+    ```html
+    <!--  要放入的container -->
+    <div id="slider_1"></div>
+    ```
+    ```javascript
+    const sliderParent = document.getElementById("slider_1");
+    const sliderInstance = new Slider(sliderParent, {initValue: 79});
+    ```
     <span className="sb-unstyled font-black"> options</span>
     <span className="sb-unstyled data-type">object</span>
 
 
-    各屬性傳入型別可參考上方 Control 說明
+    各屬性傳入型別可參考上方 Control 說明，以下 option 設定值為內部預設值。
     ```javascript
     const sliderOptions = {
       min:1,
@@ -111,11 +66,11 @@ new Slider((options = {}));
       <table className="sb-unstyled table-content">
         <thead>
           <tr className="text-center">
-            <td>methods</td><td>descriptions</td>
+            <td>methods</td><td>descriptions</td><td>inherit</td>
           </tr>
         </thead>
         <tbody>
-          <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td></tr>
+          <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
           <tr><td className="font-bold">`.getValue()`</td><td>回傳該元件的 slider 數值</td></tr>
           <tr><td className="font-bold">`.setValue(val)`</td><td>傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`</td></tr>
           <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
@@ -147,8 +102,8 @@ new Slider((options = {}));
         Slider.setDisabled(true); //Slider will become disabled
       ```
 
-    >### properties 內部屬性
-    <p className="sb-unstyled alert-msg">Read-only 可以操作的屬性皆須使用methods來更改</p>
+    >### properties 內部屬性 <span class="sb-unstyled data-type readonly">Read-only</span>
+    <p className="sb-unstyled alert-msg">可以操作的屬性皆須使用methods來更改</p>
 
      <div className="sb-unstyled table-container overflow-hidden">
       <table className="sb-unstyled table-content">

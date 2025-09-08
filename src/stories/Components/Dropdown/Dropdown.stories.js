@@ -3,8 +3,8 @@ import { fn } from "storybook/test";
 import { action } from "storybook/actions";
 
 import { createDropdown } from './DropdownStory';
-import "../stories/Components/Dropdown/Dropdown.css";
-import DropdownAPIdoc from "./Components/Dropdown/DropdownAPIdoc.mdx";
+import "./Dropdown.css";
+import DropdownAPIdoc from "./DropdownAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -26,6 +26,15 @@ export default {
     return `<div></div>`;
   },
   argTypes: {
+    UItype:{
+      control:"string",
+      description: "繼承自`BaseComponent`的屬性，代表該元件名稱",
+      table: {
+        readonly: true,
+        category: "Inherits BaseComponent",
+        defaultValue: { summary: "Dropdown" },
+      },
+    },
     handlers: { action: "callback" },
     target: {
       control: "string",
@@ -45,8 +54,8 @@ export default {
       },
     },
     bindFilteroption: {
-      control: { type: "function" },
-      description: "自訂過濾function",
+      control: { type: "object" },
+      description: "開啟過濾功能及相關設定",
       table: {
         defaultValue: { summary: "null" },
         type: { summary: "/path-to-img.png" },

@@ -3,8 +3,8 @@ import { fn } from 'storybook/test';
 import { action } from 'storybook/actions';
 
 import { createSlider } from './SliderStory.js';
-import '../stories/Components/Slider/Slider.css';
-import SliderAPIdoc from './Components/Slider/SliderAPIdoc.mdx';
+import './Slider.css';
+import SliderAPIdoc from './SliderAPIdoc.mdx';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -30,6 +30,15 @@ export default {
     return container;
   },
   argTypes: {
+    UItype: {
+      control: "string",
+      description: "繼承自`BaseComponent`的屬性，代表該元件名稱",
+      table: {
+        readonly: true,
+        category:"Inherits BaseComponent",
+        defaultValue: { summary: "Slider" },
+      },
+    },
     handlers: {
       action: "callback",
       control: "function",
@@ -74,6 +83,7 @@ export default {
       control: { type: "color", presetColors: ["var(--color-yellow-500)"] },
       description: "Slider主題色，可以傳入css variables 或是 HEX 色碼",
       table: {
+        category:"Inherits BaseComponent",
         defaultValue: { summary: "var(--color-yellow-500)" },
         type: { summary: "string" },
       },
