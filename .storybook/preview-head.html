@@ -28,6 +28,11 @@
         color: var(--color-purple-600);
     }
 
+    .data-type.arr {
+        background-color: var(--color-orange-50);
+        color: var(--color-orange-600);
+    }
+
     .data-type.readonly {
         background-color: var(--color-red-50);
         color: var(--color-red-600);
@@ -43,14 +48,14 @@
         font-weight: 500;
     }
 
-    .linkout{
+    .linkout {
         font-family: "Roboto", sans-serif;
         text-decoration: underline;
         color: var(--color-blue-700);
         padding: 0.2rem 0.5rem;
-        border-radius:4px;
-        
-        &:hover{
+        border-radius: 4px;
+
+        &:hover {
             background-color: var(--color-blue-50);
         }
     }
@@ -76,6 +81,7 @@
 
     .table-content {
         width: 100%;
+        font-size: 14px;
 
         & tr {
             border-bottom: 1px solid var(--color-gray-100);
@@ -89,5 +95,11 @@
             }
         }
 
+    }
+
+    .grouped {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
     }
 </style>

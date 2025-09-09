@@ -20,7 +20,7 @@ export class Dropdown extends flowbiteDropdown {
             bindtrigger.classList.add("dropdown-input");
             label.appendChild(bindtrigger);
 
-            bindtarget.insertAdjacentElement("afterbegin", label);
+            bindtarget.insertAdjacentElement("afterBegin", label);
         } else {
             bindtrigger = trigger;
         }
@@ -143,12 +143,14 @@ export class Dropdown extends flowbiteDropdown {
     //內部控制-綁定篩選功能監聽器
     _bindfilterHandler() {
         this._triggerEl.addEventListener("focus", () => {
+            this._triggerEl.removeAttribute("readOnly");
             this._triggerEl.addEventListener(
                 "input",
                 this.bindFilteroption.filterHandler.bind(this._triggerEl),
             );
         });
         this._triggerEl.addEventListener("blur", () => {
+            this._triggerEl.setAttribute("readOnly", true);
             this._triggerEl.removeEventListener(
                 "input",
                 this.bindFilteroption.filterHandler.bind(this._triggerEl),

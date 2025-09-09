@@ -22,46 +22,116 @@ import {
 
 # Usage API
 
-初始化 Dropdown 元件，帶入參數 `options` 物件，並設定內部屬性
+初始化 Dropdown 元件，帶入 `target`、`trigger`、`options` 等參數，並設定內部屬性
 
 ```javascript
-new Dropdown((options = {}));
+new Dropdown(target, trigger, (bindFilteroption = {}), changeHandler);
 ```
 
-    >### parameters 參數設定
-    <span className="sb-unstyled font-black">target</span>
-    <span className="sb-unstyled data-type element">HTMLElement</span>
+> ### Initial 初始化
+>
+> 使用 Dropdown 元件時，初始化方式可以分為兩種 : (主要差異在target及trigger帶入的值)
 
-    <span className="sb-unstyled font-black">trigger</span>
-    <span className="sb-unstyled data-type element">HTMLElement</span>
+- 有已知節點 : 帶入已知 DOM 節點
+  已經有靜態節點或是可以抓取到的DOM節點時，直接作為參數帶入綁定
 
-    <span className="sb-unstyled font-black">bindFilteroption</span>
-    <span className="sb-unstyled data-type">object</span>
+  ```javascript
+  let container = createElement("div");
+  container.innerHTML = `
+          <h3 class="input-label">title</h3>
+          <label class="label input-label">
+              <input type="text" class="dropdown-input" />
+          </label>
+          <ul id="test_dropdown" class="dropdown-item"></ul>
+          <select id="test" class="select dropdown-select">
+              <option value="a">A</option>
+              <option value="b">B</option>
+              <option value="c">C</option>
+          </select>
+    `;
 
-    <span className="sb-unstyled font-black">changeHandler</span>
-    <span className="sb-unstyled data-type">function</span>
+  // container is the exist node
+  let target = document.getElementById("test_dropdown");
+  let trigger = target.previousSilblingElement.querySelector(".dropdown-input");
 
+  let dropdownInstance = new Dropdown(target, trigger);
+  ```
 
-    各屬性傳入型別可參考下方 Control 說明
-    ```javascript
-    const sliderOptions = {
-      min:1,
-      max:100,
-      initValue:0,
-      step:1,
-      range:false,
-      theme:'var(--color-primary-500)',
-      thumbImg:null,
-      classes:['slider'],
-      handler:null,
-      disabled:false
-    }
-    ```
+- target 帶入要建立的目標id，trigger 則帶入要渲染的選項`selectOptions`陣列
 
-    >### methods 方法
+  ```javascript
+  const selectOptions = [
+    { value: 1, text: "One" },
+    { value: 2, text: "Two" },
+  ];
+  let dropdownInstance = new Dropdown("test_2", selectOptions);
+  ```
 
-     <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
-     <div className="sb-unstyled table-container overflow-hidden">
+> ### parameters 參數設定
+
+<span className="sb-unstyled font-black">target</span>
+<span className="sb-unstyled data-type element">HTMLElement</span>
+  ```html
+  <!-- 基本下拉選單結構 -->
+  <h3 class="input-label">title</h3>
+  <label class="label input-label">
+    <input type="text" class="dropdown-input" />
+  </label>
+  <ul id="example_dropdown" class="dropdown-item"></ul>
+  <select id="example" class="select dropdown-select"></select>
+  ```
+
+  <span className="sb-unstyled font-black">trigger</span>
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  <span> | </span>
+  <span className="sb-unstyled data-type arr">Array</span>
+  ```javascript 
+  const selectOptions=[
+    {value:"a",text:"A"},
+    {value:"b",text:"B"},
+    {value:"c",text:"C"},
+  ];
+  ```
+
+<span className="sb-unstyled font-black">changeHandler</span>
+<span className="sb-unstyled data-type">function</span>
+
+作為 onChange 事件函式使用，會綁定到`<select>`元素身上
+
+```javascript
+function testChange() {
+  let value = this.value;
+  console.log("value:", value);
+}
+
+// trigger change event anywhere
+// value: "A"
+```
+
+<span className="sb-unstyled font-black">bindFilteroption</span>
+<span className="sb-unstyled data-type">object</span>
+
+```javascript
+//基本 filtHandler 函式，為打字過濾篩選效果
+function filtItem() {
+  let inputValue = this.value;
+  let ownli = this.parentNode.parentNode.querySelectorAll(".dropdown-item li");
+  ownli.forEach((li) => {
+    li.textContent.includes(inputValue)
+      ? li.classList.remove("hidden")
+      : li.classList.add("hidden");
+  });
+}
+
+const bindFilteroption = { filter: true, filterHandler: filtItem };
+
+let instance = new Dropdown(target, trigger, filtOption);
+```
+
+> ### methods 方法
+
+    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+    <div className="sb-unstyled table-container overflow-hidden">
       <table className="sb-unstyled table-content">
         <thead>
           <tr className="text-center">
@@ -79,52 +149,104 @@ new Dropdown((options = {}));
           <tr><td className="font-bold">`.getBindSelect()`</td><td>回傳 `<select>` 節點</td></tr>
           <tr><td className="font-bold">`.clearDropdown()`</td><td>清除 `<ul>`&`<select>`子節點</td></tr>
           <tr><td className="font-bold">`.renderDropdownChildren(...args)`</td><td>重新渲染節點(單純渲染節點、不改value)</td></tr>
-          <tr><td className="font-bold">`.updateValue()`</td><td>更新預設 `<select>` 的value值(通常render完設定為第一項，如果`<select>`本身有selected option 則以它為主)</td></tr>
-
+          <tr><td className="font-bold">`.updateValue()`</td><td>更新預設 `<select>` 的value值(通常render完設定為第一項，如果`<select>`本身有selected option 則以它為主)；通常會接著搭配 `.updateValue()`使用</td></tr>
         </tbody>
       </table>
-     </div>
+    </div>
+    <span className="sb-unstyled methods">.show()</span>
+    <span className="sb-unstyled methods">.hide()</span>
+    <span className="sb-unstyled methods">.toggle()</span>
+    <a
+      className="sb-unstyled linkout"
+      href="https://flowbite.com/docs/components/dropdowns/"
+    > more in flowbite docs</a>
 
-      <span className="sb-unstyled methods">.show()</span>
-      <span className="sb-unstyled methods">.hide()</span>
-      <span className="sb-unstyled methods">.toggle()</span>
-      <a className="sb-unstyled linkout" href="https://flowbite.com/docs/components/dropdowns/">more in flowbite docs</a>
-      ``` javascript
-        let sliderElem = Slider.getElem(); // return an DOM HTMLElement
-      ```
-      <span className="sb-unstyled methods">.getValue()</span>
-      ``` javascript
-        let value = Slider.getValue(); // 30
-      ```
-      <span className="sb-unstyled methods">.setValue(val)</span>
-      ``` javascript
-        Slider.setValue(45);
-      console.log(Slider.getValue()); // 45
-      ```
-      <span className="sb-unstyled methods">.changeTheme(HEX)</span>
-      ``` javascript
-        Slider.changeTheme("#878787");
-      ```
-      <span className="sb-unstyled methods">.setDisabled(boolean)</span>
-      ``` javascript
-        Slider.setDisabled(true); //Slider will become disabled
-      ```
+```javascript
+let dropdownInstance = new Dropdown(target, trigger);
 
-    >### properties 內部屬性 <span class="sb-unstyled data-type readonly">Read-only</span>
-    <p className="sb-unstyled alert-msg">可以操作的屬性皆須使用methods來更改</p>
+dropdownInstance.show(); //list show
+dropdownInstance.hide(); //list hide
+dropdownInstance.toggle(); //switch list visible
+```
 
-     <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td><td>descriptions</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td className="font-bold">options</td><td>該 Slider 元件的 options 參數設定</td></tr>
-          <tr><td className="font-bold">childrens</td><td>指向該 Slider 元件的兩個子元件 [ `Sliderbar`, `SliderThumb`] (禁止從外部更改子元件設定)</td></tr>
-          <tr><td className="font-bold">thumb</td><td>指向 `SliderThumb` 子元件</td></tr>
-          <tr><td className="font-bold">bar</td><td>指向 `SliderBar` 子元件</td></tr>
-        </tbody>
-      </table>
-     </div>
+<span className="sb-unstyled methods">.getDropdownChildren()</span>
+``` javascript let children = Dropdown.getDropdownChildren(); // 回傳
+dropdownChildren 屬性 ```
+
+<span className="sb-unstyled methods">.getTargetDropdown()</span>
+``` javascript 
+let target = Dropdown.getTargetDropdown(); // 回傳targetEl屬性(也就是`<ul>`)
+```
+
+<span className="sb-unstyled methods">.getBindSelect()</span>
+``` javascript 
+let select = Dropdown.getBindSelect(); // 回傳bindSelect屬性(也就是`<select>`)
+```
+
+<span className="sb-unstyled methods">.clearDropdown()</span>
+``` javascript 
+Dropdown.clearDropdown(); //children will be clear 
+```
+<span className="sb-unstyled methods">.renderDropdownChildren(newliChild, newoptChild, text, optValue = null)</span>
+- `newChild`: `<li>`節點
+- `text`: 選項文字
+- `newoptChild`:  `<option>`節點
+- `optValue`: 指定 `<option>` value 值
+
+```javascript
+let li = document.createElement("li");
+let opt = document.createElement("option");
+
+Dropdown.renderDropdownChildren(li, "AA", opt, 1);
+```
+
+<span className="sb-unstyled methods">.updateValue()</span>
+```javascript
+ //previous renderChildren operations... 
+ Dropdown.updateValue();
+```
+
+> ### properties 內部屬性 <span className="sb-unstyled data-type readonly">Read-only</span>
+
+<p className="sb-unstyled alert-msg">可以操作的屬性皆須使用methods來更改</p>
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>property</td>
+        <td>type</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td className="font-bold">bindSelect</td>
+        <td>HTMLElement</td>
+        <td>該下拉選單綁定的`<select>節點元素`</td>
+      </tr>
+      <tr>
+        <td className="font-bold">dropdownChildren</td>
+        <td>HTMLCollection</td>
+        <td>紀錄目前`<ul>`內所有子節點</td>
+      </tr>
+      <tr>
+        <td className="font-bold">optValuePair</td>
+        <td>Object</td>
+        <td>
+          紀錄每個選項的 value-text 對應值物件；value 為`<option>`的value值、text 則為`<option>`的節點文字
+        </td>
+      </tr>
+      <tr>
+        <td className="font-bold">ifAll</td>
+        <td>Boolean</td>
+        <td>如果原始靜態html的預設值是不拘/全部/全縣，才會加入這個屬性</td>
+      </tr>
+      <tr>
+        <td className="font-bold">containerEl</td>
+        <td>HTMLElement</td>
+        <td>預設會去抓target的parentElement，如果傳入的參數不是DOM節點，會在生成時建立一個`<div>`並包覆所有子節點作為parentElement</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

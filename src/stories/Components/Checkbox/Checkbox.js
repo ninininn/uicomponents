@@ -125,7 +125,7 @@ export class Checkbox extends BaseComponent {
                 break;
         }
         //4. 判斷是否設定為禁止操作
-        if (!this.disabled) {
+        if (!this.options.disabled) {
             UIUtils.removeClass(this._elem, ["disabled"]);
         } else {
             UIUtils.addClass(this._elem, ["disabled"]);

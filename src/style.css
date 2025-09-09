@@ -154,4 +154,63 @@
     background-color: transparent;
   }
 
+  /* input 標籤基本設定 */
+  input:not([type="range"], [type="radio"], [type="checkbox"]),
+  select[id] {
+    @apply focus:border-b-primary-500 hover:border-b-primary-500 w-full cursor-pointer border-t-0 border-r-0 border-b-2 border-l-0 border-b-gray-300 bg-transparent p-2.5 font-medium focus:ring-0 focus-visible:outline-0;
+  }
+
+  select:not([size]) {
+    @apply pr-2;
+  }
+
+  input[type="checkbox"][id=false] {
+    @apply checked:text-primary-500 h-4 w-4 cursor-pointer rounded-sm border border-gray-300 bg-gray-50 focus:border-0 focus:ring-0 active:ring-0;
+  }
+
+  /* 壓storybook設定 */
+  input[type="checkbox"][name]:checked {
+    background-color: transparent !important;
+  }
+
+  input[type="radio"] {
+    @apply text-primary-600 active:ring-primary-500 h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 transition-colors focus:ring-0;
+  }
+
+  input[type="range"] {
+    --activeColor: var(--color-primary-400);
+    @apply h-2 w-full cursor-pointer appearance-none rounded-xs bg-gray-200;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    --activeColor: var(--color-primary-400);
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1rem;
+    width: 1rem;
+    box-shadow: 0 0 0 4px inset var(--activeColor);
+  }
+
+  input[type="checkbox"] {
+    @apply data-[checkstyle=switch]:hidden data-[checkstyle=switch]:appearance-none data-[checkstyle=toggle]:hidden data-[checkstyle=toggle]:appearance-none;
+  }
+
+  label:has(input[data-checkstyle="switch"])::before {
+    @apply absolute top-[50%] left-1 inline-block aspect-square w-8 max-w-1/2 -translate-y-[50%] transform rounded-full border-2 border-gray-500 bg-gray-300 transition-all content-[""] checked:border-green-500 checked:bg-green-300;
+  }
+
+  label:has(input[data-checkstyle="switch"]) {
+    @apply relative inline-block h-full min-h-7 max-w-30 min-w-12 cursor-pointer rounded-full bg-white py-0.5 pr-10 pl-0.5 transition duration-75 hover:bg-gray-50;
+  }
+
+  label:has(input[data-checkstyle="toggle"]) {
+    --bgColor: var(--themeColor, var(--color-yellow-500));
+
+    @apply relative flex h-full cursor-pointer items-center gap-2 p-0.5 transition duration-75;
+  }
+
+  /* 圖層開關切到問題調整 */
+  label:has(input[data-checkstyle="toggle"])::before {
+    @apply inline-block min-h-7 w-7 bg-(--bgColor) mask-[var(--toggle-img)] mask-center mask-no-repeat content-[""] flex-[1_0_auto] max-w-6;
+  }
 }

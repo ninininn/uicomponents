@@ -1,0 +1,157 @@
+import {
+  Meta,
+  Title,
+  Primary,
+  Controls,
+  Stories,
+  Source,
+} from "@storybook/addon-docs/blocks";
+
+<Meta isTemplate title="How to use Checkbox" />
+
+<Title />
+適用 : 勾選框；可以配合其他元件使用綁定屬性值
+
+<Primary />
+
+# Controls
+
+<Controls />
+
+---
+
+# Usage API
+
+初始化 Checkbox 元件，帶入 `element`、`options` 參數，並設定內部屬性
+
+```javascript
+new Checkbox(element, (options = {}));
+```
+
+> ### parameters 參數設定
+
+<span className="sb-unstyled font-black">element</span>
+<span className="sb-unstyled data-type element">HTMLElement</span>
+  ```html
+  <!-- 基本下拉選單結構 -->
+  <h3 class="input-label">title</h3>
+  <label class="label input-label">
+    <input type="text" class="dropdown-input" />
+  </label>
+  <ul id="example_dropdown" class="dropdown-item"></ul>
+  <select id="example" class="select dropdown-select"></select>
+  ```
+
+<span className="sb-unstyled font-black">options</span>
+<span className="sb-unstyled data-type">function</span>
+
+各屬性的型別及說明可參考上方Controls區塊
+
+```javascript
+const options = {
+    style: "default", //樣式
+    title: "一般勾選框", //文字
+    value: "", //<input/>的value attribute
+    checked: true,
+    theme: "var(--color-blue-500)", //預設顏色
+    checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
+    classes: ["checkbox"],
+    disabled: false,
+    handlers: null
+};
+```
+
+> ### methods 方法
+
+    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>methods</td><td>descriptions</td><td>inherit</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td className="font-bold">`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
+          <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
+          <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
+          <tr><td className="font-bold">`.getValue()`</td><td>回傳`<input/>` value值</td></tr>
+          <tr><td className="font-bold">`.getChecked()`</td><td>回傳`<input/>` checked值</td></tr>
+          <tr><td className="font-bold">`.setValue(boolean)`</td><td>傳入要設定`<input/>` value值</td></tr>
+          <tr><td className="font-bold">`.setChecked(boolean)`</td><td>傳入要設定checked值</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+<span className="sb-unstyled methods">.getElem()</span>
+``` javascript 
+Checkbox.getElem();
+```
+
+<span className="sb-unstyled methods">.changeTheme(HEXstring)</span>
+``` javascript 
+Checkbox.changeTheme("#8ecb28");
+```
+
+<span className="sb-unstyled methods">.setDisabled(boolean)</span>
+<span className="sb-unstyled methods">.setValue(boolean)</span>
+<span className="sb-unstyled methods">.setChecked(boolean)</span>
+``` javascript 
+// ...init Checkbox
+
+Checkbox.setDisabled(false);
+Checkbox.setValue(false);
+Checkbox.setChecked(true);
+```
+
+<span className="sb-unstyled methods">.getValue()</span>
+<span className="sb-unstyled methods">.getChecked()</span>
+``` javascript 
+Checkbox.getValue(); //""
+Checkbox.getChecked(); //true
+```
+
+> ### properties 內部屬性 <span className="sb-unstyled data-type readonly">Read-only</span>
+
+<p className="sb-unstyled alert-msg">可以操作的屬性皆須使用methods來更改</p>
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>property</td>
+        <td>type</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td className="font-bold">bindSelect</td>
+        <td>HTMLElement</td>
+        <td>該下拉選單綁定的`<select>節點元素`</td>
+      </tr>
+      <tr>
+        <td className="font-bold">dropdownChildren</td>
+        <td>HTMLCollection</td>
+        <td>紀錄目前`<ul>`內所有子節點</td>
+      </tr>
+      <tr>
+        <td className="font-bold">optValuePair</td>
+        <td>Object</td>
+        <td>
+          紀錄每個選項的 value-text 對應值物件；value 為`<option>`的value值、text 則為`<option>`的節點文字
+        </td>
+      </tr>
+      <tr>
+        <td className="font-bold">ifAll</td>
+        <td>Boolean</td>
+        <td>如果原始靜態html的預設值是不拘/全部/全縣，才會加入這個屬性</td>
+      </tr>
+      <tr>
+        <td className="font-bold">containerEl</td>
+        <td>HTMLElement</td>
+        <td>預設會去抓target的parentElement，如果傳入的參數不是DOM節點，會在生成時建立一個`<div>`並包覆所有子節點作為parentElement</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
