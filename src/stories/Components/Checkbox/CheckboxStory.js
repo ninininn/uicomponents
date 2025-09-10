@@ -13,7 +13,6 @@ export const createCheckbox = ({ checked, classes, disabled, style, theme, title
         title: title,
         checkImg: checkImg
     };
-    console.log(new Checkbox(parent, initOptions));
 
     return new Checkbox(parent, initOptions);
 };

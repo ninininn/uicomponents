@@ -51,7 +51,7 @@ export default {
       },
     },
     value: {
-      control: "string",
+      control: "text",
       // type: { required: true },
       description: "`<input/>`的 value 值",
       table: {
@@ -60,7 +60,6 @@ export default {
       },
     },
     theme: {
-      if: { arg: "trigger", truthy: false },
       control: "color",
       description: "色系控制，可以傳入變數(var...)或是HEX色碼",
       table: {
@@ -69,11 +68,19 @@ export default {
       },
     },
     checkImg: {
-      control: { type: "file" },
-      description: "是否更換為自訂圖標，傳入自訂圖標檔案路徑；如果樣式設定為 toggle，則將要自訂切換的圖檔以陣列傳入",
+      // control: { type: "file" },
+      control: "select",
+      options: ["眼睛組合", "愛心組合", "信封組合"],
+      mapping: {
+        "眼睛組合": ["../../../../public/eye.svg", "../../../../public/eye-off.svg"],
+        "愛心組合": ["../../../../public/heart.svg", "../../../../public/heart-off.svg"],
+        "信封組合": ["../../../../public/envelope.svg", "../../../../public/envelope-open.svg"],
+      },
+      if: { arg: "style", eq: "toggle" },
+      description: "[僅限toggle樣式更改] 更換為自訂圖標，傳入自訂圖標檔案路徑，以陣列傳入",
       table: {
-        defaultValue: { summary: "null" },
-        type: { summary: "./path/img.png | array" },
+        defaultValue: { summary: "eye" },
+        type: { summary: "[./path/img.png,./path/img2.png]" },
       },
     },
     classes: {
@@ -86,7 +93,7 @@ export default {
     },
     disabled: {
       control: { type: "boolean" },
-      description: "是否可操作狀態",
+      description: "是否可操作狀態(要注意和checked是不同意義)",
       table: {
         // type: { required: true },
         defaultValue: { summary: "false" },
@@ -94,7 +101,7 @@ export default {
       },
     },
     title: {
-      control: { type: "string" },
+      control: { type: "text" },
       description: "`<label/>文字內容`",
       table: {
         // type: { required: true },
@@ -105,7 +112,7 @@ export default {
     style: {
       control: "select",
       options: ["default", "switch", "toggle", "tag"],
-      description: "`<label/>文字內容`",
+      description: "`樣式類型`",
       table: {
         // type: { required: true },
         defaultValue: { summary: "default" },
@@ -124,31 +131,20 @@ export default {
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // 預設args
-  args: {},
+  args: {
+  },
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const defaultCheckbox = {
   args: {
     style: "default", //樣式
-    title: "一般 勾選框", //文字
+    title: "一般勾選框", //文字
     value: "", //<input/>的value attribute
     checked: true,
-    theme: "var(--color-blue-500)", //預設顏色
+    theme: "#6ae9fc", //預設顏色
     checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
     classes: ["checkbox"],
     disabled: false,
-  },
-};
-export const toggleCheckbox = {
-  args: {
-    style: "toggle", //樣式
-    title: "閉合切換樣式", //文字
-    value: "", //<input/>的value attribute
-    checked: false,
-    theme: "var(--color-purple-500)", //預設顏色
-    checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
-    classes: ["checkbox"],
-    disabled: true,
   },
 };

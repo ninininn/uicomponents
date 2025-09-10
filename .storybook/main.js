@@ -17,6 +17,7 @@ const config = {
   "framework": {
     "name": "@storybook/html-vite",
     "options": {}
-  }
+  },
+  "docs": { defaultName: 'API Docs' }
 };
 export default config;

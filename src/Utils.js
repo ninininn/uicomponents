@@ -194,5 +194,3 @@ export function hexTorgb(hexString) {
 
     return `rgb(${toR},${toG},${toB})`;
 }
-
-console.log(hexTorgb('#ffeed6'));

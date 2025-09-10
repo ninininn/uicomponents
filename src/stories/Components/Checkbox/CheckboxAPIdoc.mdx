@@ -5,6 +5,7 @@ import {
   Controls,
   Stories,
   Source,
+  Unstyled,
 } from "@storybook/addon-docs/blocks";
 
 <Meta isTemplate title="How to use Checkbox" />
@@ -30,25 +31,26 @@ new Checkbox(element, (options = {}));
 
 > ### parameters 參數設定
 
-<span className="sb-unstyled font-black">element</span>
-<span className="sb-unstyled data-type element">HTMLElement</span>
-  ```html
-  <!-- 基本下拉選單結構 -->
-  <h3 class="input-label">title</h3>
-  <label class="label input-label">
-    <input type="text" class="dropdown-input" />
-  </label>
-  <ul id="example_dropdown" class="dropdown-item"></ul>
-  <select id="example" class="select dropdown-select"></select>
-  ```
+- <span className="sb-unstyled font-black">element</span>
+  <span className="sb-unstyled data-type element">HTMLElement</span>
 
-<span className="sb-unstyled font-black">options</span>
-<span className="sb-unstyled data-type">function</span>
+  可以傳入`<label/>`或`<input/>`兩種標籤元素節點，如果傳入的節點標籤種類不是這兩種，則會直接視為容器元素(container)，並自動補上對應結構。
+    ```html
+    <!-- 基本靜態結構 -->
+    <label class="label input-label">
+      <input type="checkbox" class="checkbox" />
+      文字內容
+    </label>
+    ```   
+  <br/>
 
-各屬性的型別及說明可參考上方Controls區塊
+- <span className="sb-unstyled font-black">options</span>
+  <span className="sb-unstyled data-type">object</span>
 
-```javascript
-const options = {
+  各屬性的型別及說明可參考上方Controls區塊
+
+  ```javascript
+  const options = {
     style: "default", //樣式
     title: "一般勾選框", //文字
     value: "", //<input/>的value attribute
@@ -57,13 +59,16 @@ const options = {
     checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
     classes: ["checkbox"],
     disabled: false,
-    handlers: null
-};
-```
+    handlers: null,
+  };
+  ```
+
+  <br />
 
 > ### methods 方法
 
     <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+
     <div className="sb-unstyled table-container overflow-hidden">
       <table className="sb-unstyled table-content">
         <thead>
@@ -85,13 +90,13 @@ const options = {
 
 <span className="sb-unstyled methods">.getElem()</span>
 ``` javascript 
-Checkbox.getElem();
+Checkbox.getElem(); 
 ```
 
 <span className="sb-unstyled methods">.changeTheme(HEXstring)</span>
-``` javascript 
-Checkbox.changeTheme("#8ecb28");
-```
+``` javascript
+ Checkbox.changeTheme("#8ecb28"); 
+ ```
 
 <span className="sb-unstyled methods">.setDisabled(boolean)</span>
 <span className="sb-unstyled methods">.setValue(boolean)</span>
@@ -102,14 +107,15 @@ Checkbox.changeTheme("#8ecb28");
 Checkbox.setDisabled(false);
 Checkbox.setValue(false);
 Checkbox.setChecked(true);
+
 ```
 
 <span className="sb-unstyled methods">.getValue()</span>
 <span className="sb-unstyled methods">.getChecked()</span>
-``` javascript 
+``` javascript
 Checkbox.getValue(); //""
 Checkbox.getChecked(); //true
-```
+````
 
 > ### properties 內部屬性 <span className="sb-unstyled data-type readonly">Read-only</span>
 
