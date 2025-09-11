@@ -15,6 +15,7 @@ import {
 <Primary />
 
 # Controls
+這邊僅列出可以操作設定的 options.properties，內部屬性請參考[properties內部屬性]區塊。
 
 <Controls />
 
@@ -56,6 +57,7 @@ new Dropdown(target, trigger, (bindFilteroption = {}), changeHandler);
 
   let dropdownInstance = new Dropdown(target, trigger);
   ```
+<br/>
 
 - target 帶入要建立的目標id，trigger 則帶入要渲染的選項`selectOptions`陣列
 
@@ -69,64 +71,69 @@ new Dropdown(target, trigger, (bindFilteroption = {}), changeHandler);
 
 > ### parameters 參數設定
 
-<span className="sb-unstyled font-black">target</span>
-<span className="sb-unstyled data-type element">HTMLElement</span>
-  ```html
-  <!-- 基本下拉選單結構 -->
-  <h3 class="input-label">title</h3>
-  <label class="label input-label">
-    <input type="text" class="dropdown-input" />
-  </label>
-  <ul id="example_dropdown" class="dropdown-item"></ul>
-  <select id="example" class="select dropdown-select"></select>
-  ```
+ - <span className="sb-unstyled font-black">target</span>
+   <span className="sb-unstyled data-type element">HTMLElement</span>
+    ```html
+    <!-- 基本下拉選單結構 -->
+    <h3 class="input-label">title</h3>
+    <label class="label input-label">
+      <input type="text" class="dropdown-input" />
+    </label>
+    <ul id="example_dropdown" class="dropdown-item"></ul>
+    <select id="example" class="select dropdown-select"></select>
+    ```
+<br/>
 
-  <span className="sb-unstyled font-black">trigger</span>
-  <span className="sb-unstyled data-type element">HTMLElement</span>
-  <span> | </span>
-  <span className="sb-unstyled data-type arr">Array</span>
-  ```javascript 
-  const selectOptions=[
-    {value:"a",text:"A"},
-    {value:"b",text:"B"},
-    {value:"c",text:"C"},
-  ];
-  ```
+ - <span className="sb-unstyled font-black">trigger</span>
+   <span className="sb-unstyled data-type element">HTMLElement</span>
+   <span> | </span>
+   <span className="sb-unstyled data-type arr">Array</span>
+    ```javascript 
+    const selectOptions=[
+      {value:"a",text:"A"},
+      {value:"b",text:"B"},
+      {value:"c",text:"C"},
+    ];
+    ```
+<br/>
 
-<span className="sb-unstyled font-black">changeHandler</span>
-<span className="sb-unstyled data-type">function</span>
+ - <span className="sb-unstyled font-black">changeHandler</span>
+   <span className="sb-unstyled data-type">function</span>
 
-作為 onChange 事件函式使用，會綁定到`<select>`元素身上
+    作為 onChange 事件函式使用，會綁定到`<select>`元素身上
 
-```javascript
-function testChange() {
-  let value = this.value;
-  console.log("value:", value);
-}
+    ```javascript
+    function testChange() {
+      let value = this.value;
+      console.log("value:", value);
+    }
 
-// trigger change event anywhere
-// value: "A"
-```
+    // trigger change event anywhere
+    // value: "A"
+    ```
+<br/>
 
-<span className="sb-unstyled font-black">bindFilteroption</span>
-<span className="sb-unstyled data-type">object</span>
+ - <span className="sb-unstyled font-black">bindFilteroption</span>
+   <span className="sb-unstyled data-type">object</span>
 
-```javascript
-//基本 filtHandler 函式，為打字過濾篩選效果
-function filtItem() {
-  let inputValue = this.value;
-  let ownli = this.parentNode.parentNode.querySelectorAll(".dropdown-item li");
-  ownli.forEach((li) => {
-    li.textContent.includes(inputValue)
-      ? li.classList.remove("hidden")
-      : li.classList.add("hidden");
-  });
-}
+    ```javascript
+    //基本 filtHandler 函式，為打字過濾篩選效果
+    function filtItem() {
+      let inputValue = this.value;
+      let ownli = this.parentNode.parentNode.querySelectorAll(".dropdown-item li");
+      ownli.forEach((li) => {
+        li.textContent.includes(inputValue)
+          ? li.classList.remove("hidden")
+          : li.classList.add("hidden");
+      });
+    }
 
-const bindFilteroption = { filter: true, filterHandler: filtItem };
+    const bindFilteroption = { filter: true, filterHandler: filtItem };
 
-let instance = new Dropdown(target, trigger, filtOption);
-```
+    let instance = new Dropdown(target, trigger, filtOption);
+    ```
+
+<br/>
 
 > ### methods 方法
 
@@ -220,6 +227,11 @@ Dropdown.renderDropdownChildren(li, "AA", opt, 1);
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td className="font-bold">UItype</td>
+        <td>string</td>
+        <td>Dropdown，繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+      </tr>
       <tr>
         <td className="font-bold">bindSelect</td>
         <td>HTMLElement</td>

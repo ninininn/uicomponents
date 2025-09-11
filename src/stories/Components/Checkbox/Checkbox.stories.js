@@ -27,24 +27,12 @@ export default {
     return checkboxInstance.container;
   },
   argTypes: {
-    UItype: {
-      control: "string",
-      description: "繼承自`BaseComponent`的屬性，代表該元件名稱",
-      table: {
-        readonly: true,
-        category: "Inherits BaseComponent",
-        defaultValue: { summary: "Checkbox" },
-      },
-    },
-    element: {
-      control: "string",
-      description: "checkbox節點，如果不是 `<input>` 或 `<label>` 則視為容器(container)",
-    },
     checked: {
       control: "boolean",
       // type: { required: true },
       description: "checked狀態",
       table: {
+        category: "options parameter",
         readOnly: true,
         defaultValue: { summary: "false" },
         type: { summary: "boolean" },
@@ -53,17 +41,19 @@ export default {
     value: {
       control: "text",
       // type: { required: true },
-      description: "`<input/>`的 value 值",
+      description: "`<input/>`的 value 值，如果沒有特別設定則是直接套用`title`的值",
       table: {
+        category: "options parameter",
         defaultValue: { summary: "null" },
         type: { summary: "string | number" },
       },
     },
     theme: {
       control: "color",
-      description: "色系控制，可以傳入變數(var...)或是HEX色碼",
+      description: "色系控制，可以傳入HEX色碼",
       table: {
-        category: "Inherits BaseComponent",
+        category: "options parameter",
+        subcategory: "Inherits BaseComponent",
         type: { summary: "string" },
       },
     },
@@ -79,14 +69,16 @@ export default {
       if: { arg: "style", eq: "toggle" },
       description: "[僅限toggle樣式更改] 更換為自訂圖標，傳入自訂圖標檔案路徑，以陣列傳入",
       table: {
+        category: "options parameter",
         defaultValue: { summary: "eye" },
         type: { summary: "[./path/img.png,./path/img2.png]" },
       },
     },
     classes: {
       control: { type: "array" },
-      description: "checkbox classes",
+      description: "checkbox classes，每個class以tailwindcss property放入",
       table: {
+        category: "options parameter",
         defaultValue: { summary: "checkbox" },
         type: { summary: "array" },
       },
@@ -96,15 +88,18 @@ export default {
       description: "是否可操作狀態(要注意和checked是不同意義)",
       table: {
         // type: { required: true },
+        category: "options parameter",
         defaultValue: { summary: "false" },
         type: { summary: "boolean" },
       },
     },
     title: {
       control: { type: "text" },
-      description: "`<label/>文字內容`",
+      if: { arg: "style", neq: "toggle" },
+      description: "`<label/>`文字內容，當style為toggle時則不會顯示",
       table: {
         // type: { required: true },
+        category: "options parameter",
         defaultValue: { summary: "null" },
         type: { summary: "string" },
       },
@@ -115,6 +110,7 @@ export default {
       description: "`樣式類型`",
       table: {
         // type: { required: true },
+        category: "options parameter",
         defaultValue: { summary: "default" },
         type: { summary: "string" },
       },
@@ -124,6 +120,7 @@ export default {
       description: "作為change事件函式傳入",
       table: {
         // type: { required: true },
+        category: "options parameter",
         defaultValue: { summary: "null" },
         type: { summary: "function" },
       },
@@ -142,7 +139,7 @@ export const defaultCheckbox = {
     title: "一般勾選框", //文字
     value: "", //<input/>的value attribute
     checked: true,
-    theme: "#6ae9fc", //預設顏色
+    theme: "#61d45b", //預設顏色
     checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
     classes: ["checkbox"],
     disabled: false,

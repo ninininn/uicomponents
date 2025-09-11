@@ -28,15 +28,6 @@ export default {
     return dropdownInstance.containerEl;
   },
   argTypes: {
-    UItype: {
-      control: "string",
-      description: "繼承自`BaseComponent`的屬性，代表該元件名稱",
-      table: {
-        readonly: true,
-        category: "Inherits BaseComponent",
-        defaultValue: { summary: "Dropdown" },
-      },
-    },
     target: {
       control: "string",
       type: { required: true },

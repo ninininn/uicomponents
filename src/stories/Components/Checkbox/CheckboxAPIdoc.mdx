@@ -16,6 +16,7 @@ import {
 <Primary />
 
 # Controls
+這邊僅列出可以操作設定的 options.properties，內部屬性請參考[properties內部屬性]區塊。
 
 <Controls />
 
@@ -82,7 +83,7 @@ new Checkbox(element, (options = {}));
           <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
           <tr><td className="font-bold">`.getValue()`</td><td>回傳`<input/>` value值</td></tr>
           <tr><td className="font-bold">`.getChecked()`</td><td>回傳`<input/>` checked值</td></tr>
-          <tr><td className="font-bold">`.setValue(boolean)`</td><td>傳入要設定`<input/>` value值</td></tr>
+          <tr><td className="font-bold">`.setValue(value)`</td><td>傳入要設定`<input/>` value值</td></tr>
           <tr><td className="font-bold">`.setChecked(boolean)`</td><td>傳入要設定checked值</td></tr>
         </tbody>
       </table>
@@ -132,31 +133,46 @@ Checkbox.getChecked(); //true
     </thead>
     <tbody>
       <tr>
-        <td className="font-bold">bindSelect</td>
+        <td className="font-bold">UItype</td>
+        <td>string</td>
+        <td>Checkbox，繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+      </tr>
+      <tr>
+        <td className="font-bold">inputValue</td>
+        <td>string</td>
+        <td>`<input/>`的value值，如果沒有特別設定會預設為`options.title`內容；當`style`設定為switch時，則會自動判定`|`前後的文字並做切換；其他樣式類型時則是切換`""`及title內容</td>
+      </tr>
+      <tr>
+        <td className="font-bold">activeImg</td>
+        <td>string</td>
+        <td>當前顯示的圖示，`style`為toggle時才會出現</td>
+      </tr>
+      <tr>
+        <td className="font-bold">container</td>
         <td>HTMLElement</td>
-        <td>該下拉選單綁定的`<select>節點元素`</td>
-      </tr>
-      <tr>
-        <td className="font-bold">dropdownChildren</td>
-        <td>HTMLCollection</td>
-        <td>紀錄目前`<ul>`內所有子節點</td>
-      </tr>
-      <tr>
-        <td className="font-bold">optValuePair</td>
-        <td>Object</td>
         <td>
-          紀錄每個選項的 value-text 對應值物件；value 為`<option>`的value值、text 則為`<option>`的節點文字
+          容器節點，如果沒有特別指定就會是`<label/>`
         </td>
       </tr>
       <tr>
-        <td className="font-bold">ifAll</td>
-        <td>Boolean</td>
-        <td>如果原始靜態html的預設值是不拘/全部/全縣，才會加入這個屬性</td>
+        <td className="font-bold">defaultTheme</td>
+        <td>string</td>
+        <td>初始主題色系</td>
       </tr>
       <tr>
-        <td className="font-bold">containerEl</td>
+        <td className="font-bold">label</td>
         <td>HTMLElement</td>
-        <td>預設會去抓target的parentElement，如果傳入的參數不是DOM節點，會在生成時建立一個`<div>`並包覆所有子節點作為parentElement</td>
+        <td>記錄此元件的`<label/>`節點</td>
+      </tr>
+      <tr>
+        <td className="font-bold">options</td>
+        <td>object</td>
+        <td>傳入的設定值，詳細屬性可以參考上方options參數說明處</td>
+      </tr>
+      <tr>
+        <td className="font-bold">originParent</td>
+        <td>HTMLElement</td>
+        <td>如果初始化時帶入的`element`節點有父元素，則預設為該元素；沒有的話就會是null</td>
       </tr>
     </tbody>
   </table>

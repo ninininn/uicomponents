@@ -2,7 +2,7 @@ import { Dropdown } from "./Dropdown";
 
 export const createDropdown = ({ target, trigger, bindFilteroption = {}, filter, filterHandler, changeHandler = null }) => {
     bindFilteroption.filter = filter;
-    bindFilteroption.filterHandler = filterHandler;
+    bindFilteroption.filterHandler = filterHandler
 
     if (Array.isArray(trigger)) {
         return new Dropdown(target, trigger, bindFilteroption, changeHandler);

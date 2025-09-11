@@ -14,5 +14,7 @@ export const createCheckbox = ({ checked, classes, disabled, style, theme, title
         checkImg: checkImg
     };
 
-    return new Checkbox(parent, initOptions);
+    let checkbox_instance = new Checkbox(parent, initOptions);
+    console.log(checkbox_instance);
+    return checkbox_instance;
 };

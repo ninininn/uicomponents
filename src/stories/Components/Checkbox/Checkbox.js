@@ -38,7 +38,7 @@ export class Checkbox extends BaseComponent {
         }
 
         const defaultTheme = options.disabled
-            ? "var(--color-gray-500)"
+            ? "#808080"
             : options.theme || "var(--color-yellow-500)";
 
         // 把 inputElem 傳入作為 this._elem
@@ -46,6 +46,7 @@ export class Checkbox extends BaseComponent {
         this.UItype = "Checkbox";
         this.options = { ...this._defaultOptions, ...options };
         this.defaultTheme = options.theme || defaultTheme;
+        this.inputValue = this._defineInputValue(this.options.style,this.options.title,this.options.value);//跟著title切換?
         this.label = this._createLabelGroup(label, this.options?.style);
         this.container = this._createContainerGroup(container, this.label);
 
@@ -91,9 +92,9 @@ export class Checkbox extends BaseComponent {
     render() {
         //1. <input/> attribute settings
         this._elem.type = "checkbox";
-        this._elem.title = this.options.title;
+        // this._elem.title = this.options.title;
         this._elem.checked = this.options.checked;
-        this._elem.value = this.options.value;
+        this._elem.value = this.inputValue;
         UIUtils.addClass(this._elem, this.options.classes);
         UIUtils.setAttribute(
             this._elem,
@@ -106,6 +107,8 @@ export class Checkbox extends BaseComponent {
         switch (this.options.style) {
             case "switch":
                 UIUtils.addClass(this.label, ["label"]);
+                let titlenode = document.createTextNode(this.inputValue);
+                this.label.replaceChild(titlenode,this.label.childNodes[1]);
                 break;
             case "toggle":
                 UIUtils.setProperty(
@@ -127,10 +130,14 @@ export class Checkbox extends BaseComponent {
         //4. 判斷是否設定為禁止操作
         if (!this.options.disabled) {
             UIUtils.removeClass(this._elem, ["disabled"]);
+            this._elem.removeAttribute("disabled");
         } else {
             UIUtils.addClass(this._elem, ["disabled"]);
+            this._elem.setAttribute("disabled",true);
         }
+        console.log("render end:", this);
     }
+
 
     // 內部控制用
     // 建立完整結構
@@ -140,7 +147,7 @@ export class Checkbox extends BaseComponent {
         const checkboxStyle = style || "default";
         labelElem.appendChild(this._elem);
         // 如果有title文字(style=switch/toggle時一律不加)：
-        if (this.options.title && !["switch", "toggle"].includes(checkboxStyle)) {
+        if (this.options.title && style !== "toggle") {
             let titlenode = document.createTextNode(this.options.title);
             labelElem.appendChild(titlenode);
         }
@@ -164,6 +171,22 @@ export class Checkbox extends BaseComponent {
         return this.options.checkImg[state];
     }
 
+    //內部控制-切換inputValue
+    _defineInputValue(style, title, value) {
+        let displayText = title;//預設文字為title設定
+        let inputValue = value || title; // 預設 input.value為value，如果沒有設定則是title
+        let onoff = this.options.checked ? 0 : 1;
+        if (style === "switch") {
+            const titleText = title.trim().split("|");
+            const currentValue = value ? value.trim().split("|") : titleText;
+            displayText = titleText[onoff] || displayText || "";
+            inputValue = currentValue[onoff];
+        } else {
+            inputValue = this.options.checked ? inputValue : "";
+        }
+        // return inputValue;
+        return inputValue;
+    }
     //外部控制-取得checked狀態
     getChecked() {
         return this.options.checked;
@@ -171,33 +194,31 @@ export class Checkbox extends BaseComponent {
     //外部控制-設定checked狀態
     setChecked(checked) {
         this.options.checked = checked;
-        this._elem.checked = checked;
-
-        //如果是toggle樣式，要切換checkImg
-        if (this.options.style === "toggle") {
-            this.activeImg = this._toggleImg("toggle", this.options.checked);
-        }
-        // this.handlers(checked);
-        this.render();
+        this._applyUpdate();
     }
     //外部控制-取得value狀態
     getValue() {
-        return this.options.value;
+        return this.inputValue;
     }
     //外部控制-設定value狀態
     setValue(value) {
-        this.options.value = value;
-        this._elem.value = value;
-        this.render();
+        this.inputValue = value;
+        this._applyUpdate();
     }
     // 外部控制-更改顏色
     changeTheme(value) {
-        // if (this.disabled) {
-        //   console.error("請將disabled設定為false");
-        //   return;
-        // }
+        if (this.options.disabled) {
+          console.error("請將disabled設定為false");
+          return;
+        }
         super.setTheme(value);
-        this.render();
+        this._applyUpdate();
+    }
+
+    //外部控制-更改disabled狀態
+    setDisabled(value){
+        this.options.disabled = value;
+        this._applyUpdate();
     }
     // Event-relate
     _onChange(e) {
@@ -208,16 +229,29 @@ export class Checkbox extends BaseComponent {
             this.handlers(this.options.checked);
         }
 
-        //如果是toggle樣式，要切換checkImg
-        if (this.options.style === "toggle") {
-            this.activeImg = this._toggleImg("toggle", this.options.checked);
-        }
-        // this.relateElem.setDisabled(this.options.checked);
-        this.render();
+        this._applyUpdate();
     }
 
     _bindEvents() {
         this.onevent(this._elem, "change", this.onChange);
+    }
+
+    //內部控制-更新elem狀態+重新渲染
+    _applyUpdate() {
+        this._elem.checked = this.options.checked;
+        this._elem.value = this.inputValue;
+        this._elem.disabled = this.options.disabled;
+        //如果是toggle樣式，要切換checkImg
+        if (this.options.style === "toggle") {
+            this.activeImg = this._toggleImg("toggle", this.options.checked);
+        }
+        // this.inputValue = this._defineInputValue(this.options.style, this.options.title, this.options.value).inputValue;
+        // let updateTextNode = document.createTextNode(this.options.title);
+        // this.label.replaceChild(updateTextNode, this.label.childNodes[1]);
+        // if (this.options.style === "switch") {
+        // }
+
+        this.render();
     }
 }
 

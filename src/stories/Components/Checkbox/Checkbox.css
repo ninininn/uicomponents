@@ -1,6 +1,15 @@
 @reference "../../../style.css";
 
 @layer base {
+ @property --themeColor{
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f39386;
+ }
+
+ label,input{
+  @apply not-[&.disabled]:cursor-pointer
+ }
 
   /* input 標籤基本設定 */
   input:not([type="range"], [type="radio"], [type="checkbox"]),
@@ -12,8 +21,9 @@
     @apply pr-2;
   }
 
+  /* 調整操作效果 */
   input[type="checkbox"][data-checkstyle] {
-    @apply checked:border-0 checked:bg-primary-300 focus:outline-none
+    @apply text-gray-700 checked:border-0 checked:text-[var(--themeColor)] focus:outline-none hover:ring-2 hover:ring-[var(--themeColor)]/40 hover:text-[var(--themeColor)] transition-all 
   }
 
   input[type="checkbox"][id=false] {
@@ -44,16 +54,17 @@
   }
 
   input[type="checkbox"] {
-    @apply data-[checkstyle=switch]:hidden data-[checkstyle=switch]:appearance-none data-[checkstyle=toggle]:hidden data-[checkstyle=toggle]:appearance-none;
+    --themeColor: var(--themeColor, var(--color-primary-500));
+    @apply data-[checkstyle=switch]:hidden data-[checkstyle=switch]:appearance-none data-[checkstyle=toggle]:hidden data-[checkstyle=toggle]:appearance-none rounded-[4px] focus:ring-0!;
   }
 
   /* switch樣式 */
   label:has(input[data-checkstyle="switch"])::before {
-    @apply absolute top-[50%] left-1 inline-block aspect-square w-8 max-w-1/2 -translate-y-[50%] transform rounded-full border-2 border-gray-500 bg-gray-300 transition-all content-[""];
+    @apply absolute top-[50%] left-1 inline-block aspect-square w-8 max-w-1/2 -translate-y-[50%] transform rounded-full border-2 border-gray-300/70 bg-gray-50 transition-all content-[""];
   }
 
   label:has(input[data-checkstyle="switch"]) {
-    @apply relative inline-block h-full min-h-7 max-w-30 min-w-12 cursor-pointer rounded-full bg-white py-0.5 pr-10 pl-0.5 transition duration-75 hover:bg-gray-50;
+    @apply relative inline-block h-full min-h-7 min-w-12 cursor-pointer rounded-full bg-gray-100 py-0.5 pr-10 pl-0.5 transition duration-75 hover:bg-gray-200;
   }
 
   /* toggle樣式 */
@@ -73,7 +84,7 @@
   }
 
   label:has(input.disabled) {
-    @apply cursor-not-allowed pointer-events-none
+    @apply cursor-not-allowed pointer-events-none text-gray-400
   }
 }
 
@@ -89,11 +100,12 @@
   }
 
   .disabled {
+    --themeColor:var(--color-gray-300,#D1D5DB);
     @apply hover:cursor-not-allowed;
   }
 
   [data-checkstyle].checkbox {
-    @apply mr-1 checked:text-primary-600!;
+    @apply mr-1 checked:text-[var(--themeColor)]!;
   }
 
   .checkbox-group,
@@ -138,6 +150,6 @@
       @apply left-auto right-1;
     }
 
-    @apply pl-3 pr-10 text-green-600;
+    @apply pl-3 pr-10 bg-[var(--themeColor)] text-white;
   }
 }
