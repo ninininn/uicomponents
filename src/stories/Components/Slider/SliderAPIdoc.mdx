@@ -28,95 +28,112 @@ import {
 ```javascript
 new Slider(parentDOM, (options = {}));
 ```
-    >### parameters 參數設定
-    <span className="sb-unstyled font-black">parentDOM</span>
-    <span className="sb-unstyled data-type element">HTMLElement</span>
-    ```html
-    <!--  要放入的container -->
-    <div id="slider_1"></div>
-    ```
-    ```javascript
-    const sliderParent = document.getElementById("slider_1");
-    const sliderInstance = new Slider(sliderParent, {initValue: 79});
-    ```
-    <span className="sb-unstyled font-black"> options</span>
-    <span className="sb-unstyled data-type">object</span>
 
+>### parameters 參數設定
+- <span className="sb-unstyled font-black">parentDOM</span>
+  <span className="sb-unstyled data-type element">HTMLElement</span>  
+  ```html
+  <!--  要放入的container -->
+  <div id="slider_1"></div>
+  ```  
+  <br/>
+  ```javascript
+  const sliderParent = document.getElementById("slider_1");
+  const sliderInstance = new Slider(sliderParent, {initValue: 79});
+  ```  
+  <br/>
 
-    各屬性傳入型別可參考上方 Control 說明，以下 option 設定值為內部預設值。
-    ```javascript
-    const sliderOptions = {
-      min:1,
-      max:100,
-      initValue:0,
-      step:1,
-      range:false,
-      theme:'var(--color-primary-500)',
-      thumbImg:null,
-      classes:['slider'],
-      handler:null,
-      disabled:false
-    }
-    ```
+- <span className="sb-unstyled font-black"> options</span>
+  <span className="sb-unstyled data-type">object</span>  
+  各屬性傳入型別可參考上方 Control 說明，以下 option 設定值為內部預設值。  
 
-    >### methods 方法
+  ```javascript
+  const sliderOptions = {
+    min:1,
+    max:100,
+    initValue:0,
+    step:1,
+    range:false,
+    theme:'var(--color-primary-500)',
+    thumbImg:null,
+    classes:['slider'],
+    handler:null,
+    disabled:false
+  }
+  ```
+<br />
 
-     <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
-     <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>methods</td><td>descriptions</td><td>inherit</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
-          <tr><td className="font-bold">`.getValue()`</td><td>回傳該元件的 slider 數值</td></tr>
-          <tr><td className="font-bold">`.setValue(val)`</td><td>傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`</td></tr>
-          <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
-          <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
+> ### properties 內部屬性
+> <span class="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
 
-        </tbody>
-      </table>
-     </div>
+<div className="sb-unstyled table-container overflow-hidden">
+<table className="sb-unstyled table-content">
+  <thead>
+    <tr className="text-center">
+      <td>property</td><td>descriptions</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td className="font-bold">options</td><td>該 Slider 元件的 options 參數設定</td></tr>
+    <tr><td className="font-bold">childrens</td><td>指向該 Slider 元件的兩個子元件 [ `Sliderbar`, `SliderThumb`] (禁止從外部更改子元件設定)</td></tr>
+    <tr><td className="font-bold">thumb</td><td>指向 `SliderThumb` 子元件</td></tr>
+    <tr><td className="font-bold">bar</td><td>指向 `SliderBar` 子元件</td></tr>
+  </tbody>
+</table>
+</div>  
 
-      <span className="sb-unstyled methods">.getElem()</span>
-      ``` javascript
-        let sliderElem = Slider.getElem(); // return an DOM HTMLElement
-      ```
-      <span className="sb-unstyled methods">.getValue()</span>
-      ``` javascript
-        let value = Slider.getValue(); // 30
-      ```
-      <span className="sb-unstyled methods">.setValue(val)</span>
-      ``` javascript
-        Slider.setValue(45);
-      console.log(Slider.getValue()); // 45
-      ```
-      <span className="sb-unstyled methods">.changeTheme(HEX)</span>
-      ``` javascript
-        Slider.changeTheme("#878787");
-      ```
-      <span className="sb-unstyled methods">.setDisabled(boolean)</span>
-      ``` javascript
-        Slider.setDisabled(true); //Slider will become disabled
-      ```
+<br/>
 
-    >### properties 內部屬性 <span class="sb-unstyled data-type readonly">Read-only</span>
-    <p className="sb-unstyled alert-msg">可以操作的屬性皆須使用methods來更改</p>
+> ### methods 方法
+> 提供外部控制方法調整內部屬性值  
 
-     <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td><td>descriptions</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td className="font-bold">options</td><td>該 Slider 元件的 options 參數設定</td></tr>
-          <tr><td className="font-bold">childrens</td><td>指向該 Slider 元件的兩個子元件 [ `Sliderbar`, `SliderThumb`] (禁止從外部更改子元件設定)</td></tr>
-          <tr><td className="font-bold">thumb</td><td>指向 `SliderThumb` 子元件</td></tr>
-          <tr><td className="font-bold">bar</td><td>指向 `SliderBar` 子元件</td></tr>
-        </tbody>
-      </table>
-     </div>
+  <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+  <div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td><td>descriptions</td><td>inherit</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
+      <tr><td className="font-bold">`.getValue()`</td><td>回傳該元件的 slider 數值</td></tr>
+      <tr><td className="font-bold">`.setValue(val)`</td><td>傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`</td></tr>
+      <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
+      <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <span className="sb-unstyled methods">.getElem()</span>
+   - **Returns**  
+   回傳主元件的DOM節點(HTMLElement) - `<input/>`  
+  ``` javascript
+    let sliderElem = Slider.getElem(); // return an DOM HTMLElement
+  ```
+  <span className="sb-unstyled methods">.getValue()</span>  
+    - **Returns**  
+    回傳該元件的 slider 數值，如果是range則會回傳一個陣列
+  ``` javascript
+    let value = Slider.getValue(); // 30
+  ```
+  <span className="sb-unstyled methods">.setValue(val)</span>
+   - **Parameters**  
+  傳入數值更改value值，如果是range則傳入一陣列
+  ``` javascript
+    Slider.setValue(45);
+  console.log(Slider.getValue()); // 45
+  ```
+  <span className="sb-unstyled methods">.changeTheme(HEX)</span>
+   - **Parameters**  
+    參數可以放入任一HEX色碼，用來改變主題色
+  ``` javascript
+    Slider.changeTheme("#878787");
+  ```
+  <span className="sb-unstyled methods">.setDisabled(boolean)</span>
+   - **Parameters**  
+  傳入boolean值更改disabled狀態
+  ``` javascript
+    Slider.setDisabled(true); //Slider will become disabled
+  ```

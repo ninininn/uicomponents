@@ -62,7 +62,28 @@ new Checkbox(element, (options = {}));
     disabled: false,
     handlers: null,
   };
-  ```
+  ```  
+  <br />
+  <div className="sb-unstyled note-msg">
+    <span>title及value判斷說明 : </span>
+    <p>title屬性作為文字標籤、而value屬性則是作為`input.value`。</p>
+    <p>如果value沒有特別設定，則預設會以title作為value值；在切換checked狀態時，當樣式類型為**default**/**tag**，value會在設定值及""之間做切換；當樣式類型為**switch**時，value及title可以設定的值則會以|作為切換狀態區分。(見下方example說明)</p>
+    <div className="examples">
+      - <span className="sb-unstyled examples-title">style:"default", title:"一般勾選", value:""</span>  
+      checked: `{value:"一般勾選"}`  
+      unchecked: `{value:""}`
+    </div>
+    <div className="examples">
+      - <span className="sb-unstyled examples-title">style:"switch", title:"A|B", value:"C|D"</span>  
+      checked: `{title:"A", value:"C"}`  
+      unchecked: `{title:"B", value:"D"}`
+    </div>
+    <div className="examples">
+      - <span className="sb-unstyled examples-title">style:"switch", title:"A|B", value:""</span>  
+      checked: `{title:"A", value:"A"}`  
+      unchecked: `{title:"B", value:"B"}`
+    </div>
+  </div>
 
   <br />
 

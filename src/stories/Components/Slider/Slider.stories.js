@@ -30,20 +30,13 @@ export default {
     return container;
   },
   argTypes: {
-    UItype: {
-      control: "string",
-      description: "繼承自`BaseComponent`的屬性，代表該元件名稱",
-      table: {
-        readonly: true,
-        category:"Inherits BaseComponent",
-        defaultValue: { summary: "Slider" },
-      },
-    },
     handlers: {
       action: "callback",
       control: "function",
       description: "callback function，可以取用 slider value",
       table: {
+        category:"options parameter",
+
         defaultValue: { summary: "null" },
         type: { summary: "function" },
       },
@@ -52,6 +45,8 @@ export default {
       control: "number",
       description: "初始值，如果有開啟range功能則傳入Array",
       table: {
+        category:"options parameter",
+
         defaultValue: { summary: "0" },
         type: { summary: "number | array" },
       },
@@ -60,6 +55,7 @@ export default {
       control: "boolean",
       description: "控制雙向slider功能",
       table: {
+        category:"options parameter",
         defaultValue: { summary: "false" },
         type: { summary: "boolean" },
       },
@@ -68,6 +64,7 @@ export default {
       control: { type: "file" },
       description: "客製thumb圖示，可以放入圖片路徑來使用",
       table: {
+        category:"options parameter",
         defaultValue: { summary: "null" },
         type: { summary: "/path-to-img.png" },
       },
@@ -75,6 +72,7 @@ export default {
     step: {
       control: { type: "number" },
       table: {
+        category:"options parameter",
         defaultValue: { summary: "1" },
         type: { summary: "number" },
       },
@@ -83,19 +81,21 @@ export default {
       control: { type: "color", presetColors: ["var(--color-yellow-500)"] },
       description: "Slider主題色，可以傳入css variables 或是 HEX 色碼",
       table: {
-        category:"Inherits BaseComponent",
+        category:"options parameter",
+        subcategory:"Inherits BaseComponent",
         defaultValue: { summary: "var(--color-yellow-500)" },
         type: { summary: "string" },
       },
     },
-    min: { control: { type: "number" } },
-    max: { control: { type: "number" } },
+    min: { control: { type: "number" } ,table:{category:"options parameter"}},
+    max: { control: { type: "number" },table:{category:"options parameter"} },
     disabled: {
       control: "boolean",
       // type: { required: true },
       description:
         "是否為disabled狀態，可以搭配Checkbox元件(傳入checked值)使用",
       table: {
+        category:"options parameter",
         defaultValue: { summary: "false" },
         type: { summary: "boolean" },
       },

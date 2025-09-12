@@ -5,14 +5,14 @@ import * as prettier from 'prettier/standalone';
 import * as prettierPluginHtml from 'prettier/plugins/html';
 // import * as prettierPluginEstree from 'prettier/plugins/estree';
 import "../src/style.css";
-import { themes } from "storybook/internal/theming";
+import { themes ,ensure } from "storybook/internal/theming";
 const preview = {
   parameters: {
     docs: {
       page: DocumentationTemplate,
       codePanel: true,
-      toc: { disable: false, title: 'References' },
-      themes: themes.normal,
+      toc: { disable: false, title: 'References', headingSelector: 'h1, h2, h3' },
+      themes: ensure(themes.dark),
       source: {
         transform: async (source) => {
           try {

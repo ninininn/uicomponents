@@ -219,7 +219,7 @@ export class Checkbox extends BaseComponent {
     }
     // Event-relate
     _onChange(e) {
-        console.log("checkbox this._onChange");
+        // console.log("checkbox this._onChange");
         this.options.checked = e.target.checked;
         // this.options.checked = this._elem.checked;
         if (this.handlers) {

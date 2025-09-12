@@ -68,8 +68,19 @@ export default {
       control: { type: "boolean" },
       description: "是否開啟過濾功能",
       table: {
+        category:"bindFilteroption",
         defaultValue: { summary: "false" },
         type: { summary: "boolean" },
+      },
+    },
+    filterHandler: {
+      if: { arg: "bindFilteroption", truthy: true },
+      control: { type: "function" },
+      description: "過濾功能操作函式",
+      table: {
+        category:"bindFilteroption",
+        defaultValue: { summary: "null" },
+        type: { summary: "function" },
       },
     },
     changeHandler: {

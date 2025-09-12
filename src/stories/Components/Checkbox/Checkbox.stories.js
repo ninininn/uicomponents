@@ -1,4 +1,4 @@
-import { fn } from "storybook/test";
+import { fn, expect } from "storybook/test";
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from "storybook/actions";
 
@@ -116,6 +116,7 @@ export default {
       },
     },
     handlers: {
+      action:"change",
       control: "function",
       description: "作為change事件函式傳入",
       table: {
@@ -129,6 +130,7 @@ export default {
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // 預設args
   args: {
+    // handlers: action("change"),
   },
 };
 
@@ -137,11 +139,16 @@ export const defaultCheckbox = {
   args: {
     style: "default", //樣式
     title: "一般勾選框", //文字
-    value: "", //<input/>的value attribute
+    value: "default", //<input/>的value attribute
     checked: true,
     theme: "#61d45b", //預設顏色
-    checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
+    checkImg: ["/eye.svg", "/eye-off.svg"], //check圖標
     classes: ["checkbox"],
     disabled: false,
   },
+  // play: async ({ args, canvas, userEvent }) => {
+  //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');
+  //   await userEvent.click(canvas.getByLabelText('一般勾選框'));
+  //   await expect(args.handlers).toHaveBeenCalled();
+  // }
 };

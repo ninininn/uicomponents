@@ -18,6 +18,7 @@ const config = {
     "name": "@storybook/html-vite",
     "options": {}
   },
-  "docs": { defaultName: 'API Docs' }
+  "docs": { defaultName: 'API Docs' },
+  staticDirs: ['../public']
 };
 export default config;
