@@ -11,7 +11,7 @@ const config = {
     "@storybook/addon-essentials",
     "@chromatic-com/storybook",
     "@storybook/addon-interactions",
-    "@storybook/addon-a11y",
+    "@storybook/addon-themes",
     "@storybook/addon-styling-webpack"
   ],
   "framework": {

@@ -16,7 +16,7 @@ import {
 <Primary />
 
 # Controls
-這邊僅列出可以操作設定的 options.properties，內部屬性請參考[properties內部屬性]區塊。
+這邊僅列出初始化時可以設定的 options.properties，內部屬性請參考**properties屬性**區塊。
 
 <Controls />
 
@@ -24,7 +24,7 @@ import {
 
 # Usage API
 
-初始化 Checkbox 元件，帶入 `element`、`options` 參數，並設定內部屬性
+初始化 Checkbox 元件，帶入 `element`、`options` 參數，並設定options屬性
 
 ```javascript
 new Checkbox(element, (options = {}));
@@ -66,61 +66,8 @@ new Checkbox(element, (options = {}));
 
   <br />
 
-> ### methods 方法
-
-    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>methods</td><td>descriptions</td><td>inherit</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td className="font-bold">`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
-          <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
-          <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
-          <tr><td className="font-bold">`.getValue()`</td><td>回傳`<input/>` value值</td></tr>
-          <tr><td className="font-bold">`.getChecked()`</td><td>回傳`<input/>` checked值</td></tr>
-          <tr><td className="font-bold">`.setValue(value)`</td><td>傳入要設定`<input/>` value值</td></tr>
-          <tr><td className="font-bold">`.setChecked(boolean)`</td><td>傳入要設定checked值</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-<span className="sb-unstyled methods">.getElem()</span>
-``` javascript 
-Checkbox.getElem(); 
-```
-
-<span className="sb-unstyled methods">.changeTheme(HEXstring)</span>
-``` javascript
- Checkbox.changeTheme("#8ecb28"); 
- ```
-
-<span className="sb-unstyled methods">.setDisabled(boolean)</span>
-<span className="sb-unstyled methods">.setValue(boolean)</span>
-<span className="sb-unstyled methods">.setChecked(boolean)</span>
-``` javascript 
-// ...init Checkbox
-
-Checkbox.setDisabled(false);
-Checkbox.setValue(false);
-Checkbox.setChecked(true);
-
-```
-
-<span className="sb-unstyled methods">.getValue()</span>
-<span className="sb-unstyled methods">.getChecked()</span>
-``` javascript
-Checkbox.getValue(); //""
-Checkbox.getChecked(); //true
-````
-
-> ### properties 內部屬性 <span className="sb-unstyled data-type readonly">Read-only</span>
-
-<p className="sb-unstyled alert-msg">可以操作的屬性皆須使用methods來更改</p>
+> ### properties 內部屬性 
+> <span className="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
 
 <div className="sb-unstyled table-container overflow-hidden">
   <table className="sb-unstyled table-content">
@@ -177,3 +124,67 @@ Checkbox.getChecked(); //true
     </tbody>
   </table>
 </div>
+
+<br/>
+
+> ### methods 方法
+> 提供外部控制方法調整內部屬性值
+  
+    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>methods</td><td>descriptions</td><td>inherit</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td className="font-bold">`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
+          <tr><td className="font-bold">`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
+          <tr><td className="font-bold">`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
+          <tr><td className="font-bold">`.getValue()`</td><td>回傳`<input/>` value值</td></tr>
+          <tr><td className="font-bold">`.getChecked()`</td><td>回傳`<input/>` checked值</td></tr>
+          <tr><td className="font-bold">`.setValue(value)`</td><td>傳入要設定`<input/>` value值</td></tr>
+          <tr><td className="font-bold">`.setChecked(boolean)`</td><td>傳入要設定checked值</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+<span className="sb-unstyled methods">.getElem()</span>
+ - **Returns**  
+回傳主元件的DOM節點(HTMLElement) - `<input/>`  
+``` javascript 
+Checkbox.getElem(); 
+```  
+<span className="sb-unstyled methods">.changeTheme(HEXstring)</span>
+ - **Parameters**  
+ 參數可以放入任一HEX色碼，用來改變主題色
+
+<div className="sb-unstyled alert-msg">當disabled狀態為true時禁止修改(會跳出錯誤通知)</div>
+``` javascript
+ Checkbox.changeTheme("#8ecb28"); 
+```
+
+<span className="sb-unstyled methods">.setDisabled(boolean)</span>
+<span className="sb-unstyled methods">.setValue(value)</span>
+<span className="sb-unstyled methods">.setChecked(boolean)</span>
+ - **Parameters**  
+ 傳入boolean值更改disabled、checked狀態；傳入任一值更改`<input/>`的value值
+``` javascript 
+// ...init Checkbox
+
+Checkbox.setDisabled(false);
+Checkbox.setValue(value);
+Checkbox.setChecked(true);
+
+```
+<span className="sb-unstyled methods">.getValue()</span>
+<span className="sb-unstyled methods">.getChecked()</span>
+ - **Returns**  
+ 分別回傳`<input/>`的value及checked值
+``` javascript
+Checkbox.getValue(); //""
+Checkbox.getChecked(); //true
+````
+

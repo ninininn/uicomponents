@@ -12,7 +12,7 @@ const preview = {
       page: DocumentationTemplate,
       codePanel: true,
       toc: { disable: false, title: 'References' },
-      themes: "dark",
+      themes: themes.normal,
       source: {
         transform: async (source) => {
           try {

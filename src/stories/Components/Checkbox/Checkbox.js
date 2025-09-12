@@ -46,7 +46,7 @@ export class Checkbox extends BaseComponent {
         this.UItype = "Checkbox";
         this.options = { ...this._defaultOptions, ...options };
         this.defaultTheme = options.theme || defaultTheme;
-        this.inputValue = this._defineInputValue(this.options.style,this.options.title,this.options.value);//跟著title切換?
+        this.inputValue = this._defineInputValue(this.options.style, this.options.title, this.options.value).inputValue;
         this.label = this._createLabelGroup(label, this.options?.style);
         this.container = this._createContainerGroup(container, this.label);
 
@@ -92,7 +92,6 @@ export class Checkbox extends BaseComponent {
     render() {
         //1. <input/> attribute settings
         this._elem.type = "checkbox";
-        // this._elem.title = this.options.title;
         this._elem.checked = this.options.checked;
         this._elem.value = this.inputValue;
         UIUtils.addClass(this._elem, this.options.classes);
@@ -107,8 +106,9 @@ export class Checkbox extends BaseComponent {
         switch (this.options.style) {
             case "switch":
                 UIUtils.addClass(this.label, ["label"]);
-                let titlenode = document.createTextNode(this.inputValue);
-                this.label.replaceChild(titlenode,this.label.childNodes[1]);
+                //切換文字節點
+                let titlenode = document.createTextNode(this._defineInputValue(this.options.style, this.options.title, this.options.value).displayText);
+                this.label.replaceChild(titlenode, this.label.childNodes[1]);
                 break;
             case "toggle":
                 UIUtils.setProperty(
@@ -116,8 +116,6 @@ export class Checkbox extends BaseComponent {
                     "--toggle-img",
                     `url(${this.activeImg})`,
                 );
-                break;
-            case "filled":
                 break;
             case "tag":
                 //label classes:input-label,input-tag-group
@@ -133,9 +131,8 @@ export class Checkbox extends BaseComponent {
             this._elem.removeAttribute("disabled");
         } else {
             UIUtils.addClass(this._elem, ["disabled"]);
-            this._elem.setAttribute("disabled",true);
+            this._elem.setAttribute("disabled", true);
         }
-        console.log("render end:", this);
     }
 
 
@@ -147,7 +144,7 @@ export class Checkbox extends BaseComponent {
         const checkboxStyle = style || "default";
         labelElem.appendChild(this._elem);
         // 如果有title文字(style=switch/toggle時一律不加)：
-        if (this.options.title && style !== "toggle") {
+        if (this.options.title && checkboxStyle !== "toggle") {
             let titlenode = document.createTextNode(this.options.title);
             labelElem.appendChild(titlenode);
         }
@@ -179,13 +176,13 @@ export class Checkbox extends BaseComponent {
         if (style === "switch") {
             const titleText = title.trim().split("|");
             const currentValue = value ? value.trim().split("|") : titleText;
+            console.log(currentValue);
             displayText = titleText[onoff] || displayText || "";
-            inputValue = currentValue[onoff];
+            inputValue = currentValue[onoff] || displayText || " ";
         } else {
             inputValue = this.options.checked ? inputValue : "";
         }
-        // return inputValue;
-        return inputValue;
+        return { displayText, inputValue };
     }
     //外部控制-取得checked狀態
     getChecked() {
@@ -208,15 +205,15 @@ export class Checkbox extends BaseComponent {
     // 外部控制-更改顏色
     changeTheme(value) {
         if (this.options.disabled) {
-          console.error("請將disabled設定為false");
-          return;
+            console.error("請將disabled設定為false");
+            return;
         }
         super.setTheme(value);
         this._applyUpdate();
     }
 
     //外部控制-更改disabled狀態
-    setDisabled(value){
+    setDisabled(value) {
         this.options.disabled = value;
         this._applyUpdate();
     }
@@ -245,11 +242,8 @@ export class Checkbox extends BaseComponent {
         if (this.options.style === "toggle") {
             this.activeImg = this._toggleImg("toggle", this.options.checked);
         }
-        // this.inputValue = this._defineInputValue(this.options.style, this.options.title, this.options.value).inputValue;
-        // let updateTextNode = document.createTextNode(this.options.title);
-        // this.label.replaceChild(updateTextNode, this.label.childNodes[1]);
-        // if (this.options.style === "switch") {
-        // }
+
+        this.inputValue = this._defineInputValue(this.options.style, this.options.title, this.options.value).inputValue;
 
         this.render();
     }

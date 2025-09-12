@@ -107,7 +107,7 @@ export default {
     style: {
       control: "select",
       options: ["default", "switch", "toggle", "tag"],
-      description: "`樣式類型`",
+      description: "樣式類型",
       table: {
         // type: { required: true },
         category: "options parameter",
