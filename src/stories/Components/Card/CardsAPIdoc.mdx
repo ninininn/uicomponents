@@ -8,17 +8,18 @@ import {
   Unstyled,
 } from "@storybook/addon-docs/blocks";
 
-<Meta isTemplate title="How to use Checkbox" />
+<Meta isTemplate title="How to use Cards" />
 
 <Title />
-適用 : 勾選框；可以配合其他元件使用綁定屬性值
+適用 : 資訊面板的資料呈現
+<div className="sb-unstyled alert-msg">
+  <span>卡片元件的呈現方式可能會有多種變化，這邊僅先以基礎**資訊面板**(BasicInfoCard)作為示意說明</span>
+</div>
 
 <Primary />
 
 # Controls
-這邊僅列出初始化時可以設定的 options.properties，內部屬性請參考**properties屬性**區塊；  
-
-`checkboxGroup`的control僅為了示意群組樣式，相關元件設定請參考**CheckboxGroup**區塊說明。
+卡片元件設定較為複雜，Controls區塊包含初始化時可設定的相關參數(title, cardSize)及資料設定之參數細節(infoList)。
 
 <Controls />
 
@@ -26,34 +27,28 @@ import {
 
 # Usage API
 
-初始化 Checkbox 元件，帶入 `element`、`options` 參數，並設定options屬性
+初始化 BasicInfoCard 元件，帶入 `title`、`infoList`及`cardSize`參數。
 
 ```javascript
-new Checkbox(element, (options = {}));
+new BasicInfoCard(title, infoList, cardSize = 1);
 ```
 
 > ### parameters 參數設定
 
-- <span className="sb-unstyled font-black">element</span>
-  <span className="sb-unstyled data-type element">HTMLElement</span>
+- <span className="sb-unstyled font-black">title</span>
+  <span className="sb-unstyled data-type str">string</span>
 
-  可以傳入`<label/>`或`<input/>`兩種標籤元素節點，如果傳入的節點標籤種類不是這兩種，則會直接視為容器元素(container)，並自動補上對應結構。
-    ```html
-    <!-- 基本靜態結構 -->
-    <label class="label input-label">
-      <input type="checkbox" class="checkbox" />
-      文字內容
-    </label>
-    ```   
+  傳入卡片面版的標題文字
   <br/>
 
-- <span className="sb-unstyled font-black">options</span>
-  <span className="sb-unstyled data-type">object</span>
+- <span className="sb-unstyled font-black">infoList</span>
+  <span className="sb-unstyled data-type arr">array</span>
 
   各屬性的型別及說明可參考上方Controls區塊
 
+
   ```javascript
-  const options = {
+  const infoList = [{
     style: "default", //樣式
     title: "一般勾選框", //文字
     value: "", //<input/>的value attribute
@@ -63,9 +58,14 @@ new Checkbox(element, (options = {}));
     classes: ["checkbox"],
     disabled: false,
     handlers: null,
-  };
+  }];
   ```  
   <br />
+
+  - <span className="sb-unstyled font-black">cardSize</span>
+    <span className="sb-unstyled data-type num">number</span>  
+    卡片尺寸大小，預設為1(占滿)，也可以設定為2或3的尺寸。  
+
   <div className="sb-unstyled note-msg">
     <span>title及value判斷說明 : </span>
     <p>title屬性作為文字標籤、而value屬性則是作為`input.value`。</p>
@@ -227,8 +227,8 @@ Checkbox.getChecked(); //true
 ```  
 ---  
 
-# CheckboxGroup
-> 可以配合Checkbox元件做使用，需要先將要放入的checkbox初始化再放入  
+# Inherits
+> 主要extends from `Card` 類別，但資料部分則涉及 `Info` 類別，詳細請見個別說明。 
   
   初始化 CheckboxGroup 元件，帶入 `name`、`container` 參數
 
@@ -236,7 +236,7 @@ Checkbox.getChecked(); //true
 new CheckboxGroup(name, container);
 ```
 
-> ### parameters 參數設定
+> ### Card 類別
 
 - <span className="sb-unstyled font-black">name</span>
   <span className="sb-unstyled data-type str">string</span>  
@@ -260,8 +260,8 @@ new CheckboxGroup(name, container);
     ```   
 <br/>
 
-> ### properties 內部屬性  
-> <span className="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
+> ### Info 類別
+> <span className="sb-unstyled alert-msg">使用時不會直接操作到!僅用來整理資料用</span>
 
 <div className="sb-unstyled table-container overflow-hidden">
   <table className="sb-unstyled table-content">

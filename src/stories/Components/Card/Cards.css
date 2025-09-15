@@ -1,0 +1,40 @@
+@reference "../../../style.css";
+
+@layer components {
+  .card .data-title {
+    @apply text-secondary-800 text-lg font-bold tracking-wide;
+  }
+
+  /* card 樣式 */
+  .row-block {
+    & .card-label {
+      @apply text-secondary-600;
+    }
+
+    @apply flex w-full justify-between items-center [&>div]:w-full [&_.card-buttons]:flex-wrap;
+  }
+
+  .card-header {
+    @apply flex w-full items-center justify-between
+  }
+
+  .result-data-block .card {
+    @apply grid grid-cols-[100%] grid-rows-[0fr_auto] items-baseline transition-all duration-75 ease-[cubic-bezier(0.7,0.03,1,1.15)]
+  }
+
+  .card[data-minimize="mini"] {
+    @apply grid grid-rows-[auto_0] items-center overflow-hidden gap-0 [&_.data-title]:text-2xl px-5 max-h-fit
+  }
+
+  .card[data-minimize="mini"] .card-data-content {
+    @apply h-full grid grid-rows-[0fr] gap-0 p-0 opacity-0
+  }
+
+  .card-data-content {
+    @apply w-full bg-white rounded-sm p-3 overflow-x-scroll grid grid-rows-1 gap-1 transition-all duration-300
+  }
+
+  .card-buttons {
+    @apply flex gap-2 justify-center;
+  }
+}

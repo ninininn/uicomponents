@@ -40,20 +40,19 @@ export const createCheckbox = ({ checked, classes, disabled, style, name, theme,
             title: "群組勾選框A",
             checkImg: checkImg,
         });
+
         //其他選項示意
         let checkbox_item3 = new Checkbox({
             checked: checked,
             name: "group3",
             classes: classes,
-            disabled: disabled,
+            disabled: true,
             style: style,
             theme: "#c4729b",
             title: "群組勾選框B",
             checkImg: checkImg,
         });
-        group.addCheckItems(checkbox_instance);
-        group.addCheckItems(checkbox_item2);
-        group.addCheckItems(checkbox_item3);
+        group.addCheckItems([checkbox_instance, checkbox_item2, checkbox_item3]);
         return group;
     }
 

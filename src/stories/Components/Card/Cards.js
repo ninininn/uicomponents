@@ -527,7 +527,7 @@ let testCard = [
 
 
 
-//0902 圖例card
+//圖例card
 export class LevelCard{
   constructor({ labels, legends }){
     this.labels = labels;
