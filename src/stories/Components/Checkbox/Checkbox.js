@@ -48,6 +48,7 @@ export class Checkbox extends BaseComponent {
         this.defaultTheme = options.theme || defaultTheme;
         this.inputValue = this._defineInputValue(this.options.style, this.options.title, this.options.value).inputValue;
         this.label = this._createLabelGroup(label, this.options?.style);
+        this.name = this._elem.name || this.options.name || null;
         this.container = this._createContainerGroup(container, this.label);
 
         //0805
@@ -249,6 +250,43 @@ export class Checkbox extends BaseComponent {
     }
 }
 
-/**
- * define ElementType
- */
+
+// checkbox-Group
+export class CheckboxGroup extends BaseComponent {
+    constructor(name, container) {
+        let groupContainer = container || document.createElement("ul");
+        super(groupContainer);
+        this.UItype = "CheckboxGroup";
+        this.groupContainer = this._elem;
+        this.groupName = name; //群組名稱
+        this.items = [];
+        this._render();
+    }
+
+    //內部控制-渲染樣式
+    _render() {
+        this.groupContainer.className = "checkbox-group w-full grid grid-cols-2";
+    }
+
+    //外部控制-取得group內指定input的value
+    //應該要回傳一組物件{name,value}，讓後續可以直接取用
+    getValue(name) {
+        let nameValuePair = {};
+        for (let item of this.items) {
+            if (!item.name || item.name !== name) break;
+            nameValuePair.name = item.name;
+            nameValuePair.value = item.getValue();
+        }
+        return nameValuePair;
+    }
+    //外部控制-放入checkbox item
+    addCheckItems(item) {
+        this.items = [...this.items, item];//放入的是Checkbox instance，不是<input/>
+        let li = document.createElement("li");
+        li.classList.add("item");
+        li.appendChild(item.container);
+        this._elem.appendChild(li);
+
+        this._render();
+    }
+}

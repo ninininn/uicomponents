@@ -11,7 +11,7 @@ const preview = {
     docs: {
       page: DocumentationTemplate,
       codePanel: true,
-      toc: { disable: false, title: 'References', headingSelector: 'h1, h2, h3' },
+      toc: { disable: false, title: 'Reference', headingSelector: 'h1, h2, h3' },
       themes: ensure(themes.dark),
       source: {
         transform: async (source) => {

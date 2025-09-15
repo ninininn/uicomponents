@@ -192,88 +192,88 @@ new Dropdown(target, trigger, (bindFilteroption = {}), changeHandler);
 > ### methods 方法
 > 提供外部控制方法調整內部屬性值
 
-    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>methods</td><td>descriptions</td><td>inherit</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td className="font-bold">`.show()`</td><td>顯示綁定的下拉選單</td><td>`flowbiteDropdown`</td></tr>
-          <tr><td className="font-bold">`.hide()`</td><td>隱藏綁定的下拉選單</td><td>`flowbiteDropdown`</td></tr>
-          <tr><td className="font-bold">`.toggle()`</td><td>切換綁定的下拉選單顯示與否</td><td>`flowbiteDropdown`</td></tr>
-          <tr><td className="font-bold">`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
-          <tr><td className="font-bold">`.getdropDownInstance()`</td><td>回傳該元件instance object</td></tr>
-          <tr><td className="font-bold">`.getDropdownChildren()`</td><td>回傳 `dropdownChildren` 屬性</td></tr>
-          <tr><td className="font-bold">`.getTargetDropdown()`</td><td>回傳 `<ul>` 節點</td></tr>
-          <tr><td className="font-bold">`.getBindSelect()`</td><td>回傳 `<select>` 節點</td></tr>
-          <tr><td className="font-bold">`.clearDropdown()`</td><td>清除 `<ul>`&`<select>`子節點</td></tr>
-          <tr><td className="font-bold">`.renderDropdownChildren(...args)`</td><td>重新渲染節點(單純渲染節點、不改value)</td></tr>
-          <tr><td className="font-bold">`.updateValue()`</td><td>更新預設 `<select>` 的value值(通常render完設定為第一項，如果`<select>`本身有selected option 則以它為主)；通常會接著搭配 `.updateValue()`使用</td></tr>
-        </tbody>
-      </table>
-    </div>  
+  <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+  <div className="sb-unstyled table-container overflow-hidden">
+    <table className="sb-unstyled table-content">
+      <thead>
+        <tr className="text-center">
+          <td>methods</td><td>descriptions</td><td>inherit</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td className="font-bold">`.show()`</td><td>顯示綁定的下拉選單</td><td>`flowbiteDropdown`</td></tr>
+        <tr><td className="font-bold">`.hide()`</td><td>隱藏綁定的下拉選單</td><td>`flowbiteDropdown`</td></tr>
+        <tr><td className="font-bold">`.toggle()`</td><td>切換綁定的下拉選單顯示與否</td><td>`flowbiteDropdown`</td></tr>
+        <tr><td>`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
+        <tr><td>`.getdropDownInstance()`</td><td>回傳該元件instance object</td></tr>
+        <tr><td>`.getDropdownChildren()`</td><td>回傳 `dropdownChildren` 屬性</td></tr>
+        <tr><td>`.getTargetDropdown()`</td><td>回傳 `<ul>` 節點</td></tr>
+        <tr><td>`.getBindSelect()`</td><td>回傳 `<select>` 節點</td></tr>
+        <tr><td>`.clearDropdown()`</td><td>清除 `<ul>`&`<select>`子節點</td></tr>
+        <tr><td>`.renderDropdownChildren(...args)`</td><td>重新渲染節點(單純渲染節點、不改value)；通常會接著搭配 `.updateValue()`使用</td></tr>
+        <tr><td>`.updateValue()`</td><td>更新預設 `<select>` 的value值(通常render完設定為第一項，如果`<select>`本身有selected option 則以它為主)</td></tr>
+      </tbody>
+    </table>
+  </div>  
 
-<span className="sb-unstyled methods">.show()</span>
-<span className="sb-unstyled methods">.hide()</span>
-<span className="sb-unstyled methods">.toggle()</span>
-<a
-  className="sb-unstyled linkout"
-  href="https://flowbite.com/docs/components/dropdowns/"
-> more in flowbite docs</a>
+  <span className="sb-unstyled methods">.show()</span>
+  <span className="sb-unstyled methods">.hide()</span>
+  <span className="sb-unstyled methods">.toggle()</span>
+  <a
+    className="sb-unstyled linkout"
+    href="https://flowbite.com/docs/components/dropdowns/"
+  > more in flowbite docs</a>
 
-```javascript
-let dropdownInstance = new Dropdown(target, trigger);
+  ```javascript
+  let dropdownInstance = new Dropdown(target, trigger);
 
-dropdownInstance.show(); //list show
-dropdownInstance.hide(); //list hide
-dropdownInstance.toggle(); //switch list visible
-```
+  dropdownInstance.show(); //list show
+  dropdownInstance.hide(); //list hide
+  dropdownInstance.toggle(); //switch list visible
+  ```
 
-<span className="sb-unstyled methods">.getDropdownChildren()</span>
- - **Returns**  
- 回傳`dropdownChildren`屬性
-``` javascript 
-let children = Dropdown.getDropdownChildren();
-```
+  <span className="sb-unstyled methods">.getDropdownChildren()</span>
+  - **Returns**  
+  回傳`dropdownChildren`屬性
+  ``` javascript 
+  let children = Dropdown.getDropdownChildren();
+  ```
 
-<span className="sb-unstyled methods">.getTargetDropdown()</span>
- - **Returns**  
- 回傳targetEl屬性(也就是`<ul>`)
-``` javascript 
-let target = Dropdown.getTargetDropdown();
-```
+  <span className="sb-unstyled methods">.getTargetDropdown()</span>
+  - **Returns**  
+  回傳targetEl屬性(也就是`<ul>`)
+  ``` javascript 
+  let target = Dropdown.getTargetDropdown();
+  ```
 
-<span className="sb-unstyled methods">.getBindSelect()</span>
- - **Returns**  
- 回傳bindSelect屬性(也就是`<select>`)
-``` javascript 
-let select = Dropdown.getBindSelect();
-```
+  <span className="sb-unstyled methods">.getBindSelect()</span>
+  - **Returns**  
+  回傳bindSelect屬性(也就是`<select>`)
+  ``` javascript 
+  let select = Dropdown.getBindSelect();
+  ```
 
-<span className="sb-unstyled methods">.clearDropdown()</span>
-``` javascript 
-Dropdown.clearDropdown(); //children will be clear 
-```
-<span className="sb-unstyled methods">.renderDropdownChildren(newliChild, newoptChild, text, optValue = null)</span>
- - **Parameters**  
-    - `newChild`: `<li>`節點
-    - `text`: 選項文字
-    - `newoptChild`:  `<option>`節點
-    - `optValue`: 指定 `<option>` value 值
+  <span className="sb-unstyled methods">.clearDropdown()</span>
+  ``` javascript 
+  Dropdown.clearDropdown(); //children will be clear 
+  ```
+  <span className="sb-unstyled methods">.renderDropdownChildren(newliChild, newoptChild, text, optValue = null)</span>
+  - **Parameters**  
+      - `newChild`: `<li>`節點
+      - `text`: 選項文字
+      - `newoptChild`:  `<option>`節點
+      - `optValue`: 指定 `<option>` value 值
 
-```javascript
-let li = document.createElement("li");
-let opt = document.createElement("option");
+  ```javascript
+  let li = document.createElement("li");
+  let opt = document.createElement("option");
 
-Dropdown.renderDropdownChildren(li, "AA", opt, 1);
-```
+  Dropdown.renderDropdownChildren(li, "AA", opt, 1);
+  ```
 
-<span className="sb-unstyled methods">.updateValue()</span>
-```javascript
- //previous renderChildren operations... 
- Dropdown.updateValue();
-```
+  <span className="sb-unstyled methods">.updateValue()</span>
+  ```javascript
+  //previous renderChildren operations... 
+  Dropdown.updateValue();
+  ```
 

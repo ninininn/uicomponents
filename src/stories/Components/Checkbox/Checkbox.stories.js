@@ -24,7 +24,11 @@ export default {
     // You can either use a function to create DOM elements or use a plain html string!
     // return `<div>${label}</div>`;
     let checkboxInstance = createCheckbox({ ...args });
-    return checkboxInstance.container;
+    if (checkboxInstance.UItype ==="Checkbox"){
+      return checkboxInstance.container;
+    }else{
+      return checkboxInstance.groupContainer;
+    }
   },
   argTypes: {
     checked: {
@@ -46,6 +50,14 @@ export default {
         category: "options parameter",
         defaultValue: { summary: "null" },
         type: { summary: "string | number" },
+      },
+    },
+    name: {
+      control: "text",
+      description: "input標籤的name attribute",
+      table: {
+        category: "options parameter",
+        type: { summary: "string" },
       },
     },
     theme: {
@@ -116,7 +128,7 @@ export default {
       },
     },
     handlers: {
-      action:"change",
+      action: "change",
       control: "function",
       description: "作為change事件函式傳入",
       table: {
@@ -131,12 +143,14 @@ export default {
   // 預設args
   args: {
     // handlers: action("change"),
+    checkboxGroup:false,
   },
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const defaultCheckbox = {
   args: {
+    name: "testing",//name attribute
     style: "default", //樣式
     title: "一般勾選框", //文字
     value: "default", //<input/>的value attribute
