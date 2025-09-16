@@ -8,7 +8,7 @@
 /* @import "../src/Components/styles/Checkbox.css"; */
 /* @import "../src/Components/styles/Datepicker.css"; */
 /* @import "../src/stories/Components/styles/Slider.css"; */
-/* @import "../src/Components/styles/Button.css";  */
+@import "../src/stories/Components/Button/Button.css"; 
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

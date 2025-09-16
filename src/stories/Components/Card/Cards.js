@@ -1,4 +1,6 @@
-export class Card {
+import { BaseComponent } from "../../../Utils";
+
+export class Card extends BaseComponent {
   constructor(title, cardSize) {
     let cardContainer = document.createElement("div");
     cardContainer.classList.add("card");
@@ -19,7 +21,9 @@ export class Card {
               </button>
             </div>     
         </div>`;
-    this.cardContainer = cardContainer;
+    super(cardContainer);
+    this.UItype = "Card";
+    this.cardContainer = this._elem;
     this.title = title;
     this._cardsize = this._setCardSize(cardSize); //設定卡片尺寸
     this.minimize = false; //0827縮小功能
@@ -245,7 +249,7 @@ export class BasicInfoCard extends Card {
         this._contentBlock.appendChild(block);
       }
     });
-    console.log("groupMap:", groupMap);
+    // console.log("groupMap:", groupMap);
     groupMap.forEach((rows, groupid) => {
       const groupDiv = document.createElement("div");
       groupDiv.id = groupid;

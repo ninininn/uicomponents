@@ -44,50 +44,53 @@ new BasicInfoCard(title, infoList, cardSize = 1);
 - <span className="sb-unstyled font-black">infoList</span>
   <span className="sb-unstyled data-type arr">array</span>
 
-  各屬性的型別及說明可參考上方Controls區塊
+  各屬性的型別及說明可參考上方Controls區塊；每個`{}`都是一個 row 區塊，排列組成完整資訊面板。
 
 
   ```javascript
   const infoList = [{
-    style: "default", //樣式
-    title: "一般勾選框", //文字
-    value: "", //<input/>的value attribute
-    checked: true,
-    theme: "var(--color-blue-500)", //預設顏色
-    checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
-    classes: ["checkbox"],
-    disabled: false,
-    handlers: null,
+    blockId: "default", //區塊指定id
+    blockclass: ["flex","gap-4"], //tailwindcss 樣式
+    label: "", //資料標題文字
+    value: "", //資料內容
+    customInner: `<div class="container"></div>`, //直接放入innerHTML或是帶入其他HTMLElement的容器
+    btn: [ //按鈕清單，每個{}視為一個btn資料
+      {
+        text:"", //按鈕文字
+        class:[], //按鈕樣式(預設已經帶入.btn)
+        handler:null //click事件函式
+      }
+    ],
+    btngroupClass: "flex-col gap-[4px]",//按鈕群組樣式(string)
   }];
   ```  
-  <br />
-
-  - <span className="sb-unstyled font-black">cardSize</span>
-    <span className="sb-unstyled data-type num">number</span>  
-    卡片尺寸大小，預設為1(占滿)，也可以設定為2或3的尺寸。  
-
-  <div className="sb-unstyled note-msg">
-    <span>title及value判斷說明 : </span>
-    <p>title屬性作為文字標籤、而value屬性則是作為`input.value`。</p>
-    <p>如果value沒有特別設定，則預設會以title作為value值；在切換checked狀態時，當樣式類型為**default**/**tag**，value會在設定值及""之間做切換；當樣式類型為**switch**時，value及title可以設定的值則會以|作為切換狀態區分。(見下方example說明)</p>
+  <br />  
+    <div className="sb-unstyled note-msg">
+    <span>label 及 value 屬性傳入型別說明</span>
+    <p>原則上一個`{}`內的屬性會視為同一欄(row)，如果要在同一個row顯示多組資料，可以在`label`及`value`屬性帶入array型別的資料。(但上方control處先以單一資料呈現操作)</p>
+    <p>需要注意的是，如果`label`傳入一陣列，那`value`也需要傳入陣列，如果對應資料尚未知，可以先放入`" "`作為替代；然而如果沒有帶入`value`，但是有`customInner`，則預設會直接把 label & customInner 視為同一組。</p>  
+    <br/>
     <div className="examples">
-      - <span className="sb-unstyled examples-title">style:"default", title:"一般勾選", value:""</span>  
-      checked: `{value:"一般勾選"}`  
-      unchecked: `{value:""}`
+      - <span className="sb-unstyled examples-title">label:"A", value:"B"</span>
     </div>
     <div className="examples">
-      - <span className="sb-unstyled examples-title">style:"switch", title:"A|B", value:"C|D"</span>  
-      checked: `{title:"A", value:"C"}`  
-      unchecked: `{title:"B", value:"D"}`
+      - <span className="sb-unstyled examples-title">label:["A", "B"], value:["a", "b"]</span>  
     </div>
     <div className="examples">
-      - <span className="sb-unstyled examples-title">style:"switch", title:"A|B", value:""</span>  
-      checked: `{title:"A", value:"A"}`  
-      unchecked: `{title:"B", value:"B"}`
+      - <span className="sb-unstyled examples-title">label:["A", "B"], value:["a", " "]</span>  
+    </div>
+    <div className="examples">
+      - <span className="sb-unstyled examples-title">label:"A", customInner:`<div></div>`</span>  
     </div>
   </div>
 
-  <br />
+  <br/>
+
+- <span className="sb-unstyled font-black">cardSize</span>
+  <span className="sb-unstyled data-type num">number</span>  
+  卡片尺寸大小，預設為1(最小)，也可以設定為2或3(全滿)的尺寸。  
+
+<br />
 
 > ### properties 內部屬性 
 > <span className="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
@@ -100,64 +103,42 @@ new BasicInfoCard(title, infoList, cardSize = 1);
         <td>default</td>
         <td>type</td>
         <td>descriptions</td>
+        <td>inherit</td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td className="font-bold">UItype</td>
-        <td>Checkbox</td>
+        <td>Card</td>
         <td>string</td>
         <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+        <td>`Card` 類別</td>
       </tr>
       <tr>
-        <td className="font-bold">inputValue</td>
-        <td>`options.title`</td>
-        <td>string</td>
-        <td>`<input/>`的value值，如果沒有特別設定會預設為`options.title`內容；當`style`設定為switch時，則會自動判定`|`前後的文字並做切換；其他樣式類型時則是切換`""`及title內容</td>
+        <td className="font-bold">cardContainer</td>
+        <td>-</td>
+        <td>HTMLElement</td>
+        <td>當前顯示的圖示，`style`為toggle時才會出現</td>
+        <td>`Card` 類別</td>
       </tr>
       <tr>
-        <td className="font-bold">activeImg</td>
+        <td className="font-bold">title</td>
         <td>-</td>
         <td>string</td>
-        <td>當前顯示的圖示，`style`為toggle時才會出現</td>
+        <td>卡片標題(Header)</td>
+        <td>`Card` 類別</td>
       </tr>
       <tr>
-        <td className="font-bold">container</td>
-        <td>`<label/>`元素</td>
-        <td>HTMLElement</td>
-        <td>
-          容器節點，如果沒有特別指定就會是`<label/>`
-        </td>
+        <td className="font-bold">blocks</td>
+        <td>[]</td>
+        <td>array</td>
+        <td>記錄此卡片內所有內容區塊</td>
       </tr>
       <tr>
-        <td className="font-bold">defaultTheme</td>
-        <td>--themeColor</td>
-        <td>string</td>
-        <td>初始主題色系</td>
-      </tr>
-      <tr>
-        <td className="font-bold">label</td>
-        <td>`<label/>`元素</td>
-        <td>HTMLElement</td>
-        <td>記錄此元件的`<label/>`節點</td>
-      </tr>
-      <tr>
-        <td className="font-bold">name</td>
-        <td>null</td>
-        <td>string</td>
-        <td>記錄此元件`<input/>`標籤的name屬性</td>
-      </tr>
-      <tr>
-        <td className="font-bold">options</td>
-        <td>`options`參數</td>
-        <td>object</td>
-        <td>傳入的設定值，詳細屬性可以參考上方options參數說明處</td>
-      </tr>
-      <tr>
-        <td className="font-bold">originParent</td>
-        <td>null</td>
-        <td>HTMLElement</td>
-        <td>如果初始化時帶入的`element`節點有父元素，則預設為該元素；沒有的話就會是null</td>
+        <td className="font-bold">infoList</td>
+        <td>[]</td>
+        <td>array</td>
+        <td>各區塊資料設定</td>
       </tr>
     </tbody>
   </table>
@@ -174,186 +155,159 @@ new BasicInfoCard(title, infoList, cardSize = 1);
       <table className="sb-unstyled table-content">
         <thead>
           <tr className="text-center">
-            <td>methods</td><td>descriptions</td><td>inherit</td>
+            <td>methods</td><td>descriptions</td>
           </tr>
         </thead>
         <tbody>
-          <tr><td>`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
-          <tr><td>`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
-          <tr><td>`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
-          <tr><td>`.getValue()`</td><td>回傳`<input/>` value值</td></tr>
-          <tr><td>`.getChecked()`</td><td>回傳`<input/>` checked值</td></tr>
-          <tr><td>`.setValue(value)`</td><td>傳入要設定`<input/>` value值</td></tr>
-          <tr><td>`.setChecked(boolean)`</td><td>傳入要設定checked值</td></tr>
+          <tr><td>`.addBlocks(addInfo, options = {})`</td><td>新增項目or欄位</td></tr>
+          <tr><td>`.clearBlocks()`</td><td>清空dataContent</td></tr>
+          <tr><td>`.deleteBlock(label)`</td><td>刪除單一欄位UI&對應資料</td></tr>
+          <tr><td>`.toggleBlock(groupId)`</td><td>切換區塊visible</td></tr>
         </tbody>
       </table>
     </div>
 
-<span className="sb-unstyled methods">.getElem()</span>
- - **Returns**  
-回傳主元件的DOM節點(HTMLElement) - `<input/>`  
-``` javascript 
-Checkbox.getElem(); 
-```  
-<span className="sb-unstyled methods">.changeTheme(HEXstring)</span>
+<span className="sb-unstyled methods">.addBlocks(addInfo, options)</span>
  - **Parameters**  
- 參數可以放入任一HEX色碼，用來改變主題色
+    - <span className="sb-unstyled font-black">addInfo</span>
+      <span className="sb-unstyled data-type arr">array</span>  
+      要加入的資訊區塊設定，等同於 `infoList` 參數設定  
+        
+    - <span className="sb-unstyled font-black">options</span>
+      <span className="sb-unstyled data-type">object</span>  
+      onceSetting，是否只新增一次，其他時候則用替換方式取代原內容。  
 
-<div className="sb-unstyled alert-msg">當disabled狀態為true時禁止修改(會跳出錯誤通知)</div>
+      - **`once`** 是否只新增一次
+      - **`id`** 當once設定為true時，必須給定id作為groupId  
+
+  ```javascript
+    BasicInfoCard.addBlocks(buildno, { once: true, id:"buildno_1" });
+  ```
+<br/>
+<span className="sb-unstyled methods">.clearBlocks()</span>
+ - **清空dataContent(僅清空blocks節點，資料仍留存)**  
+
 ``` javascript
- Checkbox.changeTheme("#8ecb28"); 
+ BasicInfoCard.clearBlocks(); 
 ```
 
-<span className="sb-unstyled methods">.setDisabled(boolean)</span>
-<span className="sb-unstyled methods">.setValue(value)</span>
-<span className="sb-unstyled methods">.setChecked(boolean)</span>
+<span className="sb-unstyled methods">.deleteBlock(label)</span>
  - **Parameters**  
- 傳入boolean值更改disabled、checked狀態；傳入任一值更改`<input/>`的value值
+ 傳入欄位文字來刪除單一欄位UI&對應資料
+ <span className="sb-unstyled alert-msg">須注意是針對單一欄位來做刪除(要有label)!</span>
+
 ``` javascript 
-// ...init Checkbox
-
-Checkbox.setDisabled(false);
-Checkbox.setValue(value);
-Checkbox.setChecked(true);
-
+ BasicInfoCard.deleteBlock("資料欄位A"); 
 ```
-<span className="sb-unstyled methods">.getValue()</span>
-<span className="sb-unstyled methods">.getChecked()</span>
- - **Returns**  
- 分別回傳`<input/>`的value及checked值
+<span className="sb-unstyled methods">.toggleBlock()</span>
+ - **parameters**  
+ 可以切換同一個card內的group(有點類似tab)；使用`addBlock({once})`後會綁定內部屬性`_groupId`，可以用來切換
 ``` javascript
-Checkbox.getValue(); //""
-Checkbox.getChecked(); //true
+BasicInfoCard.toggleBlock("buildno_1");
 ```  
 ---  
 
-# Inherits
-> 主要extends from `Card` 類別，但資料部分則涉及 `Info` 類別，詳細請見個別說明。 
-  
-  初始化 CheckboxGroup 元件，帶入 `name`、`container` 參數
-
-```javascript
-new CheckboxGroup(name, container);
-```
+# Inherits  
+<div className="sb-unstyled alert-msg">做為`Card`類別的子類別之一，繼承其相關屬性；但資料部分則涉及 `Info` 類別，詳細請見個別說明。</div>  
 
 > ### Card 類別
 
-- <span className="sb-unstyled font-black">name</span>
-  <span className="sb-unstyled data-type str">string</span>  
-  群組名稱
-  <br/>
+  - #### parameters 參數設定
+    - <span className="sb-unstyled font-black">title</span>
+      <span className="sb-unstyled data-type str">string</span>  
+      卡片標題名稱(Header部分)
 
-- <span className="sb-unstyled font-black">container</span>
-  <span className="sb-unstyled data-type element">HTMLElement</span>  
+    - <span className="sb-unstyled font-black">cardSize</span>
+      <span className="sb-unstyled data-type num">number</span>  
 
-  傳入`<ul/>`標籤元素節點，如果沒有傳入則會自動建立一個
-    ```html
-    <!-- 基本靜態結構 -->
-    <ul class="checkbox-group">
-      <li class="item">
-        <label>
-          <input type="checkbox" class="checkbox" />
-          文字內容
-        </label>
-      </li>
-    </ul>
-    ```   
-<br/>
-
-> ### Info 類別
-> <span className="sb-unstyled alert-msg">使用時不會直接操作到!僅用來整理資料用</span>
-
-<div className="sb-unstyled table-container overflow-hidden">
-  <table className="sb-unstyled table-content">
-    <thead>
-      <tr className="text-center">
-        <td>property</td>
-        <td>default</td>
-        <td>type</td>
-        <td>descriptions</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td className="font-bold">UItype</td>
-        <td>CheckboxGroup</td>
-        <td>string</td>
-        <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-      </tr>
-      <tr>
-        <td className="font-bold">groupContainer</td>
-        <td>`<ul/>`標籤元素</td>
-        <td>HTMLElement</td>
-        <td>容器元素節點</td>
-      </tr>
-      <tr>
-        <td className="font-bold">groupName</td>
-        <td>-</td>
-        <td>string</td>
-        <td>此元件群組名稱</td>
-      </tr>
-      <tr>
-        <td className="font-bold">items</td>
-        <td>[]</td>
-        <td>array</td>
-        <td>
-          儲存所有子元件(Checkbox)
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<br/>
-
-> ### methods 方法
-> 提供外部控制方法調整內部屬性值  
-
-    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
-
+      卡片尺寸設定，由小到大分別為1、2、3 
+    <br/>
+  - #### properties 內部屬性
     <div className="sb-unstyled table-container overflow-hidden">
       <table className="sb-unstyled table-content">
         <thead>
           <tr className="text-center">
-            <td>methods</td><td>descriptions</td><td>inherit</td>
+            <td>property</td>
+            <td>default</td>
+            <td>type</td>
+            <td>descriptions</td>
           </tr>
         </thead>
         <tbody>
-          <tr><td>`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
-          <tr><td>`.getValue(name)`</td><td>取得群組內對應name屬性的`<input/>`value-pair 物件</td></tr>
-          <tr><td>`.addCheckItems(item)`</td><td>在群組內加入新的Checkbox元件</td></tr>
+          <tr>
+            <td className="font-bold">UItype</td>
+            <td>Card</td>
+            <td>string</td>
+            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+          </tr>
+          <tr>
+            <td className="font-bold">cardContainer</td>
+            <td>`<ul/>`標籤元素</td>
+            <td>HTMLElement</td>
+            <td>卡片元素節點</td>
+          </tr>
+          <tr>
+            <td className="font-bold">title</td>
+            <td>-</td>
+            <td>string</td>
+            <td>卡片標題(Header)</td>
+          </tr>
+          <tr>
+            <td className="font-bold">minimize</td>
+            <td>false</td>
+            <td>boolean</td>
+            <td>是否為縮小狀態</td>
+          </tr>
         </tbody>
       </table>
     </div>
+<br/>
 
-<span className="sb-unstyled methods">.getElem()</span>
- - **Returns**  
-回傳主元件的DOM節點(HTMLElement) - `<ul/>`  
-``` javascript 
-CheckboxGroup.getElem(); 
+> ### Info 類別
+> <span className="sb-unstyled alert-msg">負責整併card資料欄位(不會直接操作到!)</span>  
+
+```javascript
+  BasicInfoCard._infoStruct = new Info(infoArray);
+  //此處的_infoStruct屬性禁止外部取用!
 ```  
 
-<span className="sb-unstyled methods">.getValue(name)</span>
- - **Paramenters**  
- 可以單獨傳入指定 name attribute
- - **Returns**  
- 如果有傳入指定參數則會回傳一組對應`name`的 name-value pair 物件，可以作為後續使用；沒有傳入參數則是回傳一個包含所有 checkbox instance 的 name-value pair 的陣列。
-``` javascript
-CheckboxGroup.getValue("test"); //{name: "test", value: ""}
-CheckboxGroup.getValue(); //[{name: "test", value: ""},{name: "A", value: "A"}]
-```  
+  - #### parameters 參數設定
+    - <span className="sb-unstyled font-black">infoArray</span>
+      <span className="sb-unstyled data-type str">array</span>  
+      `BasicInfoCard`傳入的資料設定陣列(infolist)
 
-<span className="sb-unstyled methods">.addCheckItems(item)</span>
- - **Paramenters**  
- 可以傳入一個或多個 Checkbox 元件，如果傳入多個元件則要以**陣列**形式傳入。
+    <br/>
 
-``` javascript
-let child = new Checkbox(options);
-CheckboxGroup.addCheckItems(child);
-```  
-``` javascript
-let child1 = new Checkbox(options);
-let child2 = new Checkbox(options);
-let child3 = new Checkbox(options);
-
-CheckboxGroup.addCheckItems([child1, child2, child3]);
-```  
+  - #### properties 內部屬性
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>property</td>
+            <td>default</td>
+            <td>type</td>
+            <td>descriptions</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="font-bold">originInfos</td>
+            <td>-</td>
+            <td>object</td>
+            <td>包裝原始傳入的infoList設定</td>
+          </tr>
+          <tr>
+            <td className="font-bold">rowNum</td>
+            <td>0</td>
+            <td>number</td>
+            <td>紀錄資料區塊數量</td>
+          </tr>
+          <tr>
+            <td className="font-bold">rows</td>
+            <td>[]</td>
+            <td>array</td>
+            <td>儲存整理後的各區塊資料物件</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
