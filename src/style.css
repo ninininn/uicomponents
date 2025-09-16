@@ -8,7 +8,7 @@
 /* @import "../src/Components/styles/Checkbox.css"; */
 /* @import "../src/Components/styles/Datepicker.css"; */
 /* @import "../src/stories/Components/styles/Slider.css"; */
-@import "../src/stories/Components/Button/Button.css"; 
+@import "../src/stories/Components/Button/Button.css";
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -26,6 +26,7 @@
 }
 
 @theme {
+
   /* radius */
   --radius-xs: 0.5rem;
   --radius-sm: 0.75rem;
@@ -75,17 +76,44 @@
   --color-secondary-800: #294042;
   --color-secondary-900: #1c2f31;
   --font-rounded: "Huninn";
-  --font-sans:
-    "Inter", "ui-sans-serif", "system-ui", "-apple-system", "system-ui",
-    "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif",
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-body:
-    "Inter", "ui-sans-serif", "system-ui", "-apple-system", "system-ui",
-    "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif",
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono:
-    "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas",
-    "Liberation Mono", "Courier New", "monospace";
+  --font-sans: "Inter",
+  "ui-sans-serif",
+  "system-ui",
+  "-apple-system",
+  "system-ui",
+  "Segoe UI",
+  "Roboto",
+  "Helvetica Neue",
+  "Arial",
+  "Noto Sans",
+  "sans-serif",
+  "Apple Color Emoji",
+  "Segoe UI Emoji",
+  "Segoe UI Symbol",
+  "Noto Color Emoji";
+  --font-body: "Inter",
+  "ui-sans-serif",
+  "system-ui",
+  "-apple-system",
+  "system-ui",
+  "Segoe UI",
+  "Roboto",
+  "Helvetica Neue",
+  "Arial",
+  "Noto Sans",
+  "sans-serif",
+  "Apple Color Emoji",
+  "Segoe UI Emoji",
+  "Segoe UI Symbol",
+  "Noto Color Emoji";
+  --font-mono: "ui-monospace",
+  "SFMono-Regular",
+  "Menlo",
+  "Monaco",
+  "Consolas",
+  "Liberation Mono",
+  "Courier New",
+  "monospace";
   --spacing-custom: 10px;
   /* animations */
   /* 0818 add */
