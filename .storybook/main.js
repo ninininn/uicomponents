@@ -19,6 +19,10 @@ const config = {
     "options": {}
   },
   "docs": { defaultName: 'API Docs' },
-  staticDirs: ['../public']
+  staticDirs: ['../public'],
+  viteFinal: async (config) => {
+    config.base = '/uicomponents/'; // 👈 必須加上這個
+    return config;
+  }
 };
 export default config;

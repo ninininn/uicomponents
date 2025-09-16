@@ -1,10 +1,10 @@
 import "./style.css";
-import { Button } from "./Components/Button";
-import { Gdropdown } from "./Components/Dropdown";
-import { Slider } from "./Components/Slider";
-import { Checkbox } from "./Components/Checkbox";
+import { Button } from "./stories/Components/Button/Button";
+import { Dropdown } from "./stories/Components/Dropdown/Dropdown";
+import { Slider } from "./stories/Components/Slider/Slider";
+import { Checkbox } from "./stories/Components/Checkbox/Checkbox";
 import { BaseComponent } from "./Utils";
-import { Datepicker } from "./Components/DatePicker";
+import { Datepicker } from "./stories/Components/DatePicker/DatePicker";
 
 let body = document.querySelector("body");
 

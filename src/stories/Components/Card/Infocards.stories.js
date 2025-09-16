@@ -115,7 +115,6 @@ export default {
       table: {
         category: "infoList poperties",
         subcategory: "btn",
-        defaultValue: { summary: "checkbox" },
         type: { summary: "string" },
       },
     },
@@ -126,7 +125,6 @@ export default {
       table: {
         category: "infoList poperties",
         subcategory: "btn",
-        defaultValue: { summary: "checkbox" },
         type: { summary: "array" },
       },
     },
