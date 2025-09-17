@@ -1,0 +1,9 @@
+@reference "../../../style.css";
+
+@layer base {}
+
+@layer components {
+  .notify-container {
+    @apply bg-white rounded-sm px-3 py-2
+  }
+}

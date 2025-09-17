@@ -26,8 +26,8 @@ export class Card extends BaseComponent {
     this.cardContainer = this._elem;
     this.title = title;
     this._cardsize = this._setCardSize(cardSize); //設定卡片尺寸
-    this.minimize = false; //0827縮小功能
-    this._bindEvent(); //0827縮小功能
+    this.minimize = false;
+    this._bindEvent();
   }
 
   _setCardSize(size) {
@@ -44,9 +44,8 @@ export class Card extends BaseComponent {
   }
 
   _bindEvent() {
-    this.cardContainer
-      .querySelector(".miniBtn")
-      .addEventListener("click", miniCard.bind(this));
+    this.onevent(this.cardContainer
+      .querySelector(".miniBtn"), "click", miniCard.bind(this));
 
     function miniCard() {
       this.minimize = !this.minimize;
@@ -142,15 +141,15 @@ export class BasicInfoCard extends Card {
 
       //check customInner
       if (row.customInner) {
-        row.customInner.forEach((el)=>{
-          if(el instanceof HTMLElement){
-            group.appendChild(el)
-          }else{
+        row.customInner.forEach((el) => {
+          if (el instanceof HTMLElement) {
+            group.appendChild(el);
+          } else {
             let customRow = document.createElement("div");
             customRow.innerHTML = el;
             group.appendChild(customRow);
           }
-        })
+        });
         //check if HTMLElement
         // if (row.customInner instanceof HTMLElement) {
         //   group.appendChild(row.customInner);
@@ -167,15 +166,15 @@ export class BasicInfoCard extends Card {
     if (row.customInner && !row.label) {
       row.customInner.forEach((el) => {
         if (el instanceof HTMLElement) {
-          if (row.blockclass) el.classList.add(...row.blockclass)
-            rowElem.appendChild(el);
+          if (row.blockclass) el.classList.add(...row.blockclass);
+          rowElem.appendChild(el);
         } else {
           let customRow = document.createElement("div");
           customRow.innerHTML = el;
-          if (row.blockclass) customRow.classList.add(...row.blockclass)
+          if (row.blockclass) customRow.classList.add(...row.blockclass);
           rowElem.appendChild(customRow);
         }
-      })
+      });
       // if (row.customInner instanceof HTMLElement) {
       //   //check blockclass
       //   if (row.blockclass) row.customInner.classList.add(...row.blockclass);
@@ -243,7 +242,7 @@ export class BasicInfoCard extends Card {
         if (!groupMap.has(row._groupId)) groupMap.set(row._groupId, []);
         groupMap.get(row._groupId).push(row);
       } else {
-        if(row._visible===false) return;
+        if (row._visible === false) return;
         const block = this._createBlock(row);
         this.blocks.push(block);
         this._contentBlock.appendChild(block);
@@ -445,31 +444,31 @@ class Info {
     if (valueIndex < 0) {
       //check blockId
       valueIndex = this.getInfoKeys("blockId").findIndex((val) => val === label);
-      if(valueIndex<0){
+      if (valueIndex < 0) {
         console.error("沒有對應的block");
         return;
       }
     } else {
       //check if innerArray
-      if (Array.isArray(this.getInfoKeys("label")[valueIndex])){
+      if (Array.isArray(this.getInfoKeys("label")[valueIndex])) {
         //is in innerArray
-        let innerIndex = this.getInfoKeys("label")[valueIndex].findIndex(val=>val.includes(label));
+        let innerIndex = this.getInfoKeys("label")[valueIndex].findIndex(val => val.includes(label));
         //value&label要對應修改
-        this.getInfoKeys("label")[valueIndex] = this.getInfoKeys("label")[valueIndex].filter((val,index)=>index!==innerIndex);
+        this.getInfoKeys("label")[valueIndex] = this.getInfoKeys("label")[valueIndex].filter((val, index) => index !== innerIndex);
         this.getInfoKeys("value")[valueIndex] = this.getInfoKeys("value")[valueIndex].filter((val, index) => index !== innerIndex);
 
-        if (this.getInfoKeys("label")[valueIndex].length===1){
+        if (this.getInfoKeys("label")[valueIndex].length === 1) {
           //只剩一個可以扁平化
-          this.getInfoKeys("label")[valueIndex] = this.getInfoKeys("label")[valueIndex].toString()
-          this.getInfoKeys("value")[valueIndex] = this.getInfoKeys("value")[valueIndex].toString()
+          this.getInfoKeys("label")[valueIndex] = this.getInfoKeys("label")[valueIndex].toString();
+          this.getInfoKeys("value")[valueIndex] = this.getInfoKeys("value")[valueIndex].toString();
           this.rows[valueIndex].label = this.getInfoKeys("label")[valueIndex];
           this.rows[valueIndex].value = this.getInfoKeys("value")[valueIndex];
-        }else{
+        } else {
           this.rows[valueIndex].label = this.getInfoKeys("label")[valueIndex].filter((val, index) => index !== innerIndex);
           this.rows[valueIndex].value = this.getInfoKeys("value")[valueIndex].filter((val, index) => index !== innerIndex);
         }
 
-      }else{
+      } else {
         for (let prop in this.originInfos) {
           this.originInfos[prop] = this.originInfos[prop].filter((arr, index) => index !== valueIndex);
         }
@@ -532,28 +531,28 @@ let testCard = [
 
 
 //圖例card
-export class LevelCard{
-  constructor({ labels, legends }){
+export class LevelCard {
+  constructor({ labels, legends }) {
     this.labels = labels;
     this.legends = legends;
     this.container = document.createElement("div");
     this._init();
   }
 
-  _init(){
-    this.entries = Object.fromEntries(this.labels.map((lb,index)=>[lb,this.legends[index]]));
+  _init() {
+    this.entries = Object.fromEntries(this.labels.map((lb, index) => [lb, this.legends[index]]));
     this._render();
   }
 
-  _render(){
-    for(let label in this.entries){
+  _render() {
+    for (let label in this.entries) {
       let div = document.createElement("div");
       let lg = document.createElement("span");
       let lb = document.createElement("p");
       lb.textContent = label;
-      lg.classList.add("inline-block","w-6","h-5","border-gray-700");
+      lg.classList.add("inline-block", "w-6", "h-5", "border-gray-700");
       lg.classList.add(this.entries[label]);
-      div.classList.add("flex","gap-2","items-center");
+      div.classList.add("flex", "gap-2", "items-center");
       div.appendChild(lg);
       div.appendChild(lb);
       this.container.appendChild(div);
@@ -561,5 +560,5 @@ export class LevelCard{
   }
 }
 
-let testLevelCard = new LevelCard({labels:["a","b","c"],legends:["bg-red-700","bg-green-500","bg-blue-500"]});
+let testLevelCard = new LevelCard({ labels: ["a", "b", "c"], legends: ["bg-red-700", "bg-green-500", "bg-blue-500"] });
 console.log(testLevelCard);
