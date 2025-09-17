@@ -1,0 +1,359 @@
+import {
+  Meta,
+  Title,
+  Primary,
+  Controls,
+  Stories,
+  Source,
+  Unstyled,
+} from "@storybook/addon-docs/blocks";
+
+<Meta isTemplate title="How to use Checkbox" />
+
+<Title />
+適用 : 勾選框；可以配合其他元件使用綁定屬性值
+
+<Primary />
+
+# Controls
+這邊僅列出初始化時可以設定的 options.properties，內部屬性請參考**properties屬性**區塊；  
+
+`checkboxGroup`的control僅為了示意群組樣式，相關元件設定請參考**CheckboxGroup**區塊說明。
+
+<Controls />
+
+---
+
+# Usage API
+
+初始化 Checkbox 元件，帶入 `element`、`options` 參數，並設定options屬性
+
+```javascript
+new Checkbox(element, (options = {}));
+```
+
+> ### parameters 參數設定
+
+- <span className="sb-unstyled font-black">element</span>
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+
+  可以傳入`<label/>`或`<input/>`兩種標籤元素節點，如果傳入的節點標籤種類不是這兩種，則會直接視為容器元素(container)，並自動補上對應結構。
+    ```html
+    <!-- 基本靜態結構 -->
+    <label class="label input-label">
+      <input type="checkbox" class="checkbox" />
+      文字內容
+    </label>
+    ```   
+  <br/>
+
+- <span className="sb-unstyled font-black">options</span>
+  <span className="sb-unstyled data-type">object</span>
+
+  各屬性的型別及說明可參考上方Controls區塊
+
+  ```javascript
+  const options = {
+    style: "default", //樣式
+    title: "一般勾選框", //文字
+    value: "", //<input/>的value attribute
+    checked: true,
+    theme: "var(--color-blue-500)", //預設顏色
+    checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
+    classes: ["checkbox"],
+    disabled: false,
+    handlers: null,
+  };
+  ```  
+  <br />
+  <div className="sb-unstyled note-msg">
+    <span>title及value判斷說明 : </span>
+    <p>title屬性作為文字標籤、而value屬性則是作為`input.value`。</p>
+    <p>如果value沒有特別設定，則預設會以title作為value值；在切換checked狀態時，當樣式類型為**default**/**tag**，value會在設定值及""之間做切換；當樣式類型為**switch**時，value及title可以設定的值則會以|作為切換狀態區分。(見下方example說明)</p>
+    <div className="examples">
+      - <span className="sb-unstyled examples-title">style:"default", title:"一般勾選", value:""</span>  
+      checked: `{value:"一般勾選"}`  
+      unchecked: `{value:""}`
+    </div>
+    <div className="examples">
+      - <span className="sb-unstyled examples-title">style:"switch", title:"A|B", value:"C|D"</span>  
+      checked: `{title:"A", value:"C"}`  
+      unchecked: `{title:"B", value:"D"}`
+    </div>
+    <div className="examples">
+      - <span className="sb-unstyled examples-title">style:"switch", title:"A|B", value:""</span>  
+      checked: `{title:"A", value:"A"}`  
+      unchecked: `{title:"B", value:"B"}`
+    </div>
+  </div>
+
+  <br />
+
+> ### properties 內部屬性 
+> <span className="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>property</td>
+        <td>default</td>
+        <td>type</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td className="font-bold">UItype</td>
+        <td>Checkbox</td>
+        <td>string</td>
+        <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+      </tr>
+      <tr>
+        <td className="font-bold">inputValue</td>
+        <td>`options.title`</td>
+        <td>string</td>
+        <td>`<input/>`的value值，如果沒有特別設定會預設為`options.title`內容；當`style`設定為switch時，則會自動判定`|`前後的文字並做切換；其他樣式類型時則是切換`""`及title內容</td>
+      </tr>
+      <tr>
+        <td className="font-bold">activeImg</td>
+        <td>-</td>
+        <td>string</td>
+        <td>當前顯示的圖示，`style`為toggle時才會出現</td>
+      </tr>
+      <tr>
+        <td className="font-bold">container</td>
+        <td>`<label/>`元素</td>
+        <td>HTMLElement</td>
+        <td>
+          容器節點，如果沒有特別指定就會是`<label/>`
+        </td>
+      </tr>
+      <tr>
+        <td className="font-bold">defaultTheme</td>
+        <td>--themeColor</td>
+        <td>string</td>
+        <td>初始主題色系</td>
+      </tr>
+      <tr>
+        <td className="font-bold">label</td>
+        <td>`<label/>`元素</td>
+        <td>HTMLElement</td>
+        <td>記錄此元件的`<label/>`節點</td>
+      </tr>
+      <tr>
+        <td className="font-bold">name</td>
+        <td>null</td>
+        <td>string</td>
+        <td>記錄此元件`<input/>`標籤的name屬性</td>
+      </tr>
+      <tr>
+        <td className="font-bold">options</td>
+        <td>`options`參數</td>
+        <td>object</td>
+        <td>傳入的設定值，詳細屬性可以參考上方options參數說明處</td>
+      </tr>
+      <tr>
+        <td className="font-bold">originParent</td>
+        <td>null</td>
+        <td>HTMLElement</td>
+        <td>如果初始化時帶入的`element`節點有父元素，則預設為該元素；沒有的話就會是null</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<br/>
+
+> ### methods 方法
+> 提供外部控制方法調整內部屬性值
+  
+    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>methods</td><td>descriptions</td><td>inherit</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
+          <tr><td>`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
+          <tr><td>`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
+          <tr><td>`.getValue()`</td><td>回傳`<input/>` value值</td></tr>
+          <tr><td>`.getChecked()`</td><td>回傳`<input/>` checked值</td></tr>
+          <tr><td>`.setValue(value)`</td><td>傳入要設定`<input/>` value值</td></tr>
+          <tr><td>`.setChecked(boolean)`</td><td>傳入要設定checked值</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+<span className="sb-unstyled methods">.getElem()</span>
+ - **Returns**  
+回傳主元件的DOM節點(HTMLElement) - `<input/>`  
+``` javascript 
+Checkbox.getElem(); 
+```  
+<span className="sb-unstyled methods">.changeTheme(HEXstring)</span>
+ - **Parameters**  
+ 參數可以放入任一HEX色碼，用來改變主題色
+
+<div className="sb-unstyled alert-msg">當disabled狀態為true時禁止修改(會跳出錯誤通知)</div>
+``` javascript
+ Checkbox.changeTheme("#8ecb28"); 
+```
+
+<span className="sb-unstyled methods">.setDisabled(boolean)</span>
+<span className="sb-unstyled methods">.setValue(value)</span>
+<span className="sb-unstyled methods">.setChecked(boolean)</span>
+ - **Parameters**  
+ 傳入boolean值更改disabled、checked狀態；傳入任一值更改`<input/>`的value值
+``` javascript 
+// ...init Checkbox
+
+Checkbox.setDisabled(false);
+Checkbox.setValue(value);
+Checkbox.setChecked(true);
+
+```
+<span className="sb-unstyled methods">.getValue()</span>
+<span className="sb-unstyled methods">.getChecked()</span>
+ - **Returns**  
+ 分別回傳`<input/>`的value及checked值
+``` javascript
+Checkbox.getValue(); //""
+Checkbox.getChecked(); //true
+```  
+---  
+
+# CheckboxGroup
+> 可以配合Checkbox元件做使用，需要先將要放入的checkbox初始化再放入  
+  
+  初始化 CheckboxGroup 元件，帶入 `name`、`container` 參數
+
+```javascript
+new CheckboxGroup(name, container);
+```
+
+> ### parameters 參數設定
+
+- <span className="sb-unstyled font-black">name</span>
+  <span className="sb-unstyled data-type str">string</span>  
+  群組名稱
+  <br/>
+
+- <span className="sb-unstyled font-black">container</span>
+  <span className="sb-unstyled data-type element">HTMLElement</span>  
+
+  傳入`<ul/>`標籤元素節點，如果沒有傳入則會自動建立一個
+    ```html
+    <!-- 基本靜態結構 -->
+    <ul class="checkbox-group">
+      <li class="item">
+        <label>
+          <input type="checkbox" class="checkbox" />
+          文字內容
+        </label>
+      </li>
+    </ul>
+    ```   
+<br/>
+
+> ### properties 內部屬性  
+> <span className="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>property</td>
+        <td>default</td>
+        <td>type</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td className="font-bold">UItype</td>
+        <td>CheckboxGroup</td>
+        <td>string</td>
+        <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+      </tr>
+      <tr>
+        <td className="font-bold">groupContainer</td>
+        <td>`<ul/>`標籤元素</td>
+        <td>HTMLElement</td>
+        <td>容器元素節點</td>
+      </tr>
+      <tr>
+        <td className="font-bold">groupName</td>
+        <td>-</td>
+        <td>string</td>
+        <td>此元件群組名稱</td>
+      </tr>
+      <tr>
+        <td className="font-bold">items</td>
+        <td>[]</td>
+        <td>array</td>
+        <td>
+          儲存所有子元件(Checkbox)
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<br/>
+
+> ### methods 方法
+> 提供外部控制方法調整內部屬性值  
+
+    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>methods</td><td>descriptions</td><td>inherit</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
+          <tr><td>`.getValue(name)`</td><td>取得群組內對應name屬性的`<input/>`value-pair 物件</td></tr>
+          <tr><td>`.addCheckItems(item)`</td><td>在群組內加入新的Checkbox元件</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+<span className="sb-unstyled methods">.getElem()</span>
+ - **Returns**  
+回傳主元件的DOM節點(HTMLElement) - `<ul/>`  
+``` javascript 
+CheckboxGroup.getElem(); 
+```  
+
+<span className="sb-unstyled methods">.getValue(name)</span>
+ - **Paramenters**  
+ 可以單獨傳入指定 name attribute
+ - **Returns**  
+ 如果有傳入指定參數則會回傳一組對應`name`的 name-value pair 物件，可以作為後續使用；沒有傳入參數則是回傳一個包含所有 checkbox instance 的 name-value pair 的陣列。
+``` javascript
+CheckboxGroup.getValue("test"); //{name: "test", value: ""}
+CheckboxGroup.getValue(); //[{name: "test", value: ""},{name: "A", value: "A"}]
+```  
+
+<span className="sb-unstyled methods">.addCheckItems(item)</span>
+ - **Paramenters**  
+ 可以傳入一個或多個 Checkbox 元件，如果傳入多個元件則要以**陣列**形式傳入。
+
+``` javascript
+let child = new Checkbox(options);
+CheckboxGroup.addCheckItems(child);
+```  
+``` javascript
+let child1 = new Checkbox(options);
+let child2 = new Checkbox(options);
+let child3 = new Checkbox(options);
+
+CheckboxGroup.addCheckItems([child1, child2, child3]);
+```  
