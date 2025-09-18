@@ -1,6 +1,6 @@
 import { Notification } from "./Notification";
 
-export const createNotification = ({ type, area, msgContent, customContent, msgTitle, classes, handlers }) => {
+export const createNotification = ({ type, area,theme, msgContent, customContent, msgTitle, classes, placement, confirm, cancel, handlers }) => {
     let parent = document.createElement("div");
     parent.className = "mx-auto";
     let trigger = document.createElement("button");
@@ -10,11 +10,16 @@ export const createNotification = ({ type, area, msgContent, customContent, msgT
     parent.appendChild(trigger);
     let initOptions = {
         type: type,        //類型
+        theme: theme,
         area: area || ["auto", "auto"], //尺寸
         msgContent: msgContent,         //主要文字內容
         customContent: customContent,         //自定義HTML內容
         msgTitle: msgTitle,         //title文字
         classes: classes,         //自定義class
+        placement: placement,         //自定義class
+        confirm: confirm,           //確認按鈕文字&動作
+        cancel: cancel,         //取消按鈕文字&動作
+        handlers: handlers,
     };
     let notification_instance = new Notification(trigger, initOptions, type);
     // notification_instance.show();

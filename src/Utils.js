@@ -9,6 +9,14 @@ export class UIUtils {
     static removeClass(element, classes) {
         element.classList.remove(...classes);
     }
+    //清除所有class(除了指定的以外)
+    static clearClass(element, excludeClasses) {
+        let newClassName =[];
+        for (let cls of excludeClasses) {
+            newClassName.push(cls);
+        }
+        element.className = newClassName.join(" ");
+    }
     static setText(element, text) {
         element.textContent = text;
     }

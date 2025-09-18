@@ -4,6 +4,8 @@
 
 @layer components {
   .notify-container {
-    @apply bg-white rounded-sm px-3 py-2
+    --theme: var(--theme, var(--color-gray-100));
+    --text: var(--text, var(color-gray-800));
+    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100
   }
 }
