@@ -1,4 +1,4 @@
-import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-B_kediSX.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
+import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-BsY5FQ7T.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
 `,s.jsx(t,{}),`
 `,s.jsx(e.p,{children:"適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及alert)。"}),`
 `,s.jsx(c,{}),`
@@ -31,14 +31,18 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-B_kediSX.js";impo
 `,s.jsx("span",{className:"sb-unstyled data-type",children:"object"}),`
 `,s.jsx(e.p,{children:"各屬性的型別及說明可參考上方Controls區塊"}),`
 `,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  const options = {\r
-    type: "msg",          //類型\r
-    area: ["auto", "auto"], //尺寸\r
-    msgContent: null,       //主要文字內容\r
-    customContent: null,    //自定義HTML內容\r
-    msgTitle: null,         //title文字\r
-    classes: null,          //自定義class\r
+    type: "msg",                       //類型\r
+    theme: "light",                    //主題色\r
+    maxWidth: "auto",                  //最大尺寸\r
+    area: ["auto", "auto"],            //尺寸\r
+    msgContent: null,                  //主要文字內容\r
+    customContent: null,               //自定義HTML內容\r
+    msgTitle: null,                    //title文字\r
+    classes: null,                     //自定義class\r
     handler:null,\r
-    placement:"center"     //位置\r
+    placement:"center",                //位置\r
+    confirm:["確認", function(){}],    //確認按鈕文字&callback\r
+    cancel:["取消", function(){}],     //取消按鈕文字&callback\r
   };
 `})}),`
 `,s.jsx("br",{}),`
@@ -48,17 +52,27 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-B_kediSX.js";impo
 `,s.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),`
 `,s.jsx(e.p,{children:"通知視窗類型，分為四種:"}),`
 `,s.jsxs(e.ul,{children:[`
-`,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"toast"}),s.jsx(e.a,{href:"#ToastMsg",children:"ToastMsg"}),s.jsx(e.br,{}),`
+`,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#ToastMsg",children:s.jsx(e.strong,{children:"toast"})}),s.jsx(e.br,{}),`
 `,"讓使用者知道/提醒目前操作或是狀態，一般表現為在視窗某位置(通常為四個角落)跳出，並持續一段時間後消失。",`
 `,s.jsxs("div",{className:"sb-unstyled note-msg my-3",children:[s.jsx("span",{children:"toast類型特色"}),s.jsx("p",{children:"toast應該要由一個主容器包覆所有toast-item，且item要依照順序堆疊出現(FIFO)"})]}),`
+`,s.jsx("br",{}),`
 `]}),`
-`,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"modal"}),s.jsx(e.a,{href:"#ModalMsg",children:"ModalMsg"}),s.jsx(e.br,{}),`
-`,"適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作。"]}),`
-`,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"popover"}),s.jsx(e.a,{href:"#PopoverMsg",children:"PopoverMsg"}),s.jsx(e.br,{}),`
+`,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#ModalMsg",children:s.jsx(e.strong,{children:"modal"})}),s.jsx(e.br,{}),`
+`,"適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作(背景遮罩為不可關閉的設定)。",`
+`,s.jsxs("div",{className:"sb-unstyled note-msg my-3",children:[s.jsx("span",{children:"Page、Modal比較"}),s.jsx("p",{children:"Modal為必須中斷使用者操作的UI類型，而Page(inherit Flowbite Drawer)則是不強制中斷(可以設定是否出現遮罩)；但兩者都可以設定使用者關閉行為:是否點擊任一處關閉。"})]}),`
+`,s.jsx("br",{}),`
+`]}),`
+`,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#PopoverMsg",children:s.jsx(e.strong,{children:"popover"})}),s.jsx(e.br,{}),`
 `,"視覺呈現類似tooltip，不同的是可以控制觸發行為。"]}),`
-`,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"msg"}),"(default)",s.jsx(e.a,{href:"#DefaultMsg",children:"DefaultMsg"}),s.jsx(e.br,{}),`
+`,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#DefaultMsg",children:s.jsx(e.strong,{children:"msg"})}),s.jsx(e.br,{}),`
 `,"簡單提示訊息，會在指定時間(預設5秒)後自動消失。"]}),`
 `]}),`
+`,s.jsx("br",{}),`
+`]}),`
+`,s.jsxs(e.li,{children:[`
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"id"}),`\r
+`,s.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),s.jsx(e.br,{}),`
+`,"targetContainer 元素 id 屬性"]}),`
 `,s.jsx("br",{}),`
 `]}),`
 `]}),`
@@ -67,14 +81,14 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-B_kediSX.js";impo
 `,s.jsx("span",{className:"sb-unstyled data-type readonly",children:"Read-only"}),`
 `,s.jsx("span",{className:"sb-unstyled",children:"可以操作的屬性皆須使用methods來更改"}),`
 `]}),`
-`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"Notification"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"options"}),s.jsxs("td",{children:["parameter",s.jsx(e.code,{children:"options"})]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:"相關設定值"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"type"}),s.jsx("td",{children:"toast"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"通知視窗種類"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"triggerEl"}),s.jsx("td",{children:"-"}),s.jsx("td",{children:"HTMLElement"}),s.jsx("td",{children:"觸發元素"})]})]})]})}),`
+`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"}),s.jsx("td",{children:"Inherits"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"Notification"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]}),s.jsxs("td",{children:[s.jsx(e.code,{children:"BaseComponent"})," 類別"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"theme"}),s.jsx("td",{children:"light"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"主題色系，light/dark兩色系可切換"}),s.jsxs("td",{children:[s.jsx(e.code,{children:"BaseComponent"})," 類別"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"options"}),s.jsxs("td",{children:["parameter",s.jsx(e.code,{children:"options"})]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:"相關設定值"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"type"}),s.jsx("td",{children:"msg"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"通知視窗種類"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"notifyTrigger"}),s.jsx("td",{children:"-"}),s.jsx("td",{children:"HTMLElement"}),s.jsx("td",{children:"觸發元素"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"confrim"}),s.jsx("td",{children:"確定"}),s.jsx("td",{children:"array | string"}),s.jsx("td",{colSpan:"2",children:"指定確認按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"cancel"}),s.jsx("td",{children:"取消"}),s.jsx("td",{children:"array | string"}),s.jsx("td",{colSpan:"2",children:"指定取消/返回按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string"})]})]})]})}),`
 `,s.jsx("br",{}),`
 `,s.jsxs(e.blockquote,{children:[`
 `,s.jsx(e.h3,{id:"methods-方法",children:"methods 方法"}),`
 `,s.jsx(e.p,{children:"提供外部控制方法調整內部屬性值"}),`
 `]}),`
 `,s.jsx("p",{className:"sb-unstyled font-bold text-yellow-500",children:"Quick reference"}),`
-`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"methods"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".show()"})}),s.jsx("td",{children:"顯示視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".hide()"})}),s.jsx("td",{children:"隱藏(關閉)視窗"})]})]})]})}),`
+`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"methods"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".show()"})}),s.jsx("td",{children:"顯示視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".hide()"})}),s.jsx("td",{children:"隱藏(關閉)視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".isHidden()"})}),s.jsx("td",{children:"切換顯示視窗與否"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".isVisible()"})}),s.jsx("td",{children:"切換顯示視窗與否"})]})]})]})}),`
 `,s.jsx("span",{className:"sb-unstyled methods mr-2",children:".show()"}),`
 `,s.jsx("span",{className:"sb-unstyled methods",children:".hide()"}),`
 `,s.jsx(e.p,{children:"顯示/隱藏視窗"}),`
@@ -117,7 +131,7 @@ Checkbox.getChecked(); //true
 `,s.jsx("div",{className:"sb-unstyled alert-msg",children:"不會直接操作，僅列出參考用"}),`
 `,s.jsx("br",{}),`
 `,s.jsx("h3",{id:"ToastMsg",children:"ToastMsg 類別"}),`
-`,s.jsx("span",{className:"sb-unstyled data-type inherits",children:"Inherits flowbite Dismiss"}),`
+`,s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["Inherits flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/toast/",className:"linkout",children:"Dismiss"})]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
@@ -127,7 +141,7 @@ Checkbox.getChecked(); //true
 `,s.jsx("br",{}),`
 `,s.jsx(e.hr,{}),`
 `,s.jsx("h3",{id:"ModalMsg",children:"ModalMsg 類別"}),`
-`,s.jsx("span",{className:"sb-unstyled data-type inherits",children:"Inherits flowbite Modal"}),`
+`,s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["Inherits flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/modal/",className:"linkout",children:"Modal"})]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
@@ -137,7 +151,7 @@ Checkbox.getChecked(); //true
 `,s.jsx("br",{}),`
 `,s.jsx(e.hr,{}),`
 `,s.jsx("h3",{id:"PopoverMsg",children:"PopoverMsg 類別"}),`
-`,s.jsx("span",{className:"sb-unstyled data-type inherits",children:"Inherits flowbite Popover"}),`
+`,s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["Inherits flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/popover/",className:"linkout",children:"Popover"})]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
