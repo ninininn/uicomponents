@@ -1,16 +1,17 @@
 import { Notification } from "./Notification";
 
-export const createNotification = ({ type, area,theme, msgContent, customContent, msgTitle, classes, placement, confirm, cancel, handlers }) => {
+export const createNotification = ({ type, area, theme, maxWidth, msgContent, customContent, msgTitle, classes, placement, confirm, cancel, handlers, backdrop, backdropClasses, closable, triggerType, offset, countdown }) => {
     let parent = document.createElement("div");
     parent.className = "mx-auto";
     let trigger = document.createElement("button");
     trigger.className = "btn btn-primary";
-    trigger.textContent = "Toggle Notification";
-    // parent.classList.add("max-w-50");
+    trigger.textContent = "Show Notification";
+
     parent.appendChild(trigger);
     let initOptions = {
         type: type,        //類型
         theme: theme,
+        maxWidth: maxWidth,
         area: area || ["auto", "auto"], //尺寸
         msgContent: msgContent,         //主要文字內容
         customContent: customContent,         //自定義HTML內容
@@ -21,6 +22,23 @@ export const createNotification = ({ type, area,theme, msgContent, customContent
         cancel: cancel,         //取消按鈕文字&動作
         handlers: handlers,
     };
+    switch (type) {
+        case "modal":
+            initOptions.backdrop = backdrop;
+            initOptions.backdropClasses = backdropClasses;
+            initOptions.closable = closable;
+            break;
+        case "toast":
+            // initOptions.backdrop = backdrop
+            break;
+        case "popover":
+            initOptions.triggerType = triggerType;
+            initOptions.offset = offset;
+            break;
+        case "msg":
+            initOptions.countdown = countdown;
+            break;
+    }
     let notification_instance = new Notification(trigger, initOptions, type);
     // notification_instance.show();
     // layerpage_instance.getElem().addEventListener("change", (e) => {

@@ -52,14 +52,18 @@ new Notification(trigger, (options = {}));
 
   ```javascript
     const options = {
-      type: "msg",          //類型
-      area: ["auto", "auto"], //尺寸
-      msgContent: null,       //主要文字內容
-      customContent: null,    //自定義HTML內容
-      msgTitle: null,         //title文字
-      classes: null,          //自定義class
+      type: "msg",                       //類型
+      theme: "light",                    //主題色
+      maxWidth: "auto",                  //最大尺寸
+      area: ["auto", "auto"],            //尺寸
+      msgContent: null,                  //主要文字內容
+      customContent: null,               //自定義HTML內容
+      msgTitle: null,                    //title文字
+      classes: null,                     //自定義class
       handler:null,
-      placement:"center"     //位置
+      placement:"center",                //位置
+      confirm:["確認", function(){}],    //確認按鈕文字&callback
+      cancel:["取消", function(){}],     //取消按鈕文字&callback
     };
   ```  
   <br />
@@ -67,20 +71,30 @@ new Notification(trigger, (options = {}));
   <span className="sb-unstyled data-type str">string</span>
 
   通知視窗類型，分為四種: 
-   - **toast**[ToastMsg](#ToastMsg)  
+   - [**toast**](#ToastMsg)  
      讓使用者知道/提醒目前操作或是狀態，一般表現為在視窗某位置(通常為四個角落)跳出，並持續一段時間後消失。
       <div className="sb-unstyled note-msg my-3">
         <span>toast類型特色</span>
         <p>toast應該要由一個主容器包覆所有toast-item，且item要依照順序堆疊出現(FIFO)</p>
-      </div>
-   - **modal**[ModalMsg](#ModalMsg)  
-     適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作。
-   - **popover**[PopoverMsg](#PopoverMsg)  
+      </div>  
+      <br/>
+   - [**modal**](#ModalMsg)  
+     適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作(背景遮罩為不可關閉的設定)。  
+      <div className="sb-unstyled note-msg my-3">
+        <span>Page、Modal比較</span>
+        <p>Modal為必須中斷使用者操作的UI類型，而Page(inherit Flowbite Drawer)則是不強制中斷(可以設定是否出現遮罩)；但兩者都可以設定使用者關閉行為:是否點擊任一處關閉。</p>
+      </div>  
+      <br/>
+   - [**popover**](#PopoverMsg)  
      視覺呈現類似tooltip，不同的是可以控制觸發行為。
-   - **msg**(default)[DefaultMsg](#DefaultMsg)  
+   - [**msg**](#DefaultMsg)  
      簡單提示訊息，會在指定時間(預設5秒)後自動消失。
   <br />
-
+- <span className="sb-unstyled font-black">id</span>
+  <span className="sb-unstyled data-type str">string</span>  
+  targetContainer 元素 id 屬性
+  <br />
+  
 > ### properties 內部屬性 
 > <span className="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
 
@@ -92,6 +106,7 @@ new Notification(trigger, (options = {}));
         <td>default</td>
         <td>type</td>
         <td>descriptions</td>
+        <td>Inherits</td>
       </tr>
     </thead>
     <tbody>
@@ -100,6 +115,14 @@ new Notification(trigger, (options = {}));
         <td>Notification</td>
         <td>string</td>
         <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+        <td>`BaseComponent` 類別</td>
+      </tr>
+      <tr>
+        <td className="font-bold">theme</td>
+        <td>light</td>
+        <td>string</td>
+        <td>主題色系，light/dark兩色系可切換</td>
+        <td>`BaseComponent` 類別</td>
       </tr>
       <tr>
         <td className="font-bold">options</td>
@@ -109,15 +132,27 @@ new Notification(trigger, (options = {}));
       </tr>
       <tr>
         <td className="font-bold">type</td>
-        <td>toast</td>
+        <td>msg</td>
         <td>string</td>
         <td>通知視窗種類</td>
       </tr>
       <tr>
-        <td className="font-bold">triggerEl</td>
+        <td className="font-bold">notifyTrigger</td>
         <td>-</td>
         <td>HTMLElement</td>
         <td>觸發元素</td>
+      </tr>
+      <tr>
+        <td className="font-bold">confrim</td>
+        <td>確定</td>
+        <td>array | string</td>
+        <td colSpan="2">指定確認按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string</td>
+      </tr>
+      <tr>
+        <td className="font-bold">cancel</td>
+        <td>取消</td>
+        <td>array | string</td>
+        <td colSpan="2">指定取消/返回按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string</td>
       </tr>
     </tbody>
   </table>
@@ -140,6 +175,8 @@ new Notification(trigger, (options = {}));
         <tbody>
           <tr><td>`.show()`</td><td>顯示視窗</td></tr>
           <tr><td>`.hide()`</td><td>隱藏(關閉)視窗</td></tr>
+          <tr><td>`.isHidden()`</td><td>切換顯示視窗與否</td></tr>
+          <tr><td>`.isVisible()`</td><td>切換顯示視窗與否</td></tr>
         </tbody>
       </table>
     </div>
@@ -188,7 +225,7 @@ Checkbox.getChecked(); //true
 <br/>
 
 <h3 id="ToastMsg">ToastMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">Inherits flowbite Dismiss</span>
+<span className="sb-unstyled data-type inherits">Inherits flowbite <a href="https://flowbite.com/docs/components/toast/" className="linkout">Dismiss</a></span>
 
 - **properties 屬性**  
 
@@ -235,7 +272,7 @@ Checkbox.getChecked(); //true
 <br/>
 ---
 <h3 id="ModalMsg">ModalMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">Inherits flowbite Modal</span>
+<span className="sb-unstyled data-type inherits">Inherits flowbite <a href="https://flowbite.com/docs/components/modal/" className="linkout">Modal</a></span>
 
 - **properties 屬性**  
 
@@ -282,7 +319,7 @@ Checkbox.getChecked(); //true
 <br/>
 ---
 <h3 id="PopoverMsg">PopoverMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">Inherits flowbite Popover</span>
+<span className="sb-unstyled data-type inherits">Inherits flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span>
 
 - **properties 屬性**  
 

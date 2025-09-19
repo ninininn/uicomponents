@@ -11,7 +11,7 @@ export class UIUtils {
     }
     //清除所有class(除了指定的以外)
     static clearClass(element, excludeClasses) {
-        let newClassName =[];
+        let newClassName = [];
         for (let cls of excludeClasses) {
             newClassName.push(cls);
         }
@@ -20,7 +20,7 @@ export class UIUtils {
     static setText(element, text) {
         element.textContent = text;
     }
-    static setAttribute(element, attributeName, attributeValue) {
+    static setAttribute(element, attributeName, attributeValue = "") {
         element.setAttribute(`data-${attributeName}`, attributeValue);
     }
     static setProperty(element, propertyName, propertyValue) {

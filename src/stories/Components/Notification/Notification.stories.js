@@ -38,14 +38,92 @@ export default {
         type: { summary: "string" },
       },
     },
+    backdrop: {
+      control: "select",
+      options: ["static", "dynamic"],
+      if: { arg: "type", eq: "modal" },
+      description: "背景遮罩類型",
+      table: {
+        category: "parameters",
+        subcategory: "private property",
+        defaultValue: { summary: "static" },
+        type: { summary: "string" },
+      },
+    },
+    backdropClasses: {
+      control: "text",
+      if: { arg: "type", eq: "modal" },
+      description: "背景遮罩關閉類型",
+      table: {
+        category: "parameters",
+        subcategory: "private property",
+        defaultValue: { summary: "static" },
+        type: { summary: "string" },
+      },
+    },
+    closable: {
+      control: "boolean",
+      if: { arg: "type", eq: "modal" },
+      description: "背景遮罩關閉類型",
+      table: {
+        category: "parameters",
+        subcategory: "private property",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
+      },
+    },
+    triggerType: {
+      control: "select",
+      options: ["hover", "click", "none"],
+      if: { arg: "type", eq: "popover" },
+      description: "觸發動作類型",
+      table: {
+        category: "parameters",
+        subcategory: "private property",
+        defaultValue: { summary: "hover" },
+        type: { summary: "string" },
+      },
+    },
+    offset: {
+      control: "number",
+      if: { arg: "type", eq: "popover" },
+      description: "距離觸發元素的位置距離",
+      table: {
+        category: "parameters",
+        subcategory: "private property",
+        defaultValue: { summary: "10" },
+        type: { summary: "number" },
+      },
+    },
+    countdown: {
+      control: "number",
+      if: { arg: "type", eq: "msg" },
+      description: "自訂倒數消失時間",
+      table: {
+        category: "parameters",
+        subcategory: "private property",
+        defaultValue: { summary: "1000" },
+        type: { summary: "number" },
+      },
+    },
     theme: {
       control: "select",
-      options:["light","dark"],
+      options: ["light", "dark"],
       description: "通知視窗的尺寸大小",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: "light" },
+        type: { summary: "string" },
+      },
+    },
+    maxWidth: {
+      control: "text",
+      description: "通知視窗的最大尺寸",
+      table: {
+        category: "parameters",
+        subcategory: "options properties",
+        defaultValue: { summary: "auto" },
         type: { summary: "string" },
       },
     },
@@ -55,7 +133,7 @@ export default {
       description: "通知視窗的尺寸大小",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: "[auto, auto]" },
         type: { summary: "array" },
       },
@@ -65,7 +143,7 @@ export default {
       description: "訊息內容",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         type: { summary: "string" },
       },
     },
@@ -74,16 +152,16 @@ export default {
       description: "自訂訊息innerHTML結構",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         type: { summary: "string" },
       },
     },
     msgTitle: {
       control: "text",
-      description: "通知視窗標題文字",
+      description: "通知視窗標題文字，如果不需要標題可以傳入空字串或是false",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: "-" },
         type: { summary: "string" },
       },
@@ -93,18 +171,18 @@ export default {
       description: "自定義class，每個class以tailwindcss property放入",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: ".msg" },
         type: { summary: "array" },
       },
     },
     placement: {
       control: { type: "select" },
-      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top", "center"],
+      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top"],
       description: "訊息框彈出位置",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: "center" },
         type: { summary: "string" },
       },
@@ -114,7 +192,7 @@ export default {
       description: "確認按鈕文字及callback函式(此處僅提供設定按鈕文字)",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: "確定" },
         type: { summary: "array" },
       },
@@ -124,7 +202,7 @@ export default {
       description: "取消按鈕文字及callback函式(此處僅提供設定按鈕文字)",
       table: {
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: "取消" },
         type: { summary: "array" },
       },
@@ -136,7 +214,7 @@ export default {
       table: {
         // type: { required: true },
         category: "parameters",
-        subcategory: "options",
+        subcategory: "options properties",
         defaultValue: { summary: "null" },
         type: { summary: "function" },
       },
@@ -147,7 +225,8 @@ export default {
   args: {
     // handlers: action("change"),
     type: "msg",
-    theme:"light",
+    theme: "light",
+    maxWidth: "auto",
     area: ["auto", "auto"],
     msgContent: "這是測試用通知內容",
     customContent: `<div>customInner</div>`,
@@ -155,7 +234,16 @@ export default {
     classes: ["notification"],
     placement: "left-top",
     confirm: "確定",
-    cancel: "取消"
+    cancel: "取消",
+    //modal private
+    backdrop: "static",
+    backdropClasses: "bg-gray-500/50",
+    closable: false,
+    //popover private
+    triggerType:"hover",
+    offset:10,
+    //msg private
+    countdown:1000,
   },
 };
 
@@ -164,6 +252,8 @@ export const Toast = {
   args: {
     type: "toast",
     placement: "right-top",
+    msgContent: "動綠是昔毛叫這頭收乞高姐力司「黑枝乾」化氣星常每貝木嗎見雲黃巴事冬更珠，亭肖哪飯隻朱者英二活經貫綠「只地話入」卜風連語貓身陽黑空次司月她！還室意蝴士下卜後唱筆至旦民訴跑書向。後北愛升科訴把肖止聽對。",
+    maxWidth: "360px",
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

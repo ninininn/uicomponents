@@ -42,7 +42,18 @@
     .inherits {
         font-size: 14px;
         background-color: #77c5e448;
-        color: #00b7ff
+        color: #00b7ff;
+        & .linkout{
+            padding:0;
+            color: #00b7ff;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: "Google Sans Code", monospace;
+            &:hover{
+                color:var(--color-blue-700);
+                background-color:transparent;
+            }
+        }
     }
 
     .methods {

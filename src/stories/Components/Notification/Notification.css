@@ -6,6 +6,26 @@
   .notify-container {
     --theme: var(--theme, var(--color-gray-100));
     --text: var(--text, var(color-gray-800));
-    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100
+    --maxWidth: var(--maxWidth, auto);
+    --w: var(--w, auto);
+    --h: var(--h, auto);
+    srollbar-gutter: both-edges;
+    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] overflow-auto overscroll-contain;
+  }
+
+  .notify-header {
+    @apply w-full flex justify-between font-bold text-xl
+  }
+
+  .notify-content {
+    @apply mt-2 mb-4 text-sm
+  }
+
+  .notify-actionbtns {
+    @apply w-full flex gap-3
+  }
+
+  .backdrop {
+    @apply fixed w-[100dvw] h-[100dvh] top-0 z-4
   }
 }
