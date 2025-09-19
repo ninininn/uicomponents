@@ -101,6 +101,7 @@ export class Notification extends BaseComponent {
     UIUtils.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
     UIUtils.setProperty(this._elem, "--w", this.options.area[0]);
     UIUtils.setProperty(this._elem, "--h", this.options.area[1]);
+    UIUtils.addClass(this._elem, ["hidden"]);
 
   }
   //[內部控制]-綁定事件
