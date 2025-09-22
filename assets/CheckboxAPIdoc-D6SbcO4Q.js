@@ -1,4 +1,4 @@
-import{u as d,j as e,M as c,T as r,P as t,C as i}from"./iframe-BJmlumWC.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{isTemplate:!0,title:"How to use Checkbox"}),`
+import{u as d,j as e,M as c,T as r,P as t,C as i}from"./iframe-a3X9s5Ps.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{isTemplate:!0,title:"How to use Checkbox"}),`
 `,e.jsx(r,{}),`
 `,e.jsx(s.p,{children:"適用 : 勾選框；可以配合其他元件使用綁定屬性值"}),`
 `,e.jsx(t,{}),`
