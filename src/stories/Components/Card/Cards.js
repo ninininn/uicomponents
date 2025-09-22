@@ -1,5 +1,9 @@
 import { BaseComponent } from "../../../Utils";
-
+import { Notification } from "../Notification/Notification";
+function closeCard() {
+  console.log("closeCard function!");
+  this.cardContainer.remove();
+}
 export class Card extends BaseComponent {
   constructor(title, cardSize) {
     let cardContainer = document.createElement("div");
@@ -27,6 +31,14 @@ export class Card extends BaseComponent {
     this.title = title;
     this._cardsize = this._setCardSize(cardSize); //設定卡片尺寸
     this.minimize = false;
+    this._closeCard = closeCard;
+    this._closeNotify = new Notification(this.cardContainer.querySelector(".closeBtn"), {
+      msgContent: "確定關閉此資料區塊? 關閉後須重新查詢",
+      placement: "center",
+      confirm: ["確定關閉", () => {console.log("in _closeNotify"); this.cardContainer.remove()}],
+      cancel: "取消",
+      backdropClasses: "bg-gray-800/50"
+    }, "modal");
     this._bindEvent();
   }
 
@@ -60,6 +72,13 @@ export class Card extends BaseComponent {
   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
 </svg>`;
       this.cardContainer.querySelector(".miniBtn").innerHTML = icon;
+    }
+    this.cardContainer.querySelector(".closeBtn").addEventListener("click", closeNotify.bind(this));
+
+    function closeNotify() {
+      console.log("closeNotify function!");
+      console.log(this._closeNotify);
+      this._closeNotify.show();
     }
   }
 }
@@ -561,4 +580,4 @@ export class LevelCard {
 }
 
 let testLevelCard = new LevelCard({ labels: ["a", "b", "c"], legends: ["bg-red-700", "bg-green-500", "bg-blue-500"] });
-console.log(testLevelCard);
+// console.log(testLevelCard);

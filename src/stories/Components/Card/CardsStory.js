@@ -38,5 +38,6 @@ export const createCards = ({ blockId, blockclass, label, value, customInner, ti
         ];
     let realpriceCard = new BasicInfoCard(title, infoList, cardSize);
     parent.appendChild(realpriceCard.cardContainer);
+    console.log("realpriceCard:", realpriceCard);
     return parent;
 };

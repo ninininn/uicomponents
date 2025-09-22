@@ -1,6 +1,7 @@
 import { Dismiss, Modal, Popover } from "flowbite";
 import { BaseComponent, UIUtils } from "../../../Utils";
 
+
 export class Notification extends BaseComponent {
   constructor(trigger, options, type) {
     //Base notification container
@@ -19,15 +20,15 @@ export class Notification extends BaseComponent {
     //種類
     this.type = type;
     this._instance = this._defineType(this._elem, this.type);
-    //confirm&cancle actions
-    if (this.options.confirm) {
-      this.confirm = this._confirmAndcancel(this.options.confirm, "confirm");
-      this.confirmBtn = this._setBtns(this.confirm);
-    }
-    if (this.options.cancel) {
-      this.cancel = this._confirmAndcancel(this.options.cancel, "cancel");
-      this.cancelBtn = this._setBtns(this.cancel);
-    }
+    // //confirm&cancle actions
+    // if (this.options.confirm) {
+    //   this.confirm = this._confirmAndcancel(this.options.confirm, "confirm");
+    //   this.confirmBtn = this._setBtns(this.confirm);
+    // }
+    // if (this.options.cancel) {
+    //   this.cancel = this._confirmAndcancel(this.options.cancel, "cancel");
+    //   this.cancelBtn = this._setBtns(this.cancel);
+    // }
     this._init();
   }
 
@@ -40,8 +41,8 @@ export class Notification extends BaseComponent {
       msgContent: null,                  //主要文字內容
       customContent: null,               //自定義HTML內容
       msgTitle: null,                    //title文字
-      classes: null,                     //自定義class
-      handler: null,
+      classes: [],                     //自定義class
+      handler: null,                    //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
       placement: "center-center",                //位置
       confirm: "確認",                //確認按鈕文字&callback
       cancel: "取消",                 //取消按鈕文字&callback
@@ -80,12 +81,18 @@ export class Notification extends BaseComponent {
     }
     //是否有btnList要設定[預設會有一組]
 
-
+    //confirm&cancle actions
+    if (this.options.confirm) {
+      this.confirm = this._confirmAndcancel(this.options.confirm, "confirm");
+      this.confirmBtn = this._setBtns(this.confirm);
+    }
+    if (this.options.cancel) {
+      this.cancel = this._confirmAndcancel(this.options.cancel, "cancel");
+      this.cancelBtn = this._setBtns(this.cancel);
+    }
     this._render();
-    this._bindEvent();
-
-
     document.body.appendChild(this._elem);
+    this._bindEvent();
   }
 
   //[內部控制]-渲染UI樣式
@@ -102,8 +109,8 @@ export class Notification extends BaseComponent {
     UIUtils.setProperty(this._elem, "--w", this.options.area[0]);
     UIUtils.setProperty(this._elem, "--h", this.options.area[1]);
     UIUtils.addClass(this._elem, ["hidden"]);
-
   }
+
   //[內部控制]-綁定事件
   _bindEvent() {
     // if (!this.options.handlers) return;
@@ -113,6 +120,10 @@ export class Notification extends BaseComponent {
     //confirm&cancel event
     if (!this.confirmBtn) return;
     this.onevent(this.confirmBtn, "click", this.hide.bind(this));
+    if (this.confirm.handler) {
+      this.confirmBtn.addEventListener("click", this.confirm.handler.bind(this));
+      // this.onevent(this.confirmBtn, "click", this.confirm.handler.bind(this));
+    }
     if (!this.cancelBtn) return;
     this.onevent(this.cancelBtn, "click", this.hide.bind(this));
     // this.onevent(this.notifyTrigger, "click", this.options.handlers.bind(this.notifyTrigger));
@@ -163,7 +174,7 @@ export class Notification extends BaseComponent {
         break;
       case "center":
         //center
-        UIUtils.addClass(this._elem, ["top-[50%]", "left-[50%]", "translate-[-50%_-50%]"]);
+        UIUtils.addClass(this._elem, ["top-[50%]", "left-[50%]", "translate-[-50%]"]);
         break;
       default:
         break;
@@ -245,9 +256,9 @@ class ModalMsg extends Modal {
   constructor(target, options) {
     let { backdrop, backdropClasses, closable } = options;
     let modaltOptions = {
-      backdrop: backdrop,
+      backdrop: backdrop || "static",
       backdropClasses: "backdrop " + backdropClasses,
-      closable: closable
+      closable: closable || false
     };
     super(target, modaltOptions);
     this.confirmBtn = this._targetEl.querySelector("[data-confirmbtn]");

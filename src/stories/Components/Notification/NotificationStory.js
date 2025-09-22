@@ -1,4 +1,5 @@
 import { Notification } from "./Notification";
+import "./Notification.css"
 
 export const createNotification = ({ type, area, theme, maxWidth, msgContent, customContent, msgTitle, classes, placement, confirm, cancel, handlers, backdrop, backdropClasses, closable, triggerType, offset, countdown }) => {
     let parent = document.createElement("div");
@@ -20,7 +21,7 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
         placement: placement,         //自定義class
         confirm: confirm,           //確認按鈕文字&動作
         cancel: cancel,         //取消按鈕文字&動作
-        handlers: handlers,
+        handlers: handlers,      //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
     };
     switch (type) {
         case "modal":

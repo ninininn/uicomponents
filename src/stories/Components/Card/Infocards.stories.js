@@ -6,6 +6,11 @@ import { createCards } from './CardsStory';
 import "./Cards.css";
 import CardsAPIdoc from "./CardsAPIdoc.mdx";
 
+//其他元件相關css
+import "../Notification/Notification.css";
+import "../Dropdown/Dropdown.css"
+import "../Checkbox/Checkbox.css"
+
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
   title: "Components/Infocards",

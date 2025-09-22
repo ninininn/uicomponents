@@ -10,7 +10,7 @@
     --w: var(--w, auto);
     --h: var(--h, auto);
     srollbar-gutter: both-edges;
-    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] overflow-auto overscroll-contain;
+    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] min-w-[300px] min-h-[100px] overflow-auto overscroll-contain;
   }
 
   .notify-header {
