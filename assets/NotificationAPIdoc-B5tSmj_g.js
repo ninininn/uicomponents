@@ -1,14 +1,18 @@
-import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-a3X9s5Ps.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
+import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-1IdOgZ-D.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
 `,s.jsx(t,{}),`
-`,s.jsx(e.p,{children:"適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及alert)。"}),`
+`,s.jsx(e.p,{children:"適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及msg)。"}),`
 `,s.jsx(c,{}),`
 `,s.jsx(e.h1,{id:"controls",children:"Controls"}),`
-`,s.jsxs(e.p,{children:["這邊列出初始化時可以設定的 options.properties 及",s.jsx(e.code,{children:"type"}),"參數，內部屬性請參考",s.jsx(e.strong,{children:"properties屬性"}),"區塊"]}),`
+`,s.jsxs(e.p,{children:["由於 Notification 元件的使用方式較特殊，是以呼叫的方法來決定類型，提供操作的",s.jsx(e.code,{children:"type"}),"請視為實際使用場景要呼叫的方法；而 Method's parameter 則是呼叫時可以控制的設定，其餘內部屬性請參考 ",s.jsx(e.strong,{children:"properties 內部屬性"}),"區塊。"]}),`
 `,s.jsx(i,{}),`
 `,s.jsx(e.hr,{}),`
 `,s.jsx(e.h1,{id:"usage-api",children:"Usage API"}),`
-`,s.jsxs(e.p,{children:["初始化 Notification 元件，帶入 ",s.jsx(e.code,{children:"trigger"}),"、",s.jsx(e.code,{children:"options"})," 參數，並設定options屬性"]}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`new Notification(trigger, (options = {}));
+`,s.jsxs(e.p,{children:["初始化 Notification 元件，帶入 ",s.jsx(e.code,{children:"trigger"}),"參數，並於呼叫方法時帶入",s.jsx(e.code,{children:"options"}),"參數。"]}),`
+`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  let notify = new Notification(trigger); //先綁定觸發元素並初始化Notification\r
+  //...其他操作...\r
+\r
+  //要操作時再呼叫對應樣式方法\r
+  notify.modal(options)
 `})}),`
 `,s.jsxs(e.blockquote,{children:[`
 `,s.jsx(e.h3,{id:"parameters-參數設定",children:"parameters 參數設定"}),`
@@ -26,10 +30,33 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-a3X9s5Ps.js";impo
 `})}),`
 `,s.jsx("br",{}),`
 `]}),`
+`]}),`
+`,s.jsxs(e.blockquote,{children:[`
+`,s.jsx(e.h3,{id:"properties-內部屬性",children:"properties 內部屬性"}),`
+`,s.jsx("span",{className:"sb-unstyled data-type readonly",children:"Read-only"}),`
+`,s.jsx("span",{className:"sb-unstyled",children:"可以操作的屬性皆須使用methods來更改"}),`
+`]}),`
+`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"}),s.jsx("td",{children:"Inherits"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"Notification"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]}),s.jsxs("td",{children:[s.jsx(e.code,{children:"BaseComponent"})," 類別"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"theme"}),s.jsx("td",{children:"light"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"主題色系，light/dark兩色系可切換"}),s.jsxs("td",{children:[s.jsx(e.code,{children:"BaseComponent"})," 類別"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"options"}),s.jsxs("td",{children:["parameter",s.jsx(e.code,{children:"options"})]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:"相關設定值"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"type"}),s.jsx("td",{children:"msg"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"通知視窗種類"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"notifyTrigger"}),s.jsx("td",{children:"-"}),s.jsx("td",{children:"HTMLElement"}),s.jsx("td",{children:"觸發元素"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"confrim"}),s.jsx("td",{children:"確定"}),s.jsx("td",{children:"array | string"}),s.jsx("td",{colSpan:"2",children:"指定確認按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"cancel"}),s.jsx("td",{children:"取消"}),s.jsx("td",{children:"array | string"}),s.jsx("td",{colSpan:"2",children:"指定取消/返回按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string"})]})]})]})}),`
+`,s.jsx("br",{}),`
+`,s.jsxs(e.blockquote,{children:[`
+`,s.jsx(e.h3,{id:"methods-方法",children:"methods 方法"}),`
+`,s.jsx(e.p,{children:"提供外部控制方法調整內部屬性值"}),`
+`]}),`
+`,s.jsx("p",{className:"sb-unstyled font-bold text-yellow-500",children:"Quick reference"}),`
+`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"methods"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".toast(options)"})}),s.jsx("td",{children:"呼叫一個taost類型通知視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".modal(options)"})}),s.jsx("td",{children:"呼叫一個modal類型通知視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".popover(options)"})}),s.jsx("td",{children:"呼叫一個popover類型通知視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".msg(options)"})}),s.jsx("td",{children:"呼叫一般msg類型通知視窗"})]})]})]})}),`
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled methods mr-2",children:".toast(options)"}),`\r
+`,s.jsx("span",{className:"sb-unstyled methods mr-2",children:".modal(options)"}),`\r
+`,s.jsx("span",{className:"sb-unstyled methods mr-2",children:".popover(options)"}),`\r
+`,s.jsx("span",{className:"sb-unstyled methods mr-2",children:".msg(options)"}),`\r
+呼叫對應樣式方法`]}),`
+`,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
-`,s.jsx("span",{className:"sb-unstyled font-black",children:"options"}),`
-`,s.jsx("span",{className:"sb-unstyled data-type",children:"object"}),`
-`,s.jsx(e.p,{children:"各屬性的型別及說明可參考上方Controls區塊"}),`
+`,s.jsx(e.p,{children:s.jsx(e.strong,{children:"parameter"})}),`
+`,s.jsxs(e.ul,{children:[`
+`,s.jsxs(e.li,{children:[`
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"options"}),`\r
+`,s.jsx("span",{className:"sb-unstyled data-type",children:"object"}),s.jsx(e.br,{}),`
+`,"各屬性的型別及說明可參考上方",s.jsx(e.strong,{children:"Controls區塊"})]}),`
 `,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  const options = {\r
     type: "msg",                       //類型\r
     theme: "light",                    //主題色\r
@@ -45,12 +72,12 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-a3X9s5Ps.js";impo
     cancel:["取消", function(){}],     //取消按鈕文字&callback\r
   };
 `})}),`
+`]}),`
+`]}),`
 `,s.jsx("br",{}),`
 `]}),`
 `,s.jsxs(e.li,{children:[`
-`,s.jsx("span",{className:"sb-unstyled font-black",children:"type"}),`
-`,s.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),`
-`,s.jsx(e.p,{children:"通知視窗類型，分為四種:"}),`
+`,s.jsx("span",{className:"sb-unstyled font-black",children:"通知視窗類型說明，分為四種表現: "}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#ToastMsg",children:s.jsx(e.strong,{children:"toast"})}),s.jsx(e.br,{}),`
 `,"讓使用者知道/提醒目前操作或是狀態，一般表現為在視窗某位置(通常為四個角落)跳出，並持續一段時間後消失。",`
@@ -69,63 +96,7 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-a3X9s5Ps.js";impo
 `]}),`
 `,s.jsx("br",{}),`
 `]}),`
-`,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"id"}),`\r
-`,s.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),s.jsx(e.br,{}),`
-`,"targetContainer 元素 id 屬性"]}),`
-`,s.jsx("br",{}),`
 `]}),`
-`]}),`
-`,s.jsxs(e.blockquote,{children:[`
-`,s.jsx(e.h3,{id:"properties-內部屬性",children:"properties 內部屬性"}),`
-`,s.jsx("span",{className:"sb-unstyled data-type readonly",children:"Read-only"}),`
-`,s.jsx("span",{className:"sb-unstyled",children:"可以操作的屬性皆須使用methods來更改"}),`
-`]}),`
-`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"}),s.jsx("td",{children:"Inherits"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"Notification"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]}),s.jsxs("td",{children:[s.jsx(e.code,{children:"BaseComponent"})," 類別"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"theme"}),s.jsx("td",{children:"light"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"主題色系，light/dark兩色系可切換"}),s.jsxs("td",{children:[s.jsx(e.code,{children:"BaseComponent"})," 類別"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"options"}),s.jsxs("td",{children:["parameter",s.jsx(e.code,{children:"options"})]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:"相關設定值"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"type"}),s.jsx("td",{children:"msg"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"通知視窗種類"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"notifyTrigger"}),s.jsx("td",{children:"-"}),s.jsx("td",{children:"HTMLElement"}),s.jsx("td",{children:"觸發元素"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"confrim"}),s.jsx("td",{children:"確定"}),s.jsx("td",{children:"array | string"}),s.jsx("td",{colSpan:"2",children:"指定確認按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"cancel"}),s.jsx("td",{children:"取消"}),s.jsx("td",{children:"array | string"}),s.jsx("td",{colSpan:"2",children:"指定取消/返回按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string"})]})]})]})}),`
-`,s.jsx("br",{}),`
-`,s.jsxs(e.blockquote,{children:[`
-`,s.jsx(e.h3,{id:"methods-方法",children:"methods 方法"}),`
-`,s.jsx(e.p,{children:"提供外部控制方法調整內部屬性值"}),`
-`]}),`
-`,s.jsx("p",{className:"sb-unstyled font-bold text-yellow-500",children:"Quick reference"}),`
-`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"methods"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".show()"})}),s.jsx("td",{children:"顯示視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".hide()"})}),s.jsx("td",{children:"隱藏(關閉)視窗"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".isHidden()"})}),s.jsx("td",{children:"切換顯示視窗與否"})]}),s.jsxs("tr",{children:[s.jsx("td",{children:s.jsx(e.code,{children:".isVisible()"})}),s.jsx("td",{children:"切換顯示視窗與否"})]})]})]})}),`
-`,s.jsx("span",{className:"sb-unstyled methods mr-2",children:".show()"}),`
-`,s.jsx("span",{className:"sb-unstyled methods",children:".hide()"}),`
-`,s.jsx(e.p,{children:"顯示/隱藏視窗"}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  Notification.show(); \r
-  Notification.hide(); 
-`})}),`
-`,s.jsx("span",{className:"sb-unstyled methods",children:".changeTheme(HEXstring)"}),`
-`,s.jsxs(e.ul,{children:[`
-`,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"Parameters"}),s.jsx(e.br,{}),`
-`,"參數可以放入任一HEX色碼，用來改變主題色"]}),`
-`]}),`
-`,s.jsx("div",{className:"sb-unstyled alert-msg",children:"當disabled狀態為true時禁止修改(會跳出錯誤通知)"}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:` Checkbox.changeTheme("#8ecb28"); 
-`})}),`
-`,s.jsx("span",{className:"sb-unstyled methods",children:".setDisabled(boolean)"}),`
-`,s.jsx("span",{className:"sb-unstyled methods",children:".setValue(value)"}),`
-`,s.jsx("span",{className:"sb-unstyled methods",children:".setChecked(boolean)"}),`
-`,s.jsxs(e.ul,{children:[`
-`,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"Parameters"}),s.jsx(e.br,{}),`
-`,"傳入boolean值更改disabled、checked狀態；傳入任一值更改",s.jsx(e.code,{children:"<input/>"}),"的value值"]}),`
-`]}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`// ...init Checkbox\r
-\r
-Checkbox.setDisabled(false);\r
-Checkbox.setValue(value);\r
-Checkbox.setChecked(true);\r
-
-`})}),`
-`,s.jsx("span",{className:"sb-unstyled methods",children:".getValue()"}),`
-`,s.jsx("span",{className:"sb-unstyled methods",children:".getChecked()"}),`
-`,s.jsxs(e.ul,{children:[`
-`,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"Returns"}),s.jsx(e.br,{}),`
-`,"分別回傳",s.jsx(e.code,{children:"<input/>"}),"的value及checked值"]}),`
-`]}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`Checkbox.getValue(); //""\r
-Checkbox.getChecked(); //true
-`})}),`
 `,s.jsx(e.hr,{}),`
 `,s.jsx(e.h1,{id:"子類別",children:"子類別"}),`
 `,s.jsx("div",{className:"sb-unstyled alert-msg",children:"不會直接操作，僅列出參考用"}),`
