@@ -3,7 +3,7 @@ import { BaseComponent, UIUtils } from "../../../Utils";
 
 
 export class Notification extends BaseComponent {
-  constructor(trigger) {
+  constructor(trigger, options, type) {
     //Base notification container
     let targetElem = document.createElement("div");
     targetElem.className = "notify-container";
@@ -13,13 +13,14 @@ export class Notification extends BaseComponent {
       <div class="notify-content"></div>
       <div class="notify-actionbtns"></div>`;
 
-    super(targetElem);
+    super(targetElem, options.theme || "light");
     this.UItype = "Notification";
-    // this.options = { ...this.config, ...options };
+    this.options = { ...this.config, ...options };
     this.notifyTrigger = trigger;
     //種類
-    // this.type = type;
+    this.type = type;
     // this._instance = this._defineType(this._elem, this.type);
+    this._init();
   }
 
   get config() {
@@ -40,31 +41,27 @@ export class Notification extends BaseComponent {
     };
   }
   //使用對應類型呼叫方法
-  toast(setting) {
-    this.options = { ...this.config, ...setting };
+  toast(setting){
     this._instance = this._defineType(this._elem, "toast");
-    if (!this.initialize) this._init();
-    // this._show();
+    this._show()
+    
   }
-  popover(setting) {
-    this.options = { ...this.config, ...setting };
+  popover(setting){
     this._instance = this._defineType(this._elem, "popover");
-    if (!this.initialize) this._init();
-    // this._show();
-  }
-  modal(setting) {
-    this.options = { ...this.config, ...setting };
-    this._instance = this._defineType(this._elem, "modal");
-    if (!this.initialize) this._init();
-    this._show();
-  }
-  msg(setting) {
-    this.options = { ...this.config, ...setting };
-    this._instance = this._defineType(this._elem, "msg");
-    if (!this.initialize) this._init();
-    this._show();
-  }
+    this._show()
 
+  }
+  modal(setting){
+    this._instance = this._defineType(this._elem, "modal");
+    this._show()
+
+  }
+  msg(setting){
+    this._instance = this._defineType(this._elem, "msg");
+    this._show()
+
+  }
+  
 
   _defineType(target, type) {
     switch (type) {
@@ -83,7 +80,6 @@ export class Notification extends BaseComponent {
   }
 
   _init() {
-    this.initialize = true;
     let { msgTitle, msgContent, customContent, btnList, confirm, cancel } = this.options;
     if (this.type === "toast") return;
     //是否需要標題
@@ -146,7 +142,7 @@ export class Notification extends BaseComponent {
   //[內部控制]-綁定事件
   _bindEvent() {
     // if (!this.options.handlers) return;
-    // this.onevent(this.notifyTrigger, "click", this._show.bind(this));
+    this.onevent(this.notifyTrigger, "click", this.show.bind(this));
 
 
     //confirm&cancel event
@@ -240,7 +236,7 @@ class ToastMsg {
     this._options = options;
     this.msgContainer = target;
     this._trigger = trigger;
-    this.toastItems = [];
+    this.toastItems=[];
     this._init();
   }
 
@@ -262,7 +258,7 @@ class ToastMsg {
     this._trigger.addEventListener("click", () => {
       //塞新的toastitem進來，文字為options.content
       let newToast = new ToastItem();
-      this.toastItems = [...this.toastItems, newToast];
+      this.toastItems = [...this.toastItems, newToast]
     });
   }
   onShow() {

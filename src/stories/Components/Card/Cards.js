@@ -1,9 +1,6 @@
 import { BaseComponent } from "../../../Utils";
 import { Notification } from "../Notification/Notification";
-function closeCard() {
-  console.log("closeCard function!");
-  this.cardContainer.remove();
-}
+
 export class Card extends BaseComponent {
   constructor(title, cardSize) {
     let cardContainer = document.createElement("div");
@@ -31,14 +28,7 @@ export class Card extends BaseComponent {
     this.title = title;
     this._cardsize = this._setCardSize(cardSize); //設定卡片尺寸
     this.minimize = false;
-    this._closeCard = closeCard;
-    this._closeNotify = new Notification(this.cardContainer.querySelector(".closeBtn"), {
-      msgContent: "確定關閉此資料區塊? 關閉後須重新查詢",
-      placement: "center",
-      confirm: ["確定關閉", () => {console.log("in _closeNotify"); this.cardContainer.remove()}],
-      cancel: "取消",
-      backdropClasses: "bg-gray-800/50"
-    }, "modal");
+    this._closeNotify = new Notification(this.cardContainer.querySelector(".closeBtn"));
     this._bindEvent();
   }
 
@@ -76,9 +66,13 @@ export class Card extends BaseComponent {
     this.cardContainer.querySelector(".closeBtn").addEventListener("click", closeNotify.bind(this));
 
     function closeNotify() {
-      console.log("closeNotify function!");
-      console.log(this._closeNotify);
-      this._closeNotify.show();
+      this._closeNotify.modal({
+        msgContent: "確定關閉此資料區塊? 關閉後須重新查詢",
+        placement: "center",
+        confirm: ["確定關閉", () => {  this.cardContainer.remove(); }],
+        cancel: "取消",
+        backdropClasses: "bg-gray-800/50"
+      });
     }
   }
 }

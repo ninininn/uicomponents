@@ -22,7 +22,7 @@
   }
 
   .notify-actionbtns {
-    @apply w-full flex gap-3
+    @apply w-full flex gap-3 justify-center items-center
   }
 
   .backdrop {

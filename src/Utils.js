@@ -20,11 +20,41 @@ export class UIUtils {
     static setText(element, text) {
         element.textContent = text;
     }
+    static setTextnode(element, text) {
+        let textNode = document.createTextNode(text);
+        element.appendChild(textNode);
+    }
     static setAttribute(element, attributeName, attributeValue = "") {
         element.setAttribute(`data-${attributeName}`, attributeValue);
     }
     static setProperty(element, propertyName, propertyValue) {
         element.style.setProperty(propertyName, propertyValue);
+    }
+
+    static setButtons(btnConfig) {
+        let btn = document.createElement("button");
+        let { classes, icon, text, handler } = btnConfig;
+        if (icon) {
+            classes.push("icon-text-btn");
+            let img = document.createElement("img");
+            UIUtils.addClass(img, ["icon",]);
+            img.src = `${icon}`;
+            btn.appendChild(img);
+        }
+        //設定按鈕文字
+        UIUtils.setTextnode(btn, text);
+        //設定按鈕其他相關
+        UIUtils.addClass(btn, ["btn", ...classes]);
+        btn.type = "button";
+
+        if (handler) {
+            btn.addEventListener("click", (e) => {
+                handler.call(btn, e, btnConfig);
+            });
+        }
+
+
+        return btn;
     }
 }
 
@@ -73,10 +103,14 @@ export class BaseComponent {
 
     // 新增監聽器
     onevent(target, event, handler) {
-        //避免重複綁定
+        //避免重複綁定//但是.bind產生的fn還是會認為是不同的
         let recordObj = { target, event, handler };
         let checkListeners = this._eventListeners.filter((listener) => {
-            return listener.event === event && listener.target === target;
+            return (
+                listener.event === event &&
+                listener.target === target &&
+                listener.handler === handler
+            );
         });
 
         if (checkListeners.length === 0) {

@@ -1,7 +1,7 @@
 import { Notification } from "./Notification";
-import "./Notification.css"
+import "./Notification.css";
 
-export const createNotification = ({ type, area, theme, maxWidth, msgContent, customContent, msgTitle, classes, placement, confirm, cancel, handlers, backdrop, backdropClasses, closable, triggerType, offset, countdown }) => {
+export const createNotification = ({ type, area, theme, maxWidth, msgContent, customContent, msgTitle, classes, placement, confirm, cancel, btnList, handler, backdrop, backdropClasses, closable, triggerType, offset, countdown }) => {
     let parent = document.createElement("div");
     parent.className = "mx-auto";
     let trigger = document.createElement("button");
@@ -21,7 +21,8 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
         placement: placement,         //自定義class
         confirm: confirm,           //確認按鈕文字&動作
         cancel: cancel,         //取消按鈕文字&動作
-        handlers: handlers,      //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
+        handler: handler,      //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
+        btnList: btnList,
     };
     switch (type) {
         case "modal":
@@ -40,7 +41,8 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
             initOptions.countdown = countdown;
             break;
     }
-    let notification_instance = new Notification(trigger, initOptions, type);
+    // let notification_instance = new Notification(trigger, initOptions, type);
+    let notification_instance = new Notification(trigger);
     // notification_instance.show();
     // layerpage_instance.getElem().addEventListener("change", (e) => {
     //     const payload = {
@@ -51,7 +53,24 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
     //     layerpage_instance.options.handlers?.(payload);
     //     // 把checked 及 value一次顯示(僅storybook測試用)
     // });
+    trigger.addEventListener("click", () => {
+        switch (type) {
+            case "modal":
+                notification_instance.modal(initOptions);
+                break;
+            case "toast":
+                notification_instance.toast(initOptions);
+                break;
+            case "popover":
+                notification_instance.popover(initOptions);
+                break;
+            case "msg":
+                notification_instance.msg(initOptions);
+                break;
+        }
 
+        // console.log(notification_instance.modal({ initOptions }));
+    });
     console.log("notification_instance:", notification_instance);
     return parent;
 };

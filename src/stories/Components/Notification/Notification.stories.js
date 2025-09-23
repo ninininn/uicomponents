@@ -31,9 +31,9 @@ export default {
       control: "select",
       options: ["toast", "modal", "popover", "msg"],
       type: { required: true },
-      description: "跳出通知種類",
+      description: "呼叫方法name",
       table: {
-        category: "parameters",
+        category: "method",
         defaultValue: { summary: "msg" },
         type: { summary: "string" },
       },
@@ -44,7 +44,7 @@ export default {
       if: { arg: "type", eq: "modal" },
       description: "背景遮罩類型",
       table: {
-        category: "parameters",
+        category: "method's parameters",
         subcategory: "private property",
         defaultValue: { summary: "static" },
         type: { summary: "string" },
@@ -55,7 +55,7 @@ export default {
       if: { arg: "type", eq: "modal" },
       description: "背景遮罩關閉類型",
       table: {
-        category: "parameters",
+        category: "method's parameters",
         subcategory: "private property",
         defaultValue: { summary: "static" },
         type: { summary: "string" },
@@ -66,7 +66,7 @@ export default {
       if: { arg: "type", eq: "modal" },
       description: "背景遮罩關閉類型",
       table: {
-        category: "parameters",
+        category: "method's parameters",
         subcategory: "private property",
         defaultValue: { summary: "true" },
         type: { summary: "boolean" },
@@ -78,7 +78,7 @@ export default {
       if: { arg: "type", eq: "popover" },
       description: "觸發動作類型",
       table: {
-        category: "parameters",
+        category: "method's parameters",
         subcategory: "private property",
         defaultValue: { summary: "hover" },
         type: { summary: "string" },
@@ -89,7 +89,7 @@ export default {
       if: { arg: "type", eq: "popover" },
       description: "距離觸發元素的位置距離",
       table: {
-        category: "parameters",
+        category: "method's parameters",
         subcategory: "private property",
         defaultValue: { summary: "10" },
         type: { summary: "number" },
@@ -100,7 +100,7 @@ export default {
       if: { arg: "type", eq: "msg" },
       description: "自訂倒數消失時間",
       table: {
-        category: "parameters",
+        category: "method's parameters",
         subcategory: "private property",
         defaultValue: { summary: "1000" },
         type: { summary: "number" },
@@ -111,8 +111,7 @@ export default {
       options: ["light", "dark"],
       description: "通知視窗的尺寸大小",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "light" },
         type: { summary: "string" },
       },
@@ -121,8 +120,7 @@ export default {
       control: "text",
       description: "通知視窗的最大尺寸",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "auto" },
         type: { summary: "string" },
       },
@@ -132,8 +130,7 @@ export default {
       // type: { required: true },
       description: "通知視窗的尺寸大小",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "[auto, auto]" },
         type: { summary: "array" },
       },
@@ -142,8 +139,7 @@ export default {
       control: "text",
       description: "訊息內容",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         type: { summary: "string" },
       },
     },
@@ -151,8 +147,7 @@ export default {
       control: "string",
       description: "自訂訊息innerHTML結構",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         type: { summary: "string" },
       },
     },
@@ -160,8 +155,7 @@ export default {
       control: "text",
       description: "通知視窗標題文字，如果不需要標題可以傳入空字串或是false",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "-" },
         type: { summary: "string" },
       },
@@ -170,19 +164,17 @@ export default {
       control: { type: "array" },
       description: "自定義class，每個class以tailwindcss property放入",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
-        defaultValue: { summary: ".msg" },
+        category: "method's parameters",
+        defaultValue: { summary: ".notify-container" },
         type: { summary: "array" },
       },
     },
     placement: {
       control: { type: "select" },
       options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top"],
-      description: "訊息框彈出位置",
+      description: "彈出位置",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "center" },
         type: { summary: "string" },
       },
@@ -191,8 +183,7 @@ export default {
       control: { type: "text" },
       description: "確認按鈕文字及callback函式(此處僅提供設定按鈕文字)",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "確定" },
         type: { summary: "array" },
       },
@@ -201,20 +192,27 @@ export default {
       control: { type: "text" },
       description: "取消按鈕文字及callback函式(此處僅提供設定按鈕文字)",
       table: {
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "取消" },
         type: { summary: "array" },
       },
     },
-    handlers: {
+    btnList: {
+      control: { type: "array" },
+      description: "除了確認及取消以外的按鈕；text:按鈕文字|classes:樣式class陣列|handler:click-handler function",
+      table: {
+        category: "method's parameters",
+        defaultValue: { summary: "null" },
+        type: { summary: "array" },
+      },
+    },
+    handler: {
       action: "click",
       control: "function",
       description: "點擊觸發元素後的callback函式",
       table: {
         // type: { required: true },
-        category: "parameters",
-        subcategory: "options properties",
+        category: "method's parameters",
         defaultValue: { summary: "null" },
         type: { summary: "function" },
       },
@@ -235,15 +233,16 @@ export default {
     placement: "left-top",
     confirm: "確定",
     cancel: "取消",
+    btnList: [],
     //modal private
     backdrop: "static",
     backdropClasses: "bg-gray-500/50",
     closable: false,
     //popover private
-    triggerType:"hover",
-    offset:10,
+    triggerType: "hover",
+    offset: 10,
     //msg private
-    countdown:1000,
+    countdown: 1000,
   },
 };
 
@@ -253,7 +252,18 @@ export const Toast = {
     type: "toast",
     placement: "right-top",
     msgContent: "動綠是昔毛叫這頭收乞高姐力司「黑枝乾」化氣星常每貝木嗎見雲黃巴事冬更珠，亭肖哪飯隻朱者英二活經貫綠「只地話入」卜風連語貓身陽黑空次司月她！還室意蝴士下卜後唱筆至旦民訴跑書向。後北愛升科訴把肖止聽對。",
+    customContent: `<div>TEST</div>`,
     maxWidth: "360px",
+    btnList: [
+      {
+        text: "前往",
+        classes: ["btn-primary", "outline-btn"],
+        handler: function (e, config) {
+          alert("前往某網址");
+        }
+      },
+      { icon: "/public/sticker.png", text: "查看更多", classes: ["btn-secondary", "outline-btn"] },
+    ]
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');
