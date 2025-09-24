@@ -28,7 +28,6 @@ export class Card extends BaseComponent {
     this.title = title;
     this._cardsize = this._setCardSize(cardSize); //設定卡片尺寸
     this.minimize = false;
-    this._closeNotify = new Notification(this.cardContainer.querySelector(".closeBtn"));
     this._bindEvent();
   }
 
@@ -66,10 +65,10 @@ export class Card extends BaseComponent {
     this.cardContainer.querySelector(".closeBtn").addEventListener("click", closeNotify.bind(this));
 
     function closeNotify() {
-      this._closeNotify.modal({
+      Notification.modal(this.cardContainer.querySelector(".closeBtn"), {
         msgContent: "確定關閉此資料區塊? 關閉後須重新查詢",
         placement: "center",
-        confirm: ["確定關閉", () => {  this.cardContainer.remove(); }],
+        confirm: ["確定關閉", () => { this.cardContainer.remove(); }],
         cancel: "取消",
         backdropClasses: "bg-gray-800/50"
       });

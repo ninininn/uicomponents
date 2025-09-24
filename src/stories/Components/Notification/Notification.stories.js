@@ -135,6 +135,16 @@ export default {
         type: { summary: "array" },
       },
     },
+    icon: {
+      control: "file",
+      // type: { required: true },
+      description: "視窗icon圖示",
+      table: {
+        category: "method's parameters",
+        defaultValue: { summary: "[auto, auto]" },
+        type: { summary: "/path-to-icon" },
+      },
+    },
     msgContent: {
       control: "text",
       description: "訊息內容",
@@ -275,7 +285,7 @@ export const Modal = {
   args: {
     type: "modal",
     placement: "center",
-    confirm: "確定",
+    confirm: ["確定", function () { console.log("exit modal!"); }],
     cancel: "取消"
   },
   // play: async ({ args, canvas, userEvent }) => {

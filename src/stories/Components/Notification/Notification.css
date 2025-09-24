@@ -13,6 +13,14 @@
     @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] min-w-[300px] min-h-[100px] overflow-auto overscroll-contain;
   }
 
+  .toast-container {
+    @apply absolute z-50 flex flex-col-reverse justify-start gap-3
+  }
+
+  .toast-container .notify-container {
+    @apply static flex
+  }
+
   .notify-header {
     @apply w-full flex justify-between font-bold text-xl
   }
@@ -24,7 +32,9 @@
   .notify-actionbtns {
     @apply w-full flex gap-3 justify-center items-center
   }
-
+    .toast-container .notify-actionbtns {
+      @apply flex-wrap grow-4
+    }
   .backdrop {
     @apply fixed w-[100dvw] h-[100dvh] top-0 z-4
   }

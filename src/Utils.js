@@ -10,7 +10,7 @@ export class UIUtils {
         element.classList.remove(...classes);
     }
     //清除所有class(除了指定的以外)
-    static clearClass(element, excludeClasses) {
+    static clearClass(element, excludeClasses = []) {
         let newClassName = [];
         for (let cls of excludeClasses) {
             newClassName.push(cls);
@@ -33,7 +33,7 @@ export class UIUtils {
 
     static setButtons(btnConfig) {
         let btn = document.createElement("button");
-        let { classes, icon, text, handler } = btnConfig;
+        let { classes = [], icon, text, handler } = btnConfig;
         if (icon) {
             classes.push("icon-text-btn");
             let img = document.createElement("img");
@@ -53,8 +53,38 @@ export class UIUtils {
             });
         }
 
-
         return btn;
+    }
+
+    static setPosition(element, position, excludeClasses = []) {
+        UIUtils.clearClass(element, excludeClasses);
+        switch (position) {
+            case "right-top":
+                UIUtils.addClass(element, ["right-[5rem]", "top-[2rem]"]);
+                break;
+            case "right-bottom":
+                UIUtils.addClass(element, ["right-[5rem]", "bottom-[2rem]"]);
+                break;
+            case "left-top":
+                UIUtils.addClass(element, ["left-[5rem]", "top-[2rem]"]);
+                break;
+            case "left-bottom":
+                UIUtils.addClass(element, ["left-[5rem]", "bottom-[2rem]"]);
+                break;
+            case "center-top":
+                UIUtils.addClass(element, ["left-[50%]", "top-[2rem]", "-translate-x-[50%]"]);
+                break;
+            case "center-bottom":
+                UIUtils.addClass(element, ["left-[50%]", "bottom-[2rem]", "-translate-x-[50%]"]);
+                break;
+            case "center":
+                //center
+                UIUtils.addClass(element, ["top-[50%]", "left-[50%]", "translate-[-50%]"]);
+                break;
+            default:
+                break;
+        }
+
     }
 }
 

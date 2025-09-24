@@ -1,3 +1,4 @@
+import { UIUtils } from "../../../Utils";
 import { Notification } from "./Notification";
 import "./Notification.css";
 
@@ -9,6 +10,11 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
     trigger.textContent = "Show Notification";
 
     parent.appendChild(trigger);
+
+    let testBtns = [
+        { text: "1" },
+        { text: "2" },
+    ];
     let initOptions = {
         type: type,        //類型
         theme: theme,
@@ -42,7 +48,7 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
             break;
     }
     // let notification_instance = new Notification(trigger, initOptions, type);
-    let notification_instance = new Notification(trigger);
+
     // notification_instance.show();
     // layerpage_instance.getElem().addEventListener("change", (e) => {
     //     const payload = {
@@ -56,21 +62,19 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
     trigger.addEventListener("click", () => {
         switch (type) {
             case "modal":
-                notification_instance.modal(initOptions);
+                Notification.modal(trigger, initOptions);
                 break;
             case "toast":
-                notification_instance.toast(initOptions);
+                Notification.toast(trigger, initOptions);
+
                 break;
             case "popover":
-                notification_instance.popover(initOptions);
+                Notification.popover(trigger, initOptions);
                 break;
             case "msg":
-                notification_instance.msg(initOptions);
+                Notification.msg(trigger, initOptions);
                 break;
         }
-
-        // console.log(notification_instance.modal({ initOptions }));
     });
-    console.log("notification_instance:", notification_instance);
     return parent;
 };

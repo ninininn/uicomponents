@@ -2,9 +2,27 @@ import { Dismiss, Modal, Popover } from "flowbite";
 import { BaseComponent, UIUtils } from "../../../Utils";
 
 
-export class Notification extends BaseComponent {
-  constructor(trigger) {
-    //Base notification container
+export class Notification {
+  //使用對應類型呼叫方法
+  static toast(trigger, options = {}) {
+    let toastManager = new ToastMsg(trigger, options);
+    return toastManager.pushItem(options);
+  }
+  static modal(trigger, options = {}) {
+    let targetEl = Notification._createTargetContainer();
+    return new ModalMsg(targetEl, options);
+  }
+  static popover(trigger, options = {}) {
+    let targetEl = Notification._createTargetContainer();
+    return new PopoverMsg(targetEl, trigger, options);
+  }
+  static msg(trigger, options = {}) {
+    let targetEl = Notification._createTargetContainer();
+    return new DefaultMsg(targetEl, options);
+  }
+
+  //建立容器
+  static _createTargetContainer() {
     let targetElem = document.createElement("div");
     targetElem.className = "notify-container";
 
@@ -12,80 +30,40 @@ export class Notification extends BaseComponent {
       <div class="notify-header"></div>
       <div class="notify-content"></div>
       <div class="notify-actionbtns"></div>`;
+    return targetElem;
+  }
+}
 
-    super(targetElem);
-    this.UItype = "Notification";
-    // this.options = { ...this.config, ...options };
-    this.notifyTrigger = trigger;
-    //種類
-    // this.type = type;
-    // this._instance = this._defineType(this._elem, this.type);
+
+//config 內容相關&UI設定
+class BaseMsg extends BaseComponent {
+  constructor(target, options = {}) {
+    super(target, options.theme || "light");
+    this.options = { ...this.config, ...options };
+    this._init();
   }
 
   get config() {
     return {
-      type: "msg",                       //類型
-      theme: "light",                    //主題色
-      maxWidth: "auto",                 //最大尺寸
-      area: ["auto", "auto"],            //尺寸
-      msgContent: null,                  //主要文字內容
-      customContent: null,               //自定義HTML內容
-      msgTitle: null,                    //title文字
-      classes: [],                     //自定義class
-      handler: null,                    //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
-      placement: "center-center",                //位置
-      confirm: "確認",                //確認按鈕文字&callback
-      cancel: "取消",                 //取消按鈕文字&callback
-      btnList: []
+      type: "modal",        //類型
+      theme: "light",
+      maxWidth: null,
+      area: ["auto", "auto"], //尺寸
+      msgContent: null,         //主要文字內容
+      customContent: null,         //自定義HTML內容
+      msgTitle: "通知",         //title文字
+      classes: [],         //自定義class
+      placement: "center",         //自定義class
+      confirm: "確認",           //確認按鈕文字&動作
+      cancel: "取消",         //取消按鈕文字&動作
+      handler: null,      //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
+      btnList: [],
     };
-  }
-  //使用對應類型呼叫方法
-  toast(setting) {
-    this.options = { ...this.config, ...setting };
-    this._instance = this._defineType(this._elem, "toast");
-    if (!this.initialize) this._init();
-    // this._show();
-  }
-  popover(setting) {
-    this.options = { ...this.config, ...setting };
-    this._instance = this._defineType(this._elem, "popover");
-    if (!this.initialize) this._init();
-    // this._show();
-  }
-  modal(setting) {
-    this.options = { ...this.config, ...setting };
-    this._instance = this._defineType(this._elem, "modal");
-    if (!this.initialize) this._init();
-    this._show();
-  }
-  msg(setting) {
-    this.options = { ...this.config, ...setting };
-    this._instance = this._defineType(this._elem, "msg");
-    if (!this.initialize) this._init();
-    this._show();
-  }
-
-
-  _defineType(target, type) {
-    switch (type) {
-      case "toast":
-        return new ToastMsg(target, this.notifyTrigger, this.options);
-      case "modal":
-        return new ModalMsg(target, this.options);
-      case "popover":
-        return new PopoverMsg(target, this.notifyTrigger, this.options);
-      case "msg":
-        return new DefaultMsg(target, this.notifyTrigger, this.options);
-      default:
-        console.error("必選一種頁面類型");
-        break;
-    }
   }
 
   _init() {
-    this.initialize = true;
+    // header
     let { msgTitle, msgContent, customContent, btnList, confirm, cancel } = this.options;
-    if (this.type === "toast") return;
     //是否需要標題
     if (msgTitle && (msgTitle).toLowerCase() !== "false") {
       let header = this._elem.querySelector(".notify-header");
@@ -102,7 +80,12 @@ export class Notification extends BaseComponent {
     //是否有自製內容innerHTML
     if (customContent) {
       let contentDiv = this._elem.querySelector(".notify-content");
-      contentDiv.innerHTML += customContent;
+      if (customContent instanceof HTMLElement) {
+        contentDiv.appendChild(customContent);
+      }
+      else {
+        contentDiv.innerHTML += customContent;
+      }
     }
     //是否有btnList要設定[預設會有一組]
     if (btnList) {
@@ -123,10 +106,7 @@ export class Notification extends BaseComponent {
       this.cancelBtn = this._setBtns(this.cancel);
     }
     this._render();
-    document.body.appendChild(this._elem);
-    this._bindEvent();
   }
-
   //[內部控制]-渲染UI樣式
   _render() {
     //主題色
@@ -140,32 +120,16 @@ export class Notification extends BaseComponent {
     UIUtils.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
     UIUtils.setProperty(this._elem, "--w", this.options.area[0]);
     UIUtils.setProperty(this._elem, "--h", this.options.area[1]);
-    UIUtils.addClass(this._elem, ["hidden"]);
-  }
+    // UIUtils.addClass(this._elem, ["hidden"]);
 
-  //[內部控制]-綁定事件
-  _bindEvent() {
-    // if (!this.options.handlers) return;
-    // this.onevent(this.notifyTrigger, "click", this._show.bind(this));
-
-
-    //confirm&cancel event
-    if (!this.confirmBtn) return;
-    this.onevent(this.confirmBtn, "click", this.hide.bind(this));
-    if (this.confirm.handler) {
-      this.onevent(this.confirmBtn, "click", this.confirm.handler.bind(this));
-      // this.confirmBtn.addEventListener("click", this.confirm.handler.bind(this));
+    if (this.options.type !== "toast") {
+      this._setPosition(this.options.placement);
     }
-    if (!this.cancelBtn) return;
-    this.onevent(this.cancelBtn, "click", this.hide.bind(this));
-    // this.onevent(this.notifyTrigger, "click", this.options.handlers.bind(this.notifyTrigger));
   }
-
   //[內部控制]-設定確認與取消動作
   _confirmAndcancel(option, actionType) {
     let setting = Array.isArray(option) ? option : [option];
     let [btnTxt, handler] = setting;
-
     return { actionType: actionType, btnTxt: btnTxt, handler: handler };
   }
 
@@ -184,220 +148,195 @@ export class Notification extends BaseComponent {
 
   //[內部控制]-設定位置
   _setPosition(position) {
-    UIUtils.clearClass(this._elem, ["notify-container", ...this.options.classes]);
-    switch (position) {
-      case "right-top":
-        UIUtils.addClass(this._elem, ["right-[5rem]", "top-[2rem]"]);
-        break;
-      case "right-bottom":
-        UIUtils.addClass(this._elem, ["right-[5rem]", "bottom-[2rem]"]);
-        break;
-      case "left-top":
-        UIUtils.addClass(this._elem, ["left-[5rem]", "top-[2rem]"]);
-        break;
-      case "left-bottom":
-        UIUtils.addClass(this._elem, ["left-[5rem]", "bottom-[2rem]"]);
-        break;
-      case "center-top":
-        UIUtils.addClass(this._elem, ["left-[50%]", "top-[2rem]", "-translate-x-[50%]"]);
-        break;
-      case "center-bottom":
-        UIUtils.addClass(this._elem, ["left-[50%]", "bottom-[2rem]", "-translate-x-[50%]"]);
-        break;
-      case "center":
-        //center
-        UIUtils.addClass(this._elem, ["top-[50%]", "left-[50%]", "translate-[-50%]"]);
-        break;
-      default:
-        break;
-    }
+    UIUtils.setPosition(this._elem, position, ["notify-container", ...this.options.classes]);
   }
-
-  //[內部控制]-視窗顯示
-  _show() {
-    this._setPosition(this.options.placement);
-    this._instance.onShow();
-  }
-
-  //[外部控制]-視窗隱藏
-  hide() {
-    this._instance.onHide();
-  }
+  // BaseMsg 不負責行為，只是 UI 的基礎
 }
 
 //toast類型
 //flowbite needed: target,trigger(為觸發miss的元素),options
 // toast類型應該要由一個容器包覆所有toast-item，且item要堆疊出現
-class ToastMsg {
-  constructor(target, trigger, options) {
+
+//單一toast訊息->Dismiss相關
+class ToastItem extends BaseComponent {
+  constructor(trigger, options) {
     let { transition, duration, timing } = options;
     let dismissOptions = {
       transition: transition || "transition-opacity",
       duration: duration || 300,
       timing: timing || "ease-out"
     };
-
-    this._options = options;
-    this.msgContainer = target;
-    this._trigger = trigger;
-    this.toastItems = [];
+    let itemContainer = Notification._createTargetContainer();
+    super(itemContainer, options.theme || "light");
+    this._base = new BaseMsg(this._elem, options);
+    this.dismiss = new Dismiss(this._elem, this._base.cancelBtn, dismissOptions);
     this._init();
   }
 
-  //預設option設定
-  get config() {
-    return {
-      transition: "transition-opacity",
-      duration: 300,
-      timing: "ease-out"
-    };
-  }
-
   _init() {
-    UIUtils.setAttribute(this.msgContainer, "notifytoast");
+
     this._bindEvent();
   }
 
   _bindEvent() {
-    this._trigger.addEventListener("click", () => {
-      //塞新的toastitem進來，文字為options.content
-      let newToast = new ToastItem();
-      this.toastItems = [...this.toastItems, newToast];
-    });
-  }
-  onShow() {
-    this._targetEl.classList.remove("hidden");
-    this._targetEl.classList.remove("opacity-0");
-    this._targetEl.classList.add("opacity-100");
+    // this.onevent(this._base.cancelBtn, "click", this.onHide);
+    this.clearItem();
   }
 
   onHide() {
-    super.hide();
-    // document.body.removeChild(this._targetEl);
+    this.dismiss.hide();
   }
-
-  updateOnHide(fn) {
-    super.updateOnHide(fn);
+  clearItem() {
+    setTimeout(() => {
+      this._elem.remove();
+    }, 5000);
   }
 }
-//toast類型獨有子元件
-class ToastItem extends Dismiss {
-  constructor(target, trigger, options) {
+// toast類型，為容器&負責管理ToastItem
+class ToastMsg {
+  constructor(trigger, options) {
+    // if (ToastMsg.instance) return ToastMsg.instance;
 
-    let { transition, duration, timing } = options;
-    let dismissOptions = {
-      transition: transition || "transition-opacity",
-      duration: duration || 300,
-      timing: timing || "ease-out"
-    };
-    super(target, target.querySelector("[data-cancelbtn]"), dismissOptions);
+    // 如果 trigger 已經綁定過，直接返回同一個 instance
+    if (trigger.dataset.toastInit) {
+      return ToastMsg.instances[trigger.dataset.toastInit];
+    }
 
-    this.msg = this._options.msgContent;
-    this.bindHandler = this.onHide.bind(this);
+
+    this.options = options;
+    this.trigger = trigger;
+    this.toastItems = [];//所有子訊息
     this._init();
+
+    this.id = `toast-${Date.now()}`;
+    trigger.dataset.toastInit = this.id;
+    ToastMsg.instances[this.id] = this;
   }
 
-  //預設option設定
-  get config() {
-    return this._options;
-  }
+  static instances = {};//建立過的ToastMsg
 
   _init() {
-    UIUtils.setAttribute(this._targetEl, "notifytoast");
-    // garbage collection...
+    this.toastContainer = document.createElement("div");
+    UIUtils.addClass(this.toastContainer, ["toast-container"]);
+    UIUtils.setPosition(this.toastContainer, this.options.placement, ["toast-container"]);
+    document.body.appendChild(this.toastContainer);
   }
 
-  onShow() {
-    this._targetEl.classList.remove("hidden");
-    this._targetEl.classList.remove("opacity-0");
-    this._targetEl.classList.add("opacity-100");
+  _bindEvent() {
+    this.onevent(this.trigger, "click", this.pushItem);
+    this.clearItem();
   }
 
-  onHide() {
-    super.hide();
-    // document.body.removeChild(this._targetEl);
+  pushItem() {
+    let toastItem = new ToastItem(this.trigger, this.options);
+    this.toastItems.push(toastItem);
+    this.toastContainer.appendChild(toastItem._elem);
   }
 
-  updateOnHide(fn) {
-    super.updateOnHide(fn);
+  clearItem() {
+    setTimeout(() => {
+      this.toastItems.shift();
+    }, 3000);
   }
 }
+
+
 //Modal類型
 //flowbite needed: target,options
-class ModalMsg extends Modal {
+class ModalMsg extends BaseComponent {
   constructor(target, options) {
     let { backdrop, backdropClasses, closable } = options;
-    let modaltOptions = {
+    let modalOptions = {
       backdrop: backdrop || "static",
       backdropClasses: "backdrop " + backdropClasses,
       closable: closable || false
     };
-    super(target, modaltOptions);
-    this.confirmBtn = this._targetEl.querySelector("[data-confirmbtn]");
-    this.cancelBtn = this._targetEl.querySelector("[data-cancelbtn]");
-    this.bindHandler = this.onHide.bind(this);
+    super(target, options.theme);
+    this._base = new BaseMsg(target, options);
+    this.modal = new Modal(target, modalOptions);
     this._init();
   }
 
-  get config() {
-    return this._options;
-  }
-
   _init() {
-    UIUtils.setAttribute(this._targetEl, "notifymodal");
-    // this.confirmBtn.forEach((btn) => {
-    //   btn.addEventListener("click", this.bindHandler);
-    // });
-    // this.cancelBtn.forEach((btn) => {
-    //   btn.addEventListener("click", this.bindHandler);
-    // });
+    document.body.appendChild(this._elem);
+    this.onShow();
+    this._bindEvent();
+    UIUtils.setAttribute(this._elem, "notifymodal");
   }
   onShow() {
-    document.body.appendChild(this._targetEl);
-    super.show();
-    UIUtils.removeClass(this._targetEl, ["flex"]);//flowbite會自動加入flex，所以要移除
+    this.modal.show();
+    UIUtils.removeClass(this._elem, ["flex"]);//flowbite會自動加入flex，所以要移除
   }
   onHide() {
-    super.hide();
+    this.modal.hide();
+  }
+  _bindEvent() {
+    let { handler } = this._base.confirm;
+
+    if (!this._base.confirmBtn) return;
+    this.onevent(this._base.confirmBtn, "click", this.onHide.bind(this));
+    if (handler) {
+      this.onevent(this._base.confirmBtn, "click", handler.bind(this));
+    }
+    if (!this._base.cancelBtn) return;
+    this.onevent(this._base.cancelBtn, "click", this.onHide.bind(this));
   }
 }
 
 //Popover類型
 //flowbite needed: target,trigger,options
-class PopoverMsg extends Popover {
+class PopoverMsg extends BaseComponent {
   constructor(target, trigger, options) {
     let { triggerType, offset } = options;
     let popoverOptions = {
-      triggerType: triggerType,
-      offset: offset
+      triggerType: triggerType || "click",
+      offset: offset || 10
     };
-    super(target, trigger, popoverOptions);
+    super(target, options.theme || "light");
+    this._options = { ...options, ...popoverOptions };
+    this._base = new BaseMsg(target, options);
+    this.popover = new Popover(target, trigger, popoverOptions);
+    this.bindHandler = this.onHide.bind(this);
+    this._init();
   }
 
   _init() {
-    UIUtils.setAttribute(this._targetEl, "notifypopover");
+    document.body.appendChild(this._elem);
+    UIUtils.setAttribute(this._elem, "notifypopover");
+    this.onShow();
+    this._bindEvent();
   }
   get config() {
     return this._options;
   }
 
   onShow() {
-    document.body.appendChild(this._targetEl);
-    super.show();
+    this.popover.show();
   }
 
   onHide() {
-    super.hide();
+    this.popover.hide();
+  }
+  _bindEvent() {
+    let { handler } = this._base.confirm;
+
+    if (!this._base.confirmBtn) return;
+    this.onevent(this._base.confirmBtn, "click", this.onHide.bind(this));
+    if (handler) {
+      this.onevent(this._base.confirmBtn, "click", handler.bind(this));
+    }
+    if (!this._base.cancelBtn) return;
+    this.onevent(this._base.cancelBtn, "click", this.onHide.bind(this));
   }
 }
 //Alert類型
 //target,trigger,options
-class DefaultMsg {
-  constructor(target, trigger, options) {
+class DefaultMsg extends BaseComponent {
+  constructor(target, options) {
     let { countdown } = options;
-
-    this._targetEl = target;
+    super(target, options.theme || "light");
     this._options = { ...this.config, countdown: countdown };
+    this._base = new BaseMsg(target, options);
     this.bindHandler = this.onHide.bind(this);
     this._init();
   }
@@ -407,21 +346,23 @@ class DefaultMsg {
     };
   }
   _init() {
+    document.body.appendChild(this._elem);
     this._render();
+    this.onShow();
   }
   _render() {
-    UIUtils.setAttribute(this._targetEl, "notifymsg");
+    UIUtils.setAttribute(this._elem, "notifymsg");
   }
   onShow() {
-    UIUtils.removeClass(this._targetEl, ["hidden", "opacity-0"]);
-    UIUtils.addClass(this._targetEl, ["opacity-100"]);
+    UIUtils.removeClass(this._elem, ["hidden", "opacity-0"]);
+    UIUtils.addClass(this._elem, ["opacity-100"]);
     this._render();
     setTimeout(this.onHide.bind(this), 100);
   }
   onHide() {
     setTimeout(() => {
-      UIUtils.removeClass(this._targetEl, ["opacity-100"]);
-      UIUtils.addClass(this._targetEl, ["opacity-0"]);
+      UIUtils.removeClass(this._elem, ["opacity-100"]);
+      UIUtils.addClass(this._elem, ["opacity-0"]);
     }, this._options.countdown);
   }
 }
