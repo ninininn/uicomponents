@@ -70,7 +70,7 @@ class BaseMsg extends BaseComponent {
     if (icon) {
       let header = this._elem.querySelector(".notify-header");
       let msgIcon = document.createElement("img");
-      msgIcon.src = `/public/notify-icons/${icon}.svg`;
+      msgIcon.src = `/notify-icons/${icon}.svg`;
       header.appendChild(msgIcon);
     }
     //是否需要標題

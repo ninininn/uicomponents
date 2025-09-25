@@ -289,7 +289,7 @@ export const Toast = {
           alert("前往某網址");
         }
       },
-      { icon: "/public/sticker.png", text: "查看更多", classes: ["btn-secondary", "outline-btn"] },
+      { icon: "sticker.png", text: "查看更多", classes: ["btn-secondary", "outline-btn"] },
     ]
   },
   // play: async ({ args, canvas, userEvent }) => {
