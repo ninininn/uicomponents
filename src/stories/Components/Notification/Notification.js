@@ -214,7 +214,7 @@ class ToastItem extends BaseComponent {
 
   _bindEvent() {
     // this.onevent(this._base.cancelBtn, "click", this.onHide);
-    // this.clearItem();
+    this.clearItem();
   }
 
   onHide() {
