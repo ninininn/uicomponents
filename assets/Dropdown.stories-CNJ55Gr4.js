@@ -1,4 +1,4 @@
-import{D as i}from"./Dropdown-_PFK4l33.js";import p from"./DropdownAPIdoc-Djfh9M_2.js";import"./index-vRTWSlA6.js";import"./iframe-DO0oDxEN.js";import"./preload-helper-DLLWEBaG.js";const m=({target:e,trigger:r,bindFilteroption:t={},filter:u,filterHandler:d,changeHandler:n=null})=>{if(t.filter=u,t.filterHandler=d,Array.isArray(r))return new i(e,r,t,n);{let a=document.createElement("div");a.innerHTML=`
+import{D as i}from"./Dropdown-DcScMUqx.js";import p from"./DropdownAPIdoc-D9IJAKFs.js";import"./index-vRTWSlA6.js";import"./iframe-_4uR_CY0.js";import"./preload-helper-DLLWEBaG.js";const m=({target:e,trigger:r,bindFilteroption:t={},filter:u,filterHandler:d,changeHandler:n=null})=>{if(t.filter=u,t.filterHandler=d,Array.isArray(r))return new i(e,r,t,n);{let a=document.createElement("div");a.innerHTML=`
             <h3 class="input-label">title</h3>
             <label class="label input-label">
                 <input type="text" class="dropdown-input" />

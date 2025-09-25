@@ -1,4 +1,4 @@
-import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-DO0oDxEN.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
+import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-_4uR_CY0.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
 `,s.jsx(t,{}),`
 `,s.jsx(e.p,{children:"適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及msg)。"}),`
 `,s.jsx(c,{}),`
@@ -23,7 +23,7 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-DO0oDxEN.js";impo
 `,s.jsx("br",{}),`
 `]}),`
 `,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#ModalMsg",children:s.jsx(e.strong,{children:"modal"})}),s.jsx(e.br,{}),`
-`,"適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作(背景遮罩為不可關閉的設定)。",`
+`,"適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作(背景遮罩為不可關閉的設定、且一定要做決定，所以沒有右上的關閉功能)。",`
 `,s.jsxs("div",{className:"sb-unstyled note-msg my-3",children:[s.jsx("span",{children:"Page、Modal比較"}),s.jsx("p",{children:"Modal為必須中斷使用者操作的UI類型，而Page(inherit Flowbite Drawer)則是不強制中斷(可以設定是否出現遮罩)；但兩者都可以設定使用者關閉行為:是否點擊任一處關閉。"})]}),`
 `,s.jsx("br",{}),`
 `]}),`
@@ -58,6 +58,7 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-DO0oDxEN.js";impo
 `,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  const options = {\r
     type: "msg",                       //類型\r
     theme: "light",                    //主題色\r
+    icon:"",\r
     maxWidth: "auto",                  //最大尺寸\r
     area: ["auto", "auto"],            //尺寸\r
     msgContent: null,                  //主要文字內容\r
