@@ -187,6 +187,15 @@ export class BaseComponent {
         this._theme = themeValue;
         this.render();
     }
+
+    appendElem(elem) {
+        UIUtils.addClass(elem, ["opacity-0", "transition-all"]);
+        document.body.append(elem);
+
+        setTimeout(() => {
+            UIUtils.addClass(elem, ["opacity-100"]);
+        }, 100);
+    }
 }
 
 /**

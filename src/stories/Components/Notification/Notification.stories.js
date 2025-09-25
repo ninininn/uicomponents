@@ -38,6 +38,18 @@ export default {
         type: { summary: "string" },
       },
     },
+    style: {
+      control: "select",
+      options: ["default", "bordered", "accent"],
+      if: { arg: "type", eq: "toast" },
+      description: "toast樣式",
+      table: {
+        category: "method's parameters",
+        subcategory: "private property",
+        defaultValue: { summary: "static" },
+        type: { summary: "string" },
+      },
+    },
     backdrop: {
       control: "select",
       options: ["static", "dynamic"],
@@ -125,6 +137,7 @@ export default {
         type: { summary: "string" },
       },
     },
+
     area: {
       control: "array",
       // type: { required: true },
@@ -136,13 +149,14 @@ export default {
       },
     },
     icon: {
-      control: "file",
+      control: "select",
+      options: ["confirm", "error", "notice", "lock", "download"],
       // type: { required: true },
       description: "視窗icon圖示",
       table: {
         category: "method's parameters",
-        defaultValue: { summary: "[auto, auto]" },
-        type: { summary: "/path-to-icon" },
+        defaultValue: { summary: "notice" },
+        type: { summary: "null" },
       },
     },
     msgContent: {
@@ -236,6 +250,7 @@ export default {
     theme: "light",
     maxWidth: "auto",
     area: ["auto", "auto"],
+    icon: "notice",
     msgContent: "這是測試用通知內容",
     customContent: `<div>customInner</div>`,
     msgTitle: "通知",
@@ -244,6 +259,8 @@ export default {
     confirm: "確定",
     cancel: "取消",
     btnList: [],
+    //toast private
+    style:"default",
     //modal private
     backdrop: "static",
     backdropClasses: "bg-gray-500/50",

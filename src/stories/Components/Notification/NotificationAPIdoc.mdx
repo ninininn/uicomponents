@@ -59,7 +59,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
       </div>  
       <br/>
    - [**modal**](#ModalMsg)  
-     適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作(背景遮罩為不可關閉的設定)。  
+     適合需要中斷使用者操作的情況，用於提供關鍵資訊或要求做出決定。對話框在出現時會禁用其他功能，並一直保留在屏幕上，直到確認、關閉或採取所需的操作(背景遮罩為不可關閉的設定、且一定要做決定，所以沒有右上的關閉功能)。  
       <div className="sb-unstyled note-msg my-3">
         <span>Page、Modal比較</span>
         <p>Modal為必須中斷使用者操作的UI類型，而Page(inherit Flowbite Drawer)則是不強制中斷(可以設定是否出現遮罩)；但兩者都可以設定使用者關閉行為:是否點擊任一處關閉。</p>
@@ -93,6 +93,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
       const options = {
         type: "msg",                       //類型
         theme: "light",                    //主題色
+        icon:"",
         maxWidth: "auto",                  //最大尺寸
         area: ["auto", "auto"],            //尺寸
         msgContent: null,                  //主要文字內容

@@ -39,8 +39,10 @@ export class Notification {
 class BaseMsg extends BaseComponent {
   constructor(target, options = {}) {
     super(target, options.theme || "light");
+    this.UIType = "BaseMsg";
     this.options = { ...this.config, ...options };
     this._init();
+    console.log(this);
   }
 
   get config() {
@@ -54,8 +56,8 @@ class BaseMsg extends BaseComponent {
       msgTitle: "通知",         //title文字
       classes: [],         //自定義class
       placement: "center",         //自定義class
-      confirm: "確認",           //確認按鈕文字&動作
-      cancel: "取消",         //取消按鈕文字&動作
+      confirm: null,           //確認按鈕文字&動作
+      cancel: null,         //取消按鈕文字&動作
       handler: null,      //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
       btnList: [],
     };
@@ -63,10 +65,20 @@ class BaseMsg extends BaseComponent {
 
   _init() {
     // header
-    let { msgTitle, msgContent, customContent, btnList, confirm, cancel } = this.options;
-    //是否需要標題
-    if (msgTitle && (msgTitle).toLowerCase() !== "false") {
+    let { msgTitle, icon, msgContent, customContent, btnList, confirm, cancel } = this.options;
+    //icon
+    if (icon) {
       let header = this._elem.querySelector(".notify-header");
+      let msgIcon = document.createElement("img");
+      msgIcon.src = `/public/notify-icons/${icon}.svg`;
+      header.appendChild(msgIcon);
+    }
+    //是否需要標題
+    if (msgTitle && msgTitle.toLowerCase() !== "false") {
+
+      let header = this._elem.querySelector(".notify-header");
+
+      //直接傳入DOM元素
       let notifyTitle = document.createElement("h3");
       UIUtils.setText(notifyTitle, msgTitle);
       header.appendChild(notifyTitle);
@@ -109,6 +121,7 @@ class BaseMsg extends BaseComponent {
   }
   //[內部控制]-渲染UI樣式
   _render() {
+    //TODO toast類型需要特別放(X)按鈕?
     //主題色
     let themeColor = this._theme === "dark" ? "#1e222789" : "#F3F4F6";
     let textColor = this._theme === "dark" ? "#F3F4F6" : "#1F2937";
@@ -159,7 +172,7 @@ class BaseMsg extends BaseComponent {
 
 //單一toast訊息->Dismiss相關
 class ToastItem extends BaseComponent {
-  constructor(trigger, options) {
+  constructor(options) {
     let { transition, duration, timing } = options;
     let dismissOptions = {
       transition: transition || "transition-opacity",
@@ -168,28 +181,63 @@ class ToastItem extends BaseComponent {
     };
     let itemContainer = Notification._createTargetContainer();
     super(itemContainer, options.theme || "light");
+
+    //TODO options的btn要改成小的?
+    this.UIType = "ToastItem";
+    this.style = options.style;
     this._base = new BaseMsg(this._elem, options);
     this.dismiss = new Dismiss(this._elem, this._base.cancelBtn, dismissOptions);
     this._init();
   }
 
   _init() {
-
+    //設定對應顏色
+    if (this._base.options.icon) {
+      UIUtils.setProperty(this._elem, "--style", `var(--${this._base.options.icon})`);
+    } else {
+      UIUtils.setProperty(this._elem, "--style", "var(--graystyle)");
+    }
+    switch (this.style) {
+      case "bordered":
+        UIUtils.setAttribute(this._elem, `toast-${this.style}`);
+        break;
+      case "accent":
+        UIUtils.setAttribute(this._elem, `toast-${this.style}`);
+        break;
+    }
+    UIUtils.addClass(this._elem, ["opacity-0", "transition-all"]);
+    setTimeout(() => {
+      UIUtils.addClass(this._elem, ["opacity-100"]);
+    }, 100);
     this._bindEvent();
   }
 
   _bindEvent() {
     // this.onevent(this._base.cancelBtn, "click", this.onHide);
-    this.clearItem();
+    // this.clearItem();
   }
 
   onHide() {
     this.dismiss.hide();
   }
+
   clearItem() {
-    setTimeout(() => {
+    async function clearDOM() {
+      const delay = (ms) => {
+        return new Promise(resolve => {
+          setTimeout(resolve, ms);
+        });
+      };
+
+      await delay(5000);
+      //先隱藏
+      this.dismiss.hide();
+
+      await delay(2000);
+      //再移除
       this._elem.remove();
-    }, 5000);
+    }
+    clearDOM.bind(this)();
   }
 }
 // toast類型，為容器&負責管理ToastItem
@@ -201,7 +249,6 @@ class ToastMsg {
     if (trigger.dataset.toastInit) {
       return ToastMsg.instances[trigger.dataset.toastInit];
     }
-
 
     this.options = options;
     this.trigger = trigger;
@@ -228,15 +275,13 @@ class ToastMsg {
   }
 
   pushItem() {
-    let toastItem = new ToastItem(this.trigger, this.options);
+    let toastItem = new ToastItem(this.options);
     this.toastItems.push(toastItem);
     this.toastContainer.appendChild(toastItem._elem);
   }
 
   clearItem() {
-    setTimeout(() => {
-      this.toastItems.shift();
-    }, 3000);
+    this.toastItems.shift();
   }
 }
 
@@ -252,13 +297,14 @@ class ModalMsg extends BaseComponent {
       closable: closable || false
     };
     super(target, options.theme);
+    this.UIType = "ModalMsg";
     this._base = new BaseMsg(target, options);
     this.modal = new Modal(target, modalOptions);
     this._init();
   }
 
   _init() {
-    document.body.appendChild(this._elem);
+    this.appendElem(this._elem);
     this.onShow();
     this._bindEvent();
     UIUtils.setAttribute(this._elem, "notifymodal");
@@ -293,6 +339,7 @@ class PopoverMsg extends BaseComponent {
       offset: offset || 10
     };
     super(target, options.theme || "light");
+    this.UIType = "PopoverMsg";
     this._options = { ...options, ...popoverOptions };
     this._base = new BaseMsg(target, options);
     this.popover = new Popover(target, trigger, popoverOptions);
@@ -301,7 +348,7 @@ class PopoverMsg extends BaseComponent {
   }
 
   _init() {
-    document.body.appendChild(this._elem);
+    this.appendElem(this._elem);
     UIUtils.setAttribute(this._elem, "notifypopover");
     this.onShow();
     this._bindEvent();
@@ -335,9 +382,9 @@ class DefaultMsg extends BaseComponent {
   constructor(target, options) {
     let { countdown } = options;
     super(target, options.theme || "light");
+    this.UIType = "DefaultMsg";
     this._options = { ...this.config, countdown: countdown };
     this._base = new BaseMsg(target, options);
-    this.bindHandler = this.onHide.bind(this);
     this._init();
   }
   get config() {
@@ -346,24 +393,26 @@ class DefaultMsg extends BaseComponent {
     };
   }
   _init() {
-    document.body.appendChild(this._elem);
-    this._render();
-    this.onShow();
-  }
-  _render() {
+    this.appendElem(this._elem);
     UIUtils.setAttribute(this._elem, "notifymsg");
+    this._bindEvent(this._options.countdown);
   }
-  onShow() {
-    UIUtils.removeClass(this._elem, ["hidden", "opacity-0"]);
-    UIUtils.addClass(this._elem, ["opacity-100"]);
-    this._render();
-    setTimeout(this.onHide.bind(this), 100);
-  }
-  onHide() {
-    setTimeout(() => {
-      UIUtils.removeClass(this._elem, ["opacity-100"]);
+  _bindEvent(countdown) {
+    async function clearDOM() {
+      const delay = (ms) => {
+        return new Promise(resolve => {
+          setTimeout(resolve, ms);
+        });
+      };
+
+      await delay(countdown);
+      //先隱藏
       UIUtils.addClass(this._elem, ["opacity-0"]);
-    }, this._options.countdown);
+      await delay(1000);
+      //再移除
+      this._elem.remove();
+    }
+    clearDOM.bind(this)();
   }
 }
 

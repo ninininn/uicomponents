@@ -2,7 +2,7 @@ import { UIUtils } from "../../../Utils";
 import { Notification } from "./Notification";
 import "./Notification.css";
 
-export const createNotification = ({ type, area, theme, maxWidth, msgContent, customContent, msgTitle, classes, placement, confirm, cancel, btnList, handler, backdrop, backdropClasses, closable, triggerType, offset, countdown }) => {
+export const createNotification = ({ type, area, theme, maxWidth, msgContent, icon, customContent, msgTitle, classes, placement, confirm, cancel, btnList, handler, backdrop, backdropClasses, closable, triggerType, offset, countdown, style }) => {
     let parent = document.createElement("div");
     parent.className = "mx-auto";
     let trigger = document.createElement("button");
@@ -11,14 +11,11 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
 
     parent.appendChild(trigger);
 
-    let testBtns = [
-        { text: "1" },
-        { text: "2" },
-    ];
     let initOptions = {
         type: type,        //類型
         theme: theme,
         maxWidth: maxWidth,
+        icon: icon,
         area: area || ["auto", "auto"], //尺寸
         msgContent: msgContent,         //主要文字內容
         customContent: customContent,         //自定義HTML內容
@@ -37,7 +34,7 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, cu
             initOptions.closable = closable;
             break;
         case "toast":
-            // initOptions.backdrop = backdrop
+            initOptions.style = style;
             break;
         case "popover":
             initOptions.triggerType = triggerType;

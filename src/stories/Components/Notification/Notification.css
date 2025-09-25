@@ -13,16 +13,9 @@
     @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] min-w-[300px] min-h-[100px] overflow-auto overscroll-contain;
   }
 
-  .toast-container {
-    @apply absolute z-50 flex flex-col-reverse justify-start gap-3
-  }
-
-  .toast-container .notify-container {
-    @apply static flex
-  }
 
   .notify-header {
-    @apply w-full flex justify-between font-bold text-xl
+    @apply w-full flex flex-col justify-center items-center font-bold text-xl mb-2 [&>:first-child]:w-full [&>:first-child]:max-w-1/4
   }
 
   .notify-content {
@@ -32,9 +25,42 @@
   .notify-actionbtns {
     @apply w-full flex gap-3 justify-center items-center
   }
-    .toast-container .notify-actionbtns {
-      @apply flex-wrap grow-4
-    }
+
+  /* toast特殊排列 */
+  .toast-container {
+    @apply absolute z-50 flex flex-col-reverse justify-start gap-3 max-h-[100dvh] overflow-hidden
+  }
+
+  .toast-container .notify-container {
+    --notice: #FFE731;
+    --lock: #FFC037;
+    --download: #80D0FF;
+    --confirm: #51ce4f;
+    --error: #ff6038;
+    --graystyle:#878787;
+    @apply static grid grid-cols-[0.5fr_1fr_0.5fr] justify-items-center content-center rounded-none transition-all
+  }
+
+  .toast-container .notify-container[data-toast-bordered] {
+    @apply border border-[var(--style)]
+  }
+
+  .toast-container .notify-container[data-toast-accent] {
+    @apply border-t-4 border-[var(--style)]/90
+  }
+
+  .toast-container .notify-header {
+    @apply flex-row col-span-1 items-start justify-start mt-2 gap-2
+  }
+
+  .toast-container .notify-content {
+    @apply col-start-2 col-end-4
+  }
+
+  .toast-container .notify-actionbtns {
+    @apply grid grid-rows-2 col-start-2 col-end-4 flex-wrap w-full grid-cols-2 gap-1
+  }
+
   .backdrop {
     @apply fixed w-[100dvw] h-[100dvh] top-0 z-4
   }
