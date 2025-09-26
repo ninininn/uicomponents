@@ -35,14 +35,26 @@ export class UIUtils {
         let btn = document.createElement("button");
         let { classes = [], icon, text, handler } = btnConfig;
         if (icon) {
-            classes.push("icon-text-btn");
-            let img = document.createElement("img");
-            UIUtils.addClass(img, ["icon",]);
-            img.src = `${icon}`;
-            btn.appendChild(img);
+            switch (icon) {
+                case "close":
+                    classes.push("icon-btn");
+                    btn.innerHTML = `<svg class="icon text-blue-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18 17.94 6M18 18 6.06 6" />
+                    </svg>`;
+                    break;
+                default:
+                    classes.push("icon-text-btn");
+                    let img = document.createElement("img");
+                    UIUtils.addClass(img, ["icon"]);
+                    img.src = `${icon}`;
+                    btn.appendChild(img);
+                    break;
+            }
         }
         //設定按鈕文字
-        UIUtils.setTextnode(btn, text);
+        if (text) UIUtils.setTextnode(btn, text);
         //設定按鈕其他相關
         UIUtils.addClass(btn, ["btn", ...classes]);
         btn.type = "button";

@@ -195,7 +195,7 @@ export default {
     },
     placement: {
       control: { type: "select" },
-      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top"],
+      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top", "center"],
       description: "彈出位置",
       table: {
         category: "method's parameters",
@@ -252,15 +252,15 @@ export default {
     area: ["auto", "auto"],
     icon: "notice",
     msgContent: "這是測試用通知內容",
-    customContent: `<div>customInner</div>`,
+    // customContent: `<div>customInner</div>`,
     msgTitle: "通知",
     classes: ["notification"],
-    placement: "left-top",
+    placement: "left-top",//因為不同類型能設定的位置不太一樣
     confirm: "確定",
     cancel: "取消",
     btnList: [],
     //toast private
-    style:"default",
+    style: "default",
     //modal private
     backdrop: "static",
     backdropClasses: "bg-gray-500/50",
@@ -301,8 +301,11 @@ export const Toast = {
 export const Modal = {
   args: {
     type: "modal",
+    icon: "lock",
+    msgTitle: "您的權限不足",
+    msgContent: "請前往xx專區進行登錄",
     placement: "center",
-    confirm: ["確定", function () { console.log("exit modal!"); }],
+    confirm: ["馬上前往", function () { alert("to other links..."); }],
     cancel: "取消"
   },
   // play: async ({ args, canvas, userEvent }) => {
@@ -322,10 +325,10 @@ export const Popover = {
   //   await expect(args.handlers).toHaveBeenCalled();
   // }
 };
-export const Alert = {
+export const Msg = {
   args: {
-    type: "alert",
-    placement: "center",
+    type: "msg",
+    placement: "left-top",
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

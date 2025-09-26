@@ -87,100 +87,130 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
   <br/>
 
 - <span className="sb-unstyled font-black">options</span>
-<span className="sb-unstyled data-type">object</span>  
-  各屬性的型別及說明可參考上方**Controls區塊**
+  <span className="sb-unstyled data-type">object</span>  
+  各屬性的型別及說明可參考上方**Controls區塊**，各類別的私有屬性則可以參考**子類別**區塊的各個說明，此處僅列出共同設定的屬性。
     ```javascript
       const options = {
         type: "msg",                       //類型
         theme: "light",                    //主題色
-        icon:"",
         maxWidth: "auto",                  //最大尺寸
         area: ["auto", "auto"],            //尺寸
+        icon:"notice",                     //icon圖標，用做主要分類
         msgContent: null,                  //主要文字內容
         customContent: null,               //自定義HTML內容
         msgTitle: null,                    //title文字
-        classes: null,                     //自定義class
-        handler:null,
+        classes: [],                       //自定義class
         placement:"center",                //位置
         confirm:["確認", function(){}],    //確認按鈕文字&callback
         cancel:["取消", function(){}],     //取消按鈕文字&callback
+        handler:null,
       };
     ```  
   <br />
+---  
+# BaseMsg 類別  
 
+<div className="sb-unstyled alert-msg">只負責建構UI資料基礎，相關對應行為由子類別內部負責。</div>  
+- **properties 屬性**  
 
-> ### properties 內部屬性 
-> <span className="sb-unstyled data-type readonly">Read-only</span><span className="sb-unstyled">可以操作的屬性皆須使用methods來更改</span>
-
-<div className="sb-unstyled table-container overflow-hidden">
-  <table className="sb-unstyled table-content">
-    <thead>
-      <tr className="text-center">
-        <td>property</td>
-        <td>default</td>
-        <td>type</td>
-        <td>descriptions</td>
-        <td>Inherits</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td className="font-bold">UItype</td>
-        <td>Notification</td>
-        <td>string</td>
-        <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-        <td>`BaseComponent` 類別</td>
-      </tr>
-      <tr>
-        <td className="font-bold">theme</td>
-        <td>light</td>
-        <td>string</td>
-        <td>主題色系，light/dark兩色系可切換</td>
-        <td>`BaseComponent` 類別</td>
-      </tr>
-      <tr>
-        <td className="font-bold">options</td>
-        <td>parameter`options`</td>
-        <td>object</td>
-        <td>相關設定值</td>
-      </tr>
-      <tr>
-        <td className="font-bold">type</td>
-        <td>msg</td>
-        <td>string</td>
-        <td>通知視窗種類</td>
-      </tr>
-      <tr>
-        <td className="font-bold">notifyTrigger</td>
-        <td>-</td>
-        <td>HTMLElement</td>
-        <td>觸發元素</td>
-      </tr>
-      <tr>
-        <td className="font-bold">confrim</td>
-        <td>確定</td>
-        <td>array | string</td>
-        <td colSpan="2">指定確認按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string</td>
-      </tr>
-      <tr>
-        <td className="font-bold">cancel</td>
-        <td>取消</td>
-        <td>array | string</td>
-        <td colSpan="2">指定取消/返回按鈕文字及觸發後的callback函式，如果單純只需要設定文字可以只傳入string</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<br/>
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>property</td>
+            <td>default</td>
+            <td>type</td>
+            <td>descriptions</td>
+            <td>inherits</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="font-bold">UItype</td>
+            <td>BaseMsg</td>
+            <td>string</td>
+            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+            <td>`BaseComponent`</td>
+          </tr>
+          <tr>
+            <td className="font-bold">theme</td>
+            <td>light</td>
+            <td>string</td>
+            <td>主題設定，分為light/daark兩色系</td>
+            <td>`BaseComponent`</td>
+          </tr>
+          <tr>
+            <td className="font-bold">options</td>
+            <td>-</td>
+            <td>object</td>
+            <td>相關設定內容，由Notification的`options`參數傳入</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+<br/>  
 ---  
 
 # 子類別  
 <div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>  
 <br/>
 
-<h3 id="ToastMsg">ToastMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">Inherits flowbite <a href="https://flowbite.com/docs/components/toast/" className="linkout">Dismiss</a></span>
+<h3 id="ToastMsg">ToastMsg 類別</h3>  
+<span>作為容器並負責管理`ToastItem`</span>
+
+- **properties 屬性**  
+
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>property</td>
+            <td>default</td>
+            <td>type</td>
+            <td>descriptions</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="font-bold">trigger</td>
+            <td>-</td>
+            <td>HTMLElement</td>
+            <td>觸發元素</td>
+          </tr>
+          <tr>
+            <td className="font-bold">toastContainer</td>
+            <td>`<div></div>`</td>
+            <td>HTMLElement</td>
+            <td>容器元素節點</td>
+          </tr>
+          <tr>
+            <td className="font-bold">options</td>
+            <td>-</td>
+            <td>object</td>
+            <td>設定值，由參數`options`傳入，並往下傳遞至`ToastItem`</td>
+          </tr>
+          <tr>
+            <td className="font-bold">toastItems</td>
+            <td>[]</td>
+            <td>array</td>
+            <td>
+              儲存所有子訊息(ToastItem)
+            </td>
+          </tr>
+          <tr>
+            <td className="font-bold">id</td>
+            <td>-</td>
+            <td>string</td>
+            <td>
+              容器id，會用來儲存同一批子訊息
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+<br/>
+<h3 id="ToastItem">ToastItem 類別</h3>
+<span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/toast/" className="linkout">Dismiss</a></span>
 
 - **properties 屬性**  
 
@@ -227,7 +257,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
 <br/>
 ---
 <h3 id="ModalMsg">ModalMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">Inherits flowbite <a href="https://flowbite.com/docs/components/modal/" className="linkout">Modal</a></span>
+<span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/modal/" className="linkout">Modal</a></span>
 
 - **properties 屬性**  
 
@@ -244,37 +274,27 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>CheckboxGroup</td>
+            <td>ModalMsg</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>
           <tr>
-            <td className="font-bold">groupContainer</td>
-            <td>`<ul/>`標籤元素</td>
-            <td>HTMLElement</td>
+            <td className="font-bold">modal</td>
+            <td>flowbite `Modal`物件</td>
+            <td>object</td>
             <td>容器元素節點</td>
-          </tr>
-          <tr>
-            <td className="font-bold">groupName</td>
-            <td>-</td>
-            <td>string</td>
-            <td>此元件群組名稱</td>
-          </tr>
-          <tr>
-            <td className="font-bold">items</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>
-              儲存所有子元件(Checkbox)
-            </td>
           </tr>
         </tbody>
       </table>
     </div>
 <br/>
+- **options 參數可設定的私有屬性**  
+  - `backdrop` 遮罩類型，可分為static|dynamic，是否可以點擊螢幕任一處關閉
+  - `backdropClasses` 遮罩classes
+  - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal
 ---
 <h3 id="PopoverMsg">PopoverMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">Inherits flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span>
+<span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span>
 
 - **properties 屬性**  
 
@@ -291,34 +311,25 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>CheckboxGroup</td>
+            <td>PopoverMsg</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>
           <tr>
-            <td className="font-bold">groupContainer</td>
-            <td>`<ul/>`標籤元素</td>
-            <td>HTMLElement</td>
+            <td className="font-bold">popover</td>
+            <td>flowbite `Modal`物件</td>
+            <td>object</td>
             <td>容器元素節點</td>
-          </tr>
-          <tr>
-            <td className="font-bold">groupName</td>
-            <td>-</td>
-            <td>string</td>
-            <td>此元件群組名稱</td>
-          </tr>
-          <tr>
-            <td className="font-bold">items</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>
-              儲存所有子元件(Checkbox)
-            </td>
           </tr>
         </tbody>
       </table>
     </div>
-<br/>
+<br/>  
+
+- **options 參數可設定的私有屬性**  
+  - `triggerType` 觸發動作類型，可以選擇hover|click|none
+  - `offset` 距離triggerElem的距離
+
 ---
 <h3 id="DefaultMsg">DefaultMsg 類別</h3>
 
@@ -337,30 +348,12 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>CheckboxGroup</td>
+            <td>DefaultMsg</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>
-          <tr>
-            <td className="font-bold">groupContainer</td>
-            <td>`<ul/>`標籤元素</td>
-            <td>HTMLElement</td>
-            <td>容器元素節點</td>
-          </tr>
-          <tr>
-            <td className="font-bold">groupName</td>
-            <td>-</td>
-            <td>string</td>
-            <td>此元件群組名稱</td>
-          </tr>
-          <tr>
-            <td className="font-bold">items</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>
-              儲存所有子元件(Checkbox)
-            </td>
-          </tr>
         </tbody>
       </table>
-    </div>
+    </div>  
+- **options 參數可設定的私有屬性**  
+  - `countdown` 倒數消失毫秒數(ms)

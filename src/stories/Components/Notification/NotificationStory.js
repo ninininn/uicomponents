@@ -4,7 +4,7 @@ import "./Notification.css";
 
 export const createNotification = ({ type, area, theme, maxWidth, msgContent, icon, customContent, msgTitle, classes, placement, confirm, cancel, btnList, handler, backdrop, backdropClasses, closable, triggerType, offset, countdown, style }) => {
     let parent = document.createElement("div");
-    parent.className = "mx-auto";
+    parent.className = "mx-auto grid place-items-center";
     let trigger = document.createElement("button");
     trigger.className = "btn btn-primary";
     trigger.textContent = "Show Notification";

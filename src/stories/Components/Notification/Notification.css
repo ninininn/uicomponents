@@ -32,13 +32,13 @@
   }
 
   .toast-container .notify-container {
-    --notice: #FFE731;
+    --notice: #FFD500;
     --lock: #FFC037;
     --download: #80D0FF;
     --confirm: #51ce4f;
     --error: #ff6038;
-    --graystyle:#878787;
-    @apply static grid grid-cols-[0.5fr_1fr_0.5fr] justify-items-center content-center rounded-none transition-all
+    --graystyle: #878787;
+    @apply static grid grid-cols-[0.1fr_1fr_0.5fr] justify-items-center content-center rounded-none transition-all gap-x-2
   }
 
   .toast-container .notify-container[data-toast-bordered] {
@@ -50,15 +50,15 @@
   }
 
   .toast-container .notify-header {
-    @apply flex-row col-span-1 items-start justify-start mt-2 gap-2
+    @apply grid grid-cols-[auto_1fr_auto] col-span-3 gap-2 grid-flow-row-dense [&>.btn]:order-1 [&>.btn]:w-auto [&>:first-child]:w-auto [&>:first-child]:max-w-none mb-0
   }
 
   .toast-container .notify-content {
-    @apply col-start-2 col-end-4
+    @apply col-span-2 -col-end-1
   }
 
   .toast-container .notify-actionbtns {
-    @apply grid grid-rows-2 col-start-2 col-end-4 flex-wrap w-full grid-cols-2 gap-1
+    @apply col-start-2 col-end-4 grid grid-flow-col-dense gap-1 justify-start
   }
 
   .backdrop {

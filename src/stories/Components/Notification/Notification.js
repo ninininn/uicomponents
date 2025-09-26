@@ -32,17 +32,22 @@ export class Notification {
       <div class="notify-actionbtns"></div>`;
     return targetElem;
   }
+
+  //定時垃圾回收機制?
+  static _garbage(notifyobject) {
+    let that = notifyobject;
+  }
 }
 
 
 //config 內容相關&UI設定
+// BaseMsg 不負責行為，只是 UI 的基礎
 class BaseMsg extends BaseComponent {
   constructor(target, options = {}) {
     super(target, options.theme || "light");
     this.UIType = "BaseMsg";
     this.options = { ...this.config, ...options };
     this._init();
-    console.log(this);
   }
 
   get config() {
@@ -70,7 +75,7 @@ class BaseMsg extends BaseComponent {
     if (icon) {
       let header = this._elem.querySelector(".notify-header");
       let msgIcon = document.createElement("img");
-      msgIcon.src = `/notify-icons/${icon}.svg`;
+      msgIcon.src = `notify-icons/${icon}.svg`;
       header.appendChild(msgIcon);
     }
     //是否需要標題
@@ -99,7 +104,7 @@ class BaseMsg extends BaseComponent {
         contentDiv.innerHTML += customContent;
       }
     }
-    //是否有btnList要設定[預設會有一組]
+    //是否有btnList要設定[預設會有一組(confirm&cancel actions)]
     if (btnList) {
       let actionbtnDiv = this._elem.querySelector(".notify-actionbtns");
       for (let btnConfig of btnList) {
@@ -135,7 +140,7 @@ class BaseMsg extends BaseComponent {
     UIUtils.setProperty(this._elem, "--h", this.options.area[1]);
     // UIUtils.addClass(this._elem, ["hidden"]);
 
-    if (this.options.type !== "toast") {
+    if (this.options.type !== "toast" && this.options.type !== "popover") {
       this._setPosition(this.options.placement);
     }
   }
@@ -163,7 +168,6 @@ class BaseMsg extends BaseComponent {
   _setPosition(position) {
     UIUtils.setPosition(this._elem, position, ["notify-container", ...this.options.classes]);
   }
-  // BaseMsg 不負責行為，只是 UI 的基礎
 }
 
 //toast類型
@@ -171,6 +175,7 @@ class BaseMsg extends BaseComponent {
 // toast類型應該要由一個容器包覆所有toast-item，且item要堆疊出現
 
 //單一toast訊息->Dismiss相關
+//預設右上方會有(X)為dismiss用途
 class ToastItem extends BaseComponent {
   constructor(options) {
     let { transition, duration, timing } = options;
@@ -180,13 +185,15 @@ class ToastItem extends BaseComponent {
       timing: timing || "ease-out"
     };
     let itemContainer = Notification._createTargetContainer();
+    let dismissBtn = UIUtils.setButtons({ icon: "close", classes: ["text-btn"] });
+    itemContainer.querySelector(".notify-header").appendChild(dismissBtn);
     super(itemContainer, options.theme || "light");
 
     //TODO options的btn要改成小的?
     this.UIType = "ToastItem";
     this.style = options.style;
     this._base = new BaseMsg(this._elem, options);
-    this.dismiss = new Dismiss(this._elem, this._base.cancelBtn, dismissOptions);
+    this.dismiss = new Dismiss(this._elem, dismissBtn, dismissOptions);
     this._init();
   }
 
@@ -243,7 +250,6 @@ class ToastItem extends BaseComponent {
 // toast類型，為容器&負責管理ToastItem
 class ToastMsg {
   constructor(trigger, options) {
-    // if (ToastMsg.instance) return ToastMsg.instance;
 
     // 如果 trigger 已經綁定過，直接返回同一個 instance
     if (trigger.dataset.toastInit) {
@@ -267,11 +273,19 @@ class ToastMsg {
     UIUtils.addClass(this.toastContainer, ["toast-container"]);
     UIUtils.setPosition(this.toastContainer, this.options.placement, ["toast-container"]);
     document.body.appendChild(this.toastContainer);
+
+    //監聽子訊息DOM是否有移除
+    const itemsObserver = new MutationObserver((mutations) => {
+      if (mutations[0].removedNodes.length !== 0) {
+        this.clearItem();
+      }
+    });
+    itemsObserver.observe(this.toastContainer, { childList: true });
   }
 
   _bindEvent() {
     this.onevent(this.trigger, "click", this.pushItem);
-    this.clearItem();
+    this.clearItem();//由於toastItem會自己清除，這邊只需要移除toastItems裏的資料
   }
 
   pushItem() {
@@ -343,14 +357,12 @@ class PopoverMsg extends BaseComponent {
     this._options = { ...options, ...popoverOptions };
     this._base = new BaseMsg(target, options);
     this.popover = new Popover(target, trigger, popoverOptions);
-    this.bindHandler = this.onHide.bind(this);
     this._init();
   }
 
   _init() {
     this.appendElem(this._elem);
     UIUtils.setAttribute(this._elem, "notifypopover");
-    this.onShow();
     this._bindEvent();
   }
   get config() {
@@ -369,6 +381,7 @@ class PopoverMsg extends BaseComponent {
 
     if (!this._base.confirmBtn) return;
     this.onevent(this._base.confirmBtn, "click", this.onHide.bind(this));
+
     if (handler) {
       this.onevent(this._base.confirmBtn, "click", handler.bind(this));
     }
