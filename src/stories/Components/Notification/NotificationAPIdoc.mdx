@@ -155,8 +155,8 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
 <div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>  
 <br/>
 
-<h3 id="ToastMsg">ToastMsg 類別</h3>  
-<span>作為容器並負責管理`ToastItem`</span>
+><h3 id="ToastMsg">ToastMsg 類別</h3>  
+><span>作為容器並負責管理`ToastItem`</span>
 
 - **properties 屬性**  
 
@@ -209,8 +209,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
       </table>
     </div>
 <br/>
-<h3 id="ToastItem">ToastItem 類別</h3>
-<span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/toast/" className="linkout">Dismiss</a></span>
+><h3 id="ToastItem">ToastItem 類別</h3>
 
 - **properties 屬性**  
 
@@ -227,38 +226,28 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>CheckboxGroup</td>
+            <td>ToastItem</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>
           <tr>
-            <td className="font-bold">groupContainer</td>
-            <td>`<ul/>`標籤元素</td>
-            <td>HTMLElement</td>
-            <td>容器元素節點</td>
-          </tr>
-          <tr>
-            <td className="font-bold">groupName</td>
-            <td>-</td>
+            <td className="font-bold">style</td>
+            <td>accent</td>
             <td>string</td>
-            <td>此元件群組名稱</td>
+            <td>toast版型，可以選擇bordered|accent|default</td>
           </tr>
           <tr>
-            <td className="font-bold">items</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>
-              儲存所有子元件(Checkbox)
-            </td>
+            <td className="font-bold">dismiss</td>
+            <td>`Dissmiss` object</td>
+            <td>object</td>
+            <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/toast/" className="linkout">Dismiss</a></span></td>
           </tr>
         </tbody>
       </table>
     </div>
 <br/>
 ---
-<h3 id="ModalMsg">ModalMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/modal/" className="linkout">Modal</a></span>
-
+><h3 id="ModalMsg">ModalMsg 類別</h3>
 - **properties 屬性**  
 
     <div className="sb-unstyled table-container overflow-hidden">
@@ -282,7 +271,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
             <td className="font-bold">modal</td>
             <td>flowbite `Modal`物件</td>
             <td>object</td>
-            <td>容器元素節點</td>
+            <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/modal/" className="linkout">Modal</a></span></td>
           </tr>
         </tbody>
       </table>
@@ -293,8 +282,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
   - `backdropClasses` 遮罩classes
   - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal
 ---
-<h3 id="PopoverMsg">PopoverMsg 類別</h3>
-<span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span>
+><h3 id="PopoverMsg">PopoverMsg 類別</h3>
 
 - **properties 屬性**  
 
@@ -317,9 +305,9 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
           </tr>
           <tr>
             <td className="font-bold">popover</td>
-            <td>flowbite `Modal`物件</td>
+            <td>flowbite `Popover`物件</td>
             <td>object</td>
-            <td>容器元素節點</td>
+            <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span></td>
           </tr>
         </tbody>
       </table>
@@ -331,7 +319,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
   - `offset` 距離triggerElem的距離
 
 ---
-<h3 id="DefaultMsg">DefaultMsg 類別</h3>
+><h3 id="DefaultMsg">DefaultMsg 類別</h3>
 
 - **properties 屬性**  
 

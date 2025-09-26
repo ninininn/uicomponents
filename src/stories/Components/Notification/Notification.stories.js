@@ -260,7 +260,7 @@ export default {
     cancel: "取消",
     btnList: [],
     //toast private
-    style: "default",
+    style: "accent",
     //modal private
     backdrop: "static",
     backdropClasses: "bg-gray-500/50",

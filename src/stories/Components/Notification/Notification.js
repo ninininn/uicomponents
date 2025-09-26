@@ -191,7 +191,7 @@ class ToastItem extends BaseComponent {
 
     //TODO options的btn要改成小的?
     this.UIType = "ToastItem";
-    this.style = options.style;
+    this.style = options.style || "accent";
     this._base = new BaseMsg(this._elem, options);
     this.dismiss = new Dismiss(this._elem, dismissBtn, dismissOptions);
     this._init();
