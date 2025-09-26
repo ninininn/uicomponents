@@ -1,5 +1,5 @@
-import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-COtk0fJ9.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
-`,s.jsx(t,{}),`
+import{u as l,j as s,M as t,T as r,P as c,C as i}from"./iframe-BGmQ7LGp.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(t,{isTemplate:!0,title:"How to use Notification"}),`
+`,s.jsx(r,{}),`
 `,s.jsx(e.p,{children:"適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及msg)。"}),`
 `,s.jsx(c,{}),`
 `,s.jsx(e.h1,{id:"controls",children:"Controls"}),`
@@ -88,8 +88,10 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-COtk0fJ9.js";impo
 `,s.jsx(e.h1,{id:"子類別",children:"子類別"}),`
 `,s.jsx("div",{className:"sb-unstyled alert-msg",children:"不會直接操作，僅列出參考用"}),`
 `,s.jsx("br",{}),`
+`,s.jsxs(e.blockquote,{children:[`
 `,s.jsxs(e.p,{children:[s.jsx("h3",{id:"ToastMsg",children:"ToastMsg 類別"}),s.jsx(e.br,{}),`
 `,s.jsxs("span",{children:["作為容器並負責管理",s.jsx(e.code,{children:"ToastItem"})]})]}),`
+`]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
@@ -97,22 +99,24 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-COtk0fJ9.js";impo
 `]}),`
 `]}),`
 `,s.jsx("br",{}),`
+`,s.jsxs(e.blockquote,{children:[`
 `,s.jsx("h3",{id:"ToastItem",children:"ToastItem 類別"}),`
-`,s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["related to flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/toast/",className:"linkout",children:"Dismiss"})]}),`
+`]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
-`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"CheckboxGroup"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"groupContainer"}),s.jsxs("td",{children:[s.jsx(e.code,{children:"<ul/>"}),"標籤元素"]}),s.jsx("td",{children:"HTMLElement"}),s.jsx("td",{children:"容器元素節點"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"groupName"}),s.jsx("td",{children:"-"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"此元件群組名稱"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"items"}),s.jsx("td",{children:"[]"}),s.jsx("td",{children:"array"}),s.jsx("td",{children:s.jsx(e.p,{children:"儲存所有子元件(Checkbox)"})})]})]})]})}),`
+`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"ToastItem"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"style"}),s.jsx("td",{children:"accent"}),s.jsx("td",{children:"string"}),s.jsx("td",{children:"toast版型，可以選擇bordered|accent|default"})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"dismiss"}),s.jsxs("td",{children:[s.jsx(e.code,{children:"Dissmiss"})," object"]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["related to flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/toast/",className:"linkout",children:"Dismiss"})]})})]})]})]})}),`
 `]}),`
 `]}),`
 `,s.jsx("br",{}),`
 `,s.jsx(e.hr,{}),`
+`,s.jsxs(e.blockquote,{children:[`
 `,s.jsx("h3",{id:"ModalMsg",children:"ModalMsg 類別"}),`
-`,s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["related to flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/modal/",className:"linkout",children:"Modal"})]}),`
+`]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
-`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"ModalMsg"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"modal"}),s.jsxs("td",{children:["flowbite ",s.jsx(e.code,{children:"Modal"}),"物件"]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:"容器元素節點"})]})]})]})}),`
+`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"ModalMsg"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"modal"}),s.jsxs("td",{children:["flowbite ",s.jsx(e.code,{children:"Modal"}),"物件"]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["related to flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/modal/",className:"linkout",children:"Modal"})]})})]})]})]})}),`
 `]}),`
 `]}),`
 `,s.jsx("br",{}),`
@@ -126,12 +130,13 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-COtk0fJ9.js";impo
 `]}),`
 `]}),`
 `,s.jsx(e.hr,{}),`
+`,s.jsxs(e.blockquote,{children:[`
 `,s.jsx("h3",{id:"PopoverMsg",children:"PopoverMsg 類別"}),`
-`,s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["related to flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/popover/",className:"linkout",children:"Popover"})]}),`
+`]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
-`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"PopoverMsg"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"popover"}),s.jsxs("td",{children:["flowbite ",s.jsx(e.code,{children:"Modal"}),"物件"]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:"容器元素節點"})]})]})]})}),`
+`,s.jsx("div",{className:"sb-unstyled table-container overflow-hidden",children:s.jsxs("table",{className:"sb-unstyled table-content",children:[s.jsx("thead",{children:s.jsxs("tr",{className:"text-center",children:[s.jsx("td",{children:"property"}),s.jsx("td",{children:"default"}),s.jsx("td",{children:"type"}),s.jsx("td",{children:"descriptions"})]})}),s.jsxs("tbody",{children:[s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"UItype"}),s.jsx("td",{children:"PopoverMsg"}),s.jsx("td",{children:"string"}),s.jsxs("td",{children:["繼承自",s.jsx(e.code,{children:"BaseComponent"}),"的屬性，代表該元件名稱"]})]}),s.jsxs("tr",{children:[s.jsx("td",{className:"font-bold",children:"popover"}),s.jsxs("td",{children:["flowbite ",s.jsx(e.code,{children:"Popover"}),"物件"]}),s.jsx("td",{children:"object"}),s.jsx("td",{children:s.jsxs("span",{className:"sb-unstyled data-type inherits",children:["related to flowbite ",s.jsx("a",{href:"https://flowbite.com/docs/components/popover/",className:"linkout",children:"Popover"})]})})]})]})]})}),`
 `]}),`
 `]}),`
 `,s.jsx("br",{}),`
@@ -144,7 +149,9 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-COtk0fJ9.js";impo
 `]}),`
 `]}),`
 `,s.jsx(e.hr,{}),`
+`,s.jsxs(e.blockquote,{children:[`
 `,s.jsx("h3",{id:"DefaultMsg",children:"DefaultMsg 類別"}),`
+`]}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.p,{children:s.jsx(e.strong,{children:"properties 屬性"})}),`
