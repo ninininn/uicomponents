@@ -195,7 +195,10 @@ export default {
     },
     placement: {
       control: { type: "select" },
-      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top", "center"],
+      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top", "center","custom"],
+      mapping:{
+        "custom":["180px","80px"]
+      },
       description: "彈出位置",
       table: {
         category: "method's parameters",

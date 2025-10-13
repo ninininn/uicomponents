@@ -94,6 +94,14 @@ export class UIUtils {
                 UIUtils.addClass(element, ["top-[50%]", "left-[50%]", "translate-[-50%]"]);
                 break;
             default:
+                //自訂位置
+                try {
+                    let xposition = position[0];
+                    let yposition = position[1];
+                    UIUtils.addClass(element, [`top-[${xposition}]`, `left-[${yposition}]`]);
+                } catch (error) {
+                    console.error(error);
+                }
                 break;
         }
 
