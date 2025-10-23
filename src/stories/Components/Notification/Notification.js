@@ -1,23 +1,36 @@
 import { Dismiss, Modal, Popover } from "flowbite";
 import { BaseComponent, UIUtils } from "../../../Utils";
 
+//TODO 1.點擊trigger觸發時要做throttle節流(點太多次只認一次)
 
 export class Notification {
   //使用對應類型呼叫方法
   static toast(trigger, options = {}) {
-    let toastManager = new ToastMsg(trigger, options);
+    if (options.handler) {
+      let toastManager = new ToastMsg(trigger, options);
+    }
+    trigger.addEventListener("click", options.handler);
     return toastManager.pushItem(options);
   }
   static modal(trigger, options = {}) {
     let targetEl = Notification._createTargetContainer();
+    if (options.handler) {
+      trigger.addEventListener("click", options.handler);
+    }
     return new ModalMsg(targetEl, options);
   }
   static popover(trigger, options = {}) {
     let targetEl = Notification._createTargetContainer();
+    if (options.handler) {
+      trigger.addEventListener("click", options.handler);
+    }
     return new PopoverMsg(targetEl, trigger, options);
   }
   static msg(trigger, options = {}) {
     let targetEl = Notification._createTargetContainer();
+    if (options.handler) {
+      trigger.addEventListener("click", options.handler);
+    }
     return new DefaultMsg(targetEl, options);
   }
 
@@ -61,8 +74,8 @@ class BaseMsg extends BaseComponent {
       msgTitle: "通知",         //title文字
       classes: [],         //自定義class
       placement: "center",         //自定義class
-      confirm: null,           //確認按鈕文字&動作
-      cancel: null,         //取消按鈕文字&動作
+      confirm: ["確認", null],           //確認按鈕文字&動作
+      cancel: ["取消", null],         //取消按鈕文字&動作
       handler: null,      //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
       btnList: [],
     };
@@ -153,12 +166,20 @@ class BaseMsg extends BaseComponent {
 
   //[內部控制]-設定確認及取消按鈕
   _setBtns(btnConfig) {
+    const { btnTxt, handler } = btnConfig;
     let btnsblock = this._elem.querySelector(".notify-actionbtns");
-    let btn = document.createElement("button");
+    // let btn = document.createElement("button");
     let btnClasses = ["btn", "btn-primary"];
     btnConfig.actionType !== "confirm" && btnClasses.push("outline-btn");
-    UIUtils.addClass(btn, btnClasses);
-    UIUtils.setText(btn, btnConfig.btnTxt);
+    // UIUtils.addClass(btn, btnClasses);
+    // UIUtils.setText(btn, btnConfig.btnTxt);
+    let btn = UIUtils.setButtons(
+      {
+        classes: btnClasses,
+        text: btnTxt,
+        handler: handler
+      }
+    );
     UIUtils.setAttribute(btn, `${btnConfig.actionType}btn`);
     btnsblock.appendChild(btn);
     return btn;
@@ -307,7 +328,7 @@ class ModalMsg extends BaseComponent {
     let { backdrop, backdropClasses, closable } = options;
     let modalOptions = {
       backdrop: backdrop || "static",
-      backdropClasses: "backdrop " + backdropClasses,
+      backdropClasses: "backdrop " + backdropClasses || "",
       closable: closable || false
     };
     super(target, options.theme);
