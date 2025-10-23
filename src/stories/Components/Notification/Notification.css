@@ -62,6 +62,6 @@
   }
 
   .backdrop {
-    @apply fixed w-[100dvw] h-[100dvh] top-0 z-4
+    @apply fixed w-[100dvw] h-[100dvh] top-0 z-40
   }
 }

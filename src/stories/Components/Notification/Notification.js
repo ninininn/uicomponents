@@ -2,6 +2,8 @@ import { Dismiss, Modal, Popover } from "flowbite";
 import { BaseComponent, UIUtils } from "../../../Utils";
 
 //TODO 1.點擊trigger觸發時要做throttle節流(點太多次只認一次)
+//TODO 2.清除重複的通知元素/關閉後要清掉該元素或是替換成新內容
+//TODO 3.初始化時，不一定要傳入trigger參數!如果只有傳入options也可以
 
 export class Notification {
   //使用對應類型呼叫方法
@@ -12,7 +14,7 @@ export class Notification {
     trigger.addEventListener("click", options.handler);
     return toastManager.pushItem(options);
   }
-  static modal(trigger, options = {}) {
+  static modal(trigger = null, options = {}) {
     let targetEl = Notification._createTargetContainer();
     if (options.handler) {
       trigger.addEventListener("click", options.handler);
@@ -46,7 +48,7 @@ export class Notification {
     return targetElem;
   }
 
-  //定時垃圾回收機制?
+  //TODO 定時垃圾回收機制?
   static _garbage(notifyobject) {
     let that = notifyobject;
   }
