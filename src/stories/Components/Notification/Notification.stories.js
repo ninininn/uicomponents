@@ -195,9 +195,9 @@ export default {
     },
     placement: {
       control: { type: "select" },
-      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top", "center","custom"],
-      mapping:{
-        "custom":["180px","80px"]
+      options: ["right-bottom", "right-top", "left-bottom", "left-top", "center-bottom", "center-top", "center", "custom"],
+      mapping: {
+        "custom": ["180px", "80px"]
       },
       description: "彈出位置",
       table: {
@@ -282,18 +282,8 @@ export const Toast = {
     type: "toast",
     placement: "right-top",
     msgContent: "動綠是昔毛叫這頭收乞高姐力司「黑枝乾」化氣星常每貝木嗎見雲黃巴事冬更珠，亭肖哪飯隻朱者英二活經貫綠「只地話入」卜風連語貓身陽黑空次司月她！還室意蝴士下卜後唱筆至旦民訴跑書向。後北愛升科訴把肖止聽對。",
-    customContent: `<div>TEST</div>`,
+    customContent: `<div>...customDiv</div>`,
     maxWidth: "360px",
-    btnList: [
-      {
-        text: "前往",
-        classes: ["btn-primary", "outline-btn"],
-        handler: function (e, config) {
-          alert("前往某網址");
-        }
-      },
-      { icon: "sticker.png", text: "查看更多", classes: ["btn-secondary", "outline-btn"] },
-    ]
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');
@@ -309,7 +299,17 @@ export const Modal = {
     msgContent: "請前往xx專區進行登錄",
     placement: "center",
     confirm: ["馬上前往", function () { alert("to other links..."); }],
-    cancel: "取消"
+    cancel: "取消",
+    btnList: [
+      {
+        text: "前往",
+        classes: ["btn-primary", "outline-btn"],
+        handler: function (e, config) {
+          alert("前往某網址");
+        }
+      },
+      { icon: "sticker.png", text: "查看更多", classes: ["btn-secondary", "outline-btn"] },
+    ]
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

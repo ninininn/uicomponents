@@ -295,3 +295,17 @@ export function hexTorgb(hexString) {
 
     return `rgb(${toR},${toG},${toB})`;
 }
+
+/**
+ * Debounce 節流
+ * 一定時間內控制觸發次數
+ */
+export function debounce(callback, delay) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+           callback(...args);
+        }, delay);
+    };
+}

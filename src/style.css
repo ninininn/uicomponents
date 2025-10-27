@@ -117,7 +117,7 @@
   --spacing-custom: 10px;
   /* animations */
   /* 0818 add */
-  --animate-fadeIn: 6s fadeIn 200ms ease-in-out;
+  --animate-fadeIn: fadeIn 6s ease-in-out;
 
   @keyframes fadeIn {
     0% {
@@ -141,6 +141,29 @@
     }
   }
 
+  --animate-msgIn:msgIn 1s ease-in-out;
+  --animate-msgOut:msgOut 1s ease-in-out;
+
+  @keyframes msgIn{
+    0%{
+      transform:translateY(-50%);
+      opacity:0;
+    }
+    100%{
+      transform:translateY(0%);
+      opacity:1;
+    }
+  }
+  @keyframes msgOut{
+    0%{
+      transform:translateY(0%);
+      opacity:1;
+    }
+    100%{
+      transform:translateY(-50%);
+      opacity:0;
+    }
+  }
   --inset-shadow-md: inset 0 0 0 3px var(--color-yellow-50);
 }
 

@@ -10,25 +10,25 @@
     --w: var(--w, auto);
     --h: var(--h, auto);
     srollbar-gutter: both-edges;
-    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] min-w-[300px] min-h-[100px] overflow-auto overscroll-contain;
+    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] min-w-[300px] min-h-[100px] overflow-auto overscroll-contain shadow-sm;
   }
 
 
   .notify-header {
-    @apply w-full flex flex-col justify-center items-center font-bold text-xl mb-2 [&>:first-child]:w-full [&>:first-child]:max-w-1/4
+    @apply w-full flex flex-col justify-center items-center font-bold text-xl mb-2 [&>:first-child]:w-full [&>:first-child]:max-w-1/6;
   }
 
   .notify-content {
-    @apply mt-2 mb-4 text-sm
+    @apply mt-2 mb-4 text-sm text-center;
   }
 
   .notify-actionbtns {
-    @apply w-full flex gap-3 justify-center items-center
+    @apply w-full flex gap-3 justify-center items-center;
   }
 
   /* toast特殊排列 */
   .toast-container {
-    @apply absolute z-50 flex flex-col-reverse justify-start gap-3 max-h-[100dvh] overflow-hidden
+    @apply absolute z-50 flex flex-col justify-start gap-3 max-h-[100dvh] overflow-hidden;
   }
 
   .toast-container .notify-container {
@@ -38,30 +38,30 @@
     --confirm: #51ce4f;
     --error: #ff6038;
     --graystyle: #878787;
-    @apply static grid grid-cols-[0.1fr_1fr_0.5fr] justify-items-center content-center rounded-none transition-all gap-x-2
+    @apply static grid grid-cols-[0.1fr_1fr_0.5fr] justify-items-center content-center rounded-none gap-x-2 transition-all animate-msgIn;
   }
 
   .toast-container .notify-container[data-toast-bordered] {
-    @apply border border-[var(--style)]
+    @apply border border-[var(--style)];
   }
 
   .toast-container .notify-container[data-toast-accent] {
-    @apply border-t-4 border-[var(--style)]/90
+    @apply border-t-4 border-[var(--style)]/90;
   }
 
   .toast-container .notify-header {
-    @apply grid grid-cols-[auto_1fr_auto] col-span-3 gap-2 grid-flow-row-dense [&>.btn]:order-1 [&>.btn]:w-auto [&>:first-child]:w-auto [&>:first-child]:max-w-none mb-0
+    @apply grid grid-cols-[auto_1fr_auto] col-span-3 gap-2 grid-flow-row-dense [&>.btn]:order-1 [&>.btn]:w-auto [&>:first-child]:w-auto [&>:first-child]:max-w-none mb-0;
   }
 
   .toast-container .notify-content {
-    @apply col-span-2 -col-end-1
+    @apply col-span-2 -col-end-1;
   }
 
   .toast-container .notify-actionbtns {
-    @apply col-start-2 col-end-4 grid grid-flow-col-dense gap-1 justify-start
+    @apply col-start-2 col-end-4 grid grid-flow-col-dense gap-1 justify-start;
   }
 
   .backdrop {
-    @apply fixed w-[100dvw] h-[100dvh] top-0 z-40
+    @apply fixed w-[100dvw] h-[100dvh] top-0 z-40;
   }
 }

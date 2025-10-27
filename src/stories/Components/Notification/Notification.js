@@ -1,17 +1,17 @@
 import { Dismiss, Modal, Popover } from "flowbite";
-import { BaseComponent, UIUtils } from "../../../Utils";
+import { BaseComponent, UIUtils, debounce } from "../../../Utils";
 
-//TODO 1.點擊trigger觸發時要做throttle節流(點太多次只認一次)
+//TODO 1.點擊trigger觸發時要做debounce(點太多次只認一次)
 //TODO 2.清除重複的通知元素/關閉後要清掉該元素或是替換成新內容
 //TODO 3.初始化時，不一定要傳入trigger參數!如果只有傳入options也可以
 
 export class Notification {
   //使用對應類型呼叫方法
   static toast(trigger, options = {}) {
+    let toastManager = new ToastMsg(trigger, options);
     if (options.handler) {
-      let toastManager = new ToastMsg(trigger, options);
+      trigger.addEventListener("click", debounce(options.handler, 500));
     }
-    trigger.addEventListener("click", options.handler);
     return toastManager.pushItem(options);
   }
   static modal(trigger = null, options = {}) {
@@ -85,7 +85,7 @@ class BaseMsg extends BaseComponent {
 
   _init() {
     // header
-    let { msgTitle, icon, msgContent, customContent, btnList, confirm, cancel } = this.options;
+    let { type, msgTitle, icon, msgContent, customContent, btnList, confirm, cancel } = this.options;
     //icon
     if (icon) {
       let header = this._elem.querySelector(".notify-header");
@@ -129,11 +129,11 @@ class BaseMsg extends BaseComponent {
     }
 
     //confirm&cancel actions
-    if (confirm) {
+    if (confirm && type !== "toast") {
       this.confirm = this._confirmAndcancel(confirm, "confirm");
       this.confirmBtn = this._setBtns(this.confirm);
     }
-    if (cancel) {
+    if (cancel && type !== "toast") {
       this.cancel = this._confirmAndcancel(cancel, "cancel");
       this.cancelBtn = this._setBtns(this.cancel);
     }
@@ -235,10 +235,8 @@ class ToastItem extends BaseComponent {
         UIUtils.setAttribute(this._elem, `toast-${this.style}`);
         break;
     }
-    UIUtils.addClass(this._elem, ["opacity-0", "transition-all"]);
-    setTimeout(() => {
-      UIUtils.addClass(this._elem, ["opacity-100"]);
-    }, 100);
+    // UIUtils.addClass(this._elem, ["animate-msgIn"]);
+
     this._bindEvent();
   }
 
@@ -292,6 +290,7 @@ class ToastMsg {
   static instances = {};//建立過的ToastMsg
 
   _init() {
+    // this._bindEvent();
     this.toastContainer = document.createElement("div");
     UIUtils.addClass(this.toastContainer, ["toast-container"]);
     UIUtils.setPosition(this.toastContainer, this.options.placement, ["toast-container"]);
@@ -306,15 +305,22 @@ class ToastMsg {
     itemsObserver.observe(this.toastContainer, { childList: true });
   }
 
+  //BUG 沒有使用到(?)  
   _bindEvent() {
-    this.onevent(this.trigger, "click", this.pushItem);
+    if (this.options.handler) this.onevent(this.trigger, "click", this.options.handler);
+    this.onevent(this.trigger, "click", debounce(this.pushItem, 400));
     this.clearItem();//由於toastItem會自己清除，這邊只需要移除toastItems裏的資料
   }
 
   pushItem() {
     let toastItem = new ToastItem(this.options);
+    let fragment = document.createDocumentFragment();
     this.toastItems.push(toastItem);
-    this.toastContainer.appendChild(toastItem._elem);
+    fragment.appendChild(toastItem._elem);
+    this.toastContainer.appendChild(fragment);
+
+
+    // this.toastContainer.appendChild(toastItem._elem);
   }
 
   clearItem() {
@@ -352,15 +358,20 @@ class ModalMsg extends BaseComponent {
   }
   onHide() {
     this.modal.hide();
+    //FIX 關閉每個modal應該也要destroy(保留一段時間後再刪除)
+    setTimeout(() => {
+      this._elem.remove();
+    }, 3000);
   }
+
   _bindEvent() {
-    let { handler } = this._base.confirm;
+    // let { handler } = this._base.confirm;
 
     if (!this._base.confirmBtn) return;
     this.onevent(this._base.confirmBtn, "click", this.onHide.bind(this));
-    if (handler) {
-      this.onevent(this._base.confirmBtn, "click", handler.bind(this));
-    }
+    // if (handler) {
+    //   this.onevent(this._base.confirmBtn, "click", handler.bind(this));
+    // }
     if (!this._base.cancelBtn) return;
     this.onevent(this._base.cancelBtn, "click", this.onHide.bind(this));
   }

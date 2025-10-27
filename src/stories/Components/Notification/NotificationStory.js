@@ -1,4 +1,4 @@
-import { UIUtils } from "../../../Utils";
+import { UIUtils, debounce } from "../../../Utils";
 import { Notification } from "./Notification";
 import "./Notification.css";
 
@@ -32,6 +32,7 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, ic
             initOptions.backdrop = backdrop;
             initOptions.backdropClasses = backdropClasses;
             initOptions.closable = closable;
+            console.log(initOptions.btnList);
             break;
         case "toast":
             initOptions.style = style;
