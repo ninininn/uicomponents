@@ -1,4 +1,4 @@
-import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-CpbVZA0s.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
+import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-BzeisIy3.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
 `,s.jsx(t,{}),`
 `,s.jsx(e.p,{children:"適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及msg)。"}),`
 `,s.jsx(c,{}),`
@@ -30,7 +30,7 @@ import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-CpbVZA0s.js";impo
 `,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#PopoverMsg",children:s.jsx(e.strong,{children:"popover"})}),s.jsx(e.br,{}),`
 `,"視覺呈現類似tooltip，不同的是可以控制觸發行為。"]}),`
 `,s.jsxs(e.li,{children:[s.jsx(e.a,{href:"#DefaultMsg",children:s.jsx(e.strong,{children:"msg"})}),s.jsx(e.br,{}),`
-`,"簡單提示訊息，會在指定時間(預設5秒)後自動消失。"]}),`
+`,"簡單提示訊息，會在指定時間(預設1秒)後自動消失。"]}),`
 `]}),`
 `,s.jsx("br",{}),`
 `]}),`
