@@ -110,7 +110,7 @@ export default {
     countdown: {
       control: "number",
       if: { arg: "type", eq: "msg" },
-      description: "自訂倒數消失時間",
+      description: "自訂倒數消失時間(ms)",
       table: {
         category: "method's parameters",
         subcategory: "private property",
