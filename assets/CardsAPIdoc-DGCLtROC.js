@@ -1,4 +1,4 @@
-import{u as d,j as s,M as r,T as c,P as i,C as t}from"./iframe-BzeisIy3.js";import"./preload-helper-DLLWEBaG.js";function l(e){const n={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",h4:"h4",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...e.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Cards"}),`
+import{u as d,j as s,M as r,T as c,P as i,C as t}from"./iframe-BG6fSF4C.js";import"./preload-helper-DLLWEBaG.js";function l(e){const n={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",h4:"h4",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...e.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Cards"}),`
 `,s.jsx(c,{}),`
 `,s.jsx(n.p,{children:"適用 : 資訊面板的資料呈現"}),`
 `,s.jsx("div",{className:"sb-unstyled alert-msg",children:s.jsxs("span",{children:["卡片元件的呈現方式可能會有多種變化，這邊僅先以基礎",s.jsx(n.strong,{children:"資訊面板"}),"(BasicInfoCard)作為示意說明"]})}),`
