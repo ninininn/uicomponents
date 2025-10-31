@@ -347,7 +347,7 @@ class ModalMsg extends BaseComponent {
   }
 
   _init() {
-    this.appendElem(this._elem);
+    document.body.append(this._elem);
     this.onShow();
     this._bindEvent();
     UIUtils.setAttribute(this._elem, "notifymodal");
@@ -395,7 +395,7 @@ class PopoverMsg extends BaseComponent {
   }
 
   _init() {
-    this.appendElem(this._elem);
+    document.body.append(this._elem);
     UIUtils.setAttribute(this._elem, "notifypopover");
     this._bindEvent();
   }
@@ -440,7 +440,7 @@ class DefaultMsg extends BaseComponent {
     };
   }
   _init() {
-    this.appendElem(this._elem);
+    document.body.append(this._elem);
     UIUtils.setAttribute(this._elem, "notifymsg");
     this._bindEvent(this._options.countdown);
   }

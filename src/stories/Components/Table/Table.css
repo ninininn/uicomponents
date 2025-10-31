@@ -3,65 +3,30 @@
 @layer base {}
 
 @layer components {
-  .notify-container {
-    --theme: var(--theme, var(--color-gray-100));
-    --text: var(--text, var(color-gray-800));
-    --maxWidth: var(--maxWidth, auto);
-    --w: var(--w, auto);
-    --h: var(--h, auto);
-    srollbar-gutter: both-edges;
-    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] min-w-[300px] min-h-[100px] overflow-auto overscroll-contain shadow-sm;
+
+  /*table容器*/
+  .table-container {
+    @apply w-full h-fit rounded-md max-w-full max-h-80 overflow-hidden
   }
 
-
-  .notify-header {
-    @apply w-full flex flex-col justify-center items-center font-bold text-xl mb-2 [&>:first-child]:w-full [&>img:first-child]:max-w-1/6;
+  /*table本體*/
+  .table {
+    @apply w-full h-full rounded-md overflow-scroll
   }
 
-  .notify-content {
-    @apply mt-2 mb-4 text-sm text-center;
+  .table thead {
+    @apply sticky top-0 bg-primary-200 shadow-md text-primary-900
   }
 
-  .notify-actionbtns {
-    @apply w-full flex gap-3 justify-center items-center;
+  .table tbody {
+    @apply w-full
   }
 
-  /* toast特殊排列 */
-  .toast-container {
-    @apply absolute z-50 flex flex-col justify-start gap-3 max-h-[100dvh] overflow-hidden;
+  .table tbody tr {
+    @apply transition-all odd:bg-gray-100 odd:data-[rowSelected]:bg-primary-50 data-[rowSelected]:bg-primary-100
   }
 
-  .toast-container .notify-container {
-    --notice: #FFD500;
-    --lock: #FFC037;
-    --download: #80D0FF;
-    --confirm: #51ce4f;
-    --error: #ff6038;
-    --graystyle: #878787;
-    @apply static grid grid-cols-[0.1fr_1fr_0.5fr] justify-items-center content-center rounded-none gap-x-2 transition-all animate-msgIn;
-  }
-
-  .toast-container .notify-container[data-toast-bordered] {
-    @apply border border-[var(--style)];
-  }
-
-  .toast-container .notify-container[data-toast-accent] {
-    @apply border-t-4 border-[var(--style)]/90;
-  }
-
-  .toast-container .notify-header {
-    @apply grid grid-cols-[auto_1fr_auto] col-span-3 gap-2 grid-flow-row-dense [&>.btn]:order-1 [&>.btn]:w-auto [&>:first-child]:w-auto [&>:first-child]:max-w-none mb-0;
-  }
-
-  .toast-container .notify-content {
-    @apply col-span-2 -col-end-1;
-  }
-
-  .toast-container .notify-actionbtns {
-    @apply col-start-2 col-end-4 grid grid-flow-col-dense gap-1 justify-start;
-  }
-
-  .backdrop {
-    @apply fixed w-[100dvw] h-[100dvh] top-0 z-40 bg-gray-800/50;
+  .table thead th, .table td {
+    @apply py-1.5 px-2
   }
 }

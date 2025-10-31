@@ -8,15 +8,15 @@ import {
   Unstyled,
 } from "@storybook/addon-docs/blocks";
 
-<Meta isTemplate title="How to use Notification" />
+<Meta isTemplate title="How to use Table" />
 
 <Title />
-適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及msg)。
+常見表格資料表，可以載入資料並更新Table畫面
 
 <Primary />
 
 # Controls
-由於 Notification 元件的使用方式較特殊，是以呼叫的方法來決定類型，提供操作的`type`請視為實際使用場景要呼叫的方法；而 Method's parameter 則是呼叫時可以控制的設定，其餘內部屬性請參考 **properties 內部屬性**區塊。
+由於 Table 元件由多個子元件所組成，此 control 區塊會連同子元件的可控`options`參數設定一併列出。
 
 <Controls />
 
@@ -27,8 +27,7 @@ import {
 Notification 元件和其他元件不同，不需要`new`初始化，用法為直接呼叫對應類型的靜態方法，並帶入參數 `trigger`及`options`即可。
 
 ```javascript
-  Notification.modal(trigger,options);
-  //直接呼叫對應方法
+  let table = new Table(options, data);
 ```  
 
 <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
@@ -51,7 +50,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
 
 - <span className="sb-unstyled font-black">通知視窗類型說明，分為四種表現: </span>
 
-   - [**toast**](#ToastMsg)  
+   - [**toast**](#TableHeader)  
      讓使用者知道/提醒目前操作或是狀態，一般表現為在視窗某位置(通常為四個角落)跳出，並持續一段時間後消失。
       <div className="sb-unstyled note-msg my-3">
         <span>toast類型特色</span>
@@ -108,7 +107,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
     ```  
   <br />
 ---  
-# BaseMsg 類別  
+# Pagination 元件  
 
 <div className="sb-unstyled alert-msg">只負責建構UI資料基礎，相關對應行為由子類別內部負責。</div>  
 - **properties 屬性**  
@@ -151,69 +150,11 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
 <br/>  
 ---  
 
-# 子類別  
+# 子元件  
 <div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>  
 <br/>
-
-><span id="ToastMsg">ToastMsg 類別</span>  
-<span>作為容器並負責管理`ToastItem`</span>
-- **properties 屬性**  
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold">trigger</td>
-            <td>-</td>
-            <td>HTMLElement</td>
-            <td>觸發元素</td>
-          </tr>
-          <tr>
-            <td className="font-bold">toastContainer</td>
-            <td>`<div></div>`</td>
-            <td>HTMLElement</td>
-            <td>容器元素節點</td>
-          </tr>
-          <tr>
-            <td className="font-bold">options</td>
-            <td>-</td>
-            <td>object</td>
-            <td>設定值，由參數`options`傳入，並往下傳遞至`ToastItem`</td>
-          </tr>
-          <tr>
-            <td className="font-bold">toastItems</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>
-              儲存所有子訊息(ToastItem)
-            </td>
-          </tr>
-          <tr>
-            <td className="font-bold">id</td>
-            <td>-</td>
-            <td>string</td>
-            <td>
-              容器id，會用來儲存同一批子訊息
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-<br/>
-- **options 參數可設定的私有屬性**  
-  - `style` toast樣式，可分為 bordered | accent | default
-<br/>
----
-><h3 id="ToastItem">ToastItem 類別</h3>
-
+><h3>TableHeader</h3>
+><h3 id="TableCell">TableCell</h3>
 - **properties 屬性**  
 
     <div className="sb-unstyled table-container overflow-hidden">
@@ -229,45 +170,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>ToastItem</td>
-            <td>string</td>
-            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-          </tr>
-          <tr>
-            <td className="font-bold">style</td>
-            <td>accent</td>
-            <td>string</td>
-            <td>toast版型，可以選擇bordered|accent|default</td>
-          </tr>
-          <tr>
-            <td className="font-bold">dismiss</td>
-            <td>`Dissmiss` object</td>
-            <td>object</td>
-            <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/toast/" className="linkout">Dismiss</a></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-<br/>
-
----
-><h3 id="ModalMsg">ModalMsg 類別</h3>
-- **properties 屬性**  
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold">UItype</td>
-            <td>ModalMsg</td>
+            <td>TableCell</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>
@@ -286,7 +189,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
   - `backdropClasses` 遮罩classes
   - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal
 ---
-><h3 id="PopoverMsg">PopoverMsg 類別</h3>
+><h3 id="TableRow">TableRow</h3>
 
 - **properties 屬性**  
 
@@ -303,7 +206,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>PopoverMsg</td>
+            <td>TableRow</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>
@@ -323,7 +226,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
   - `offset` 距離triggerElem的距離
 
 ---
-><h3 id="DefaultMsg">DefaultMsg 類別</h3>
+><h3 id="TableColumn">TableColumn</h3>
 
 - **properties 屬性**  
 
@@ -340,7 +243,7 @@ Notification 元件和其他元件不同，不需要`new`初始化，用法為�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>DefaultMsg</td>
+            <td>TableColumn</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>

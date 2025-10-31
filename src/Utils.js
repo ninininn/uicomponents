@@ -209,8 +209,8 @@ export class BaseComponent {
     }
 
     appendElem(elem) {
+        this._elem.appendChild(elem);
         UIUtils.addClass(elem, ["opacity-0", "transition-all"]);
-        document.body.append(elem);
 
         setTimeout(() => {
             UIUtils.addClass(elem, ["opacity-100"]);
@@ -305,7 +305,7 @@ export function debounce(callback, delay) {
     return function (...args) {
         clearTimeout(timer);
         timer = setTimeout(() => {
-           callback(...args);
+            callback(...args);
         }, delay);
     };
 }
