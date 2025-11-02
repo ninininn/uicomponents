@@ -1,32 +1,33 @@
 @reference "../../../style.css";
 
-@layer base {}
+@layer base {
+}
 
 @layer components {
-
   /*table容器*/
   .table-container {
-    @apply w-full h-fit rounded-md max-w-full max-h-80 overflow-hidden
+    @apply w-full h-fit rounded-md max-w-full max-h-80 overflow-auto;
   }
 
   /*table本體*/
   .table {
-    @apply w-full h-full rounded-md overflow-scroll
+    @apply w-full h-full rounded-md;
   }
 
   .table thead {
-    @apply sticky top-0 bg-primary-200 shadow-md text-primary-900
+    @apply sticky top-0 bg-primary-200 shadow-md text-primary-900;
   }
 
   .table tbody {
-    @apply w-full
+    @apply w-full h-full min-h-50;
   }
 
   .table tbody tr {
-    @apply transition-all odd:bg-gray-100 odd:data-[rowSelected]:bg-primary-50 data-[rowSelected]:bg-primary-100
+    @apply transition-all odd:bg-gray-100 odd:data-[rowSelected]:bg-primary-50 data-[rowSelected]:bg-primary-100;
   }
 
-  .table thead th, .table td {
-    @apply py-1.5 px-2
+  .table thead th,
+  .table td {
+    @apply py-1.5 px-2;
   }
 }

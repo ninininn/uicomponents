@@ -8,11 +8,14 @@ export class Table extends BaseComponent {
     super(tableContainer);
     this.UItype = "Table";
     this.options = { ...this.config, ...options };
-    this.tableRows = this._setRows(dataArr);
-    this.tableHeader = new TableHeader(this.options.cols, this.options.selection);
+    this.data = dataArr;
+    this.tableHeader = new TableHeader(
+      this.options.cols,
+      this.options.selection
+    );
     this.tableBody = document.createElement("tbody");
     this.table = tableElem;
-    this.dataCounts = this.tableRows.length;
+    this.dataCounts = this.data.length;
     //TODO cols欄位要作為 context 讓所有子元件能夠共用?
     //TODO this.options.selection 勾選欄位顯示與否
     this._init();
@@ -20,13 +23,13 @@ export class Table extends BaseComponent {
 
   get config() {
     return {
-      id: '',
+      id: "",
       elem: null,
       limits: 50,
-      name: 'defaultTable',
-      classes: ['table-container'],
+      name: "defaultTable",
+      classes: ["table-container"],
       cols: [],
-      selection: 'checkbox',
+      selection: "checkbox",
     };
   }
 
@@ -38,6 +41,7 @@ export class Table extends BaseComponent {
 
   //樣式渲染
   _render() {
+    this.tableRows = this._setRows(this.data);
     this.table.appendChild(this.tableHeader.getElem());
     this._elem.appendChild(this.table);
 
@@ -52,12 +56,12 @@ export class Table extends BaseComponent {
         this.tableBody.appendChild(row.getElem());
       }
     }
+
+    this.options.elem.appendChild(this._elem);
   }
 
   //事件綁定
-  _bindEvent() {
-
-  }
+  _bindEvent() {}
 
   //設定表列資料
   _setRows(arr, selection) {
@@ -67,7 +71,6 @@ export class Table extends BaseComponent {
 
     return tableRows;
   }
-
 
   //[外部控制]-設定表格尺寸
   //!如果超過max-width,max-height則直接用max-width/height
@@ -119,7 +122,7 @@ class TableHeader extends BaseComponent {
 
 //TableRow 表列
 class TableRow extends BaseComponent {
-  constructor(data, index, selection = 'checkbox', uitype) {
+  constructor(data, index, selection = "checkbox", uitype) {
     const rowContainer = document.createElement("tr");
     super(rowContainer);
     this.UItype = "TableRow";
@@ -150,7 +153,8 @@ class TableRow extends BaseComponent {
         delete this._elem.dataset.rowselected;
       }
     }
-    if (this.selection) this.onevent(this.selection.getElem(), "change", checkEvent.bind(this));
+    if (this.selection)
+      this.onevent(this.selection.getElem(), "change", checkEvent.bind(this));
   }
 
   _checkSelection(selectionType, uitype) {
@@ -191,8 +195,6 @@ class TableCell extends BaseComponent {
   }
 }
 
-
-
 //Pagination 分頁元件
 //! 未來要獨自拆出檔案
 class Pagination extends BaseComponent {
@@ -200,8 +202,6 @@ class Pagination extends BaseComponent {
     const componentContainer = document.createElement("div");
     super(componentContainer);
     this.UItype = "Pagination";
-
-
   }
 }
 
