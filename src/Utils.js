@@ -3,6 +3,9 @@
  */
 
 export class UIUtils {
+    static setStyle(element, property, styleValue) {
+        element.style[property] = styleValue;
+    }
     static addClass(element, classes) {
         element.classList.add(...classes);
     }
@@ -249,6 +252,23 @@ export function bindState(initState) {
     }
 
     return [getState, setState, subscribe];
+}
+
+/**
+ * Context 共享數據機制
+ * 1. createContext 建立共享Context，紀錄數據
+ * 2. useContext 使用共享數據
+ */
+
+export function createContext(defaultContext){
+    let context = {
+        Provider: defaultContext
+    }
+    return context;
+}
+
+export function useContext(context){
+    return context.Provider;
 }
 
 /**

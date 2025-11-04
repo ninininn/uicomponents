@@ -118,6 +118,7 @@
   /* animations */
   /* 0818 add */
   --animate-fadeIn: fadeIn 6s ease-in-out;
+  --animate-fadeOut: fadeOut 1s ease-in-out;
 
   @keyframes fadeIn {
     0% {
@@ -138,6 +139,15 @@
     100% {
       opacity: 0;
       scale: 0.1;
+    }
+  }
+  @keyframes fadeOut {
+    0% {
+      opacity: 1
+    }
+
+    100% {
+      opacity: 0;
     }
   }
 

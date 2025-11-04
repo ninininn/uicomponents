@@ -1,12 +1,21 @@
 @reference "../../../style.css";
 
-@layer base {
-}
+@layer base {}
 
 @layer components {
+
   /*table容器*/
   .table-container {
-    @apply w-full h-fit rounded-md max-w-full max-h-80 overflow-auto;
+    --theme: var(--themeColor, var(--color-primary-100));
+    @apply w-full h-fit rounded-md bg-[#fff] max-w-full max-h-80 overflow-auto;
+  }
+
+  .table:empty {
+    @apply mx-auto w-10/12 h-20
+  }
+
+  .table-skeleton {
+    @apply w-full h-full max-h-full overflow-hidden bg-[#fff];
   }
 
   /*table本體*/
@@ -15,7 +24,7 @@
   }
 
   .table thead {
-    @apply sticky top-0 bg-primary-200 shadow-md text-primary-900;
+    @apply sticky top-0 bg-[var(--theme)] shadow-md text-primary-900;
   }
 
   .table tbody {
@@ -23,7 +32,7 @@
   }
 
   .table tbody tr {
-    @apply transition-all odd:bg-gray-100 odd:data-[rowSelected]:bg-primary-50 data-[rowSelected]:bg-primary-100;
+    @apply w-full transition-all bg-[#fff] odd:bg-gray-100 odd:data-[rowSelected]:bg-[var(--theme)]/50 data-[rowSelected]:bg-[var(--theme)]/30 has-[td:hover]:text-secondary-500 cursor-pointer;
   }
 
   .table thead th,
