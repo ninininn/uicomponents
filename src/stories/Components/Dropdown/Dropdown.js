@@ -2,7 +2,6 @@ import { Dropdown as flowbiteDropdown } from "flowbite";
 
 export class Dropdown extends flowbiteDropdown {
     constructor(target, trigger, bindFilteroption = null, changeHandler = null) {
-        //0826 擴充調整-------------
         let bindtarget, bindtrigger;
         if (!(target instanceof HTMLElement)) {
             bindtarget = document.createElement("ul");
@@ -33,7 +32,6 @@ export class Dropdown extends flowbiteDropdown {
 
         this.containerEl = target.parentElement || this._createContainer();
         if (changeHandler) this.changeHandler = changeHandler.bind(this.bindSelect);
-        //0826 ---------------------
 
         //如果建立時select有預設value就用它，沒有的話就先用第一個li
         this.optValuePair = this.getMatchValue(
@@ -50,7 +48,6 @@ export class Dropdown extends flowbiteDropdown {
         this._init();
     }
 
-    //0826 增加擴充彈性 ----------------------
     _createBindSelect(selectId, selectOptions) {
         let select = document.createElement("select");
         select.classList.add("select", "dropdown-select");
@@ -74,7 +71,6 @@ export class Dropdown extends flowbiteDropdown {
         container.appendChild(this.bindSelect);
         return container;
     }
-    //0826 ------------------------------
 
     //內部控制 - 初始化
     _init() {
@@ -123,7 +119,8 @@ export class Dropdown extends flowbiteDropdown {
     _bindBasicHandler() {
         //0826 如果有傳入<select/>的change監聽器
         if (this.changeHandler) this.bindSelect.addEventListener("change", this.changeHandler);
-        this._targetEl.addEventListener("click", (event) => {
+        //BUG mouse event 手機沒有，要再調整成pointer event
+        this._targetEl.addEventListener("mousedown", (event) => {
             event.stopPropagation();
             let updateValue = event.target.textContent;
             this._triggerEl.value = updateValue;
