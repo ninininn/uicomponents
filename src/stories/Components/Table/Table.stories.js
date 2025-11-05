@@ -32,53 +32,45 @@ export default {
       type: { required: true },
       description: "表格元素id",
       table: {
-        category: "table",
+        category: "configurations",
         type: { summary: "string" },
       },
     },
-    style: {
-      control: "select",
-      options: ["default", "bordered", "accent"],
-      if: { arg: "type", eq: "toast" },
-      description: "toast樣式",
+    name: {
+      control: "text",
+      description: "Table name",
       table: {
-        category: "tableheader",
-        subcategory: "private property",
-        defaultValue: { summary: "static" },
+        category: "configurations",
+        defaultValue: { summary: "-" },
         type: { summary: "string" },
       },
     },
-    limit: {
+    limits: {
       control: "number",
       description: "每頁顯示的最多筆數",
       min: 1,
       table: {
-        category: "table",
-        subcategory: "private property",
-        defaultValue: { summary: "static" },
-        type: { summary: "string" },
+        category: "configurations",
+        defaultValue: { summary: "50" },
+        type: { summary: "number" },
       },
     },
     elem: {
       control: "text",
       description: "要放入的DOM元素",
       table: {
-        category: "tableheader",
-        subcategory: "private property",
+        category: "configurations",
         defaultValue: { summary: "null" },
         type: { summary: "string" },
       },
     },
-    triggerType: {
-      control: "select",
-      options: ["hover", "click", "none"],
-      if: { arg: "type", eq: "popover" },
-      description: "觸發動作類型",
+    cols: {
+      control: "array",
+      description: "欄位設定及帶入值",
       table: {
-        category: "tableheader",
-        subcategory: "private property",
-        defaultValue: { summary: "hover" },
-        type: { summary: "string" },
+        category: "configurations",
+        defaultValue: { summary: "-" },
+        type: { summary: "array" },
       },
     },
     selection: {
@@ -86,33 +78,33 @@ export default {
       options: ["checkbox", "radio"],
       description: "是否要有勾選功能",
       table: {
-        category: "table",
+        category: "configurations",
         defaultValue: { summary: "checkbox" },
         type: { summary: "string" },
       },
     },
-    maxWidth: {
-      control: "text",
-      description: "通知視窗的最大尺寸",
+    tools: {
+      control: "boolean",
+      description: "是否要有基本工具列",
       table: {
-        category: "tableheader",
-        defaultValue: { summary: "auto" },
-        type: { summary: "string" },
+        category: "configurations",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
       },
     },
-    customContent: {
-      control: "string",
-      description: "自訂訊息innerHTML結構",
+    complete: {
+      control: "function",
+      description: "完成資料載入後要執行的函式",
       table: {
-        category: "tableheader",
-        type: { summary: "string" },
+        category: "configurations",
+        type: { summary: "function" },
       },
     },
     classes: {
       control: { type: "array" },
       description: "自定義class，每個class以tailwindcss property放入",
       table: {
-        category: "table",
+        category: "configurations",
         defaultValue: { summary: ".table" },
         type: { summary: "array" },
       },
@@ -121,7 +113,7 @@ export default {
       control: { type: "function" },
       description: "完成資料載入後要執行的函式",
       table: {
-        category: "tableheader",
+        category: "configurations",
         type: { summary: "function" },
       },
     },
@@ -129,7 +121,7 @@ export default {
       control: { type: "function" },
       description: "資料載入失敗時要執行的函式",
       table: {
-        category: "tableheader",
+        category: "configurations",
         type: { summary: "function" },
       },
     },
@@ -139,7 +131,7 @@ export default {
       description: "點擊觸發元素後的callback函式",
       table: {
         // type: { required: true },
-        category: "tableheader",
+        category: "configurations",
         defaultValue: { summary: "null" },
         type: { summary: "function" },
       },
@@ -150,12 +142,10 @@ export default {
   args: {
     // handlers: action("change"),
     id: "table_first",
-    theme: "light",
-    maxWidth: "auto",
-    // customContent: `<div>customInner</div>`,
     classes: ["table-container"],
     limits: 20,
-    selection:"checkbox"
+    selection: "checkbox",
+    tools: true,
   },
 };
 
@@ -171,8 +161,6 @@ export const Table = {
       { field: 'done', title: '完成', sort: true, fixed: false },
     ],
     limits: 50,
-    customContent: `<div>...customDiv</div>`,
-    maxWidth: "360px",
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

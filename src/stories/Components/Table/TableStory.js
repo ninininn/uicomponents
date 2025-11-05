@@ -9,10 +9,8 @@ export const createTable = ({
     name,
     limits,
     selection,
-    maxWidth,
     elem,
     cols,
-    customContent,
     tools,
     classes,
     complete,
@@ -28,18 +26,17 @@ export const createTable = ({
     parent.appendChild(trigger);
 
     let initOptions = {
-        id: id, //title文字
-        name: name, //自定義class
+        id: id,                 //title文字
+        name: name,             //自定義class
         limits: limits,
-        elem: parent,
+        elem: parent,           //elem
         cols: cols,
-        selection: selection, //是否開啟勾選列
-        maxWidth: maxWidth,
-        customContent: customContent, //自定義HTML內容or其他元件
-        classes: classes, //自定義class
-        complete: complete, //確認按鈕文字&動作
-        error: error, //取消按鈕文字&動作
-        handler: handler, //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
+        tools: tools,
+        selection: selection,   //是否開啟勾選列
+        classes: classes,       //自定義class
+        complete: complete,     //確認按鈕文字&動作
+        error: error,           //取消按鈕文字&動作
+        handler: handler,       //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
     };
 
     //fake data

@@ -5,7 +5,7 @@
 @layer components {
 
   /*table容器*/
-  .table-container {
+  .table-container{
     --theme: var(--themeColor, var(--color-primary-100));
     @apply w-full h-fit rounded-md bg-[#fff] max-w-full max-h-80 overflow-auto;
   }
