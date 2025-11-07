@@ -42,7 +42,7 @@ export class Table extends BaseComponent {
 
     let colsCount = this.options.cols.length;
     this.skeleton = new Skeleton({ type: 'table', colNum: this.options.selection ? colsCount + 1 : colsCount });
-
+    createContext(this, this.options.cols);
 
     this._render();
     this._bindEvent();
@@ -79,8 +79,9 @@ export class Table extends BaseComponent {
 
   //設定表列資料
   _setRows(arr, selection) {
+    let thisTable = this;
     let tableRows = arr.map((dataObj, index) => {
-      return new TableRow(dataObj, index, selection);
+      return new TableRow(dataObj, index, selection, thisTable);
     });
 
     return tableRows;
@@ -184,13 +185,13 @@ class TableHeader extends BaseComponent {
 
 //TableRow 表列
 class TableRow extends BaseComponent {
-  constructor(data, index, selection = "checkbox") {
+  constructor(data, index, selection = "checkbox", table) {
     const rowContainer = document.createElement("tr");
     super(rowContainer);
     this.UItype = "TableRow";
     this.data = data;
     this.selection = this._checkSelection(selection);
-    this.cells = this._setTableCells(this.data);
+    this.cells = this._setTableCells(this.data, useContext(table));
     this.index = ++index;
     this._init();
   }
@@ -228,9 +229,9 @@ class TableRow extends BaseComponent {
       return;
     }
   }
-  _setTableCells(data) {
-    let cells = Object.values(data).map((value) => {
-      return new TableCell(value);
+  _setTableCells(data, colConfig) {
+    let cells = Object.values(data).map((value, index) => {
+      return new TableCell(value, colConfig[index]);
     });
     return cells;
   }
@@ -238,20 +239,34 @@ class TableRow extends BaseComponent {
 
 //TableCell 資料格
 class TableCell extends BaseComponent {
-  constructor(dataValue) {
+  constructor(dataValue, colConfig) {
     const td = document.createElement("td");
     super(td);
     this.UItype = "TableCell";
     this.dataValue = dataValue;
+    this.config = colConfig;
     this._init();
   }
 
   _init() {
-    if (this.dataValue.field) {
-      UIUtils.setText(this._elem, this.dataValue.title);
-    } else {
-      UIUtils.setText(this._elem, this.dataValue);
+    this._render();
+  }
+  _render() {
+    let { field, align = "left" } = this.config;
+    switch (align) {
+      case "center":
+        UIUtils.addClass(this._elem, ["text-center"]);
+        break;
+      case "right":
+        UIUtils.addClass(this._elem, ["text-right"]);
+        break;
+      default:
+        UIUtils.clearClass(this._elem);
+        break;
     }
+    UIUtils.setAttribute(this._elem, "field", field);
+    UIUtils.setText(this._elem, this.dataValue);
+
   }
 }
 

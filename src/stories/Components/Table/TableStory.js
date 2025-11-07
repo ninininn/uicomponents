@@ -30,7 +30,7 @@ export const createTable = ({
         name: name,             //自定義class
         limits: limits,
         elem: parent,           //elem
-        cols: cols,
+        cols:cols,
         tools: tools,
         selection: selection,   //是否開啟勾選列
         classes: classes,       //自定義class

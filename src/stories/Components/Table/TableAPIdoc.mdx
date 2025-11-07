@@ -11,7 +11,8 @@ import {
 <Meta isTemplate title="How to use Table" />
 
 <Title />
-常見表格資料表，可以載入資料並更新Table畫面
+常見表格資料表，可以載入資料並更新Table畫面  
+(此頁面測試用API來源 : [公開API (https://jsonplaceholder.typicode.com/todos)](https://jsonplaceholder.typicode.com/todos))
 
 <Primary />
 
@@ -32,7 +33,7 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
 
 > ### parameters 參數設定
 
-- <span className="sb-unstyled font-black">options</span>
+- <span className="sb-unstyled font-black">config</span>
   <span className="sb-unstyled data-type">object</span>  
   各屬性的型別及說明可參考上方**Controls區塊**，各類別的私有屬性則可以參考**子類別**區塊的各個說明，此處僅列出共同設定的屬性。
     ```javascript
@@ -50,6 +51,61 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
       handler: handler,       //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
     };
     ```  
+  <br/>
+    - <span className="sb-unstyled font-black">column configuration</span>
+      ```javascript
+      const cols = [
+        {field:'id', title:'ID', sort:true, fixed:true},
+        {field:'name', title:'名稱', sort:false, fixed:false},
+        {field:'count', title:'數量', sort:true, fixed:false},
+      ];
+      ```
+      <br/>
+      每個 column <span className="sb-unstyled data-type">object</span> 都可以設定以下屬性 :  
+      <div className="sb-unstyled table-container">
+        <table className="sb-unstyled table-content">
+          <thead>
+            <tr className="text-center">
+              <td>property</td>
+              <td>default</td>
+              <td>type</td>
+              <td>descriptions</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="font-bold text-center">field</td>
+              <td className="text-center">-</td>
+              <td className="text-center">string</td>
+              <td>欄位屬性/特徵</td>
+            </tr>
+            <tr>
+              <td className="font-bold text-center">title</td>
+              <td className="text-center">-</td>
+              <td className="text-center">string</td>
+              <td>欄位文字</td>
+            </tr>
+            <tr>
+              <td className="font-bold text-center">sort</td>
+              <td className="text-center">true</td>
+              <td className="text-center">boolean</td>
+              <td>是否有排序功能</td>
+            </tr>
+            <tr>
+              <td className="font-bold text-center">fixed</td>
+              <td className="text-center">false</td>
+              <td className="text-center">boolean</td>
+              <td>是否固定該欄</td>
+            </tr>
+            <tr>
+              <td className="font-bold text-center">align</td>
+              <td className="text-center">left</td>
+              <td className="text-center">string</td>
+              <td>欄位對齊位置，可選 left / center / right</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
   <br />
 ---  
 > ### prototype properties 原型屬性  
@@ -104,7 +160,7 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
       </tr>
       <tr>
         <td className="font-bold">data</td>
-        <td>`-`</td>
+        <td>[]</td>
         <td>array</td>
         <td>呼叫API後取回的資料陣列</td>
       </tr>
@@ -130,10 +186,16 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
         </tr>
       </thead>
       <tbody>
-        <tr><td>`.toast(options)`</td><td>呼叫一個toast類型通知視窗</td></tr>
-        <tr><td>`.modal(options)`</td><td>呼叫一個modal類型通知視窗</td></tr>
-        <tr><td>`.popover(options)`</td><td>呼叫一個popover類型通知視窗</td></tr>
-        <tr><td>`.msg(options)`</td><td>呼叫一般msg類型通知視窗</td></tr>
+        <tr><td>`.setSelected(rowIndex)`</td><td>設定預設勾選列</td></tr>
+        <tr><td>`.setData(dataArr)`</td><td>放入資料重新渲染</td></tr>
+        <tr><td>`.setSize(width,height)`</td><td>設定表格尺寸</td></tr>
+        <tr><td>`.reload()`</td><td>重新呼叫API抓資料</td></tr>
+        <tr><td>`.updateRow(index,data)`</td><td>更新指定列資料</td></tr>
+        <tr><td>`.getTableData()`</td><td>取得表格所有資料</td></tr>
+        <tr><td>`.getSelected()`</td><td>取得表格內所有選取的Row</td></tr>
+        <tr><td>`.exportTable()`</td><td>匯出成csv文件/pdf?</td></tr>
+        <tr><td>`.getElem()`</td><td>取得table DOM節點</td></tr>
+        <tr><td>`.setTheme()`</td><td>設定主題色</td></tr>
       </tbody>
     </table>
   </div>
@@ -157,7 +219,7 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
         <tbody>
           <tr>
             <td className="font-bold">UItype</td>
-            <td>BaseMsg</td>
+            <td>Pagination</td>
             <td>string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
             <td>`BaseComponent`</td>
@@ -185,40 +247,40 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
 <div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>  
 <br/>
 ><h3 id="TableHeader">TableHeader</h3>
-><h3 id="TableCell">TableCell</h3>
 - **properties 屬性**  
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold">UItype</td>
-            <td>TableCell</td>
-            <td>string</td>
-            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-          </tr>
-          <tr>
-            <td className="font-bold">modal</td>
-            <td>flowbite `Modal`物件</td>
-            <td>object</td>
-            <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/modal/" className="linkout">Modal</a></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div className="sb-unstyled table-container overflow-hidden">
+    <table className="sb-unstyled table-content">
+      <thead>
+        <tr className="text-center">
+          <td>property</td>
+          <td>default</td>
+          <td>type</td>
+          <td>descriptions</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="font-bold text-center">UItype</td>
+          <td className="text-center">TableHeader</td>
+          <td className="text-center">string</td>
+          <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+        </tr>
+        <tr>
+          <td className="font-bold text-center">cols</td>
+          <td className="text-center">-</td>
+          <td className="text-center">string</td>
+          <td>各欄位設定陣列(= cols 傳入參數)</td>
+        </tr>
+        <tr>
+          <td className="font-bold text-center">selection</td>
+          <td className="text-center">checkbox</td>
+          <td className="text-center">string</td>
+          <td>勾選功能，可用 checkbox / radio，其餘視為靜態 table</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 <br/>
-- **options 參數可設定的私有屬性**  
-  - `backdrop` 遮罩類型，可分為static|dynamic，是否可以點擊螢幕任一處關閉
-  - `backdropClasses` 遮罩classes
-  - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal
 ---
 ><h3 id="TableRow">TableRow</h3>
 
@@ -236,15 +298,15 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
         </thead>
         <tbody>
           <tr>
-            <td className="font-bold">UItype</td>
-            <td>TableRow</td>
-            <td>string</td>
+            <td className="font-bold text-center">UItype</td>
+            <td className="text-center">TableRow</td>
+            <td className="text-center">string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
           </tr>
           <tr>
-            <td className="font-bold">popover</td>
-            <td>flowbite `Popover`物件</td>
-            <td>object</td>
+            <td className="font-bold text-center">popover</td>
+            <td className="text-center">flowbite `Popover`物件</td>
+            <td className="text-center">object</td>
             <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span></td>
           </tr>
         </tbody>
@@ -254,10 +316,10 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
 
 - **options 參數可設定的私有屬性**  
   - `triggerType` 觸發動作類型，可以選擇hover|click|none
-  - `offset` 距離triggerElem的距離
-
+  - `offset` 距離triggerElem的距離  
+<br/>  
 ---
-><h3 id="TableColumn">TableColumn</h3>
+><h3 id="TableCell">TableCell</h3>
 
 - **properties 屬性**  
 
@@ -273,13 +335,22 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
         </thead>
         <tbody>
           <tr>
-            <td className="font-bold">UItype</td>
-            <td>TableColumn</td>
-            <td>string</td>
+            <td className="font-bold text-center">UItype</td>
+            <td className="text-center">TableCell</td>
+            <td className="text-center">string</td>
             <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">dataValue</td>
+            <td className="text-center">-</td>
+            <td className="text-center">string/number</td>
+            <td>資料格的資料內容</td>
           </tr>
         </tbody>
       </table>
-    </div>  
+    </div>
+<br/>
 - **options 參數可設定的私有屬性**  
-  - `countdown` 倒數消失毫秒數(ms)
+  - `backdrop` 遮罩類型，可分為static|dynamic，是否可以點擊螢幕任一處關閉
+  - `backdropClasses` 遮罩classes
+  - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal

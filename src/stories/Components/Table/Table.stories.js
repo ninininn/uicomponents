@@ -105,7 +105,7 @@ export default {
       description: "自定義class，每個class以tailwindcss property放入",
       table: {
         category: "configurations",
-        defaultValue: { summary: ".table" },
+        defaultValue: { summary: ".table-container" },
         type: { summary: "array" },
       },
     },
@@ -146,6 +146,7 @@ export default {
     limits: 20,
     selection: "checkbox",
     tools: true,
+
   },
 };
 
@@ -155,8 +156,8 @@ export const Table = {
     id: "test-table",
     name: "測試表格",
     cols: [
-      { field: 'useId', title: '使用者id', sort: true, fixed: false },
-      { field: 'id', title: '編號', sort: false, fixed: false },
+      { field: 'useId', title: '使用者id', sort: true, fixed: false, align: "center" },
+      { field: 'id', title: '編號', sort: false, fixed: false, align: "center" },
       { field: 'title', title: '內容', sort: true, fixed: false },
       { field: 'done', title: '完成', sort: true, fixed: false },
     ],
