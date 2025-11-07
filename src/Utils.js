@@ -259,16 +259,14 @@ export function bindState(initState) {
  * 1. createContext 建立共享Context，紀錄數據
  * 2. useContext 使用共享數據
  */
-
-export function createContext(defaultContext){
-    let context = {
-        Provider: defaultContext
-    }
-    return context;
+window.CoreContexts = new Map();
+export function createContext(provider, defaultContext) {
+    window.CoreContexts.set(provider, defaultContext);
+    return window.CoreContexts;
 }
 
-export function useContext(context){
-    return context.Provider;
+export function useContext(provider) {
+    return window.CoreContexts.get(provider);
 }
 
 /**
