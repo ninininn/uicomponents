@@ -1,4 +1,4 @@
-import{u as r,j as s,M as t}from"./iframe-aqnIh44O.js";import"./preload-helper-DLLWEBaG.js";function l(n){const e={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(t,{title:"Configure your project"}),`
+import{u as r,j as s,M as t}from"./iframe-99hlWHJr.js";import"./preload-helper-DLLWEBaG.js";function l(n){const e={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(t,{title:"Configure your project"}),`
 `,s.jsx(e.h1,{id:"工具函式",children:"工具函式"}),`
 `,s.jsx(e.p,{children:"提供多種共用functions，方便在各種情境使用。"}),`
 `,s.jsx(e.h3,{id:"uiutils-類別",children:"UIUtils 類別"}),`
