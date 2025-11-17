@@ -1,4 +1,4 @@
-import{u as t,j as e,M as l,T as r,P as c,C as i}from"./iframe-99hlWHJr.js";import"./preload-helper-DLLWEBaG.js";function d(n){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...t(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Table"}),`
+import{u as t,j as e,M as l,T as r,P as c,C as i}from"./iframe-yN89SlnH.js";import"./preload-helper-DLLWEBaG.js";function d(n){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...t(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Table"}),`
 `,e.jsx(r,{}),`
 `,e.jsxs(s.p,{children:["常見表格資料表，可以載入資料並更新Table畫面",e.jsx(s.br,{}),`
 `,"(此頁面測試用API來源 : ",e.jsx(s.a,{href:"https://jsonplaceholder.typicode.com/todos",rel:"nofollow",children:"公開API (https://jsonplaceholder.typicode.com/todos)"}),")"]}),`
@@ -18,19 +18,19 @@ import{u as t,j as e,M as l,T as r,P as c,C as i}from"./iframe-99hlWHJr.js";impo
 `,e.jsxs(s.li,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"config"}),`\r
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"object"}),e.jsx(s.br,{}),`
 `,"各屬性的型別及說明可參考上方",e.jsx(s.strong,{children:"Controls區塊"}),"，各類別的私有屬性則可以參考",e.jsx(s.strong,{children:"子類別"}),"區塊的各個說明，此處僅列出共同設定的屬性。",`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const initOptions = {\r
-  id: id,                 //title文字\r
-  name: name,             //自定義class\r
-  limits: limits,\r
-  elem: parent,           //elem\r
-  cols: cols,\r
-  tools: tools,\r
-  selection: selection,   //是否開啟勾選列\r
-  classes: classes,       //自定義class\r
-  complete: complete,     //確認按鈕文字&動作\r
-  error: error,           //取消按鈕文字&動作\r
-  handler: handler,       //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內\r
-};
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  const initConfig = {\r
+    id: id,                 //tableId\r
+    name: name,             //自定義table名稱\r
+    limits: limits,         //單頁顯示筆數限制\r
+    container: parent,      //要放入的DOM元素(容器)\r
+    cols:cols,              //欄位設定\r
+    tools: tools,           //是否顯示工具列\r
+    selection: selection,   //是否開啟勾選列\r
+    classes: classes,       //自定義class\r
+    complete: complete,     //渲染完成後要執行的fn\r
+    error: error,           //渲染失敗執行的fn\r
+    handler: handler,       //渲染時執行的fn(非同步)\r
+  };
 `})}),`
 `,e.jsx("br",{}),`
 `,e.jsxs(s.ul,{children:[`
