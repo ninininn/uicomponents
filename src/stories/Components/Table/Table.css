@@ -5,9 +5,9 @@
 @layer components {
 
   /*table容器*/
-  .table-container{
+  .table-container {
     --theme: var(--themeColor, var(--color-primary-100));
-    @apply w-full h-fit rounded-md bg-[#fff] max-w-full max-h-80 overflow-auto;
+    @apply w-full h-fit rounded-md bg-[#fff] max-w-full max-h-80 overflow-auto shadow-sm;
   }
 
   .table:empty {
@@ -38,5 +38,21 @@
   .table thead th,
   .table td {
     @apply py-1.5 px-2;
+  }
+
+  .pagination {
+    @apply flex my-3
+  }
+
+  .page-item {
+    @apply border border-gray-300 first-of-type:rounded-l-xs last-of-type:rounded-r-xs px-1.5 select-none  transition-all duration-75 disabled:text-gray-300 disabled:cursor-not-allowed;
+  }
+
+  .page-item:not([disabled]){
+    @apply hover:bg-primary-400/30 hover:text-primary-600 cursor-pointer
+  }
+
+  .page-item[data-currentPage] {
+    @apply bg-primary-500 text-white;
   }
 }

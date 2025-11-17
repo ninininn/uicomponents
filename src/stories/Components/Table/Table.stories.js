@@ -161,7 +161,7 @@ export const Table = {
       { field: 'title', title: '內容', sort: true, fixed: false },
       { field: 'done', title: '完成', sort: true, fixed: false },
     ],
-    limits: 50,
+    limits: 20,
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

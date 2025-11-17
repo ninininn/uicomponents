@@ -3,7 +3,14 @@ import { Checkbox } from "../Checkbox/Checkbox";
 
 export class Table extends BaseComponent {
   constructor(options = {}, dataArr = []) {
-    const tableContainer = document.createElement("div");
+    let tableContainer;
+    //判斷是否有帶入容器 
+    if (options.container) {
+      tableContainer = options.container;
+    } else {
+      tableContainer = document.createElement("div");
+      options.container = tableContainer;
+    }
     const tableElem = document.createElement("table");
     super(tableContainer, options.theme || 'var(--color-primary-200)');
     this.UItype = "Table";
@@ -21,7 +28,7 @@ export class Table extends BaseComponent {
   get config() {
     return {
       id: "",
-      elem: null,
+      container: null,
       limits: 50,
       name: "defaultTable",
       classes: ["table-container"],
@@ -43,7 +50,7 @@ export class Table extends BaseComponent {
     let colsCount = this.options.cols.length;
     this.skeleton = new Skeleton({ type: 'table', colNum: this.options.selection ? colsCount + 1 : colsCount });
     createContext(this, this.options.cols);
-
+    console.log(window.CoreContexts);
     this._render();
     this._bindEvent();
   }
@@ -61,6 +68,7 @@ export class Table extends BaseComponent {
       this.skeleton.hide();
     }
     //組裝
+    this.table.id = this.id;
     this.table.appendChild(this.tableHeader.getElem());
     this.table.appendChild(this.tableBody);
     this._elem.appendChild(this.table);
@@ -69,9 +77,10 @@ export class Table extends BaseComponent {
     UIUtils.addClass(this._elem, this.options.classes);
 
     //渲染rows
-    this._updateRows();
+    this._updateRows();//取回全部data
     this._renderRows();
     this.options.elem.appendChild(this._elem);
+
   }
 
   //事件綁定
@@ -129,6 +138,10 @@ export class Table extends BaseComponent {
     this.data = dataArr;
     this.dataCounts = this.data.length;
     this._render();
+
+    //分頁設定
+    this._pagination = new Pagination({ currentPage: 1, pageSize: this.options.limits, total: this.dataCounts });
+    this._elem.after(this._pagination.getElem());
   }
 
   //[外部控制]-修改對應Row資料
@@ -273,12 +286,99 @@ class TableCell extends BaseComponent {
 //Pagination 分頁元件
 //! 未來要獨自拆出檔案
 class Pagination extends BaseComponent {
-  constructor(counts) {
+  constructor(config) {
     const componentContainer = document.createElement("div");
+    UIUtils.addClass(componentContainer, ["pagination"]);
+
     super(componentContainer);
     this.UItype = "Pagination";
+    this.currentPage = config.currentPage || 1;
+    this.total = Math.ceil(config.total / config.pageSize);
+    this.pages = this._createPages(this.total, this.currentPage);
+    this.handler = config.handler;
+    this._init();
   }
+  _init() {
+    this._render();
+    console.log(this);
+  }
+
+  _render() {
+    let pageFragment = document.createDocumentFragment();
+    for (let i = 0; i < this.pages.length; i++) {
+      let page = document.createElement("button");
+      page.type = 'button';
+      let isCurrent = this.pages[i].current;
+      if (isCurrent) UIUtils.setAttribute(page, "currentPage");
+      UIUtils.addClass(page, ["page-item"]);
+      switch (this.pages[i].type) {
+        case 'prev-page':
+          UIUtils.setText(page, '<<');
+          break;
+        case 'next-page':
+          UIUtils.setText(page, '>>');
+          break;
+        default:
+          UIUtils.setText(page, this.pages[i].page);
+          break;
+      }
+      if (this.pages[i].page > this.pages.length - 2 || this.pages[i].page <= 0) {
+        this.pages[i].page = null;
+        page.disabled = true;
+      }
+      page.addEventListener("click", () => {
+        this.pages[i].onclick(this.pages[i].page);
+        // this.handler(this.currentPage * (this.fullData.length / this.total));
+      });
+      pageFragment.appendChild(page);
+    }
+    this._elem.appendChild(pageFragment);
+  }
+
+  _createPages(totalPage, currentPage) {
+    let thisPagination = this;
+    let pageList = [];
+    let prevPageItem = { type: 'prev-page', page: this.currentPage - 1, current: false, onclick: this.goPage.bind(thisPagination) };
+    let nextPageItem = { type: 'next-page', page: this.currentPage + 1, current: false, onclick: this.goPage.bind(thisPagination) };
+
+    for (let i = 0; i < totalPage; i++) {
+      let pageItem = { type: 'page', page: i + 1, current: i + 1 === currentPage, onclick: this.goPage.bind(thisPagination) };
+      pageList.push(pageItem);
+    }
+    return [prevPageItem, ...pageList, nextPageItem];
+  }
+
+  setCurrentPage(page) {
+    this.currentPage = page;
+    //TODO 重新渲染?還是只更新該item?
+  }
+  //重新更新頁數
+  updatePage() {
+    let currentPage = this.currentPage;
+    this.pages = this.pages.map((page) => {
+      if (page.type === 'prev-page') {
+        page.page = currentPage - 1;
+      } else if (page.type === 'next-page') {
+        page.page = currentPage + 1;
+      }
+      let isCurrent = page.page === currentPage;
+      page.current = isCurrent;
+      return page;
+    });
+  }
+
+  //前往指定頁
+  goPage(page) {
+    console.log(`go ${page} page`, this);
+    this.setCurrentPage(page);//更新currentPage
+    this.updatePage();//更新prev&next的page
+
+    this._elem.innerHTML = ``;
+    this._render();
+  }
+
 }
+
 
 //Skeleton 元件
 //! 未來要獨自拆出檔案

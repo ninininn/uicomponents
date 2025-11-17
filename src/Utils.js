@@ -142,7 +142,7 @@ export function defineArgs(args, tagName = "div") {
 export class BaseComponent {
     constructor(elem, theme) {
         this._elem = elem; //子類別instance的渲染DOM節點
-        this._theme = theme;
+        this._theme = theme || 'light';
         this._eventListeners = []; // record eventListeners
     }
 

@@ -26,17 +26,17 @@ export const createTable = ({
     parent.appendChild(trigger);
 
     let initOptions = {
-        id: id,                 //title文字
-        name: name,             //自定義class
-        limits: limits,
+        id: id,                 //tableId
+        name: name,             //自定義table名稱
+        limits: limits,         //單頁顯示筆數限制
         elem: parent,           //elem
-        cols:cols,
-        tools: tools,
+        cols:cols,              //欄位設定
+        tools: tools,           //是否顯示工具列
         selection: selection,   //是否開啟勾選列
         classes: classes,       //自定義class
-        complete: complete,     //確認按鈕文字&動作
-        error: error,           //取消按鈕文字&動作
-        handler: handler,       //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
+        complete: complete,     //渲染完成後要執行的fn
+        error: error,           //渲染失敗執行的fn
+        handler: handler,       //渲染時執行的fn(非同步)
     };
 
     //fake data
