@@ -55,7 +55,7 @@ export default {
         type: { summary: "number" },
       },
     },
-    elem: {
+    container: {
       control: "text",
       description: "要放入的DOM元素",
       table: {

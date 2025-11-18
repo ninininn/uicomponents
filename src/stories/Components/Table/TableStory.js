@@ -9,7 +9,7 @@ export const createTable = ({
     name,
     limits,
     selection,
-    elem,
+    container,
     cols,
     tools,
     classes,
@@ -20,7 +20,7 @@ export const createTable = ({
     let parent = document.createElement("div");
     parent.className = "mx-auto grid place-items-center";
     let trigger = document.createElement("button");
-    trigger.className = "btn btn-primary";
+    trigger.className = "btn btn-primary mb-3";
     trigger.textContent = "create Table";
 
     parent.appendChild(trigger);
@@ -29,8 +29,8 @@ export const createTable = ({
         id: id,                 //tableId
         name: name,             //自定義table名稱
         limits: limits,         //單頁顯示筆數限制
-        elem: parent,           //elem
-        cols:cols,              //欄位設定
+        container: parent,      //container
+        cols: cols,              //欄位設定
         tools: tools,           //是否顯示工具列
         selection: selection,   //是否開啟勾選列
         classes: classes,       //自定義class

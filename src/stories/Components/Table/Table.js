@@ -3,14 +3,7 @@ import { Checkbox } from "../Checkbox/Checkbox";
 
 export class Table extends BaseComponent {
   constructor(options = {}, dataArr = []) {
-    let tableContainer;
-    //判斷是否有帶入容器 
-    if (options.container) {
-      tableContainer = options.container;
-    } else {
-      tableContainer = document.createElement("div");
-      options.container = tableContainer;
-    }
+    let tableContainer = document.createElement("div");
     const tableElem = document.createElement("table");
     super(tableContainer, options.theme || 'var(--color-primary-200)');
     this.UItype = "Table";
@@ -51,6 +44,7 @@ export class Table extends BaseComponent {
     this.skeleton = new Skeleton({ type: 'table', colNum: this.options.selection ? colsCount + 1 : colsCount });
     createContext(this, this.options.cols);
     console.log(window.CoreContexts);
+    this._createPagination();//建立對應分頁元件
     this._render();
     this._bindEvent();
   }
@@ -78,8 +72,15 @@ export class Table extends BaseComponent {
 
     //渲染rows
     this._updateRows();//取回全部data
-    this._renderRows();
-    this.options.elem.appendChild(this._elem);
+    this._renderRows(0, this.options.limits);
+    //判斷是否有帶入容器 
+    if (this.options.container) {
+      this.options.container.appendChild(this._elem);
+      this._elem.after(this._pagination.getElem());
+
+    } else {
+      console.error("請指定table要放入的位置");
+    }
 
   }
 
@@ -100,14 +101,19 @@ export class Table extends BaseComponent {
     this.tableRows = this._setRows(this.data);
   }
 
-  _renderRows() {
-    let count = 0;
-    for (let row of this.tableRows) {
-      count++;
-      if (count <= this.options.limits) {
-        this.tableBody.appendChild(row.getElem());
-      }
+  _renderRows(startIndex, endIndex) {
+    if (!this.tableRows) return;
+    let showRows = this.tableRows.slice(startIndex, endIndex);
+    let rowFragment = document.createDocumentFragment();
+    for (let row of showRows) {
+      rowFragment.appendChild(row.getElem());
     }
+    let currentTr = this.tableBody.querySelectorAll("tr[data-index]");
+    for (let row of currentTr) {
+      row.remove();
+    }
+    this.tableBody.appendChild(rowFragment);
+    this._elem.scrollTop = 0;
   }
   //[外部控制]-設定表格尺寸
   //!如果超過max-width,max-height則直接用max-width/height
@@ -137,14 +143,23 @@ export class Table extends BaseComponent {
   setData(dataArr) {
     this.data = dataArr;
     this.dataCounts = this.data.length;
+    this._pagination.renderPage(this.dataCounts);//更新pagination資料數量
     this._render();
-
-    //分頁設定
-    this._pagination = new Pagination({ currentPage: 1, pageSize: this.options.limits, total: this.dataCounts });
-    this._elem.after(this._pagination.getElem());
   }
 
-  //[外部控制]-修改對應Row資料
+
+  //[內部]建立對應Pagination元件
+  _createPagination() {
+    //分頁設定
+    this._pagination = new Pagination({
+      currentPage: 1, pageSize: this.options.limits, total: this.dataCounts, handler: (page) => {
+        console.log("handler page:", page);
+        const start = (page - 1) * this.options.limits;
+        const end = start + this.options.limits;
+        this._renderRows(start, end);
+      }
+    });
+  }
 }
 
 //TableHeader 表頭
@@ -292,18 +307,30 @@ class Pagination extends BaseComponent {
 
     super(componentContainer);
     this.UItype = "Pagination";
+    this._config = { ...this.config, ...config };
     this.currentPage = config.currentPage || 1;
-    this.total = Math.ceil(config.total / config.pageSize);
+    this.total = Math.ceil(this._config.total / this._config.pageSize);
     this.pages = this._createPages(this.total, this.currentPage);
     this.handler = config.handler;
     this._init();
   }
+
+  get config() {
+    return {
+      currentPage: 1,//當前頁面
+      pageSize: 20,//limits單頁顯示數量
+      total: null,//資料總數
+    };
+  }
+
   _init() {
     this._render();
-    console.log(this);
+    this._bindEvent();
   }
 
   _render() {
+    console.log(this);
+    this._elem.innerHTML = ``;//清空
     let pageFragment = document.createDocumentFragment();
     for (let i = 0; i < this.pages.length; i++) {
       let page = document.createElement("button");
@@ -322,17 +349,22 @@ class Pagination extends BaseComponent {
           UIUtils.setText(page, this.pages[i].page);
           break;
       }
-      if (this.pages[i].page > this.pages.length - 2 || this.pages[i].page <= 0) {
-        this.pages[i].page = null;
+      if (this.pages[i].page < 1 || this.pages[i].page > this.total) {
+        this.pages[i].page = this.currentPage;
         page.disabled = true;
       }
-      page.addEventListener("click", () => {
-        this.pages[i].onclick(this.pages[i].page);
-        // this.handler(this.currentPage * (this.fullData.length / this.total));
-      });
+      page.dataset.page = this.pages[i].page;
       pageFragment.appendChild(page);
     }
     this._elem.appendChild(pageFragment);
+  }
+
+  _bindEvent() {
+    super.onevent(this._elem, "click", (event) => {
+      let pageNum = Number(event.target.dataset.page);
+      this.pages[pageNum].onclick(pageNum);
+      this.handler(pageNum);
+    });
   }
 
   _createPages(totalPage, currentPage) {
@@ -346,6 +378,13 @@ class Pagination extends BaseComponent {
       pageList.push(pageItem);
     }
     return [prevPageItem, ...pageList, nextPageItem];
+  }
+
+  renderPage(totalPages) {
+    this._config = { ...this._config, total: totalPages };
+    this.total = Math.ceil(totalPages / this._config.pageSize);
+    this.pages = this._createPages(this.total, this.currentPage);
+    this._render();
   }
 
   setCurrentPage(page) {
@@ -373,7 +412,6 @@ class Pagination extends BaseComponent {
     this.setCurrentPage(page);//更新currentPage
     this.updatePage();//更新prev&next的page
 
-    this._elem.innerHTML = ``;
     this._render();
   }
 
