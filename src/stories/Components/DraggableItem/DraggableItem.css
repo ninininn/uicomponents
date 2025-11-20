@@ -3,6 +3,33 @@
 @layer base {}
 
 @layer components {
+  .draggable-group {
+    @apply flex
+  }
 
+  .target-zone {
+    @apply bg-primary-100
+  }
+
+  .draggable-item {
+    @apply px-2 py-1 rounded-xs select-none cursor-grab relative bg-gray-200 active:cursor-grabbing
+  }
+
+  /* 要被拖曳的元素 */
+  .drag-chosen {
+    @apply bg-primary-50
+  }
+
+  .drag-indicator {
+    --indicator-opacity-normal: 0;
+    --indicator-opacity-active: 1;
+    --indicator-opacity: var(--indicator-opacity-normal);
+    @apply p-0 h-0.5 overflow-hidden bg-primary-300
+  }
+
+  /* 不能被拖曳的元素 */
+  .ignore-dragging {
+    @apply cursor-not-allowed
+  }
 
 }

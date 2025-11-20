@@ -30,6 +30,9 @@ export class UIUtils {
     static setAttribute(element, attributeName, attributeValue = "") {
         element.setAttribute(`data-${attributeName}`, attributeValue);
     }
+    static removeAttribute(element, attributeName) {
+        element.removeAttribute(attributeName);
+    }
     static setProperty(element, propertyName, propertyValue) {
         element.style.setProperty(propertyName, propertyValue);
     }

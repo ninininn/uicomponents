@@ -16,32 +16,46 @@ export const createDraggableItem = ({
     handler,
 }) => {
     let parent = document.createElement("div");
-    parent.className = "mx-auto grid place-items-center";
-    let trigger = document.createElement("button");
-    trigger.className = "btn btn-primary mb-3";
-    trigger.textContent = "create Table";
+    parent.className = "mx-auto flex gap-5";
 
-    parent.appendChild(trigger);
+    let firstDiv = document.createElement("div");
+    let secondDiv = document.createElement("div");
 
-    let initOptions = {
-        id: id,                 //tableId
-        name: name,             //自定義table名稱
-        limits: limits,         //單頁顯示筆數限制
-        container: parent,      //container
-        cols: cols,              //欄位設定
-        tools: tools,           //是否顯示工具列
-        selection: selection,   //是否開啟勾選列
-        classes: classes,       //自定義class
-        complete: complete,     //渲染完成後要執行的fn
-        error: error,           //渲染失敗執行的fn
-        handler: handler,       //渲染時執行的fn(非同步)
+    firstDiv.className = 'draggable-group gap-2 p-3 border border-primary-500 rounded-sm';
+    secondDiv.className = 'draggable-group gap-2 p-3 border border-secondary-500 rounded-sm';
+
+
+    let initConfig = {
+        onEnd: function () {
+            console.log(this.getSortingIndex());
+            console.log(this.getChildSort());
+            ;
+        }
     };
 
-    //fake data
-    async function fetchData(url) {
-        let data = await fetch(url);
-        return data;
+    for (let i = 0; i < 6; i++) {
+        const firstItem = document.createElement("div");
+        const secondItem = document.createElement("div");
+
+        firstItem.textContent = `item ${i}`;
+        firstItem.className = 'draggable-item';
+        firstItem.setAttribute('data-index', i);
+
+        secondItem.textContent = `item ${i}`;
+        secondItem.className = 'draggable-item';
+        // secondItem.setAttribute('data-index', i);
+        secondItem.dataset.customValue = `value${i}`;
+
+        firstDiv.appendChild(firstItem);
+        secondDiv.appendChild(secondItem);
+
     }
+    let div1_DragItem = new DraggableItem(firstDiv, initConfig);
+    let div2_DragItem = new DraggableItem(secondDiv, initConfig);
+
+    parent.appendChild(firstDiv);
+    parent.appendChild(secondDiv);
+
 
     // let notification_instance = new Notification(trigger, initOptions, type);
 
@@ -55,18 +69,6 @@ export const createDraggableItem = ({
     //     layerpage_instance.options.handlers?.(payload);
     //     // 把checked 及 value一次顯示(僅storybook測試用)
     // });
-    trigger.addEventListener("click", () => {
-        let table_instance = new DraggableItem(initOptions);
-        fetchData("https://jsonplaceholder.typicode.com/todos")
-            .then((response) => response.json())
-            .then((json) => {
-                //模擬資料載入
-                setTimeout(() => {
-                    table_instance.setData(json);
-                    console.log("table_instance:", table_instance);
-                }, 5000);
 
-            });;
-    });
     return parent;
 };
