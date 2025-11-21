@@ -1,4 +1,4 @@
-import{u as r,j as e,M as d,T as t,P as c,C as i}from"./iframe-CmJM7uHB.js";import"./preload-helper-DLLWEBaG.js";function l(s){const n={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use Dropdown"}),`
+import{u as r,j as e,M as d,T as t,P as c,C as i}from"./iframe-r4pb3cj8.js";import"./preload-helper-DLLWEBaG.js";function l(s){const n={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use Dropdown"}),`
 `,e.jsx(t,{}),`
 `,e.jsxs(n.p,{children:["適用 : 下拉選單項目；繼承自 Flowbite ",e.jsx(n.code,{children:"Dropdown"})," 元件"]}),`
 `,e.jsx(c,{}),`
