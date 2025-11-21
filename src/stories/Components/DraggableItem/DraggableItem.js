@@ -7,14 +7,14 @@ export class DraggableItem extends BaseComponent {
     // const patchedEvents = this._wrapEvents(config);
     this.UItype = "DraggableItem";
     this.sortable = Sortable.create(this._elem, { ...this._config, ...config });
-
+    this._dataMap = config.dataMap || {};
     this._init();
   }
 
   get _config() {
     return {
       sort: true,
-      direction: 'vertical',
+      direction: 'horizontal',
       group: 'draggable-group',
       ghostClass: 'drag-indicator',// Class name for the drop placeholder (default sortable-ghost).
       dataIdAttr: 'data-custom-value',
@@ -30,12 +30,13 @@ export class DraggableItem extends BaseComponent {
   _init() {
     this._render();
     this._bindEvent(this._config);
+    console.log(this);
   }
 
   //樣式渲染(UI snpshot)把目前狀態→轉成畫面
   //根據目前的 state 產出畫面結構
   _render() {
-    if (this.sortable._getDirection() === 'vertical') UIUtils.addClass(this._elem, ['flex-col']);
+
   }
 
   //事件綁定
@@ -45,6 +46,10 @@ export class DraggableItem extends BaseComponent {
       if (config[type]) {
         this.setHandler(type, (evt) => { config[type].call(this, evt); });
       }
+    });
+
+    this.setHandler('onEnd', () => {
+      this._keys = this.getSortingIndex(); //取得最後排序
     });
   }
 
@@ -59,6 +64,14 @@ export class DraggableItem extends BaseComponent {
 
   getSortingIndex() {
     return this.sortable.toArray();
+  }
+
+  getDataMap() {
+    return this._keys.map(key => this._dataMap[key]);
+
+  }
+  sort(order, animation = true) {
+    return this.sortable.sort(order, animation);
   }
 
 }

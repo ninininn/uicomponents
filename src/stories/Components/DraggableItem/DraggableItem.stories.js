@@ -27,10 +27,10 @@ export default {
 
   },
   argTypes: {
-    id: {
+    group: {
       control: "text",
       type: { required: true },
-      description: "表格元素id",
+      description: "群組名稱",
       table: {
         category: "configurations",
         type: { summary: "string" },
@@ -38,91 +38,127 @@ export default {
     },
     name: {
       control: "text",
-      description: "Table name",
+      description: "groupObj name attribute",
       table: {
         category: "configurations",
+        subcategory: 'group',
         defaultValue: { summary: "-" },
         type: { summary: "string" },
       },
     },
-    limits: {
-      control: "number",
-      description: "每頁顯示的最多筆數",
-      min: 1,
-      table: {
-        category: "configurations",
-        defaultValue: { summary: "50" },
-        type: { summary: "number" },
-      },
-    },
-    container: {
-      control: "text",
-      description: "要放入的DOM元素",
-      table: {
-        category: "configurations",
-        defaultValue: { summary: "null" },
-        type: { summary: "string" },
-      },
-    },
-    cols: {
-      control: "array",
-      description: "欄位設定及帶入值",
-      table: {
-        category: "configurations",
-        defaultValue: { summary: "-" },
-        type: { summary: "array" },
-      },
-    },
-    selection: {
+    pull: {
       control: "select",
-      options: ["checkbox", "radio"],
-      description: "是否要有勾選功能",
+      options: ['true', 'false', "['groupA','groupB']", 'clone'],
+      description: "如何移動該item，除了一般的move方式，也可以用clone(複製)",
       table: {
         category: "configurations",
-        defaultValue: { summary: "checkbox" },
-        type: { summary: "string" },
+        subcategory: 'group',
+        defaultValue: { summary: "true" },
+        type: { summary: "string | boolean | array | function" },
       },
     },
-    tools: {
+    put: {
+      control: "select",
+      options: ['true', 'false', "['groupA','groupB']", 'function'],
+      description: "是否可以被放到其他draggableItem，也可以用array放入要被放置的群組名稱",
+      table: {
+        category: "configurations",
+        subcategory: 'group',
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean | array | function" },
+      },
+    },
+    sort: {
       control: "boolean",
-      description: "是否要有基本工具列",
+      description: "是否可以排序",
       table: {
         category: "configurations",
         defaultValue: { summary: "true" },
         type: { summary: "boolean" },
       },
     },
-    complete: {
-      control: "function",
-      description: "完成資料載入後要執行的函式",
+    delay: {
+      control: "number",
+      description: "判斷結束拖曳的延遲時間(milliseconds)",
       table: {
         category: "configurations",
-        type: { summary: "function" },
+        defaultValue: { summary: "0" },
+        type: { summary: "number" },
       },
     },
-    classes: {
-      control: { type: "array" },
-      description: "自定義class，每個class以tailwindcss property放入",
+    animation: {
+      control: "number",
+      description: "動畫速度ms(0為沒有動畫)",
+      min: 0,
       table: {
         category: "configurations",
-        defaultValue: { summary: ".table-container" },
-        type: { summary: "array" },
+        defaultValue: { summary: "150" },
+        type: { summary: "number" },
       },
     },
-    complete: {
-      control: { type: "function" },
-      description: "完成資料載入後要執行的函式",
+    easing: {
+      control: "select",
+      options: ["ease-in-out", "linear", "cubic-bezier(1, 0, 0, 1)"],
+      description: "動畫漸變函數",
       table: {
         category: "configurations",
-        type: { summary: "function" },
+        defaultValue: { summary: "null" },
+        type: { summary: "string" },
       },
     },
-    error: {
-      control: { type: "function" },
-      description: "資料載入失敗時要執行的函式",
+    filter: {
+      control: "text",
+      description: "要過濾的css class元素",
       table: {
         category: "configurations",
-        type: { summary: "function" },
+        defaultValue: { summary: "-" },
+        type: { summary: "text" },
+      },
+    },
+    dataIdAttr: {
+      control: "text",
+      description: "自訂的data值，可以用.toArray()方法取得序列",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "-" },
+        type: { summary: "string" },
+      },
+    },
+    ghostClass: {
+      control: "text",
+      description: "自訂placeHolder元素的css class",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "sortable-ghost" },
+        type: { summary: "string" },
+      },
+    },
+    chosenClass: {
+      control: "text",
+      description: "自訂chosen item元素的css class",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "sortable-chosen" },
+        type: { summary: "string" },
+      },
+    },
+    dragClass: {
+      control: "text",
+      description: "自訂dragging item元素的css class",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "sortable-drag" },
+        type: { summary: "string" },
+      },
+    },
+    direction: {
+      control: "select",
+      options: ['horizontal', 'vertical'],
+      description: "插入軸方向",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "horizontal" },
+        type: { summary: "string" },
       },
     },
     handler: {
@@ -141,27 +177,33 @@ export default {
   // 預設args
   args: {
     // handlers: action("change"),
-    id: "table_first",
-    classes: ["table-container"],
-    limits: 20,
-    selection: "checkbox",
-    tools: true,
-
+    group: "draggable-group",
+    name: 'draggable-group',
+    pull: 'true',
+    put: 'true',
+    dataIdAttr: "data-custom-value",
+    sort: true,
+    delay: 0,
+    animation: 150,
+    direction: 'horizontal',
+    easing: "cubic-bezier(1, 0, 0, 1)",
+    ghostClass: 'drag-indicator',
+    chosenClass: 'sortable-chosen',
+    dragClass: 'sortable-drag'
   },
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const DraggableItem = {
   args: {
-    id: "test-table",
-    name: "測試表格",
-    cols: [
-      { field: 'useId', title: '使用者id', sort: true, fixed: false, align: "center" },
-      { field: 'id', title: '編號', sort: false, fixed: false, align: "center" },
-      { field: 'title', title: '內容', sort: true, fixed: false },
-      { field: 'done', title: '完成', sort: true, fixed: false },
-    ],
-    limits: 20,
+    group: 'draggable-group',
+    name: 'draggable-group',
+    pull: 'true',
+    put: 'true',
+    delay: 0,
+    animation: 200,
+    chosenClass: 'chosen-item',
+    dragClass: 'sortable-drag',
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

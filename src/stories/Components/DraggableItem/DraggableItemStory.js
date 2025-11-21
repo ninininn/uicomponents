@@ -3,16 +3,19 @@ import { DraggableItem } from "./DraggableItem";
 import "./DraggableItem.css";
 
 export const createDraggableItem = ({
-    id,
+    group,
     name,
-    limits,
-    selection,
-    container,
-    cols,
-    tools,
-    classes,
-    complete,
-    error,
+    pull,
+    put,
+    dataIdAttr,
+    direction,
+    sort,
+    delay,
+    animation,
+    easing,
+    ghostClass,
+    chosenClass,
+    dragClass,
     handler,
 }) => {
     let parent = document.createElement("div");
@@ -21,15 +24,25 @@ export const createDraggableItem = ({
     let firstDiv = document.createElement("div");
     let secondDiv = document.createElement("div");
 
-    firstDiv.className = 'draggable-group gap-2 p-3 border border-primary-500 rounded-sm';
-    secondDiv.className = 'draggable-group gap-2 p-3 border border-secondary-500 rounded-sm';
+    firstDiv.className = 'draggable-group flex-col gap-2 p-3 border border-primary-500 rounded-sm';
+    secondDiv.className = 'draggable-group flex-col gap-2 p-3 border border-secondary-500 rounded-sm';
 
 
     let initConfig = {
+        group: group,
+        dataIdAttr: dataIdAttr,
+        sort: sort,
+        ghostClass: ghostClass,
+        chosenClass: chosenClass,
+        dragClass: dragClass,
+        delay: delay,
+        animation: animation,
+        easing: easing,
+        direction: direction,
         onEnd: function () {
             console.log(this.getSortingIndex());
             console.log(this.getChildSort());
-            ;
+            console.log(this.sort(this.getSortingIndex().reverse(), true));
         }
     };
 
@@ -39,19 +52,18 @@ export const createDraggableItem = ({
 
         firstItem.textContent = `item ${i}`;
         firstItem.className = 'draggable-item';
-        firstItem.setAttribute('data-index', i);
+        firstItem.dataset.customValue = i;
 
         secondItem.textContent = `item ${i}`;
         secondItem.className = 'draggable-item';
-        // secondItem.setAttribute('data-index', i);
-        secondItem.dataset.customValue = `value${i}`;
+        secondItem.dataset.customValue = i;
 
         firstDiv.appendChild(firstItem);
         secondDiv.appendChild(secondItem);
 
     }
     let div1_DragItem = new DraggableItem(firstDiv, initConfig);
-    let div2_DragItem = new DraggableItem(secondDiv, initConfig);
+    let div2_DragItem = new DraggableItem(secondDiv, { ...initConfig, direction: 'horizontal' });
 
     parent.appendChild(firstDiv);
     parent.appendChild(secondDiv);
