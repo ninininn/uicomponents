@@ -161,6 +161,15 @@ export default {
         type: { summary: "string" },
       },
     },
+    dataList: {
+      control: "object",
+      description: "dataIdAttr對應轉換資料",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "{}" },
+        type: { summary: "object" },
+      },
+    },
     handler: {
       action: "click",
       control: "function",
@@ -181,7 +190,8 @@ export default {
     name: 'draggable-group',
     pull: 'true',
     put: 'true',
-    dataIdAttr: "data-custom-value",
+    dataIdAttr: "data-drag",
+    dataList: {},
     sort: true,
     delay: 0,
     animation: 150,

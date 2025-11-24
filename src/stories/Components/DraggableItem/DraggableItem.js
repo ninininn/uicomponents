@@ -7,7 +7,7 @@ export class DraggableItem extends BaseComponent {
     // const patchedEvents = this._wrapEvents(config);
     this.UItype = "DraggableItem";
     this.sortable = Sortable.create(this._elem, { ...this._config, ...config });
-    this._dataMap = config.dataMap || {};
+    this._dataMap = this._createDataMap(this._config.data);
     this._init();
   }
 
@@ -17,7 +17,7 @@ export class DraggableItem extends BaseComponent {
       direction: 'horizontal',
       group: 'draggable-group',
       ghostClass: 'drag-indicator',// Class name for the drop placeholder (default sortable-ghost).
-      dataIdAttr: 'data-custom-value',
+      dataIdAttr: 'data-drag',
       filter: '.ignore-dragging',
       chosenClass: "sortable-chosen",  // Class name for the chosen item
       dragClass: "sortable-drag",  // Class name for the dragging item
@@ -47,29 +47,46 @@ export class DraggableItem extends BaseComponent {
         this.setHandler(type, (evt) => { config[type].call(this, evt); });
       }
     });
-
-    this.setHandler('onEnd', () => {
-      this._keys = this.getSortingIndex(); //取得最後排序
-    });
   }
 
+  _createDataMap(dataValue = {}) {
+    // this._config.data = dataValue;
+    let data = this.getSortingIndex().map((key, index) => [key, Object.keys(dataValue)[index]]) || [];
+    let dataMap = new Map(data) || new Map();
+    return dataMap;
+  }
 
   setHandler(type, fn) {
     this.sortable.option(type, fn);
+  }
+
+  getDraggedItem(event) {
+    return event.item;
   }
 
   getChildSort() {
     return this._elem.children;
   }
 
-  getSortingIndex() {
-    return this.sortable.toArray();
+  //[外部控制]-取得指定序位的dataIdAttr值
+  getSortingIndex(index) {
+    let returnSort = this.sortable.toArray()[index] || this.sortable.toArray();
+    return returnSort;
   }
 
-  getDataMap() {
-    return this._keys.map(key => this._dataMap[key]);
-
+  //[外部控制]-設定資料Map
+  setDataMap(data) {
+    this._dataMap = this._createDataMap(data);
   }
+
+  //[外部控制]-取得指定key的資料值or整個資料Map
+  getDataMap(key) {
+    let returnData = key ? this._dataMap.get(key) : this._dataMap;
+
+    return returnData;
+  }
+
+  //[外部控制]-以指定順序排序item
   sort(order, animation = true) {
     return this.sortable.sort(order, animation);
   }

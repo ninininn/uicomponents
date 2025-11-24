@@ -121,53 +121,15 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
     <tbody>
       <tr>
         <td className="font-bold">UItype</td>
-        <td>Table</td>
+        <td>DraggableItem</td>
         <td>string</td>
         <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
       </tr>
       <tr>
-        <td className="font-bold">id</td>
-        <td>`-`</td>
-        <td>string</td>
-        <td>Table ID</td>
-      </tr>
-      <tr>
-        <td className="font-bold">_tableRows</td>
-        <td>[]</td>
-        <td>array</td>
-        <td>多個`TableRow`元件</td>
-      </tr>
-      <tr>
-        <td className="font-bold">_tableHeader</td>
-        <td>`TableHeader`</td>
+        <td className="font-bold">sortable</td>
+        <td>`Sortable`</td>
         <td>Object</td>
-        <td>
-          `TableHeader`元件
-        </td>
-      </tr>
-      <tr>
-        <td className="font-bold">tableBody</td>
-        <td>`<tbody>`</td>
-        <td>`HTMLElement`</td>
-        <td>`<tbody>`主體DOM</td>
-      </tr>
-      <tr>
-        <td className="font-bold">table</td>
-        <td>`<table>`</td>
-        <td>HTMLElement</td>
-        <td>`<table>` 元素</td>
-      </tr>
-      <tr>
-        <td className="font-bold">data</td>
-        <td>[]</td>
-        <td>array</td>
-        <td>呼叫API後取回的資料陣列</td>
-      </tr>
-      <tr>
-        <td className="font-bold">dataCounts</td>
-        <td>0</td>
-        <td>number</td>
-        <td>資料總筆數</td>
+        <td>SortableJS `Sortable` 物件</td>
       </tr>
     </tbody>
   </table>
@@ -185,16 +147,10 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
         </tr>
       </thead>
       <tbody>
-        <tr><td>`.setSelected(rowIndex)`</td><td>設定預設勾選列</td></tr>
-        <tr><td>`.setData(dataArr)`</td><td>放入資料重新渲染</td></tr>
-        <tr><td>`.setSize(width,height)`</td><td>設定表格尺寸</td></tr>
-        <tr><td>`.reload()`</td><td>重新呼叫API抓資料</td></tr>
-        <tr><td>`.updateRow(index,data)`</td><td>更新指定列資料</td></tr>
-        <tr><td>`.getTableData()`</td><td>取得表格所有資料</td></tr>
-        <tr><td>`.getSelected()`</td><td>取得表格內所有選取的Row</td></tr>
-        <tr><td>`.exportTable()`</td><td>匯出成csv文件/pdf?</td></tr>
-        <tr><td>`.getElem()`</td><td>取得table DOM節點</td></tr>
-        <tr><td>`.setTheme()`</td><td>設定主題色</td></tr>
+        <tr><td>`.setHandler(type,fn)`</td><td>設定對應事件的function</td></tr>
+        <tr><td>`.getChildSort()`</td><td>取得子元素HTMLCollection</td></tr>
+        <tr><td>`.getSortingIndex()`</td><td>取得指定data-\*的順序陣列</td></tr>
+        <tr><td>`.sort(order,animation)`</td><td>用指定排序(order)來排列元素</td></tr>
       </tbody>
     </table>
   </div>
