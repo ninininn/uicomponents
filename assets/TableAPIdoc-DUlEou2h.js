@@ -1,6 +1,7 @@
-import{u as t,j as e,M as l,T as r,P as c,C as i}from"./iframe-r4pb3cj8.js";import"./preload-helper-DLLWEBaG.js";function d(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...t(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use DraggableItem"}),`
+import{u as t,j as e,M as l,T as r,P as c,C as i}from"./iframe-BqM7Wi7g.js";import"./preload-helper-DLLWEBaG.js";function d(n){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...t(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Table"}),`
 `,e.jsx(r,{}),`
-`,e.jsx(s.p,{children:"拖曳排序元件"}),`
+`,e.jsxs(s.p,{children:["常見表格資料表，可以載入資料並更新Table畫面",e.jsx(s.br,{}),`
+`,"(此頁面測試用API來源 : ",e.jsx(s.a,{href:"https://jsonplaceholder.typicode.com/todos",rel:"nofollow",children:"公開API (https://jsonplaceholder.typicode.com/todos)"}),")"]}),`
 `,e.jsx(c,{}),`
 `,e.jsx(s.h1,{id:"controls",children:"Controls"}),`
 `,e.jsxs(s.p,{children:["Table 元件由多個子元件所組成，但其餘子元件之設定在使用時都不會直接操作到，所以僅示意",e.jsx(s.code,{children:"config"}),"參數。"]}),`
@@ -8,7 +9,7 @@ import{u as t,j as e,M as l,T as r,P as c,C as i}from"./iframe-r4pb3cj8.js";impo
 `,e.jsx(s.hr,{}),`
 `,e.jsx(s.h1,{id:"usage-api",children:"Usage API"}),`
 `,e.jsxs(s.p,{children:["使用",e.jsx(s.code,{children:"new"}),"關鍵字初始化一個",e.jsx(s.code,{children:"Table"}),"元件，並帶入",e.jsx(s.code,{children:"config"}),"設定參數。"]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  let dragList = new DraggableItem(elem, config);
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  let table = new Table(config);
 `})}),`
 `,e.jsxs(s.blockquote,{children:[`
 `,e.jsx(s.h3,{id:"parameters-參數設定",children:"parameters 參數設定"}),`
