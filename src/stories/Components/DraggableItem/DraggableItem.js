@@ -30,7 +30,6 @@ export class DraggableItem extends BaseComponent {
   _init() {
     this._render();
     this._bindEvent(this._config);
-    console.log(this);
   }
 
   //樣式渲染(UI snpshot)把目前狀態→轉成畫面

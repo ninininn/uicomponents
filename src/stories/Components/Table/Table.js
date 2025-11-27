@@ -307,7 +307,7 @@ class Pagination extends BaseComponent {
 
     super(componentContainer);
     this.UItype = "Pagination";
-    this._config = { ...this.config, ...config };
+    this._config = config;
     this.currentPage = config.currentPage || 1;
     this.total = Math.ceil(this._config.total / this._config.pageSize);
     this.pages = this._createPages(this.total, this.currentPage);
@@ -317,10 +317,16 @@ class Pagination extends BaseComponent {
 
   get config() {
     return {
-      currentPage: 1,//當前頁面
+      ellipsis: true,//收合數量
+      initCurrentPage: 1,
       pageSize: 20,//limits單頁顯示數量
       total: null,//資料總數
+      ...this._config
     };
+  }
+
+  set config(value) {
+    this._config = { ...this._config, ...value };
   }
 
   _init() {
@@ -333,51 +339,91 @@ class Pagination extends BaseComponent {
     this._elem.innerHTML = ``;//清空
     let pageFragment = document.createDocumentFragment();
     for (let i = 0; i < this.pages.length; i++) {
-      let page = document.createElement("button");
-      page.type = 'button';
+      let pageBtn = document.createElement("button");
+      pageBtn.type = 'button';
       let isCurrent = this.pages[i].current;
-      if (isCurrent) UIUtils.setAttribute(page, "currentPage");
-      UIUtils.addClass(page, ["page-item"]);
+      if (isCurrent) UIUtils.setAttribute(pageBtn, "currentPage");
+      UIUtils.addClass(pageBtn, ["page-item"]);
       switch (this.pages[i].type) {
         case 'prev-page':
-          UIUtils.setText(page, '<<');
+          UIUtils.setText(pageBtn, '<<');
+          UIUtils.setAttribute(pageBtn, 'prev');
           break;
         case 'next-page':
-          UIUtils.setText(page, '>>');
+          UIUtils.setText(pageBtn, '>>');
+          UIUtils.setAttribute(pageBtn, 'next');
+          break;
+        case 'start-ellipsis':
+          UIUtils.setText(pageBtn, '...');
+          pageBtn.disabled = true;
+          break;
+        case 'end-ellipsis':
+          UIUtils.setText(pageBtn, '...');
+          pageBtn.disabled = true;
           break;
         default:
-          UIUtils.setText(page, this.pages[i].page);
+          UIUtils.setText(pageBtn, this.pages[i].page);
+          pageBtn.dataset.page = this.pages[i].page;
           break;
       }
       if (this.pages[i].page < 1 || this.pages[i].page > this.total) {
         this.pages[i].page = this.currentPage;
-        page.disabled = true;
+        pageBtn.disabled = true;
       }
-      page.dataset.page = this.pages[i].page;
-      pageFragment.appendChild(page);
+      pageFragment.appendChild(pageBtn);
     }
     this._elem.appendChild(pageFragment);
   }
 
   _bindEvent() {
-    super.onevent(this._elem, "click", (event) => {
+    function onClickHandler(event) {
       let pageNum = Number(event.target.dataset.page);
-      this.pages[pageNum].onclick(pageNum);
+      if (!pageNum) {
+        pageNum = event.target.hasAttribute("data-prev") ? this.currentPage - 1 : event.target.hasAttribute("data-next") ? this.currentPage + 1 : this.currentPage;
+      }
+
+      this.goPage(pageNum);
       this.handler(pageNum);
-    });
+    }
+    super.onevent(this._elem, "click", onClickHandler.bind(this));
   }
 
   _createPages(totalPage, currentPage) {
-    let thisPagination = this;
     let pageList = [];
-    let prevPageItem = { type: 'prev-page', page: this.currentPage - 1, current: false, onclick: this.goPage.bind(thisPagination) };
-    let nextPageItem = { type: 'next-page', page: this.currentPage + 1, current: false, onclick: this.goPage.bind(thisPagination) };
+    let offset = this._config.pageSize; //要省略的數量
+    let prevPageItem = { type: 'prev-page', page: this.currentPage - 1, current: false };
+    let nextPageItem = { type: 'next-page', page: this.currentPage + 1, current: false };
 
-    for (let i = 0; i < totalPage; i++) {
-      let pageItem = { type: 'page', page: i + 1, current: i + 1 === currentPage, onclick: this.goPage.bind(thisPagination) };
+    for (let i = 1; i <= totalPage; i++) {
+      let type;
+      if (i === 1 || i === currentPage || i === totalPage || i === currentPage + 1 || i === currentPage - 1) {
+        type = 'page';
+      } else if (i <= currentPage + offset) {
+        type = 'start-ellipsis';
+      } else if (i >= totalPage - offset && i < totalPage) {
+        type = 'end-ellipsis';
+      }
+
+      let pageItem = { type: type || 'page', page: i, current: i === currentPage };
       pageList.push(pageItem);
     }
-    return [prevPageItem, ...pageList, nextPageItem];
+
+    let showPageList = pageList.filter((item, i) => {
+      const { type } = item;
+      if (type === 'start-ellipsis' && pageList[i + 1].type === 'start-ellipsis') {
+        return false;
+      }
+      if (type === 'end-ellipsis' && pageList[i + 1].type === 'end-ellipsis') {
+        return false;
+      }
+      if (type === 'start-ellipsis' && pageList[i + 1].type === 'end-ellipsis') {
+        return false;
+      }
+      return true;
+    });
+
+    return [prevPageItem, ...showPageList, nextPageItem];
+
   }
 
   renderPage(totalPages) {
@@ -394,21 +440,13 @@ class Pagination extends BaseComponent {
   //重新更新頁數
   updatePage() {
     let currentPage = this.currentPage;
-    this.pages = this.pages.map((page) => {
-      if (page.type === 'prev-page') {
-        page.page = currentPage - 1;
-      } else if (page.type === 'next-page') {
-        page.page = currentPage + 1;
-      }
-      let isCurrent = page.page === currentPage;
-      page.current = isCurrent;
-      return page;
-    });
+    this.pages = this._createPages(this.total, currentPage);
   }
 
   //前往指定頁
   goPage(page) {
-    console.log(`go ${page} page`, this);
+    console.log(`go ${page} page`);
+    if (page < 1 || page > this.total) return;
     this.setCurrentPage(page);//更新currentPage
     this.updatePage();//更新prev&next的page
 
