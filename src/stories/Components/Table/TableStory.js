@@ -3,6 +3,7 @@ import { Table, Skeleton } from "./Table";
 import { Checkbox } from "../Checkbox/Checkbox";
 import "./Table.css";
 import "../Checkbox/Checkbox.css";
+import "../Dropdown/Dropdown.css";
 
 export const createTable = ({
     id,
@@ -12,6 +13,7 @@ export const createTable = ({
     container,
     cols,
     tools,
+    theme,
     classes,
     complete,
     error,
@@ -33,6 +35,7 @@ export const createTable = ({
         cols: cols,              //欄位設定
         tools: tools,           //是否顯示工具列
         selection: selection,   //是否開啟勾選列
+        theme: theme,
         classes: classes,       //自定義class
         complete: complete,     //渲染完成後要執行的fn
         error: error,           //渲染失敗執行的fn

@@ -1,11 +1,12 @@
 import { BaseComponent, UIUtils, debounce, createContext, useContext } from "../../../Utils";
 import { Checkbox } from "../Checkbox/Checkbox";
+import { Dropdown } from "../Dropdown/Dropdown";
 
 export class Table extends BaseComponent {
   constructor(options = {}, dataArr = []) {
     let tableContainer = document.createElement("div");
     const tableElem = document.createElement("table");
-    super(tableContainer, options.theme || 'var(--color-primary-200)');
+    super(tableContainer, options.theme || 'var(--color-primary-100)');
     this.UItype = "Table";
     this.id = options.id;
     this.options = { ...this.config, ...options };
@@ -27,7 +28,6 @@ export class Table extends BaseComponent {
       classes: ["table-container"],
       cols: [],
       selection: "checkbox",
-      themeColor: 'var(--color-primary-100)',
     };
   }
 
@@ -43,7 +43,7 @@ export class Table extends BaseComponent {
     let colsCount = this.options.cols.length;
     this.skeleton = new Skeleton({ type: 'table', colNum: this.options.selection ? colsCount + 1 : colsCount });
     createContext(this, this.options.cols);
-    console.log(window.CoreContexts);
+
     this._createPagination();//建立對應分頁元件
     this._render();
     this._bindEvent();
@@ -52,7 +52,7 @@ export class Table extends BaseComponent {
   //樣式渲染(UI snpshot)把目前狀態→轉成畫面
   //根據目前的 state 產出畫面結構
   _render() {
-    super.setTheme(this.options.themeColor);
+    super.setTheme(this.options.theme);
     UIUtils.setProperty(this._elem, "--theme", this._theme);
 
     //TODO 渲染完成前顯示skeleton
@@ -152,7 +152,7 @@ export class Table extends BaseComponent {
   _createPagination() {
     //分頁設定
     this._pagination = new Pagination({
-      currentPage: 1, pageSize: this.options.limits, total: this.dataCounts, handler: (page) => {
+      theme: this._theme, currentPage: 1, pageSize: this.options.limits, total: this.dataCounts, handler: (page) => {
         console.log("handler page:", page);
         const start = (page - 1) * this.options.limits;
         const end = start + this.options.limits;
@@ -305,7 +305,7 @@ class Pagination extends BaseComponent {
     const componentContainer = document.createElement("div");
     UIUtils.addClass(componentContainer, ["pagination"]);
 
-    super(componentContainer);
+    super(componentContainer, config.theme || 'var(--color-primary-500)');
     this.UItype = "Pagination";
     this._config = config;
     this.currentPage = config.currentPage || 1;
@@ -317,7 +317,7 @@ class Pagination extends BaseComponent {
 
   get config() {
     return {
-      ellipsis: true,//收合數量
+      jump: true,//直接跳轉到指定頁功能否開啟
       initCurrentPage: 1,
       pageSize: 20,//limits單頁顯示數量
       total: null,//資料總數
@@ -326,7 +326,7 @@ class Pagination extends BaseComponent {
   }
 
   set config(value) {
-    this._config = { ...this._config, ...value };
+    this._config = { ...this.config, ...value };
   }
 
   _init() {
@@ -337,6 +337,9 @@ class Pagination extends BaseComponent {
   _render() {
     console.log(this);
     this._elem.innerHTML = ``;//清空
+    super.setTheme(this._theme);
+    UIUtils.setProperty(this._elem, "--theme", this._theme);
+
     let pageFragment = document.createDocumentFragment();
     for (let i = 0; i < this.pages.length; i++) {
       let pageBtn = document.createElement("button");
@@ -373,10 +376,15 @@ class Pagination extends BaseComponent {
       pageFragment.appendChild(pageBtn);
     }
     this._elem.appendChild(pageFragment);
+
+    //跳轉至指定頁功能
+    if (this.config.jump) this._createJumpCompo();
   }
 
   _bindEvent() {
     function onClickHandler(event) {
+      event.stopPropagation();
+      if (!event.target.classList.contains("page-item")) return;
       let pageNum = Number(event.target.dataset.page);
       if (!pageNum) {
         pageNum = event.target.hasAttribute("data-prev") ? this.currentPage - 1 : event.target.hasAttribute("data-next") ? this.currentPage + 1 : this.currentPage;
@@ -400,7 +408,7 @@ class Pagination extends BaseComponent {
         type = 'page';
       } else if (i <= currentPage + offset) {
         type = 'start-ellipsis';
-      } else if (i >= totalPage - offset && i < totalPage) {
+      } else if (i >= currentPage + offset) {
         type = 'end-ellipsis';
       }
 
@@ -408,16 +416,17 @@ class Pagination extends BaseComponent {
       pageList.push(pageItem);
     }
 
+    console.log(pageList);
     let showPageList = pageList.filter((item, i) => {
       const { type } = item;
       if (type === 'start-ellipsis' && pageList[i + 1].type === 'start-ellipsis') {
-        return false;
+        return false;//過濾掉不是最後的start-ellipsis
       }
       if (type === 'end-ellipsis' && pageList[i + 1].type === 'end-ellipsis') {
-        return false;
+        return false;//過濾掉不是最後的end-ellipsis
       }
       if (type === 'start-ellipsis' && pageList[i + 1].type === 'end-ellipsis') {
-        return false;
+        return false;//過濾掉start-ellipsis接著end-ellipsis(只留start/end其中一種)
       }
       return true;
     });
@@ -426,6 +435,45 @@ class Pagination extends BaseComponent {
 
   }
 
+  _createJumpCompo() {
+    if (this.total <= 0) return;
+    let jumpCompo = document.createElement("div");
+    UIUtils.addClass(jumpCompo, ["pagination-jump"]);
+    let pagesOption = [];
+    for (let i = 1; i <= this.total; i++) {
+      let opt = { value: i, text: i };
+      if (i === this.currentPage) opt.selected = true;
+      pagesOption.push(opt);
+    }
+
+    let jumpDropdown = new Dropdown("jump-dropdown", pagesOption, {
+      filter: true, filterHandler: function filtItem() {
+        let inputValue = this.value;
+        let ownli = this.parentNode.parentNode.querySelectorAll(".dropdown-item li");
+        ownli.forEach((li) => {
+          li.textContent.includes(inputValue)
+            ? li.classList.remove("hidden")
+            : li.classList.add("hidden");
+        });
+      }
+    }, function (e) {
+      let pageNum = Number(e.target.value);
+      this.goPage(pageNum);
+      this.handler(pageNum);
+    }.bind(this));
+    console.log(jumpDropdown);
+
+
+    let jumpFragment = document.createDocumentFragment();
+
+    jumpFragment.appendChild(document.createTextNode('前往第'));
+    jumpFragment.appendChild(jumpDropdown.containerEl);
+    jumpFragment.appendChild(document.createTextNode('頁'));
+
+    jumpCompo.appendChild(jumpFragment);
+    this._elem.appendChild(jumpCompo);
+  }
+  //[外部控制]-生成對應pages
   renderPage(totalPages) {
     this._config = { ...this._config, total: totalPages };
     this.total = Math.ceil(totalPages / this._config.pageSize);
@@ -433,22 +481,18 @@ class Pagination extends BaseComponent {
     this._render();
   }
 
+  //[外部控制]-設定指定頁面為當前頁
   setCurrentPage(page) {
     this.currentPage = page;
-    //TODO 重新渲染?還是只更新該item?
+    this.pages = this._createPages(this.total, this.currentPage);
   }
-  //重新更新頁數
-  updatePage() {
-    let currentPage = this.currentPage;
-    this.pages = this._createPages(this.total, currentPage);
-  }
+
 
   //前往指定頁
   goPage(page) {
     console.log(`go ${page} page`);
     if (page < 1 || page > this.total) return;
     this.setCurrentPage(page);//更新currentPage
-    this.updatePage();//更新prev&next的page
 
     this._render();
   }

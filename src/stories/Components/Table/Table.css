@@ -1,6 +1,22 @@
 @reference "../../../style.css";
 
-@layer base {}
+@layer base {
+  @property --theme {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: var(--color-primary-500);
+  }
+
+  /*
+Source - https://stackoverflow.com/a
+Posted by Alex Char, modified by community. See post 'Timeline' for change history
+Retrieved 2025-11-28, License - CC BY-SA 4.0
+*/
+
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
 
 @layer components {
 
@@ -28,7 +44,7 @@
   }
 
   .table thead {
-    @apply sticky top-0 bg-[var(--theme)] shadow-md text-primary-900;
+    @apply sticky top-0 bg-[var(--theme)] shadow-md text-white select-none;
   }
 
   .table tbody {
@@ -36,7 +52,7 @@
   }
 
   .table tbody tr {
-    @apply w-full transition-all bg-[#fff] odd:bg-gray-100 odd:data-[rowSelected]:bg-[var(--theme)]/50 data-[rowSelected]:bg-[var(--theme)]/30 has-[td:hover]:text-secondary-500 cursor-pointer;
+    @apply w-full transition-all bg-[#fff] odd:bg-gray-100 odd:data-[rowSelected]:bg-[var(--theme)]/50 data-[rowSelected]:bg-[var(--theme)]/30 has-[td:hover]:text-[var(--theme)]/80 cursor-pointer;
   }
 
   .table thead th,
@@ -45,21 +61,23 @@
   }
 
   .pagination {
+    --theme: var(--themeColor, var(--color-primary-500));
     @apply flex gap-2 my-3 items-center
   }
 
-  /* .page-item {
-    @apply border border-gray-300 first-of-type:rounded-l-xs last-of-type:rounded-r-xs px-1.5 select-none transition-all duration-75 disabled:text-gray-300 disabled:pointer-events-none;
-  } */
   .page-item {
-    @apply aspect-square hover:bg-primary-500 rounded-full w-8 select-none transition-all duration-75 disabled:text-gray-300 disabled:pointer-events-none;
+    @apply aspect-square hover:bg-[var(--theme)] rounded-full w-8 select-none transition-all duration-75 disabled:text-gray-300 disabled:pointer-events-none;
   }
 
   .page-item:not([disabled]) {
-    @apply hover:bg-primary-400/30 hover:text-primary-600 cursor-pointer
+    @apply hover:bg-[var(--theme)]/30 hover:text-[var(--theme)] cursor-pointer
   }
 
   .page-item[data-currentPage] {
-    @apply bg-primary-500 text-white;
+    @apply bg-[var(--theme)] text-white;
+  }
+
+  .pagination-jump {
+    @apply flex gap-1 items-center text-gray-400 text-nowrap select-none [&>div]:max-w-20
   }
 }

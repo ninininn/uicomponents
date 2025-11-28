@@ -92,6 +92,15 @@ export default {
         type: { summary: "boolean" },
       },
     },
+    theme: {
+      control: "color",
+      description: "表格色系",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "var(--color-primary-500)" },
+        type: { summary: "string" },
+      },
+    },
     complete: {
       control: "function",
       description: "完成資料載入後要執行的函式",
@@ -109,14 +118,7 @@ export default {
         type: { summary: "array" },
       },
     },
-    complete: {
-      control: { type: "function" },
-      description: "完成資料載入後要執行的函式",
-      table: {
-        category: "configurations",
-        type: { summary: "function" },
-      },
-    },
+
     error: {
       control: { type: "function" },
       description: "資料載入失敗時要執行的函式",
@@ -146,7 +148,7 @@ export default {
     limits: 20,
     selection: "checkbox",
     tools: true,
-
+    theme: "var(--color-primary-100)",
   },
 };
 
