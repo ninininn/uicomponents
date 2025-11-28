@@ -1,4 +1,4 @@
-import{u as r,j as e,M as d,T as c,P as i,C as t}from"./iframe-BqM7Wi7g.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use Slider"}),`
+import{u as r,j as e,M as d,T as c,P as i,C as t}from"./iframe-DAf7hKWT.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use Slider"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(s.p,{children:"適用 : 圖層清單、透明度、數值選擇；可以搭配其他元件如 Checkbox 來使用"}),`
 `,e.jsx(i,{}),`
