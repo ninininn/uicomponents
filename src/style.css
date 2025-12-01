@@ -141,6 +141,7 @@
       scale: 0.1;
     }
   }
+
   @keyframes fadeOut {
     0% {
       opacity: 1
@@ -154,32 +155,40 @@
   --animate-msgIn:msgIn 1s ease-in-out;
   --animate-msgOut:msgOut 1s ease-in-out;
 
-  @keyframes msgIn{
-    0%{
-      transform:translateY(-50%);
-      opacity:0;
+  @keyframes msgIn {
+    0% {
+      transform: translateY(-50%);
+      opacity: 0;
     }
-    100%{
-      transform:translateY(0%);
-      opacity:1;
-    }
-  }
-  @keyframes msgOut{
-    0%{
-      transform:translateY(0%);
-      opacity:1;
-    }
-    100%{
-      transform:translateY(-50%);
-      opacity:0;
+
+    100% {
+      transform: translateY(0%);
+      opacity: 1;
     }
   }
+
+  @keyframes msgOut {
+    0% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(-50%);
+      opacity: 0;
+    }
+  }
+
   --inset-shadow-md: inset 0 0 0 3px var(--color-yellow-50);
 }
 
 @layer base {
   :root {
     --layer-translate: 310%;
+    --scrollbar-color-thumb: rgb(106, 106, 106);
+    --scrollbar-color-track: transparent;
+    --scrollbar-width: thin;
+    --scrollbar-width-legacy: 0.75rem;
   }
 
   body {
@@ -192,28 +201,45 @@
     letter-spacing: 0.5rem;
   }
 
+  /* scrollbar 相關 */
 
-  *::-webkit-scrollbar,
-  *::-webkit-scrollbar-thumb {
-    -webkit-appearance: none;
-    appearance: none;
+  /* Modern browsers with `scrollbar-*` support */
+  @supports (scrollbar-width: auto) {
+    * {
+      scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
+      scrollbar-width: var(--scrollbar-width);
+    }
   }
 
-  *::-webkit-scrollbar {
-    width: 0.75rem;
-    height: 12px;
+  /* Legacy browsers with `::-webkit-scrollbar-*` support */
+  @supports selector(::-webkit-scrollbar) {
+    *::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-color-thumb);
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 0.55rem;
+      border: 3.5px solid transparent;
+      background-clip: content-box;
+      @apply bg-gray-400
+    }
+
+    *::-webkit-scrollbar-track {
+      background: var(--scrollbar-color-track);
+    }
+
+    *::-webkit-scrollbar {
+      -webkit-appearance: none;
+      appearance: none;
+      max-width: var(--scrollbar-width-legacy);
+      max-height: var(--scrollbar-width-legacy);
+    }
   }
 
-  *::-webkit-scrollbar-thumb {
-    border-radius: 0.55rem;
-    border: 3.5px solid transparent;
-    background-clip: content-box;
-    @apply bg-gray-400
-  }
-
-  *::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
 
 
+}
+
+@utility theme-* {
+  backgrund-color: --value(--theme-*);
+  /* 可以使用在@theme裡定義的變數 */
 }
