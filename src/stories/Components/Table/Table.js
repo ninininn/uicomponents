@@ -1,21 +1,49 @@
-import { BaseComponent, UIUtils, debounce, createContext, useContext } from "../../../Utils";
+
+import { BaseComponent, UIUtils, bindState, createContext, useContext } from "../../../Utils";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
+
+
+const DATA_ATTR_INDEX = 'index';
+const DATA_ATTR_ROWSELECTED = 'rowSelected';
+const DATA_ATTR_FIELD = 'field';
 
 export class Table extends BaseComponent {
   constructor(options = {}, dataArr = []) {
     let tableContainer = document.createElement("div");
+    // const tableWrapper = document.createElement("div");
     const tableElem = document.createElement("table");
+    // UIUtils.addClass(tableWrapper, ["table-wrapper"]);
+    // tableWrapper.appendChild(tableElem);
+    tableContainer.appendChild(tableElem);
+
     super(tableContainer, options.theme || 'var(--color-primary-100)');
     this.UItype = "Table";
     this.id = options.id;
-    this.options = { ...this.config, ...options };
+    this._config = options;
     this.data = dataArr;
 
     this.table = tableElem;
     this.dataCounts = this.data.length;
-    //TODO cols欄位要作為 context 讓所有子元件能夠共用?
-    //TODO this.options.selection 勾選欄位顯示與否
+
+    this.tableBody = document.createElement("tbody");
+    this.tableHeader = new TableHeader(
+      this.config.cols,
+      this.config.selection, this._theme
+    );
+
+    let colsCount = this.config.cols.length;
+    this.skeleton = new Skeleton({ type: 'table', colNum: this.config.selection ? colsCount + 1 : colsCount });
+    createContext(this, this.config.cols);
+
+    this._createPagination();//建立對應分頁元件
+
+    //initialValue改為new Set()，分別對應每一頁
+    const [getSelected, setSelected, subscribeSelected] = bindState(this.tableHeader.selection.getChecked());
+    this.getSelected = getSelected;
+    this.setSelected = setSelected;
+    this.subscribeSelected = subscribeSelected;
+
     this._init();
   }
 
@@ -28,23 +56,13 @@ export class Table extends BaseComponent {
       classes: ["table-container"],
       cols: [],
       selection: "checkbox",
+      ...this._config
     };
   }
 
   //初始化
   //資料改變應在邏輯層進行，然後再呼叫 _render()
   _init() {
-    this.tableBody = document.createElement("tbody");
-    this.tableHeader = new TableHeader(
-      this.options.cols,
-      this.options.selection
-    );
-
-    let colsCount = this.options.cols.length;
-    this.skeleton = new Skeleton({ type: 'table', colNum: this.options.selection ? colsCount + 1 : colsCount });
-    createContext(this, this.options.cols);
-
-    this._createPagination();//建立對應分頁元件
     this._render();
     this._bindEvent();
   }
@@ -52,7 +70,7 @@ export class Table extends BaseComponent {
   //樣式渲染(UI snpshot)把目前狀態→轉成畫面
   //根據目前的 state 產出畫面結構
   _render() {
-    super.setTheme(this.options.theme);
+    super.setTheme(this.config.theme);
     UIUtils.setProperty(this._elem, "--theme", this._theme);
 
     //TODO 渲染完成前顯示skeleton
@@ -61,60 +79,103 @@ export class Table extends BaseComponent {
     } else {
       this.skeleton.hide();
     }
+
     //組裝
     this.table.id = this.id;
     this.table.appendChild(this.tableHeader.getElem());
     this.table.appendChild(this.tableBody);
-    this._elem.appendChild(this.table);
+
     //class設定
     UIUtils.addClass(this.table, ["table"]);
-    UIUtils.addClass(this._elem, this.options.classes);
+    UIUtils.addClass(this._elem, this.config.classes);
 
     //渲染rows
-    this._updateRows();//取回全部data
-    this._renderRows(0, this.options.limits);
-    //判斷是否有帶入容器 
-    if (this.options.container) {
-      this.options.container.appendChild(this._elem);
+    this._updateRows();//以新資料更新tableRows
+    this._renderRows(0, this.config.limits);
+
+    //判斷是否有容器
+    if (this.config.container) {
+      this.config.container.appendChild(this.getElem());
+      //放入分頁元件
       this._elem.after(this._pagination.getElem());
-
-    } else {
-      console.error("請指定table要放入的位置");
     }
-
   }
 
   //事件綁定
-  _bindEvent() { }
+  _bindEvent() {
+    //click TableHeader的Checkbox時要全選該頁Rows
+    function selectedAllRows() {
+      let currentPage = this._pagination.currentPage;
+      const start = (currentPage - 1) * this.config.limits;
+      const end = start + this.config.limits;
+
+      this.setSelected(this.tableHeader.selection.getChecked());
+      // this.tableRows.forEach((row) => {
+      //   if (row.index >= start && row.index <= end) {
+      //     row.selection.setChecked(this.tableHeader.selection.getChecked());
+      //     //! data-selected狀態也要改變
+      //     if (this.tableHeader.selection.getChecked()) {
+      //       UIUtils.setAttribute(row.getElem(), DATA_ATTR_ROWSELECTED);
+      //     } else {
+      //       delete row.getElem().dataset.rowselected;
+      //     }
+      //   }
+      // });
+    }
+    this.onevent(this.tableHeader.selection.getElem(), "change", selectedAllRows.bind(this));
+  }
 
   //設定表列資料
   _setRows(arr, selection) {
     let thisTable = this;
     let tableRows = arr.map((dataObj, index) => {
-      return new TableRow(dataObj, index, selection, thisTable);
+      return new TableRow(dataObj, index, selection, thisTable, this.subscribeSelected);
     });
 
     return tableRows;
   }
 
+  //更新表列資料
   _updateRows() {
     this.tableRows = this._setRows(this.data);
   }
 
+  //紀錄勾選欄位資料
+  _checkState() {
+
+  }
+
+  //渲染指定範圍的rows
   _renderRows(startIndex, endIndex) {
-    if (!this.tableRows) return;
+    if (!this.tableRows || this.tableRows.length === 0) return;
+    //generate new-rows
     let showRows = this.tableRows.slice(startIndex, endIndex);
     let rowFragment = document.createDocumentFragment();
     for (let row of showRows) {
       rowFragment.appendChild(row.getElem());
     }
+    //remove old-rows
     let currentTr = this.tableBody.querySelectorAll("tr[data-index]");
     for (let row of currentTr) {
       row.remove();
     }
     this.tableBody.appendChild(rowFragment);
     this._elem.scrollTop = 0;
+
+    // TODO 需隔離渲染樣式&狀態改變
+    //! 最上方TableHeader狀態恢復(或依據該頁row全選狀態改變)
+    this.tableHeader.selection.setChecked(this.checkSelectedRows(startIndex, endIndex));
+
+
+    //! 如果有任何一row取消選取，也要改變header狀態
+    //BUG 每次reder都會重複新增監聽器!!應該只要新增一次即可!
+    this.tableRows.forEach((row) => {
+      this.onevent(row.getElem(), "click", function () {
+        this.tableHeader.selection.setChecked(this.checkSelectedRows(startIndex, endIndex));
+      }.bind(this));
+    });
   }
+
   //[外部控制]-設定表格尺寸
   //!如果超過max-width,max-height則直接用max-width/height
   setSize(width, height = 'auto') {
@@ -126,17 +187,23 @@ export class Table extends BaseComponent {
   getTableData() {
     if (!this.tableRows) {
       console.error("No Data Yet!");
-      return;
+      return this.tableRows;
     }
-    let fullData = this.tableRows.map((row) => {
-      return row.data;
-    });
-    return fullData;
+    return this.data;
   }
 
+
   //[外部控制]-取得表格內所有選取的Row
-  getSelected() {
-    return;
+  getSelectedRows() {
+    let selectedRows = this.tableRows.filter((row) =>
+      row.selection.getChecked());
+    return selectedRows;
+  }
+
+  //[外部控制]-取得指定過濾條件Rows
+  getFiltedRows(fn) {
+    let filtedDataRow = this.tableRows.filter(fn);
+    return filtedDataRow;
   }
 
   //[外部控制]-放入資料
@@ -147,16 +214,21 @@ export class Table extends BaseComponent {
     this._render();
   }
 
+  //[外部&內部控制]-檢查是否全選rows
+  checkSelectedRows(startIndex, endIndex) {
+    let checkFields = this.tableRows.slice(startIndex, endIndex);
+    return checkFields.every((row) => row.selection.getChecked());
+  }
 
   //[內部]建立對應Pagination元件
   _createPagination() {
     //分頁設定
     this._pagination = new Pagination({
-      theme: this._theme, currentPage: 1, pageSize: this.options.limits, total: this.dataCounts, handler: (page) => {
-        console.log("handler page:", page);
-        const start = (page - 1) * this.options.limits;
-        const end = start + this.options.limits;
+      theme: this._theme, currentPage: 1, pageSize: this.config.limits, total: this.dataCounts, handler: (page) => {
+        const start = (page - 1) * this.config.limits;
+        const end = start + this.config.limits;
         this._renderRows(start, end);
+        this.setSelected(false);
       }
     });
   }
@@ -164,9 +236,9 @@ export class Table extends BaseComponent {
 
 //TableHeader 表頭
 class TableHeader extends BaseComponent {
-  constructor(cols, selection) {
+  constructor(cols, selection, theme) {
     const headerElem = document.createElement("thead");
-    super(headerElem);
+    super(headerElem, theme);
     this.UItype = "TableHeader";
     this.cols = cols;
     this.selection = this._checkSelection(selection);
@@ -176,6 +248,10 @@ class TableHeader extends BaseComponent {
   //初始化
   _init() {
     this._render();
+  }
+
+  _bindEvent() {
+
   }
 
   _render() {
@@ -191,7 +267,7 @@ class TableHeader extends BaseComponent {
 
     for (let col of this.cols) {
       let th = document.createElement("th");
-      UIUtils.setAttribute(th, "field", col.field);
+      UIUtils.setAttribute(th, DATA_ATTR_FIELD, col.field);
       UIUtils.setText(th, col.title);
 
       main.appendChild(th);
@@ -200,10 +276,16 @@ class TableHeader extends BaseComponent {
     this._elem.appendChild(tr);
   }
 
+
+  //[內部控制]-全選所有Rows的Checkboxes
   _checkSelection(selectionType) {
     let cellElem = document.createElement("th");
     if (selectionType === "checkbox") {
-      let checkbox = new Checkbox(cellElem, { checked: false });
+      let checkbox = new Checkbox(cellElem, {
+        theme: this._theme,
+        checked: false, handlers: () => {
+        }
+      });
       return checkbox;
     } else if (selectionType === "radio") {
       return;
@@ -213,15 +295,19 @@ class TableHeader extends BaseComponent {
 
 //TableRow 表列
 class TableRow extends BaseComponent {
-  constructor(data, index, selection = "checkbox", table) {
+  constructor(data, index, selection = "checkbox", table, subscribeSelected) {
     const rowContainer = document.createElement("tr");
-    super(rowContainer);
+    super(rowContainer, table._theme);
     this.UItype = "TableRow";
     this.data = data;
     this.selection = this._checkSelection(selection);
     this.cells = this._setTableCells(this.data, useContext(table));
     this.index = ++index;
     this._init();
+
+    subscribeSelected((headerSelected) => {
+      this.selection.setChecked(headerSelected);
+    });
   }
 
   _init() {
@@ -231,27 +317,36 @@ class TableRow extends BaseComponent {
       fragment.appendChild(cell.getElem());
     }
     this._elem.appendChild(fragment);
-    UIUtils.setAttribute(this._elem, "index", this.index);
+    UIUtils.setAttribute(this._elem, DATA_ATTR_INDEX, this.index);
+    this._render();
     this._bindEvent();
   }
 
+  _render() {
+    let isChecked = this.selection.getChecked();
+    if (isChecked) {
+      UIUtils.setAttribute(this._elem, DATA_ATTR_ROWSELECTED);
+    } else {
+      delete this._elem.dataset.rowselected;
+    }
+  }
+
   _bindEvent() {
-    function checkEvent() {
+    function checkEvent(e) {
       let isChecked = this.selection.getChecked();
-      if (isChecked) {
-        UIUtils.setAttribute(this._elem, "rowSelected");
-      } else {
-        delete this._elem.dataset.rowselected;
-      }
+      this.selection.setChecked(!isChecked);
+      this._render();
     }
     if (this.selection)
-      this.onevent(this.selection.getElem(), "change", checkEvent.bind(this));
+      this.onevent(this.getElem(), "click", checkEvent.bind(this));
   }
 
   _checkSelection(selectionType) {
     let cellElem = document.createElement("td");
     if (selectionType === "checkbox") {
-      let checkbox = new Checkbox(cellElem, { checked: false });
+      let checkbox = new Checkbox(cellElem, {
+        checked: false
+      });
       return checkbox;
     } else if (selectionType === "radio") {
       return;
@@ -280,7 +375,7 @@ class TableCell extends BaseComponent {
     this._render();
   }
   _render() {
-    let { field, align = "left" } = this.config;
+    let { field, align = "left", template } = this.config;
     switch (align) {
       case "center":
         UIUtils.addClass(this._elem, ["text-center"]);
@@ -292,14 +387,21 @@ class TableCell extends BaseComponent {
         UIUtils.clearClass(this._elem);
         break;
     }
-    UIUtils.setAttribute(this._elem, "field", field);
+    UIUtils.setAttribute(this._elem, DATA_ATTR_FIELD, field);
     UIUtils.setText(this._elem, this.dataValue);
 
+    //TODO template function - 傳入自訂函式來建立內容
+    if (template) {
+      template.bind(this)(this.dataValue);
+    }
   }
 }
 
 //Pagination 分頁元件
 //! 未來要獨自拆出檔案
+const DATA_ATTR_CUR_PAGE = 'currentPage';
+const DATA_ATTR_PREV = 'prev';
+const DATA_ATTR_NEXT = 'next';
 class Pagination extends BaseComponent {
   constructor(config) {
     const componentContainer = document.createElement("div");
@@ -309,7 +411,7 @@ class Pagination extends BaseComponent {
     this.UItype = "Pagination";
     this._config = config;
     this.currentPage = config.currentPage || 1;
-    this.total = Math.ceil(this._config.total / this._config.pageSize);
+    this.total = Math.ceil(this.config.total / this.config.pageSize) || 0;
     this.pages = this._createPages(this.total, this.currentPage);
     this.handler = config.handler;
     this._init();
@@ -320,14 +422,11 @@ class Pagination extends BaseComponent {
       jump: true,//直接跳轉到指定頁功能否開啟
       initCurrentPage: 1,
       pageSize: 20,//limits單頁顯示數量
-      total: null,//資料總數
+      total: 0,//資料總數
       ...this._config
     };
   }
 
-  set config(value) {
-    this._config = { ...this.config, ...value };
-  }
 
   _init() {
     this._render();
@@ -345,16 +444,16 @@ class Pagination extends BaseComponent {
       let pageBtn = document.createElement("button");
       pageBtn.type = 'button';
       let isCurrent = this.pages[i].current;
-      if (isCurrent) UIUtils.setAttribute(pageBtn, "currentPage");
+      if (isCurrent) UIUtils.setAttribute(pageBtn, DATA_ATTR_CUR_PAGE);
       UIUtils.addClass(pageBtn, ["page-item"]);
       switch (this.pages[i].type) {
         case 'prev-page':
           UIUtils.setText(pageBtn, '<<');
-          UIUtils.setAttribute(pageBtn, 'prev');
+          UIUtils.setAttribute(pageBtn, DATA_ATTR_PREV);
           break;
         case 'next-page':
           UIUtils.setText(pageBtn, '>>');
-          UIUtils.setAttribute(pageBtn, 'next');
+          UIUtils.setAttribute(pageBtn, DATA_ATTR_NEXT);
           break;
         case 'start-ellipsis':
           UIUtils.setText(pageBtn, '...');
@@ -398,7 +497,7 @@ class Pagination extends BaseComponent {
 
   _createPages(totalPage, currentPage) {
     let pageList = [];
-    let offset = this._config.pageSize; //要省略的數量
+    let offset = this.config.pageSize; //要省略的數量
     let prevPageItem = { type: 'prev-page', page: this.currentPage - 1, current: false };
     let nextPageItem = { type: 'next-page', page: this.currentPage + 1, current: false };
 
@@ -416,7 +515,6 @@ class Pagination extends BaseComponent {
       pageList.push(pageItem);
     }
 
-    console.log(pageList);
     let showPageList = pageList.filter((item, i) => {
       const { type } = item;
       if (type === 'start-ellipsis' && pageList[i + 1].type === 'start-ellipsis') {
@@ -461,8 +559,6 @@ class Pagination extends BaseComponent {
       this.goPage(pageNum);
       this.handler(pageNum);
     }.bind(this));
-    console.log(jumpDropdown);
-
 
     let jumpFragment = document.createDocumentFragment();
 
@@ -475,7 +571,7 @@ class Pagination extends BaseComponent {
   }
   //[外部控制]-生成對應pages
   renderPage(totalPages) {
-    this._config = { ...this._config, total: totalPages };
+    this._config = { ...this.config, total: totalPages };
     this.total = Math.ceil(totalPages / this._config.pageSize);
     this.pages = this._createPages(this.total, this.currentPage);
     this._render();
@@ -485,6 +581,7 @@ class Pagination extends BaseComponent {
   setCurrentPage(page) {
     this.currentPage = page;
     this.pages = this._createPages(this.total, this.currentPage);
+    this._config = { ...this.config, currentPage: page };
   }
 
 

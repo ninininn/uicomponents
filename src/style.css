@@ -23,6 +23,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --layer-translate: 310%;
+  /* --scrollbar-color-thumb: rgb(106, 106, 106); */
+  /* --scrollbar-color-track: var(--color-gray-100); */
+  /* --scrollbar-width: auto; */
+  --scrollbar-width-legacy: 0.75rem;
 }
 
 @theme {
@@ -183,13 +189,6 @@
 }
 
 @layer base {
-  :root {
-    --layer-translate: 310%;
-    --scrollbar-color-thumb: rgb(106, 106, 106);
-    --scrollbar-color-track: transparent;
-    --scrollbar-width: thin;
-    --scrollbar-width-legacy: 0.75rem;
-  }
 
   body {
     font-family: var(--font-rounded);
@@ -208,6 +207,7 @@
     * {
       scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
       scrollbar-width: var(--scrollbar-width);
+      scrollbar-gutter: both-edges;
     }
   }
 
@@ -224,7 +224,8 @@
     }
 
     *::-webkit-scrollbar-track {
-      background: var(--scrollbar-color-track);
+      background: var(--scrollbar-color-track, transparent);
+      margin: 1rem;
     }
 
     *::-webkit-scrollbar {

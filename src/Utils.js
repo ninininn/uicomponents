@@ -138,6 +138,38 @@ export function defineArgs(args, tagName = "div") {
     return { element, options };
 }
 
+export function defineContainer(container, type = null) {
+    let result;
+    //如果有指定tagType
+    if (type) {
+        //如果是DOM點
+        if (container instanceof HTMLElement) {
+            //但是type不符合條件
+            if (container.nodeName !== type.toUpperCase()) {
+                result = document.createElement(type);
+                result.appendChild(container);
+                return result;
+            } else {
+                result = container;
+                return result;
+            }
+        } else if (document.querySelector(container) || document.getElementById(container)) {
+            //如果不是DOM節點，但找的到querySelector/Id
+            //檢查type
+            if (container.nodeName !== type.toUpperCase()) {
+                result = document.createElement(type);
+                result.appendChild(container);
+                return result;
+            } else {
+                result = container;
+                return result;
+            }
+        }else{
+            console.error("請放入有效的容器");
+        }
+    }
+}
+
 /**
  * 父類別
  * 共用原型方法

@@ -23,7 +23,11 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   /*table容器*/
   .table-container {
     --theme: var(--themeColor, var(--color-primary-100));
-    @apply w-full h-fit rounded-md bg-[#fff] max-w-full max-h-80 overflow-auto shadow-sm scroll-smooth;
+    @apply relative w-full h-fit rounded-md bg-[#fff] max-w-full max-h-80 overflow-auto shadow-sm scroll-smooth isolate;
+  }
+
+  .table-container::after {
+    @apply content-[""] block h-2 w-full bg-gradient-to-b from-transparent to-gray-200 absolute bottom-0 -z-1 mt-2;
   }
 
   .table-container label {
@@ -40,11 +44,14 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   /*table本體*/
   .table {
+    /*checkbox變數*/
+    --themeColor: var(--theme);
     @apply w-full h-full rounded-md;
   }
 
   .table thead {
-    @apply sticky top-0 bg-[var(--theme)] shadow-md text-white select-none;
+    --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
+    @apply sticky top-0 bg-[var(--theme)] shadow-sm tracking-[1px] text-white select-none text-nowrap;
   }
 
   .table tbody {
@@ -52,12 +59,13 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .table tbody tr {
-    @apply w-full transition-all bg-[#fff] odd:bg-gray-100 odd:data-[rowSelected]:bg-[var(--theme)]/50 data-[rowSelected]:bg-[var(--theme)]/30 has-[td:hover]:text-[var(--theme)]/80 cursor-pointer;
+    --hover-text-theme: color-mix(in srgb, var(--themeColor) 60%, var(--color-black) 40%);
+    @apply w-full transition-all bg-[#fff] odd:bg-gray-50 odd:data-[rowSelected]:bg-[var(--theme)]/40 data-[rowSelected]:bg-[var(--theme)]/20 data-[rowSelected]:hover:bg-gray-100 has-[td:hover]:bg-gray-100 cursor-pointer hover:[&_.checkbox]:border-[var(--theme)] hover:[&_.checkbox]:ring-2 hover:[&_.checkbox]:ring-[var(--theme)]/50 [&_.checkbox]:checked:text-[var(--theme)];
   }
 
   .table thead th,
   .table td {
-    @apply py-1.5 px-2;
+    @apply py-1.5 px-3;
   }
 
   .pagination {

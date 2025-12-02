@@ -38,17 +38,17 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
   各屬性的型別及說明可參考上方**Controls區塊**，各類別的私有屬性則可以參考**子類別**區塊的各個說明，此處僅列出共同設定的屬性。
     ```javascript
       const initConfig = {
-        id: id,                 //tableId
-        name: name,             //自定義table名稱
-        limits: limits,         //單頁顯示筆數限制
-        container: parent,      //要放入的DOM元素(容器)
-        cols:cols,              //欄位設定
-        tools: tools,           //是否顯示工具列
-        selection: selection,   //是否開啟勾選列
-        classes: classes,       //自定義class
-        complete: complete,     //渲染完成後要執行的fn
-        error: error,           //渲染失敗執行的fn
-        handler: handler,       //渲染時執行的fn(非同步)
+        id: "table_A",                                 //tableId
+        name: "測試用表格",                             //自定義table名稱
+        limits: 20,                                    //單頁顯示筆數限制
+        container: document.getElementById("parent"),  //要放入的DOM元素(容器)
+        cols:cols,                                     //欄位設定
+        tools: true,                                   //是否顯示工具列
+        selection: "checkbox",                         //是否開啟勾選列
+        classes: ["table-container"],                  //自定義class
+        complete: complete,                            //渲染完成後要執行的fn
+        error: error,                                  //渲染失敗執行的fn
+        handler: handler,                              //渲染時執行的fn(非同步)
       };
     ```  
   <br/>
@@ -102,6 +102,12 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
               <td className="text-center">left</td>
               <td className="text-center">string</td>
               <td>欄位對齊位置，可選 left / center / right</td>
+            </tr>
+            <tr>
+              <td className="font-bold text-center">template</td>
+              <td className="text-center">-</td>
+              <td className="text-center">function</td>
+              <td>自訂義tablecell的渲染函式</td>
             </tr>
           </tbody>
         </table>
@@ -169,6 +175,12 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
         <td>0</td>
         <td>number</td>
         <td>資料總筆數</td>
+      </tr>
+      <tr>
+        <td className="font-bold">_pagination</td>
+        <td>`Pagination`元件</td>
+        <td>Object</td>
+        <td>綁定的`Pagination`分頁元件</td>
       </tr>
     </tbody>
   </table>

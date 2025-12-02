@@ -5,6 +5,7 @@ import { action } from "storybook/actions";
 import { createTable } from './TableStory';
 import "./Table.css";
 import TableAPIdoc from "./TableAPIdoc.mdx";
+import { UIUtils } from "../../../Utils";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -158,10 +159,16 @@ export const Table = {
     id: "test-table",
     name: "測試表格",
     cols: [
-      { field: 'useId', title: '使用者id', sort: true, fixed: false, align: "center" },
+      {
+        field: 'useId', title: '使用者id', sort: true, fixed: false, align: "center", template: function (data) {
+          if (data === 1) {
+            UIUtils.setText(this.getElem(), "01");
+          }
+        }
+      },
       { field: 'id', title: '編號', sort: false, fixed: false, align: "center" },
       { field: 'title', title: '內容', sort: true, fixed: false },
-      { field: 'done', title: '完成', sort: true, fixed: false },
+      { field: 'done', title: '完成', sort: true, fixed: false, align: "center" },
     ],
     limits: 20,
   },

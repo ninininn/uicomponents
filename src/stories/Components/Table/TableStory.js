@@ -25,13 +25,17 @@ export const createTable = ({
     trigger.className = "btn btn-primary mb-3";
     trigger.textContent = "create Table";
 
+    let tableTarget = document.createElement("div");
+
+
     parent.appendChild(trigger);
+    parent.appendChild(tableTarget);
 
     let initOptions = {
         id: id,                 //tableId
         name: name,             //自定義table名稱
         limits: limits,         //單頁顯示筆數限制
-        container: parent,      //container
+        container: tableTarget,      //container容器(table本身就有一個table-container)
         cols: cols,              //欄位設定
         tools: tools,           //是否顯示工具列
         selection: selection,   //是否開啟勾選列

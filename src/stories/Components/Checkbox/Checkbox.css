@@ -106,7 +106,7 @@
   }
 
   [data-checkstyle].checkbox {
-    @apply mr-1 checked:text-[var(--themeColor)]! checked:border-0 focus-visible:outline-none focus:ring-0;
+    @apply mr-1 checked:text-[var(--themeColor)] checked:border-0 focus-visible:outline-none focus:ring-0;
   }
 
   .checkbox-group,
