@@ -26,6 +26,7 @@ export const createTable = ({
     trigger.textContent = "create Table";
 
     let tableTarget = document.createElement("div");
+    tableTarget.className = "table-test-target";
 
 
     parent.appendChild(trigger);
@@ -35,7 +36,7 @@ export const createTable = ({
         id: id,                 //tableId
         name: name,             //自定義table名稱
         limits: limits,         //單頁顯示筆數限制
-        container: tableTarget,      //container容器(table本身就有一個table-container)
+        container: container || '.table-test-target',      //container容器(table本身就有一個table-container)
         cols: cols,              //欄位設定
         tools: tools,           //是否顯示工具列
         selection: selection,   //是否開啟勾選列
@@ -71,7 +72,8 @@ export const createTable = ({
             .then((json) => {
                 //模擬資料載入
                 setTimeout(() => {
-                    table_instance.setData(json);
+                    table_instance.setData(json).selectedFullPage(1);
+
                     console.log("table_instance:", table_instance);
                 }, 5000);
 

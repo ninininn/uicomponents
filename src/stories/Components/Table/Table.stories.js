@@ -149,7 +149,7 @@ export default {
     limits: 20,
     selection: "checkbox",
     tools: true,
-    theme: "var(--color-primary-100)",
+    theme: "var(--color-primary-500)",
   },
 };
 
@@ -171,6 +171,7 @@ export const Table = {
       { field: 'done', title: '完成', sort: true, fixed: false, align: "center" },
     ],
     limits: 20,
+    container: '.table-test-target'
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

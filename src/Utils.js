@@ -1,3 +1,5 @@
+import { signal, computed, effect } from '@preact/signals-core';
+
 /**
  * 工具Functions
  */
@@ -164,10 +166,21 @@ export function defineContainer(container, type = null) {
                 result = container;
                 return result;
             }
-        }else{
+        } else {
             console.error("請放入有效的容器");
         }
     }
+}
+
+/**
+ * 轉換id/class selector 尋找元素是否存在
+ * @param {*} id 
+ * @returns 
+ */
+export function findElem(selector) {
+    if (!selector) return;
+
+    return document.querySelector(selector);
 }
 
 /**
@@ -190,7 +203,7 @@ export class BaseComponent {
     render() { }
 
     // 新增監聽器
-    onevent(target, event, handler) {
+    onevent(target, event, handler, options) {
         //避免重複綁定//但是.bind產生的fn還是會認為是不同的
         let recordObj = { target, event, handler };
         let checkListeners = this._eventListeners.filter((listener) => {
@@ -202,7 +215,7 @@ export class BaseComponent {
         });
 
         if (checkListeners.length === 0) {
-            target.addEventListener(event, handler);
+            target.addEventListener(event, handler, options);
             this._eventListeners.push(recordObj);
         }
     }
@@ -361,4 +374,16 @@ export function debounce(callback, delay) {
             callback(...args);
         }, delay);
     };
+}
+
+/**
+ * Signal 概念實作
+ */
+
+export function createSignals(initialValue) {
+    let value = initialValue;
+    const get = () => value; //getter
+    const set = (updateValue) => { value = updateValue; }; //setter
+
+    return { get, set };
 }
