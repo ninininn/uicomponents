@@ -1,4 +1,4 @@
-import{u as d,j as e,M as c,T as r,P as t,C as i}from"./iframe-DAf7hKWT.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{isTemplate:!0,title:"How to use Checkbox"}),`
+import{u as d,j as e,M as c,T as r,P as t,C as i}from"./iframe-BWigM8VB.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{isTemplate:!0,title:"How to use Checkbox"}),`
 `,e.jsx(r,{}),`
 `,e.jsx(s.p,{children:"適用 : 勾選框；可以配合其他元件使用綁定屬性值"}),`
 `,e.jsx(t,{}),`
@@ -19,10 +19,10 @@ import{u as d,j as e,M as c,T as r,P as t,C as i}from"./iframe-DAf7hKWT.js";impo
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"element"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type element",children:"HTMLElement"}),`
 `,e.jsxs(s.p,{children:["可以傳入",e.jsx(s.code,{children:"<label/>"}),"或",e.jsx(s.code,{children:"<input/>"}),"兩種標籤元素節點，如果傳入的節點標籤種類不是這兩種，則會直接視為容器元素(container)，並自動補上對應結構。"]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-html",children:`<!-- 基本靜態結構 -->\r
-<label class="label input-label">\r
-  <input type="checkbox" class="checkbox" />\r
-  文字內容\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-html",children:`<!-- 基本靜態結構 -->
+<label class="label input-label">
+  <input type="checkbox" class="checkbox" />
+  文字內容
 </label>
 `})}),`
 `,e.jsx("br",{}),`
@@ -31,16 +31,16 @@ import{u as d,j as e,M as c,T as r,P as t,C as i}from"./iframe-DAf7hKWT.js";impo
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"options"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"object"}),`
 `,e.jsx(s.p,{children:"各屬性的型別及說明可參考上方Controls區塊"}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const options = {\r
-  style: "default", //樣式\r
-  title: "一般勾選框", //文字\r
-  value: "", //<input/>的value attribute\r
-  checked: true,\r
-  theme: "var(--color-blue-500)", //預設顏色\r
-  checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標\r
-  classes: ["checkbox"],\r
-  disabled: false,\r
-  handlers: null,\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const options = {
+  style: "default", //樣式
+  title: "一般勾選框", //文字
+  value: "", //<input/>的value attribute
+  checked: true,
+  theme: "var(--color-blue-500)", //預設顏色
+  checkImg: ["../../../../public/eye.svg", "../../../../public/eye-off.svg"], //check圖標
+  classes: ["checkbox"],
+  disabled: false,
+  handlers: null,
 };
 `})}),`
 `,e.jsx("br",{}),`
@@ -95,11 +95,11 @@ import{u as d,j as e,M as c,T as r,P as t,C as i}from"./iframe-DAf7hKWT.js";impo
 `,e.jsxs(s.li,{children:[e.jsx(s.strong,{children:"Parameters"}),e.jsx(s.br,{}),`
 `,"傳入boolean值更改disabled、checked狀態；傳入任一值更改",e.jsx(s.code,{children:"<input/>"}),"的value值"]}),`
 `]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`// ...init Checkbox\r
-\r
-Checkbox.setDisabled(false);\r
-Checkbox.setValue(value);\r
-Checkbox.setChecked(true);\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`// ...init Checkbox
+
+Checkbox.setDisabled(false);
+Checkbox.setValue(value);
+Checkbox.setChecked(true);
 
 `})}),`
 `,e.jsx("span",{className:"sb-unstyled methods",children:".getValue()"}),`
@@ -108,7 +108,7 @@ Checkbox.setChecked(true);\r
 `,e.jsxs(s.li,{children:[e.jsx(s.strong,{children:"Returns"}),e.jsx(s.br,{}),`
 `,"分別回傳",e.jsx(s.code,{children:"<input/>"}),"的value及checked值"]}),`
 `]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`Checkbox.getValue(); //""\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`Checkbox.getValue(); //""
 Checkbox.getChecked(); //true
 `})}),`
 `,e.jsx(s.hr,{}),`
@@ -124,7 +124,7 @@ Checkbox.getChecked(); //true
 `]}),`
 `,e.jsxs(s.ul,{children:[`
 `,e.jsxs(s.li,{children:[`
-`,e.jsxs(s.p,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"name"}),`\r
+`,e.jsxs(s.p,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"name"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),e.jsx(s.br,{}),`
 `,"群組名稱"]}),`
 `,e.jsx("br",{}),`
@@ -133,14 +133,14 @@ Checkbox.getChecked(); //true
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"container"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type element",children:"HTMLElement"}),`
 `,e.jsxs(s.p,{children:["傳入",e.jsx(s.code,{children:"<ul/>"}),"標籤元素節點，如果沒有傳入則會自動建立一個"]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-html",children:`<!-- 基本靜態結構 -->\r
-<ul class="checkbox-group">\r
-  <li class="item">\r
-    <label>\r
-      <input type="checkbox" class="checkbox" />\r
-      文字內容\r
-    </label>\r
-  </li>\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-html",children:`<!-- 基本靜態結構 -->
+<ul class="checkbox-group">
+  <li class="item">
+    <label>
+      <input type="checkbox" class="checkbox" />
+      文字內容
+    </label>
+  </li>
 </ul>
 `})}),`
 `]}),`
@@ -173,7 +173,7 @@ Checkbox.getChecked(); //true
 `,e.jsxs(s.li,{children:[e.jsx(s.strong,{children:"Returns"}),e.jsx(s.br,{}),`
 `,"如果有傳入指定參數則會回傳一組對應",e.jsx(s.code,{children:"name"}),"的 name-value pair 物件，可以作為後續使用；沒有傳入參數則是回傳一個包含所有 checkbox instance 的 name-value pair 的陣列。"]}),`
 `]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`CheckboxGroup.getValue("test"); //{name: "test", value: ""}\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`CheckboxGroup.getValue("test"); //{name: "test", value: ""}
 CheckboxGroup.getValue(); //[{name: "test", value: ""},{name: "A", value: "A"}]
 `})}),`
 `,e.jsx("span",{className:"sb-unstyled methods",children:".addCheckItems(item)"}),`
@@ -181,12 +181,12 @@ CheckboxGroup.getValue(); //[{name: "test", value: ""},{name: "A", value: "A"}]
 `,e.jsxs(s.li,{children:[e.jsx(s.strong,{children:"Paramenters"}),e.jsx(s.br,{}),`
 `,"可以傳入一個或多個 Checkbox 元件，如果傳入多個元件則要以",e.jsx(s.strong,{children:"陣列"}),"形式傳入。"]}),`
 `]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`let child = new Checkbox(options);\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`let child = new Checkbox(options);
 CheckboxGroup.addCheckItems(child);
 `})}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`let child1 = new Checkbox(options);\r
-let child2 = new Checkbox(options);\r
-let child3 = new Checkbox(options);\r
-\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`let child1 = new Checkbox(options);
+let child2 = new Checkbox(options);
+let child3 = new Checkbox(options);
+
 CheckboxGroup.addCheckItems([child1, child2, child3]);
 `})})]})}function x(n={}){const{wrapper:s}={...d(),...n.components};return s?e.jsx(s,{...n,children:e.jsx(l,{...n})}):l(n)}export{x as default};

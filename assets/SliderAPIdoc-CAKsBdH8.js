@@ -1,4 +1,4 @@
-import{u as r,j as e,M as d,T as c,P as i,C as t}from"./iframe-DAf7hKWT.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use Slider"}),`
+import{u as r,j as e,M as d,T as c,P as i,C as t}from"./iframe-BWigM8VB.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use Slider"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(s.p,{children:"適用 : 圖層清單、透明度、數值選擇；可以搭配其他元件如 Checkbox 來使用"}),`
 `,e.jsx(i,{}),`
@@ -6,7 +6,7 @@ import{u as r,j as e,M as d,T as c,P as i,C as t}from"./iframe-DAf7hKWT.js";impo
 `,e.jsx(t,{}),`
 `,e.jsx(s.hr,{}),`
 `,e.jsx(s.h1,{id:"usage-api",children:"Usage API"}),`
-`,e.jsxs(s.p,{children:["初始化 Slider 元件，帶入參數 ",e.jsx(s.code,{children:"parentDOM"})," 及 ",e.jsx(s.code,{children:"options"}),` 物件，並設定內部屬性。\r
+`,e.jsxs(s.p,{children:["初始化 Slider 元件，帶入參數 ",e.jsx(s.code,{children:"parentDOM"})," 及 ",e.jsx(s.code,{children:"options"}),` 物件，並設定內部屬性。
 (兩參數皆為可選值，若沒有帶入則會套用內部預設值)`]}),`
 `,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`new Slider(parentDOM, (options = {}));
 `})}),`
@@ -17,30 +17,30 @@ import{u as r,j as e,M as d,T as c,P as i,C as t}from"./iframe-DAf7hKWT.js";impo
 `,e.jsxs(s.li,{children:[`
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"parentDOM"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type element",children:"HTMLElement"}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-html",children:`<!--  要放入的container -->\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-html",children:`<!--  要放入的container -->
 <div id="slider_1"></div>
 `})}),`
 `,e.jsx("br",{}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const sliderParent = document.getElementById("slider_1");\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const sliderParent = document.getElementById("slider_1");
 const sliderInstance = new Slider(sliderParent, {initValue: 79});
 `})}),`
 `,e.jsx("br",{}),`
 `]}),`
 `,e.jsxs(s.li,{children:[`
-`,e.jsxs(s.p,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:" options"}),`\r
+`,e.jsxs(s.p,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:" options"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"object"}),e.jsx(s.br,{}),`
 `,"各屬性傳入型別可參考上方 Control 說明，以下 option 設定值為內部預設值。"]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const sliderOptions = {\r
-  min:1,\r
-  max:100,\r
-  initValue:0,\r
-  step:1,\r
-  range:false,\r
-  theme:'var(--color-primary-500)',\r
-  thumbImg:null,\r
-  classes:['slider'],\r
-  handler:null,\r
-  disabled:false\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const sliderOptions = {
+  min:1,
+  max:100,
+  initValue:0,
+  step:1,
+  range:false,
+  theme:'var(--color-primary-500)',
+  thumbImg:null,
+  classes:['slider'],
+  handler:null,
+  disabled:false
 }
 `})}),`
 `]}),`
@@ -78,7 +78,7 @@ const sliderInstance = new Slider(sliderParent, {initValue: 79});
 `,e.jsxs(s.li,{children:[e.jsx(s.strong,{children:"Parameters"}),e.jsx(s.br,{}),`
 `,"傳入數值更改value值，如果是range則傳入一陣列"]}),`
 `]}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  Slider.setValue(45);\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  Slider.setValue(45);
 console.log(Slider.getValue()); // 45
 `})}),`
 `,e.jsx("span",{className:"sb-unstyled methods",children:".changeTheme(HEX)"}),`
