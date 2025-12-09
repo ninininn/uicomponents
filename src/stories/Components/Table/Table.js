@@ -155,7 +155,6 @@ export class Table extends BaseComponent {
           if (this.getSelected().get(this._pagination.currentPage)) {
             //是全選狀態
             let isAllSelected = this._checkRowState();
-            console.log(row.selection.getChecked());
             this.tableHeader.selection.setChecked(isAllSelected);
             this.setSelected(
               this.getSelected().set(
@@ -275,9 +274,19 @@ export class Table extends BaseComponent {
           this.getSelected().get(page)
         );
 
-        console.log("table_createPagination handler:", this.getSelected());
-        this.setSelected(pageHeaderSelected);
+        this.setSelected(pageHeaderSelected);//!這邊就會呼叫subscribe()
         this.tableHeader.selection.setChecked(this.getSelected().get(page));
+        let currentRows = this.tableRows.filter(
+          (row) => row.index > start && row.index <= end
+        );
+
+        //要檢查pageHeaderSelected為true才要改
+        if (pageHeaderSelected.get(page)) {
+          currentRows.forEach((row) => {
+            row.selection.setChecked(this.getSelected().get(page));
+            row._render();
+          });
+        }
       },
     });
   }
@@ -332,22 +341,21 @@ class TableHeader extends BaseComponent {
         checked: false,
         handlers: (checked) => {
           let currentPage = this.table._pagination.currentPage;
-          const start =
-            currentPage * this.table.config.limits * this.table.config.limits;
+          const start = (currentPage * this.table.config.limits) - this.table.config.limits
+            ;
           const end =
-            currentPage * this.table.config.limits - this.table.config.limits;
+            currentPage * this.table.config.limits;
           let currentRows = this.table.tableRows.filter(
             (row) => row.index > start && row.index <= end
           );
-
           currentRows.forEach((row) => {
             row.selection.setChecked(checked);
+            row._render();
           });
 
           this.table.setSelected(
             this.table.getSelected().set(currentPage, checked)
           );
-          console.log("header checkbox handler:", this.table.getSelected());
         },
       });
       return checkbox;
@@ -370,15 +378,20 @@ class TableRow extends BaseComponent {
     this._init();
 
     subscribe((headerSelected) => {
-      //動態依據tableHeader勾選狀態設定
-      let isheaderSelected = headerSelected.get(table._pagination.currentPage);
-      //要檢查自己的check狀態?
-      if (isheaderSelected) {
-        this.selection.setChecked(true);
-        this._render();
+      //判斷是否為在指定頁數內的row
+      const currentPage = table._pagination.currentPage;
+      const start = (currentPage - 1) * table.config.limits;
+      const end = start + table.config.limits;
+      if (this.index >= start && this.index <= end) {
+        let isheaderSelected = headerSelected.get(currentPage);
+        //動態依據tableHeader勾選狀態設定
+        if (isheaderSelected) {
+          console.log(currentPage);
+          this.selection.setChecked(isheaderSelected);
+          table.tableHeader.selection.setChecked(isheaderSelected);
+          this._render();
+        }
       }
-
-      table.tableHeader.selection.setChecked(isheaderSelected);
     });
   }
 
@@ -438,7 +451,7 @@ class TableRow extends BaseComponent {
 var defaultTbcellConfig = {
   field: "",
   title: "",
-  sort: function () {},
+  sort: function () { },
   fixed: "",
   align: "left",
 };
