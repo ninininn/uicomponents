@@ -50,6 +50,13 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     @apply sticky top-0 bg-[var(--theme)] shadow-sm tracking-[1px] text-white select-none text-nowrap;
   }
 
+  .table thead th[data-sort] {
+    --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
+    --themeUnactive: color-mix(in srgb, var(--theme) 80%, var(--color-black) 20%);
+    --themeActive: color-mix(in srgb, var(--theme) 10%, var(--color-black) 90%);
+    @apply cursor-pointer [&_span]:flex [&_span]:gap-1 [&_.icon]:w-6 [&_.icon]:h-6 [&_.icon]:text-(--themeColor) data-[sort='dec']:[&_.icon]:rotate-x-180 data-[sort='dec']:[&_.icon]:transition-all data-[sort='dec']:[&_.icon]:duration-75 hover:[&_.icon]:text-(--themeActive);
+  }
+
   .table tbody {
     @apply w-full h-full min-h-50;
   }

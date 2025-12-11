@@ -160,15 +160,15 @@ export const Table = {
     name: "測試表格",
     cols: [
       {
-        field: 'useId', title: '使用者id', sort: true, fixed: false, align: "center", template: function (data) {
+        field: 'userId', title: '使用者id', sort: 'asc', fixed: false, align: "center", template: function (data) {
           if (data === 1) {
             UIUtils.setText(this.getElem(), "01");
           }
         }
       },
-      { field: 'id', title: '編號', sort: false, fixed: false, align: "center" },
-      { field: 'title', title: '內容', sort: true, fixed: false },
-      { field: 'done', title: '完成', sort: true, fixed: false, align: "center" },
+      { field: 'id', title: '編號', sort: 'dec', fixed: false, align: "center" },
+      { field: 'title', title: '內容', sort: false, fixed: false },
+      { field: 'done', title: '完成', sort: false, fixed: true, align: "center" },
     ],
     limits: 20,
     container: '.table-test-target'

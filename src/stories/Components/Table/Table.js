@@ -12,6 +12,7 @@ import { Dropdown } from "../Dropdown/Dropdown";
 const DATA_ATTR_INDEX = "index";
 const DATA_ATTR_ROWSELECTED = "rowSelected";
 const DATA_ATTR_FIELD = "field";
+const DATA_ATTR_SORT = "sort";
 
 var defaultTableConfig = {
   id: "",
@@ -145,35 +146,30 @@ export class Table extends BaseComponent {
   //更新表列資料
   _updateRows() {
     this.tableRows = this._setRows(this.data);
+  }
 
-    //click任一row時要檢查tableHeader是否全選，並依據當前頁的row重新設定HeaderSelected狀態
-    this.tableRows.forEach((row) => {
-      this.onevent(
-        row.getElem(),
-        "click",
-        function () {
-          if (this.getSelected().get(this._pagination.currentPage)) {
-            //是全選狀態
-            let isAllSelected = this._checkRowState();
-            this.tableHeader.selection.setChecked(isAllSelected);
-            this.setSelected(
-              this.getSelected().set(
-                this._pagination.currentPage,
-                isAllSelected
-              )
-            );
-          }
-        }.bind(this),
-        false
-      );
-    });
+  //依據欄位排序設定排序(只針對當前頁)
+  _rowSort(rule, field) {
+    switch (rule) {
+      case 'asc'://小到大 升冪
+        // currentRows.sort((x, y) => x.data[field] - y.data[field]);
+        this.data.sort((x, y) => x[field] - y[field]);
+        break;
+      case 'dec'://大到小 降冪
+        // currentRows.sort((x, y) => y.data[field] - x.data[field]);
+        this.data.sort((x, y) => y[field] - x[field]);
+        break;
+    }
+
+    this._updateRows();
+    this._showRows((this.getCurrentPage() - 1) * this.config.limits, ((this.getCurrentPage() - 1) * this.config.limits) + this.config.limits);
   }
 
   //紀錄勾選欄位資料
   //[外部&內部控制]-檢查是否全選rows
   _checkRowState() {
     //! 如果有任何一row取消選取，也要改變header狀態
-    let range = this._pagination.currentPage * this.config.limits;
+    let range = this.getCurrentPage() * this.config.limits;
     let checkRows = this.tableRows.filter(
       (row) => row.index <= range && row.index > range - this.config.limits
     );
@@ -182,7 +178,7 @@ export class Table extends BaseComponent {
   }
 
   //渲染指定範圍的rows
-  //使用時機:goPage()、
+  //使用時機:goPage()、_rowSort()
   _showRows(startIndex, endIndex) {
     if (!this.tableRows || this.tableRows.length === 0) return;
     //generate new-rows
@@ -246,12 +242,33 @@ export class Table extends BaseComponent {
     this._render();
     this._showRows(0, this.config.limits);
 
+    //click任一row時要檢查tableHeader是否全選，並依據當前頁的row重新設定HeaderSelected狀態
+    this.tableRows.forEach((row) => {
+      this.onevent(
+        row.getElem(),
+        "click",
+        function () {
+          if (this.getSelected().get(this.getCurrentPage())) {
+            //是全選狀態
+            let isAllSelected = this._checkRowState();
+            this.tableHeader.selection.setChecked(isAllSelected);
+            this.setSelected(
+              this.getSelected().set(
+                this.getCurrentPage(),
+                isAllSelected
+              )
+            );
+          }
+        }.bind(this),
+        false
+      );
+    });
     return this;
   }
 
   //[外部控制]-全選全頁
-  selectedFullPage(pageNum = this._pagination.currentPage) {
-    this.setSelected(this.getSelected().set(pageNum, true));
+  selectedFullPage(pageNum = this.getCurrentPage(), selected = true) {
+    this.setSelected(this.getSelected().set(pageNum, selected));
     return this;
   }
 
@@ -287,8 +304,36 @@ export class Table extends BaseComponent {
             row._render();
           });
         }
+
+        console.log("目前selected的row:", this.getSelectedRows());
       },
     });
+  }
+
+  //取得當前頁rows
+  getCurrentRows() {
+    let currentPage = this.getCurrentPage();
+    const start = (currentPage - 1) * this.config.limits;
+    const end = start + this.config.limits;
+    let currentRows = this.tableRows.slice(start, end);
+    return currentRows;
+  }
+
+  //取得當前頁面number
+  getCurrentPage() {
+    return this._pagination.currentPage;
+  }
+
+  //清除所有選取狀態
+  clearSelected() {
+    let totalPages = this._pagination.total;
+    for (let i = 1; i <= totalPages; i++) {
+      this.selectedFullPage(i, false);
+    }
+    const changeEvent = new Event("change");
+
+    this.tableHeader.selection.setChecked(false);
+    this.tableHeader.selection.getElem().dispatchEvent(changeEvent);
   }
 }
 
@@ -309,6 +354,23 @@ class TableHeader extends BaseComponent {
   //初始化
   _init() {
     this._render();
+    this._bindEvent();
+  }
+
+  _bindEvent() {
+    function setSortCursor(e) {
+      e.stopPropagation();
+      if (e.currentTarget.dataset.sort) {
+        let sort = e.currentTarget.dataset.sort === 'asc' ? 'dec' : 'asc';
+        this.table._rowSort(sort, e.currentTarget.dataset.field);
+        UIUtils.setAttribute(e.currentTarget, DATA_ATTR_SORT, sort);
+      }
+    }
+    if (this.cols.some((col) => col.sort)) {
+      this.getElem().querySelectorAll("[data-sort]").forEach((th) => {
+        this.onevent(th, "click", setSortCursor.bind(this));
+      });
+    }
   }
 
   _render() {
@@ -323,9 +385,20 @@ class TableHeader extends BaseComponent {
 
     for (let col of this.cols) {
       let th = document.createElement("th");
+      let sortIcon = document.createElement("span");
       UIUtils.setAttribute(th, DATA_ATTR_FIELD, col.field);
-      UIUtils.setText(th, col.title);
+      UIUtils.setText(sortIcon, col.title);
 
+      if (col.sort) {
+        UIUtils.setAttribute(th, DATA_ATTR_SORT, col.sort);
+        sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
+<path d="M4.24999 10.7617V15C4.24999 15.4142 4.58578 15.75 4.99999 15.75C5.4142 15.75 5.74999 15.4142 5.74999 15V10.7617C5.83248 10.875 5.9131 10.9879 5.9912 11.0967L5.9958 11.1031C6.1467 11.3133 6.30972 11.5404 6.43847 11.6855C6.71335 11.9954 7.18818 12.0239 7.49804 11.749C7.80761 11.4742 7.83604 11.0002 7.56151 10.6904C7.49513 10.6156 7.38199 10.4613 7.20995 10.2217L7.19283 10.1978C7.0366 9.98019 6.84876 9.71852 6.65526 9.46875C6.45751 9.2135 6.23286 8.94285 6.00487 8.73047C5.89083 8.62424 5.75714 8.51521 5.60937 8.42871C5.46887 8.34647 5.25683 8.25 4.99999 8.25C4.74316 8.25 4.53111 8.34647 4.39062 8.42871C4.24284 8.51521 4.10915 8.62424 3.99511 8.73047C3.76712 8.94285 3.54247 9.2135 3.34472 9.46875C3.14409 9.72771 2.94956 9.99947 2.79003 10.2217C2.61799 10.4613 2.50485 10.6156 2.43847 10.6904C2.16394 11.0002 2.19237 11.4742 2.50194 11.749C2.8118 12.0239 3.28663 11.9954 3.56151 11.6855C3.69026 11.5403 3.85328 11.3133 4.00418 11.1031L4.00878 11.0967C4.08689 10.9879 4.1675 10.875 4.24999 10.7617Z" fill="currentColor"/>
+</svg>
+`;
+      }
+
+      th.appendChild(sortIcon);
       main.appendChild(th);
     }
     tr.appendChild(main);
@@ -340,21 +413,14 @@ class TableHeader extends BaseComponent {
         theme: this._theme,
         checked: false,
         handlers: (checked) => {
-          let currentPage = this.table._pagination.currentPage;
-          const start = (currentPage * this.table.config.limits) - this.table.config.limits
-            ;
-          const end =
-            currentPage * this.table.config.limits;
-          let currentRows = this.table.tableRows.filter(
-            (row) => row.index > start && row.index <= end
-          );
+          let currentRows = this.table.getCurrentRows();
           currentRows.forEach((row) => {
             row.selection.setChecked(checked);
             row._render();
           });
 
           this.table.setSelected(
-            this.table.getSelected().set(currentPage, checked)
+            this.table.getSelected().set(this.table.getCurrentPage(), checked)
           );
         },
       });
@@ -379,14 +445,13 @@ class TableRow extends BaseComponent {
 
     subscribe((headerSelected) => {
       //判斷是否為在指定頁數內的row
-      const currentPage = table._pagination.currentPage;
+      const currentPage = table.getCurrentPage();
       const start = (currentPage - 1) * table.config.limits;
       const end = start + table.config.limits;
       if (this.index >= start && this.index <= end) {
         let isheaderSelected = headerSelected.get(currentPage);
         //動態依據tableHeader勾選狀態設定
         if (isheaderSelected) {
-          console.log(currentPage);
           this.selection.setChecked(isheaderSelected);
           table.tableHeader.selection.setChecked(isheaderSelected);
           this._render();
@@ -452,7 +517,7 @@ var defaultTbcellConfig = {
   field: "",
   title: "",
   sort: function () { },
-  fixed: "",
+  fixed: false,
   align: "left",
 };
 
@@ -472,7 +537,7 @@ class TableCell extends BaseComponent {
   }
 
   _render() {
-    let { field, align = "left", template } = this.config;
+    let { field, align = "left", template, fixed } = this.config;
     switch (align) {
       case "center":
         UIUtils.addClass(this._elem, ["text-center"]);
@@ -532,7 +597,6 @@ class Pagination extends BaseComponent {
   }
 
   _render() {
-    console.log(this);
     this._elem.innerHTML = ``; //清空
     super.setTheme(this._theme);
     UIUtils.setProperty(this._elem, "--theme", this._theme);

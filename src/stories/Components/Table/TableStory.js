@@ -24,6 +24,9 @@ export const createTable = ({
     let trigger = document.createElement("button");
     trigger.className = "btn btn-primary mb-3";
     trigger.textContent = "create Table";
+    let clear = document.createElement("button");
+    clear.className = "btn btn-primary mb-3";
+    clear.textContent = "clear Selected";
 
     let tableTarget = document.createElement("div");
     tableTarget.className = "table-test-target";
@@ -31,6 +34,7 @@ export const createTable = ({
 
     parent.appendChild(trigger);
     parent.appendChild(tableTarget);
+    parent.appendChild(clear);
 
     let initOptions = {
         id: id,                 //tableId
@@ -77,7 +81,11 @@ export const createTable = ({
                     console.log("table_instance:", table_instance);
                 }, 5000);
 
+                clear.addEventListener("click", () => {
+                    table_instance.clearSelected();
+                });
             });;
     });
+
     return parent;
 };
