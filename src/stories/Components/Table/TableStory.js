@@ -22,10 +22,10 @@ export const createTable = ({
     let parent = document.createElement("div");
     parent.className = "mx-auto grid place-items-center";
     let trigger = document.createElement("button");
-    trigger.className = "btn btn-primary mb-3";
+    trigger.className = "btn btn-secondary mb-3";
     trigger.textContent = "create Table";
     let clear = document.createElement("button");
-    clear.className = "btn btn-primary mb-3";
+    clear.className = "btn btn-danger outline-btn mb-3";
     clear.textContent = "clear Selected";
 
     let tableTarget = document.createElement("div");
@@ -84,8 +84,15 @@ export const createTable = ({
                 clear.addEventListener("click", () => {
                     table_instance.clearSelected();
                 });
+
+                let webcustomTable = document.createElement("custom-table");
+                webcustomTable.setCol(cols);
+                webcustomTable.setData(json);
+
+                parent.appendChild(webcustomTable);
             });;
     });
+
 
     return parent;
 };

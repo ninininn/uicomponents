@@ -71,6 +71,17 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     @apply py-1.5 px-3;
   }
 
+  @media screen and (max-width: 500px) {
+
+    .table :is(tr, td) {
+      @apply block
+    }
+
+    .table td:not(:first-child)::before {
+      @apply content-[attr(data-field)]
+    }
+  }
+
   .pagination {
     --theme: var(--themeColor, var(--color-primary-500));
     @apply flex gap-2 my-3 items-center
