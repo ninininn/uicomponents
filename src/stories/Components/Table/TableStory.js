@@ -71,7 +71,7 @@ export const createTable = ({
     // });
     trigger.addEventListener("click", () => {
         let table_instance = new Table(initOptions);
-        fetchData("https://jsonplaceholder.typicode.com/todos")
+        fetchData("https://jsonplaceholder.typicode.com/comments")
             .then((response) => response.json())
             .then((json) => {
                 //模擬資料載入
@@ -84,12 +84,6 @@ export const createTable = ({
                 clear.addEventListener("click", () => {
                     table_instance.clearSelected();
                 });
-
-                let webcustomTable = document.createElement("custom-table");
-                webcustomTable.setCol(cols);
-                webcustomTable.setData(json);
-
-                parent.appendChild(webcustomTable);
             });;
     });
 

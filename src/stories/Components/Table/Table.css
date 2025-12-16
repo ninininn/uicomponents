@@ -42,12 +42,12 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   .table {
     /*checkbox變數*/
     --themeColor: var(--theme);
-    @apply w-full h-full rounded-md;
+    @apply rounded-md table-fixed;
   }
 
   .table thead {
     --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
-    @apply sticky top-0 bg-[var(--theme)] shadow-sm tracking-[1px] text-white select-none text-nowrap;
+    @apply w-full sticky top-0 bg-[var(--theme)] shadow-sm tracking-[1px] text-white select-none text-nowrap;
   }
 
   .table thead th[data-sort] {

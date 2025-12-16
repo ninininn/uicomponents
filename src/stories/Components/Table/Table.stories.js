@@ -160,17 +160,18 @@ export const Table = {
     name: "測試表格",
     cols: [
       {
-        field: 'userId', title: '使用者id', sort: 'asc', fixed: false, align: "center", template: function (data) {
+        field: 'postId', title: 'postId', sort: 'asc', fixed: false, align: "center", template: function (data) {
           if (data === 1) {
             UIUtils.setText(this.getElem(), "01");
           }
         }
       },
-      { field: 'id', title: '編號', sort: 'dec', fixed: false, align: "center" },
-      { field: 'title', title: '內容', sort: false, fixed: false },
-      { field: 'done', title: '完成', sort: false, fixed: true, align: "center" },
+      { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "center" },
+      { field: 'name', title: '名字', sort: false, fixed: false, align: "center" },
+      { field: 'email', title: 'email', sort: false, fixed: true, align: "center" },
+      { field: 'body', title: '內容', sort: false, fixed: false },
     ],
-    limits: 20,
+    limits: 5,
     container: '.table-test-target'
   },
   // play: async ({ args, canvas, userEvent }) => {
