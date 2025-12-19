@@ -218,14 +218,14 @@
       -webkit-appearance: none;
       appearance: none;
       border-radius: 0.55rem;
-      border: 3.5px solid transparent;
+      border: 3px solid transparent;
       background-clip: content-box;
-      @apply bg-gray-400
+      @apply bg-gray-400 cursor-pointer hover:bg-gray-500
     }
 
     *::-webkit-scrollbar-track {
       background: var(--scrollbar-color-track, transparent);
-      margin: 1rem;
+      /* margin: 1rem; */
     }
 
     *::-webkit-scrollbar {

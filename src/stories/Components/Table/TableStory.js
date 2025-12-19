@@ -42,13 +42,15 @@ export const createTable = ({
         limits: limits,         //單頁顯示筆數限制
         container: container || '.table-test-target',      //container容器(table本身就有一個table-container)
         cols: cols,              //欄位設定
-        tools: tools,           //是否顯示工具列
+        tools: tools ? [{ classes: ["btn-danger"], text: "工具" }, { classes: ["btn-danger", "outline-btn"], text: "工具" }] : false,           //是否顯示工具列
         selection: selection,   //是否開啟勾選列
         theme: theme,
         classes: classes,       //自定義class
         complete: complete,     //渲染完成後要執行的fn
         error: error,           //渲染失敗執行的fn
         handler: handler,       //渲染時執行的fn(非同步)
+        url: "https://jsonplaceholder.typicode.com/comments",
+        controlPage: true,
     };
 
     //fake data
@@ -71,12 +73,13 @@ export const createTable = ({
     // });
     trigger.addEventListener("click", () => {
         let table_instance = new Table(initOptions);
+        console.log("table_instance:", table_instance);
         fetchData("https://jsonplaceholder.typicode.com/comments")
             .then((response) => response.json())
             .then((json) => {
                 //模擬資料載入
                 setTimeout(() => {
-                    table_instance.setData(json).selectedFullPage(1);
+                    // table_instance.setData(json).selectedFullPage(1);
 
                     console.log("table_instance:", table_instance);
                 }, 5000);

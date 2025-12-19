@@ -1,5 +1,7 @@
 // import { signal, computed, effect } from '@preact/signals-core';
 
+import { cache } from "react";
+
 /**
  * 工具Functions
  */
@@ -68,7 +70,7 @@ export class UIUtils {
         btn.type = "button";
 
         if (handler) {
-            btn.addEventListener("click", (e) => {
+            btn.addEventListener("click", function (e) {
                 handler.call(btn, e, btnConfig);
             });
         }
@@ -195,7 +197,7 @@ export function defineContainer(container, type = null) {
  * @returns
  */
 export function findElem(selector) {
-    if (!selector) return;
+    if (!selector) console.error("請放入有效的容器元素");
 
     return document.querySelector(selector);
 }
@@ -209,6 +211,11 @@ export class BaseComponent {
         this._elem = elem; //子類別instance的渲染DOM節點
         this._theme = theme || "light";
         this._eventListeners = []; // record eventListeners
+    }
+
+    get cache() {
+        let initData = createCacheData(this.cacheKey, {});
+        return initData;
     }
 
     // 資料初始化
@@ -266,11 +273,6 @@ export class BaseComponent {
         return this._elem;
     }
 
-    //取得childrenElem節點入口
-    // getChild() {
-    //     return this.
-    // }
-
     setTheme(themeValue) {
         this._theme = themeValue;
         this.render();
@@ -285,6 +287,51 @@ export class BaseComponent {
         }, 100);
     }
 }
+
+//快取設定
+class componentCache {
+    constructor(cacheKey, value) {
+        this._key = cacheKey;
+        this._value = value;
+        this._getCache = this.cache();
+    }
+
+    get cache() {
+        return;
+    }
+
+    get key() {
+        return this._key;
+    }
+
+    get value() {
+        return this._value;
+    }
+}
+
+function createCacheData(cache_key, initValue) {
+    let cache = new componentCache(cache_key, initValue);
+    let set = function (value) {
+        localStorage.setItem(cache_key, value);
+    };
+
+    let get = function () {
+        let data = JSON.parse(localStorage.getItem(cache_key));
+        if (!data) {
+            localStorage.setItem(cache_key, {});
+        }
+
+        console.log(JSON.parse(localStorage.getItem(cache_key)));
+        return JSON.parse(localStorage.getItem(cache_key));
+    };
+
+    let remove = function () {
+        localStorage.removeItem(cache_key);
+    };
+
+    return { cache, set, get, remove };
+}
+
 
 /**
  * State 控制器
@@ -394,43 +441,4 @@ export function debounce(callback, delay) {
             callback(...args);
         }, delay);
     };
-}
-
-/**
- * Signal 概念實作
- */
-
-export function createSignals(initialValue) {
-    let value = initialValue;
-    const get = () => value; //getter
-    const set = (updateValue) => {
-        value = updateValue;
-    }; //setter
-
-    return { get, set };
-}
-
-
-class Signal {
-    constructor(value) {
-        this.value = value;
-        this.subscribers = [];
-    }
-
-    getValue() {
-        return this.value;
-    }
-
-    setValue(newValue) {
-        this.value = newValue;
-        this.emit();
-    }
-
-    emit() {
-        this.subscribers.forEach((subscriber) => subscriber(this.value));
-    }
-
-    subscribe(callbackFn) {
-        this.subscribers.push(callbackFn);
-    }
 }

@@ -23,7 +23,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   /*table容器*/
   .table-container {
     --theme: var(--themeColor, var(--color-primary-100));
-    @apply relative w-full h-fit rounded-md bg-[#fff] max-w-full max-h-80 overflow-auto shadow-sm scroll-smooth isolate;
+    @apply relative w-full h-fit bg-[#fff] max-w-full max-h-80 overflow-auto scroll-smooth isolate;
   }
 
   .table-container label {
@@ -42,12 +42,12 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   .table {
     /*checkbox變數*/
     --themeColor: var(--theme);
-    @apply rounded-md table-fixed;
+    @apply table-fixed mr-2;
   }
 
   .table thead {
     --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
-    @apply w-full sticky top-0 bg-[var(--theme)] shadow-sm tracking-[1px] text-white select-none text-nowrap;
+    @apply w-full sticky top-0 overflow-hidden [&_th]:bg-[var(--theme)] [&_th:is(:first-child)]:rounded-l-xs [&_th:is(:last-child)]:rounded-r-xs tracking-[1px] text-white select-none text-nowrap hidden md:table-header-group;
   }
 
   .table thead th[data-sort] {
@@ -63,7 +63,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   .table tbody tr {
     --hover-text-theme: color-mix(in srgb, var(--themeColor) 60%, var(--color-black) 40%);
-    @apply w-full transition-all bg-[#fff] odd:bg-gray-50 odd:data-[rowSelected]:bg-[var(--theme)]/40 data-[rowSelected]:bg-[var(--theme)]/20 data-[rowSelected]:hover:bg-gray-100 has-[td:hover]:bg-gray-100 cursor-pointer hover:[&_.checkbox]:border-[var(--theme)] hover:[&_.checkbox]:ring-2 hover:[&_.checkbox]:ring-[var(--theme)]/50 [&_.checkbox]:checked:text-[var(--theme)];
+    @apply w-full border-b border-gray-300 transition-all bg-[#fff] odd:bg-gray-50 odd:data-[rowSelected]:bg-[var(--theme)]/40 data-[rowSelected]:bg-[var(--theme)]/20 data-[rowSelected]:hover:bg-gray-100 has-[td:hover]:bg-gray-100 cursor-pointer hover:[&_.checkbox]:border-[var(--theme)] hover:[&_.checkbox]:ring-2 hover:[&_.checkbox]:ring-[var(--theme)]/50 [&_.checkbox]:checked:text-[var(--theme)];
   }
 
   .table thead th,
@@ -78,8 +78,13 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     }
 
     .table td:not(:first-child)::before {
-      @apply content-[attr(data-field)]
+      @apply content-[attr(data-field)] bg-(--themeColor) block;
     }
+
+  }
+
+  .table-tools {
+    @apply flex justify-end w-full mb-2
   }
 
   .pagination {
@@ -100,6 +105,6 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .pagination-jump {
-    @apply flex gap-1 items-center text-gray-400 text-nowrap select-none [&>div]:max-w-20
+    @apply flex grow-[2] mr-3 justify-end gap-1 items-center text-gray-400 text-nowrap select-none [&>div]:max-w-20
   }
 }

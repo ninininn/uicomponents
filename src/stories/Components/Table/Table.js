@@ -13,20 +13,21 @@ const DATA_ATTR_INDEX = "index";
 const DATA_ATTR_ROWSELECTED = "rowSelected";
 const DATA_ATTR_FIELD = "field";
 const DATA_ATTR_SORT = "sort";
+const PAGE_LIMITS = [10, 20, 25, 50, 100];
 
 var defaultTableConfig = {
   id: "",
   container: null,
-  limits: 50,
+  limits: PAGE_LIMITS[2],
   name: "defaultTable",
   classes: ["table-container"],
   cols: [],
   selection: "checkbox",
-  tools: [{ classes: ["btn-danger", "outline-btn"], text: "工具" }, { classes: ["btn-danger", "outline-btn"], text: "工具" }]
+  tools: [{ classes: ["btn-danger", "outline-btn"], text: "工具" }, { classes: ["btn-danger", "outline-btn"], text: "工具" }],
 };
 
 export class Table extends BaseComponent {
-  constructor(options = {}, dataArr = []) {
+  constructor(options = {}, dataArr) {
     let tableContainer = document.createElement("div");
     const tableElem = document.createElement("table");
 
@@ -36,29 +37,20 @@ export class Table extends BaseComponent {
     this.UItype = "Table";
     this.id = options.id;
     this._config = Object.assign(defaultTableConfig, options);
-    this.data = dataArr;
-
     this.table = tableElem;
-    this.dataCounts = this.data.length;
-
     this.tableBody = document.createElement("tbody");
-    this.tableHeader = new TableHeader(this); //!這邊傳入的this還沒建置完成!
-
+    this.tableHeader = new TableHeader(this);
     let colsCount = this.config.cols.length;
     this.skeleton = new Skeleton({
       type: "table",
       colNum: this.config.selection ? colsCount + 1 : colsCount,
     });
+
+    this.data = dataArr;
+    this.dataCounts = this.data?.length || 0;
     createContext(this, this.config.cols);
 
     this._createPagination(); //建立對應分頁元件
-
-    //TODO initialValue改為new Set()，分別對應每一頁
-    const [getSelected, setSelected, subscribeSelected] = bindState(new Map());
-    this.getSelected = getSelected;
-    this.setSelected = setSelected;
-    this.subscribeSelected = subscribeSelected;
-
     this._init();
   }
 
@@ -66,10 +58,23 @@ export class Table extends BaseComponent {
     return this._config;
   }
 
+  get cacheKey() {//內部快取key
+    return this.UItype + "-" + this.id;
+  }
+
+  //!取得內部快取
+
+  async pullData(url) {
+    let table = this;
+
+    let data = await fetch(url);
+    return data;
+  }
+
+
   //初始化
   //資料改變應在邏輯層進行，然後再呼叫 _render()
   _init() {
-
     //建立工具列
     if (this.config.tools) {
       let toolBar = document.createElement("div");
@@ -87,15 +92,24 @@ export class Table extends BaseComponent {
   //樣式渲染(UI snpshot)把目前狀態→轉成畫面
   //根據目前的 state 產出畫面結構
   _render() {
-    console.log("table_render:", this);
     super.setTheme(this.config.theme);
     UIUtils.setProperty(this._elem, "--theme", this._theme);
 
-    //TODO 渲染完成前顯示skeleton
+    //TODO 渲染完成前顯示skeleton;
     if (this.dataCounts < 1) {
       this.tableBody.appendChild(this.skeleton.getElem());
+      this.skeleton.show();
     } else {
       this.skeleton.hide();
+    }
+
+    if (!this.data && this.config.url) {
+      this.pullData(this.config.url)
+        .then((res) => res.json())
+        .then((data) => {
+          this.setData(data);
+          this.skeleton.hide();
+        });
     }
 
     //組裝
@@ -125,21 +139,16 @@ export class Table extends BaseComponent {
   _bindEvent() {
     //click TableHeader的Checkbox時要全選該頁Rows
 
-    //判斷rows全選
+    //檢查該row是否已經在cache內
     this.onevent(
       this.tableBody,
       "click",
       function (e) {
         console.log("check rows state in this page");
         let targetRowIndex = parseInt(e.target.closest("tr[data-index]").dataset.index);
-        let checkState = this.tableRows[targetRowIndex - 1].selection.getChecked();
-        this.tableRows[targetRowIndex - 1].selection.setChecked(!checkState);
-        const changeEvent = new Event("change");
-        let isAllrowSelected = this._checkRowState();
-        this.tableHeader.selection.setChecked(isAllrowSelected);
-        this.tableHeader.selection.getElem().dispatchEvent(changeEvent);
-        if (isAllrowSelected) {
-        }
+
+        //如果沒有在快取內->設定完放入快取
+
       }.bind(this),
       false
     );
@@ -154,7 +163,6 @@ export class Table extends BaseComponent {
         index: ++index,
         selection: selection,
         table: thisTable,
-        subscribe: this.subscribeSelected,
       };
 
       return new TableRow(args);
@@ -182,7 +190,7 @@ export class Table extends BaseComponent {
     }
 
     this._updateRows();
-    this._showRows((this.getCurrentPage() - 1) * this.config.limits, ((this.getCurrentPage() - 1) * this.config.limits) + this.config.limits);
+    this._showRows();
   }
 
   //紀錄勾選欄位資料
@@ -199,11 +207,8 @@ export class Table extends BaseComponent {
 
   //渲染指定範圍的rows
   //使用時機:goPage()、_rowSort()
-  _showRows(startIndex, endIndex) {
-    //generate new-rows
-    // let showRows = this.tableRows.slice(startIndex, endIndex);
-    let showRows = this.data.slice(startIndex, endIndex);
-    let renderRows = this._createRows(showRows);
+  _showRows() {
+    let renderRows = this._createRows(this.getCurrentData());
     let rowFragment = document.createDocumentFragment();
     for (let row of renderRows) {
       rowFragment.appendChild(row.getElem());
@@ -253,13 +258,7 @@ export class Table extends BaseComponent {
     this.dataCounts = this.data.length;
     this._pagination.renderPage(this.dataCounts); //更新pagination資料數量
 
-    let headerSelected = this.getSelected(); //取得Map
-    for (let i = 0; i < this._pagination.total; i++) {
-      headerSelected.set(i + 1, false);
-    }
-    this.setSelected(headerSelected);
-
-    this._showRows(0, this.config.limits);
+    this._showRows();
     this._updateRows(); //更新rows資料
     this._render();
 
@@ -289,7 +288,7 @@ export class Table extends BaseComponent {
 
   //[外部控制]-全選全頁
   selectedFullPage(pageNum = this.getCurrentPage(), selected = true) {
-    this.setSelected(this.getSelected().set(pageNum, selected));
+    let range = pageNum * this.config.limits;
     return this;
   }
 
@@ -301,44 +300,25 @@ export class Table extends BaseComponent {
       currentPage: 1,
       pageSize: this.config.limits,
       total: this.dataCounts,
-      handler: (page) => {
-        const start = (page - 1) * this.config.limits;
-        const end = start + this.config.limits;
-        this._showRows(start, end);
-
+      controlPage: this.config.controlPage,
+      handler: ({ page, size }) => {
+        this.config.limits = size;
+        this._showRows();
         //設定HeaderSelected值
-        let pageHeaderSelected = this.getSelected().set(
-          page,
-          this.getSelected().get(page)
-        );
-
-        this.setSelected(pageHeaderSelected);//!這邊就會呼叫subscribe()
-        this.tableHeader.selection.setChecked(this.getSelected().get(page));
-        let currentRows = this.tableRows.filter(
-          (row) => row.index > start && row.index <= end
-        );
-
-        console.log("pageHeaderSelected:", pageHeaderSelected);
-        //要檢查pageHeaderSelected為true才要改
-        if (pageHeaderSelected.get(page)) {
-          currentRows.forEach((row) => {
-            row.selection.setChecked(this.getSelected().get(page));
-            row._render();
-          });
-        }
-
         console.log("目前selected的row:", this.getSelectedRows());
+        console.log("目前page:", page);
+        console.log("目前pageSize:", size);
       },
     });
   }
 
   //取得當前頁rows
-  getCurrentRows() {
+  getCurrentData() {
     let currentPage = this.getCurrentPage();
     const start = (currentPage - 1) * this.config.limits;
     const end = start + this.config.limits;
-    let currentRows = this.tableRows.slice(start, end);
-    return currentRows;
+    let currentData = this.data.slice(start, end);
+    return currentData;
   }
 
   //取得當前頁面number
@@ -439,10 +419,6 @@ class TableHeader extends BaseComponent {
             row.selection.setChecked(checked);
             row._render();
           });
-
-          this.table.setSelected(
-            this.table.getSelected().set(this.table.getCurrentPage(), checked)
-          );
         },
       });
       return checkbox;
@@ -454,7 +430,7 @@ class TableHeader extends BaseComponent {
 
 //TableRow 表列
 class TableRow extends BaseComponent {
-  constructor({ data, index, selection = "checkbox", table, subscribe }) {
+  constructor({ data, index, selection = "checkbox", table }) {
     const rowContainer = document.createElement("tr");
     super(rowContainer, table._theme);
     this.UItype = "TableRow";
@@ -463,22 +439,6 @@ class TableRow extends BaseComponent {
     this.cells = this._setTableCells(this.data, useContext(table));
     this.index = index;
     this._init();
-
-    subscribe((headerSelected) => {
-      //判斷是否為在指定頁數內的row
-      const currentPage = table.getCurrentPage();
-      const start = (currentPage - 1) * table.config.limits;
-      const end = start + table.config.limits;
-      if (this.index >= start && this.index <= end) {
-        let isheaderSelected = headerSelected.get(currentPage);
-        //動態依據tableHeader勾選狀態設定
-        if (isheaderSelected) {
-          this.selection.setChecked(isheaderSelected);
-          table.tableHeader.selection.setChecked(isheaderSelected);
-          this._render();
-        }
-      }
-    });
   }
 
   _init() {
@@ -495,7 +455,6 @@ class TableRow extends BaseComponent {
 
   _render() {
     let isChecked = this.selection.getChecked();
-    console.log("row's _render:", isChecked);
     if (isChecked) {
       UIUtils.setAttribute(this._elem, DATA_ATTR_ROWSELECTED);
     } else {
@@ -507,6 +466,8 @@ class TableRow extends BaseComponent {
     function checkEvent(e) {
       let isChecked = this.selection.getChecked();
       this.selection.setChecked(!isChecked);
+      //紀錄checked的row-index放入cache
+
       //TODO 點擊時 執行設定好的on();
       this._render();
     }
@@ -528,9 +489,15 @@ class TableRow extends BaseComponent {
     }
   }
   _setTableCells(data, colConfig) {
-    let cells = Object.values(data).map((value, index) => {
-      return new TableCell(value, colConfig[index]);
+    console.log("cell data:", data);
+    console.log("Object.values(data):", Object.values(data));
+    console.log("colConfig:", colConfig);
+    let cells = colConfig.map((config, index) => {
+      return new TableCell(Object.values(data)[index], config);
     });
+    // let cells = Object.values(data).map((value, index) => {
+    //   return new TableCell(value, colConfig[index]);
+    // });
     return cells;
   }
 }
@@ -592,8 +559,9 @@ const DATA_ATTR_NEXT = "next";
 var defaultPaginatioConfig = {
   jump: true, //直接跳轉到指定頁功能否開啟
   initCurrentPage: 1,
-  pageSize: 20, //limits單頁顯示數量
+  pageSize: PAGE_LIMITS[1], //limits單頁顯示數量
   total: 0, //資料總數
+  controlPage: false,//是否可以操作每頁顯示數量
 };
 
 class Pagination extends BaseComponent {
@@ -665,6 +633,7 @@ class Pagination extends BaseComponent {
 
     //跳轉至指定頁功能
     if (this.config.jump) this._createJumpCompo();
+    if (this.config.controlPage) this._createPageControl();
   }
 
   _bindEvent() {
@@ -681,7 +650,7 @@ class Pagination extends BaseComponent {
       }
 
       this.goPage(pageNum);
-      this.handler(pageNum);
+      this.handler({ page: pageNum, size: this.config.pageSize });
     }
     super.onevent(this._elem, "click", onClickHandler.bind(this));
   }
@@ -777,7 +746,7 @@ class Pagination extends BaseComponent {
       function (e) {
         let pageNum = Number(e.target.value);
         this.goPage(pageNum);
-        this.handler(pageNum);
+        this.handler({ page: pageNum, size: this.config.pageSize });
       }.bind(this)
     );
 
@@ -789,6 +758,39 @@ class Pagination extends BaseComponent {
 
     jumpCompo.appendChild(jumpFragment);
     this._elem.appendChild(jumpCompo);
+  }
+
+  _createPageControl() {
+    let pageController = document.createElement("div");
+    UIUtils.addClass(pageController, ["pagination-jump"]);
+    let pagesOption = [];
+    for (let i = 0; i < PAGE_LIMITS.length; i++) {
+      let opt = { value: PAGE_LIMITS[i], text: `${PAGE_LIMITS[i]}條` };
+      if (PAGE_LIMITS[i] === this.config.pageSize) {
+        opt.selected = true;
+      };
+      pagesOption.push(opt);
+    }
+
+    let tablepageDropdown = new Dropdown(
+      "table-page-dropdown",
+      pagesOption, null,
+      function (e) {
+        let pageSize = Number(e.target.value);
+        this._config.pageSize = pageSize;
+        this.renderPage(this._config.total);
+        this.handler({ page: this.currentPage, size: pageSize });
+      }.bind(this)
+    );
+
+    let pageFragment = document.createDocumentFragment();
+
+    pageFragment.appendChild(document.createTextNode("每頁顯示"));
+    pageFragment.appendChild(tablepageDropdown.containerEl);
+    pageFragment.appendChild(document.createTextNode(` / 頁`));
+
+    pageController.appendChild(pageFragment);
+    this._elem.appendChild(pageController);
   }
   //[外部控制]-生成對應pages
   renderPage(totalPages) {

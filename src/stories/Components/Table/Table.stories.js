@@ -47,12 +47,12 @@ export default {
       },
     },
     limits: {
-      control: "number",
+      control: "select",
+      options: [10, 20, 25, 50, 100],
       description: "每頁顯示的最多筆數",
-      min: 1,
       table: {
         category: "configurations",
-        defaultValue: { summary: "50" },
+        defaultValue: { summary: "25" },
         type: { summary: "number" },
       },
     },
@@ -146,7 +146,7 @@ export default {
     // handlers: action("change"),
     id: "table_first",
     classes: ["table-container"],
-    limits: 20,
+    limits: 25,
     selection: "checkbox",
     tools: true,
     theme: "var(--color-primary-500)",
@@ -161,17 +161,27 @@ export const Table = {
     cols: [
       {
         field: 'postId', title: 'postId', sort: 'asc', fixed: false, align: "center", template: function (data) {
-          if (data === 1) {
-            UIUtils.setText(this.getElem(), "01");
-          }
+          let template = `<div>${data}</div>`;
+          this.getElem().innerHTML = template;
         }
       },
       { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "center" },
       { field: 'name', title: '名字', sort: false, fixed: false, align: "center" },
       { field: 'email', title: 'email', sort: false, fixed: true, align: "center" },
       { field: 'body', title: '內容', sort: false, fixed: false },
+      {
+        field: 'operate', title: '操作', sort: false, fixed: false, template: function (data) {
+          console.log("點擊的row data是:", data);
+          let template = UIUtils.setButtons({
+            classes: ["btn-sm", "btn-success"], text: "操作按鈕", handler: function (e) {
+              console.log("點擊的row data是:", data);
+            }.bind(this)
+          });
+          this.getElem().appendChild(template);
+        }
+      },
     ],
-    limits: 5,
+    limits: 25,
     container: '.table-test-target'
   },
   // play: async ({ args, canvas, userEvent }) => {
