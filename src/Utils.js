@@ -78,6 +78,15 @@ export class UIUtils {
         return btn;
     }
 
+    static setBtnGroup(btns, container) {
+        let buttons = btns.map((btnConfig) => UIUtils.setButtons(btnConfig));
+        if (container) {
+            container.append(...buttons);
+            return container;
+        }
+        return buttons;
+    }
+
     static setPosition(element, position, excludeClasses = []) {
         UIUtils.clearClass(element, excludeClasses);
         switch (position) {

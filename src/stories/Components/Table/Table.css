@@ -42,7 +42,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   .table {
     /*checkbox變數*/
     --themeColor: var(--theme);
-    @apply table-fixed mr-2;
+    @apply mr-2;
   }
 
   .table thead {
@@ -84,7 +84,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .table-tools {
-    @apply flex justify-end w-full mb-2
+    @apply flex gap-2 justify-end w-full mb-2 items-center
   }
 
   .pagination {

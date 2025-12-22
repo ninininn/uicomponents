@@ -10,7 +10,7 @@ import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
 
 const DATA_ATTR_INDEX = "index";
-const DATA_ATTR_ROWSELECTED = "rowSelected";
+const DATA_ATTR_ROWSELECTED = "rowselected";
 const DATA_ATTR_FIELD = "field";
 const DATA_ATTR_SORT = "sort";
 const PAGE_LIMITS = [10, 20, 25, 50, 100];
@@ -23,7 +23,7 @@ var defaultTableConfig = {
   classes: ["table-container"],
   cols: [],
   selection: "checkbox",
-  tools: [{ classes: ["btn-danger", "outline-btn"], text: "工具" }, { classes: ["btn-danger", "outline-btn"], text: "工具" }],
+  tools: ["group", "exports", "print"],
 };
 
 export class Table extends BaseComponent {
@@ -77,12 +77,7 @@ export class Table extends BaseComponent {
   _init() {
     //建立工具列
     if (this.config.tools) {
-      let toolBar = document.createElement("div");
-      UIUtils.addClass(toolBar, ["table-tools"]);
-      this.config.tools.forEach((btnConfig) => {
-        toolBar.appendChild(UIUtils.setButtons(btnConfig));
-      });
-      this.tools = toolBar;
+      this._createToolBar(this.config.tools);
     }
 
     this._render();
@@ -149,9 +144,31 @@ export class Table extends BaseComponent {
 
         //如果沒有在快取內->設定完放入快取
 
-      }.bind(this),
-      false
+      }.bind(this)
     );
+  }
+
+  //表格工具列設定
+  _createToolBar(toolConfig) {
+    let toolBar = document.createElement("div");
+    for (let feature of toolConfig) {
+      switch (feature) {
+        case 'group':
+          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/drag.svg' }));
+          break;
+        case 'exports':
+          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/heart-off.svg' }));
+          break;
+        case 'print':
+          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/heart.svg' }));
+          break;
+        default:
+          toolBar.appendChild(UIUtils.setButtons(feature));
+          break;
+      }
+    }
+    UIUtils.addClass(toolBar, ["table-tools"]);
+    this.tools = toolBar;
   }
 
   //設定表列資料
@@ -306,8 +323,6 @@ export class Table extends BaseComponent {
         this._showRows();
         //設定HeaderSelected值
         console.log("目前selected的row:", this.getSelectedRows());
-        console.log("目前page:", page);
-        console.log("目前pageSize:", size);
       },
     });
   }
@@ -489,11 +504,8 @@ class TableRow extends BaseComponent {
     }
   }
   _setTableCells(data, colConfig) {
-    console.log("cell data:", data);
-    console.log("Object.values(data):", Object.values(data));
-    console.log("colConfig:", colConfig);
     let cells = colConfig.map((config, index) => {
-      return new TableCell(Object.values(data)[index], config);
+      return new TableCell(Object.values(data)[index] || data, config);
     });
     // let cells = Object.values(data).map((value, index) => {
     //   return new TableCell(value, colConfig[index]);
@@ -508,6 +520,7 @@ var defaultTbcellConfig = {
   sort: function () { },
   fixed: false,
   align: "left",
+  template: function () { }
 };
 
 //TableCell 資料格
@@ -540,13 +553,15 @@ class TableCell extends BaseComponent {
         break;
     }
     UIUtils.setAttribute(this._elem, DATA_ATTR_FIELD, field);
-    UIUtils.setText(textContainer, this.dataValue);
-    this._elem.appendChild(textContainer);
-
-    //TODO template function - 傳入自訂函式來建立內容
     if (template) {
-      template.bind(this)(this.dataValue);
+      template.bind(this, this.dataValue)();
+    } else {
+      //TODO template function - 傳入自訂函式來建立內容
+      UIUtils.setText(textContainer, this.dataValue);
+      this._elem.appendChild(textContainer);
     }
+
+
   }
 }
 

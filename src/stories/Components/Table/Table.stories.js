@@ -93,6 +93,39 @@ export default {
         type: { summary: "boolean" },
       },
     },
+    groupTool: {
+      control: "boolean",
+      if: { arg: 'tools', truthy: true },
+      description: "群組篩選工具",
+      table: {
+        category: "configurations",
+        subcategory: "tools feature",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
+      },
+    },
+    exportsTool: {
+      control: "boolean",
+      if: { arg: 'tools', truthy: true },
+      description: "匯出工具",
+      table: {
+        category: "configurations",
+        subcategory: "tools feature",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
+      },
+    },
+    printTool: {
+      control: "boolean",
+      if: { arg: 'tools', truthy: true },
+      description: "列印工具",
+      table: {
+        category: "configurations",
+        subcategory: "tools feature",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
+      },
+    },
     theme: {
       control: "color",
       description: "表格色系",
@@ -150,6 +183,9 @@ export default {
     selection: "checkbox",
     tools: true,
     theme: "var(--color-primary-500)",
+    groupTool: true,
+    exportsTool: true,
+    printTool: true
   },
 };
 
@@ -170,14 +206,26 @@ export const Table = {
       { field: 'email', title: 'email', sort: false, fixed: true, align: "center" },
       { field: 'body', title: '內容', sort: false, fixed: false },
       {
-        field: 'operate', title: '操作', sort: false, fixed: false, template: function (data) {
-          console.log("點擊的row data是:", data);
-          let template = UIUtils.setButtons({
-            classes: ["btn-sm", "btn-success"], text: "操作按鈕", handler: function (e) {
-              console.log("點擊的row data是:", data);
-            }.bind(this)
-          });
-          this.getElem().appendChild(template);
+        field: 'operate', title: '操作', sort: false, fixed: false,
+        template: function (data) {
+          let buttons = [{
+            classes: ["btn-sm", "btn-success"], text: "查看細節",
+            handler: function (e) {
+              e.stopPropagation();//避免觸發選取該row
+              console.log("btn handler get data:", data);
+            }
+          },
+          {
+            classes: ["btn-sm", "btn-danger"], text: "刪除此列",
+            handler: function (e) {
+              e.stopPropagation();//避免觸發選取該row
+              console.log("btn handler get data:", data);
+            }
+          }];
+          let btnContainer = document.createElement("div");
+          UIUtils.addClass(btnContainer, ["flex", "gap-2"]);
+          UIUtils.setBtnGroup(buttons, btnContainer);
+          this.getElem().appendChild(btnContainer);
         }
       },
     ],

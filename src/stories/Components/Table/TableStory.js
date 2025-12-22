@@ -13,6 +13,9 @@ export const createTable = ({
     container,
     cols,
     tools,
+    groupTool,
+    exportsTool,
+    printTool,
     theme,
     classes,
     complete,
@@ -35,6 +38,7 @@ export const createTable = ({
     parent.appendChild(trigger);
     parent.appendChild(tableTarget);
     parent.appendChild(clear);
+    let toolFeature = [groupTool = 'group', exportsTool = 'exports', printTool = 'print'];
 
     let initOptions = {
         id: id,                 //tableId
@@ -42,7 +46,7 @@ export const createTable = ({
         limits: limits,         //單頁顯示筆數限制
         container: container || '.table-test-target',      //container容器(table本身就有一個table-container)
         cols: cols,              //欄位設定
-        tools: tools ? [{ classes: ["btn-danger"], text: "工具" }, { classes: ["btn-danger", "outline-btn"], text: "工具" }] : false,           //是否顯示工具列
+        tools: tools ? [...toolFeature] : false,           //是否顯示工具列
         selection: selection,   //是否開啟勾選列
         theme: theme,
         classes: classes,       //自定義class
