@@ -6,6 +6,7 @@ import { createTable } from './TableStory';
 import "./Table.css";
 import TableAPIdoc from "./TableAPIdoc.mdx";
 import { UIUtils } from "../../../Utils";
+import { Notification } from '../Notification/Notification';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -213,6 +214,8 @@ export const Table = {
             handler: function (e) {
               e.stopPropagation();//避免觸發選取該row
               console.log("btn handler get data:", data);
+              console.log("this btn:", this);
+              Notification.modal(this, { customContent: `<div>${JSON.stringify(data)}</div>` });
             }
           },
           {

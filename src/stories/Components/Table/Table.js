@@ -154,13 +154,13 @@ export class Table extends BaseComponent {
     for (let feature of toolConfig) {
       switch (feature) {
         case 'group':
-          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/drag.svg' }));
+          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/filter.svg' }));
           break;
         case 'exports':
-          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/heart-off.svg' }));
+          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/export.svg' }));
           break;
         case 'print':
-          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/heart.svg' }));
+          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/print.svg' }));
           break;
         default:
           toolBar.appendChild(UIUtils.setButtons(feature));
