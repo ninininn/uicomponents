@@ -1,5 +1,5 @@
-import{u as d,j as e,M as t,T as r,P as c,C as i}from"./iframe-BWigM8VB.js";import"./preload-helper-DLLWEBaG.js";function l(s){const n={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{isTemplate:!0,title:"How to use Dropdown"}),`
-`,e.jsx(r,{}),`
+import{u as r,j as e,M as d,T as t,P as c,C as i}from"./iframe-DRkchdRO.js";import"./preload-helper-DLLWEBaG.js";function l(s){const n={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use Dropdown"}),`
+`,e.jsx(t,{}),`
 `,e.jsxs(n.p,{children:["適用 : 下拉選單項目；繼承自 Flowbite ",e.jsx(n.code,{children:"Dropdown"})," 元件"]}),`
 `,e.jsx(c,{}),`
 `,e.jsx(n.h1,{id:"controls",children:"Controls"}),`
@@ -16,26 +16,26 @@ import{u as d,j as e,M as t,T as r,P as c,C as i}from"./iframe-BWigM8VB.js";impo
 `]}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:[`
-`,e.jsxs(n.p,{children:[e.jsx(n.strong,{children:"有已知節點"}),` : 帶入已知 DOM 節點
+`,e.jsxs(n.p,{children:[e.jsx(n.strong,{children:"有已知節點"}),` : 帶入已知 DOM 節點\r
 已經有靜態節點或是可以抓取到的DOM節點時，直接作為參數帶入綁定`]}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`let container = createElement("div");
-container.innerHTML = \`
-        <h3 class="input-label">title</h3>
-        <label class="label input-label">
-            <input type="text" class="dropdown-input" />
-        </label>
-        <ul id="test_dropdown" class="dropdown-item"></ul>
-        <select id="test" class="select dropdown-select">
-            <option value="a">A</option>
-            <option value="b">B</option>
-            <option value="c">C</option>
-        </select>
-  \`;
-
-// container is the exist node
-let target = document.getElementById("test_dropdown");
-let trigger = target.previousSilblingElement.querySelector(".dropdown-input");
-
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`let container = createElement("div");\r
+container.innerHTML = \`\r
+        <h3 class="input-label">title</h3>\r
+        <label class="label input-label">\r
+            <input type="text" class="dropdown-input" />\r
+        </label>\r
+        <ul id="test_dropdown" class="dropdown-item"></ul>\r
+        <select id="test" class="select dropdown-select">\r
+            <option value="a">A</option>\r
+            <option value="b">B</option>\r
+            <option value="c">C</option>\r
+        </select>\r
+  \`;\r
+\r
+// container is the exist node\r
+let target = document.getElementById("test_dropdown");\r
+let trigger = target.previousSilblingElement.querySelector(".dropdown-input");\r
+\r
 let dropdownInstance = new Dropdown(target, trigger);
 `})}),`
 `]}),`
@@ -44,10 +44,10 @@ let dropdownInstance = new Dropdown(target, trigger);
 `,e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:[`
 `,e.jsx(n.p,{children:e.jsxs(n.strong,{children:["target 直接帶入要自訂id、trigger 則帶入要渲染的選項",e.jsx(n.code,{children:"selectOptions"}),"陣列"]})}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`const selectOptions = [
-  { value: 1, text: "One" },
-  { value: 2, text: "Two" },
-];
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`const selectOptions = [\r
+  { value: 1, text: "One" },\r
+  { value: 2, text: "Two" },\r
+];\r
 let dropdownInstance = new Dropdown("test_2", selectOptions);
 `})}),`
 `]}),`
@@ -60,12 +60,12 @@ let dropdownInstance = new Dropdown("test_2", selectOptions);
 `,e.jsxs(n.li,{children:[`
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"target"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type element",children:"HTMLElement"}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-html",children:`<!-- 基本下拉選單結構 -->
-<h3 class="input-label">title</h3>
-<label class="label input-label">
-  <input type="text" class="dropdown-input" />
-</label>
-<ul id="example_dropdown" class="dropdown-item"></ul>
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-html",children:`<!-- 基本下拉選單結構 -->\r
+<h3 class="input-label">title</h3>\r
+<label class="label input-label">\r
+  <input type="text" class="dropdown-input" />\r
+</label>\r
+<ul id="example_dropdown" class="dropdown-item"></ul>\r
 <select id="example" class="select dropdown-select"></select>
 `})}),`
 `]}),`
@@ -73,15 +73,15 @@ let dropdownInstance = new Dropdown("test_2", selectOptions);
 `,e.jsx("br",{}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:[`
-`,e.jsxs(n.p,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"trigger"}),`
-`,e.jsx("span",{className:"sb-unstyled data-type element",children:"HTMLElement"}),`
-`,e.jsx("span",{children:" | "}),`
+`,e.jsxs(n.p,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"trigger"}),`\r
+`,e.jsx("span",{className:"sb-unstyled data-type element",children:"HTMLElement"}),`\r
+`,e.jsx("span",{children:" | "}),`\r
 `,e.jsx("span",{className:"sb-unstyled data-type arr",children:"Array"}),e.jsx(n.br,{}),`
 `,"trigger 可以是HTMLElement，或是把要設定的選項物件以陣列形式傳入 :"]}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`const selectOptions=[
-  {value:"a",text:"A"},
-  {value:"b",text:"B"},
-  {value:"c",text:"C"},
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`const selectOptions=[\r
+  {value:"a",text:"A"},\r
+  {value:"b",text:"B"},\r
+  {value:"c",text:"C"},\r
 ];
 `})}),`
 `]}),`
@@ -92,12 +92,12 @@ let dropdownInstance = new Dropdown("test_2", selectOptions);
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"changeHandler"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"function"}),`
 `,e.jsxs(n.p,{children:["作為 onChange 事件函式使用，會綁定到",e.jsx(n.code,{children:"<select>"}),"元素身上"]}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`function testChange() {
-  let value = this.value;
-  console.log("value:", value);
-}
-
-// trigger change event anywhere
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`function testChange() {\r
+  let value = this.value;\r
+  console.log("value:", value);\r
+}\r
+\r
+// trigger change event anywhere\r
 // value: "A"
 `})}),`
 `]}),`
@@ -107,19 +107,19 @@ let dropdownInstance = new Dropdown("test_2", selectOptions);
 `,e.jsxs(n.li,{children:[`
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"bindFilteroption"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"object"}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`//基本 filtHandler 函式，為打字過濾篩選效果
-function filtItem() {
-  let inputValue = this.value;
-  let ownli = this.parentNode.parentNode.querySelectorAll(".dropdown-item li");
-  ownli.forEach((li) => {
-    li.textContent.includes(inputValue)
-      ? li.classList.remove("hidden")
-      : li.classList.add("hidden");
-  });
-}
-
-const bindFilteroption = { filter: true, filterHandler: filtItem };
-
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`//基本 filtHandler 函式，為打字過濾篩選效果\r
+function filtItem() {\r
+  let inputValue = this.value;\r
+  let ownli = this.parentNode.parentNode.querySelectorAll(".dropdown-item li");\r
+  ownli.forEach((li) => {\r
+    li.textContent.includes(inputValue)\r
+      ? li.classList.remove("hidden")\r
+      : li.classList.add("hidden");\r
+  });\r
+}\r
+\r
+const bindFilteroption = { filter: true, filterHandler: filtItem };\r
+\r
 let instance = new Dropdown(target, trigger, filtOption);
 `})}),`
 `]}),`
@@ -142,10 +142,10 @@ let instance = new Dropdown(target, trigger, filtOption);
 `,e.jsx("span",{className:"sb-unstyled methods",children:".hide()"}),`
 `,e.jsx("span",{className:"sb-unstyled methods",children:".toggle()"}),`
 `,e.jsx("a",{className:"sb-unstyled linkout",href:"https://flowbite.com/docs/components/dropdowns/",children:" more in flowbite docs"}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`let dropdownInstance = new Dropdown(target, trigger);
-
-dropdownInstance.show(); //list show
-dropdownInstance.hide(); //list hide
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`let dropdownInstance = new Dropdown(target, trigger);\r
+\r
+dropdownInstance.show(); //list show\r
+dropdownInstance.hide(); //list hide\r
 dropdownInstance.toggle(); //switch list visible
 `})}),`
 `,e.jsx("span",{className:"sb-unstyled methods",children:".getDropdownChildren()"}),`
@@ -183,12 +183,12 @@ dropdownInstance.toggle(); //switch list visible
 `]}),`
 `]}),`
 `]}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`let li = document.createElement("li");
-let opt = document.createElement("option");
-
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`let li = document.createElement("li");\r
+let opt = document.createElement("option");\r
+\r
 Dropdown.renderDropdownChildren(li, "AA", opt, 1);
 `})}),`
 `,e.jsx("span",{className:"sb-unstyled methods",children:".updateValue()"}),`
-`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`//previous renderChildren operations... 
+`,e.jsx(n.pre,{children:e.jsx(n.code,{className:"language-javascript",children:`//previous renderChildren operations... \r
 Dropdown.updateValue();
-`})})]})}function h(s={}){const{wrapper:n}={...d(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(l,{...s})}):l(s)}export{h as default};
+`})})]})}function h(s={}){const{wrapper:n}={...r(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(l,{...s})}):l(s)}export{h as default};
