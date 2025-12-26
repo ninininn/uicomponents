@@ -13,6 +13,9 @@ export class UIUtils {
     static addClass(element, classes) {
         element.classList.add(...classes);
     }
+    static toggleClass(element, classes) {
+        element.classList.toggle(...classes);
+    }
     static removeClass(element, classes) {
         element.classList.remove(...classes);
     }

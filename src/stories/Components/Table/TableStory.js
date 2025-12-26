@@ -78,20 +78,10 @@ export const createTable = ({
     trigger.addEventListener("click", () => {
         let table_instance = new Table(initOptions);
         console.log("table_instance:", table_instance);
-        fetchData("https://jsonplaceholder.typicode.com/comments")
-            .then((response) => response.json())
-            .then((json) => {
-                //模擬資料載入
-                setTimeout(() => {
-                    // table_instance.setData(json).selectedFullPage(1);
 
-                    console.log("table_instance:", table_instance);
-                }, 5000);
-
-                clear.addEventListener("click", () => {
-                    table_instance.clearSelected();
-                });
-            });;
+        clear.addEventListener("click", () => {
+            table_instance.clearSelected();
+        });
     });
 
 

@@ -1,9 +1,6 @@
 import {
   BaseComponent,
   UIUtils,
-  bindState,
-  createContext,
-  useContext,
   findElem,
 } from "../../../Utils";
 import { Checkbox } from "../Checkbox/Checkbox";
@@ -26,14 +23,27 @@ var defaultTableConfig = {
   tools: ["group", "exports", "print"],
 };
 
+var defaultColumnConfig = {
+  field: undefined,
+  title: undefined,
+  align: "left",
+  fixed: false,
+  sort: undefined,
+  template: undefined,
+  visible: true,
+};
+
 export class Table extends BaseComponent {
   constructor(options = {}, dataArr) {
     let tableContainer = document.createElement("div");
     const tableElem = document.createElement("table");
 
     tableContainer.appendChild(tableElem);
+    //!把初始設定值定義好-cols
+    let tableCols = options.cols;
+    options.cols = tableCols.map((col) => Object.assign({}, defaultColumnConfig, col));
 
-    super(tableContainer, options.theme || "var(--color-primary-500)");
+    super(tableContainer, options.theme = "var(--color-primary-500)");
     this.UItype = "Table";
     this.id = options.id;
     this._config = Object.assign(defaultTableConfig, options);
@@ -48,7 +58,6 @@ export class Table extends BaseComponent {
 
     this.data = dataArr;
     this.dataCounts = this.data?.length || 0;
-    createContext(this, this.config.cols);
 
     this._createPagination(); //建立對應分頁元件
     this._init();
@@ -58,11 +67,11 @@ export class Table extends BaseComponent {
     return this._config;
   }
 
+  //!取得內部快取
   get cacheKey() {//內部快取key
     return this.UItype + "-" + this.id;
   }
 
-  //!取得內部快取
 
   async pullData(url) {
     let table = this;
@@ -152,20 +161,55 @@ export class Table extends BaseComponent {
   _createToolBar(toolConfig) {
     let toolBar = document.createElement("div");
     for (let feature of toolConfig) {
+      let btn, btnHandler;
       switch (feature) {
         case 'group':
-          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/filter.svg' }));
+          let popover = document.createElement("div");
+          UIUtils.addClass(popover, ["tools-popover"]);
+          popover.addEventListener("click", (e) => {
+            e.stopImmediatePropagation();
+            const attr = e.target.getAttribute("name");
+          });
+          let cols = this.config.cols;
+          for (let col of cols) {
+            console.log(col);
+            let colsCheck = new Checkbox({
+              theme: this._theme,
+              checked: col.visible,//!依據初始設定值
+              title: col.title,
+              handlers: (checked) => {
+                col.visible = checked;
+                this.tableHeader._updateCol(`${col.field}`, col);
+              }
+            });
+            popover.appendChild(colsCheck.container);
+          }
+
+          btn = UIUtils.setButtons({
+            classes: ["btn-sm", "outline-btn", "relative"],
+            icon: '/public/filter.svg',
+            handler: (e) => {
+              e.stopImmediatePropagation();
+              if (e.target === btn) {
+                UIUtils.toggleClass(popover, ["visible"]);
+              }
+            }
+          });
+          toolBar.appendChild(popover);
           break;
         case 'exports':
-          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/export.svg' }));
+          btnHandler = () => { };
+          btn = UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/export.svg', handler: btnHandler });
           break;
         case 'print':
-          toolBar.appendChild(UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/print.svg' }));
+          btnHandler = () => { };
+          btn = UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/public/print.svg', handler: btnHandler });
           break;
         default:
           toolBar.appendChild(UIUtils.setButtons(feature));
           break;
       }
+      toolBar.appendChild(btn);
     }
     UIUtils.addClass(toolBar, ["table-tools"]);
     this.tools = toolBar;
@@ -225,7 +269,8 @@ export class Table extends BaseComponent {
   //渲染指定範圍的rows
   //使用時機:goPage()、_rowSort()
   _showRows() {
-    let renderRows = this._createRows(this.getCurrentData());
+    const curentData = this.getCurrentData();
+    let renderRows = this._createRows(curentData);
     let rowFragment = document.createDocumentFragment();
     for (let row of renderRows) {
       rowFragment.appendChild(row.getElem());
@@ -269,7 +314,7 @@ export class Table extends BaseComponent {
     return filtedDataRow;
   }
 
-  //[外部控制]-放入資料
+  //[外部控制]-直接放入資料
   setData(dataArr) {
     this.data = dataArr;
     this.dataCounts = this.data.length;
@@ -358,6 +403,8 @@ class TableHeader extends BaseComponent {
   constructor(table) {
     const { cols, selection, theme } = table.config;
     const headerElem = document.createElement("thead");
+    const tr = document.createElement("tr");
+    headerElem.appendChild(tr);
 
     super(headerElem, theme);
     this.UItype = "TableHeader";
@@ -369,7 +416,12 @@ class TableHeader extends BaseComponent {
 
   //初始化
   _init() {
-    this._render();
+    if (this.selection.UItype === "Checkbox") {
+      const th = document.createElement("th");
+      th.appendChild(this.selection.getElem());
+      this._elem.querySelector("tr").appendChild(th);
+    }
+    this._elem.querySelector("tr").appendChild(this._createHead());
     this._bindEvent();
   }
 
@@ -390,35 +442,55 @@ class TableHeader extends BaseComponent {
   }
 
   _render() {
-    const tr = document.createElement("tr");
-    const main = document.createDocumentFragment();
-
+    const oldFragment = document.createDocumentFragment();
+    //!把節點放到新的片段中組裝
+    const newFragment = document.createDocumentFragment();
     if (this.selection.UItype === "Checkbox") {
-      const th = document.createElement("th");
-      th.appendChild(this.selection.getElem());
-      tr.appendChild(th);
+      newFragment.appendChild(this.getElem().querySelector("th"));
+    }
+    const existNodes = this.getElem().querySelectorAll("th");
+    const existCol = Array.from(existNodes).map((node) => node.dataset.field);
+
+    for (let i = 0; i < this.cols.length; i++) {
+      if (this.cols[i].visible) {//如果是可見的欄位，去現有的node找存不存在
+        // if (existNodes[]) {
+        //   newFragment.appendChild(existNodes);
+        // } else {
+        //   newFragment.appendChild(this._createCol());
+        // }
+      }
     }
 
-    for (let col of this.cols) {
-      let th = document.createElement("th");
-      let sortIcon = document.createElement("span");
-      UIUtils.setAttribute(th, DATA_ATTR_FIELD, col.field);
-      UIUtils.setText(sortIcon, col.title);
+    this._elem.querySelector("tr").appendChild(newFragment);
+  }
 
-      if (col.sort) {
-        UIUtils.setAttribute(th, DATA_ATTR_SORT, col.sort);
-        sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  _createHead() {
+    const main = document.createDocumentFragment();
+    for (let col of this.cols) {
+      if (!col.visible) continue;
+      let th = this._createCol(col);
+      main.appendChild(th);
+    }
+    return main;
+  }
+
+  _createCol(colconfig) {
+    let { field, title, sort, visible } = colconfig;
+    if (!visible) return;
+    let th = document.createElement("th");
+    let sortIcon = document.createElement("span");
+    UIUtils.setAttribute(th, DATA_ATTR_FIELD, field);
+    UIUtils.setText(sortIcon, title);
+    if (sort) {
+      UIUtils.setAttribute(th, DATA_ATTR_SORT, sort);
+      sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
 <path d="M4.24999 10.7617V15C4.24999 15.4142 4.58578 15.75 4.99999 15.75C5.4142 15.75 5.74999 15.4142 5.74999 15V10.7617C5.83248 10.875 5.9131 10.9879 5.9912 11.0967L5.9958 11.1031C6.1467 11.3133 6.30972 11.5404 6.43847 11.6855C6.71335 11.9954 7.18818 12.0239 7.49804 11.749C7.80761 11.4742 7.83604 11.0002 7.56151 10.6904C7.49513 10.6156 7.38199 10.4613 7.20995 10.2217L7.19283 10.1978C7.0366 9.98019 6.84876 9.71852 6.65526 9.46875C6.45751 9.2135 6.23286 8.94285 6.00487 8.73047C5.89083 8.62424 5.75714 8.51521 5.60937 8.42871C5.46887 8.34647 5.25683 8.25 4.99999 8.25C4.74316 8.25 4.53111 8.34647 4.39062 8.42871C4.24284 8.51521 4.10915 8.62424 3.99511 8.73047C3.76712 8.94285 3.54247 9.2135 3.34472 9.46875C3.14409 9.72771 2.94956 9.99947 2.79003 10.2217C2.61799 10.4613 2.50485 10.6156 2.43847 10.6904C2.16394 11.0002 2.19237 11.4742 2.50194 11.749C2.8118 12.0239 3.28663 11.9954 3.56151 11.6855C3.69026 11.5403 3.85328 11.3133 4.00418 11.1031L4.00878 11.0967C4.08689 10.9879 4.1675 10.875 4.24999 10.7617Z" fill="currentColor"/>
 </svg>
 `;
-      }
-
-      th.appendChild(sortIcon);
-      main.appendChild(th);
     }
-    tr.appendChild(main);
-    this._elem.appendChild(tr);
+    th.appendChild(sortIcon);
+    return th;
   }
 
   //[內部控制]-全選所有Rows的Checkboxes
@@ -441,6 +513,20 @@ class TableHeader extends BaseComponent {
       return;
     }
   }
+
+  _updateCol(field, colSetting) {
+    this.cols = this.cols.map((col) => {
+      if (col.field === field) {
+        return { ...col, ...colSetting };
+      } else {
+        return col;
+      }
+    });
+
+    this._render();
+    //!重新依據資料showRows
+    this.table._showRows();
+  }
 }
 
 //TableRow 表列
@@ -451,7 +537,7 @@ class TableRow extends BaseComponent {
     this.UItype = "TableRow";
     this.data = data;
     this.selection = this._checkSelection(selection);
-    this.cells = this._setTableCells(this.data, useContext(table));
+    this.cells = this._setTableCells(this.data, table.config.cols);
     this.index = index;
     this._init();
   }
@@ -460,7 +546,7 @@ class TableRow extends BaseComponent {
     let fragment = document.createDocumentFragment();
     if (this.selection) fragment.appendChild(this.selection.container);
     for (let cell of this.cells) {
-      fragment.appendChild(cell.getElem());
+      if (cell.config.visible) fragment.appendChild(cell.getElem());
     }
     this._elem.appendChild(fragment);
     UIUtils.setAttribute(this._elem, DATA_ATTR_INDEX, this.index);
@@ -504,24 +590,15 @@ class TableRow extends BaseComponent {
     }
   }
   _setTableCells(data, colConfig) {
-    let cells = colConfig.map((config, index) => {
-      return new TableCell(Object.values(data)[index] || data, config);
+    let cells = colConfig.map((config) => {
+      const cellValue = data[config.field];
+      return new TableCell(cellValue || data, config);
     });
-    // let cells = Object.values(data).map((value, index) => {
-    //   return new TableCell(value, colConfig[index]);
-    // });
     return cells;
   }
 }
 
-var defaultTbcellConfig = {
-  field: "",
-  title: "",
-  sort: function () { },
-  fixed: false,
-  align: "left",
-  template: function () { }
-};
+
 
 //TableCell 資料格
 class TableCell extends BaseComponent {
@@ -530,16 +607,13 @@ class TableCell extends BaseComponent {
     super(td);
     this.UItype = "TableCell";
     this.dataValue = dataValue;
-    this.config = Object.assign(defaultTbcellConfig, colConfig);
+    this.config = Object.assign({}, defaultColumnConfig, colConfig);
     this._init();
   }
 
   _init() {
-    this._render();
-  }
-
-  _render() {
-    let { field, align = "left", template, fixed } = this.config;
+    let { field, align = "left", template, fixed, visible } = this.config;
+    if (!visible) return;
     let textContainer = document.createElement("span");
     switch (align) {
       case "center":
@@ -553,15 +627,18 @@ class TableCell extends BaseComponent {
         break;
     }
     UIUtils.setAttribute(this._elem, DATA_ATTR_FIELD, field);
+    //TODO template function - 傳入自訂函式來建立內容
+    if (typeof (this.dataValue) === "string" || typeof (this.dataValue) === "number") {
+      UIUtils.setText(textContainer, this.dataValue);
+    }
+    this._elem.appendChild(textContainer);
+
     if (template) {
       template.bind(this, this.dataValue)();
-    } else {
-      //TODO template function - 傳入自訂函式來建立內容
-      UIUtils.setText(textContainer, this.dataValue);
-      this._elem.appendChild(textContainer);
     }
+  }
 
-
+  _render() {
   }
 }
 
@@ -584,7 +661,7 @@ class Pagination extends BaseComponent {
     const componentContainer = document.createElement("div");
     UIUtils.addClass(componentContainer, ["pagination"]);
 
-    super(componentContainer, config.theme || "var(--color-primary-500)");
+    super(componentContainer, config.theme = "var(--color-primary-500)");
     this.UItype = "Pagination";
     this._config = Object.assign(defaultPaginatioConfig, config);
     this.currentPage = config.currentPage || 1;
@@ -794,7 +871,8 @@ class Pagination extends BaseComponent {
         let pageSize = Number(e.target.value);
         this._config.pageSize = pageSize;
         this.renderPage(this._config.total);
-        this.handler({ page: this.currentPage, size: pageSize });
+        this.goPage(1);
+        this.handler({ page: 1, size: pageSize });
       }.bind(this)
     );
 

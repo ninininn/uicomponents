@@ -148,6 +148,7 @@ export class Checkbox extends BaseComponent {
         if (this.options.title && checkboxStyle !== "toggle") {
             let titlenode = document.createTextNode(this.options.title);
             labelElem.appendChild(titlenode);
+            labelElem.setAttribute("name", this.options.title);
         }
         return labelElem;
     }

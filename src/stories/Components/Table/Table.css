@@ -23,7 +23,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   /*table容器*/
   .table-container {
     --theme: var(--themeColor, var(--color-primary-100));
-    @apply relative w-full h-fit bg-[#fff] max-w-full max-h-80 overflow-auto scroll-smooth isolate;
+    @apply relative w-full h-fit max-w-full max-h-80 overflow-auto scroll-smooth isolate;
   }
 
   .table-container label {
@@ -35,14 +35,14 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .table-skeleton {
-    @apply w-full h-full max-h-full overflow-hidden bg-[#fff];
+    @apply w-full h-full max-h-full overflow-hidden bg-white;
   }
 
   /*table本體*/
   .table {
     /*checkbox變數*/
     --themeColor: var(--theme);
-    @apply mr-2;
+    @apply mr-2 bg-white;
   }
 
   .table thead {
@@ -84,12 +84,12 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .table-tools {
-    @apply flex gap-2 justify-end w-full mb-2 items-center
+    @apply flex gap-2 justify-end w-full mb-2 pr-5 items-center relative
   }
 
   .pagination {
     --theme: var(--themeColor, var(--color-primary-500));
-    @apply flex gap-2 my-3 items-center
+    @apply flex gap-2 my-3 pr-5 items-center
   }
 
   .page-item {
@@ -106,5 +106,10 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   .pagination-jump {
     @apply flex grow-[2] mr-3 justify-end gap-1 items-center text-gray-400 text-nowrap select-none [&>div]:max-w-20
+  }
+
+  .tools-popover {
+    --position-x:5rem;
+    @apply absolute top-full -translate-x-[var(--position-x)] p-3 bg-white rounded-sm shadow-sm z-10 invisible transition-[visibility] ease-in-out
   }
 }

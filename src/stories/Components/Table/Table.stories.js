@@ -202,7 +202,7 @@ export const Table = {
           this.getElem().innerHTML = template;
         }
       },
-      { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "center" },
+      { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "center", visible: false },
       { field: 'name', title: '名字', sort: false, fixed: false, align: "center" },
       { field: 'email', title: 'email', sort: false, fixed: true, align: "center" },
       { field: 'body', title: '內容', sort: false, fixed: false },
@@ -213,8 +213,6 @@ export const Table = {
             classes: ["btn-sm", "btn-success"], text: "查看細節",
             handler: function (e) {
               e.stopPropagation();//避免觸發選取該row
-              console.log("btn handler get data:", data);
-              console.log("this btn:", this);
               Notification.modal(this, { customContent: `<div>${JSON.stringify(data)}</div>` });
             }
           },

@@ -83,6 +83,7 @@
         --theme-text-color: var(--theme-text-color, var(--color-white));
         width: calc(--spacing(6) * var(--size));
         height: calc(--spacing(6) * var(--size));
+        pointer-events: none;
     }
 
     .btn[disabled] .icon {
