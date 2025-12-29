@@ -80,7 +80,9 @@ export const createTable = ({
         console.log("table_instance:", table_instance);
 
         clear.addEventListener("click", () => {
-            table_instance.clearSelected();
+            table_instance.setSize(500,
+                100
+            );
         });
     });
 

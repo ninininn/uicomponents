@@ -42,7 +42,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   .table {
     /*checkbox變數*/
     --themeColor: var(--theme);
-    @apply mr-2 bg-white;
+    @apply mr-2 bg-white table-auto;
   }
 
   .table thead {
@@ -68,7 +68,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   .table thead th,
   .table td {
-    @apply py-1.5 px-3;
+    @apply py-1.5 px-3 text-[0.5em];
   }
 
   @media screen and (max-width: 500px) {
@@ -109,7 +109,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .tools-popover {
-    --position-x:5rem;
+    --position-x: 5rem;
     @apply absolute top-full -translate-x-[var(--position-x)] p-3 bg-white rounded-sm shadow-sm z-10 invisible transition-[visibility] ease-in-out
   }
 }

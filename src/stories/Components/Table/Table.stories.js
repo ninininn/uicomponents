@@ -199,7 +199,7 @@ export const Table = {
       {
         field: 'postId', title: 'postId', sort: 'asc', fixed: false, align: "center", template: function (data) {
           let template = `<div>${data}</div>`;
-          this.getElem().innerHTML = template;
+          this._elem.innerHTML = template;
         }
       },
       { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "center", visible: false },
@@ -208,25 +208,25 @@ export const Table = {
       { field: 'body', title: '內容', sort: false, fixed: false },
       {
         field: 'operate', title: '操作', sort: false, fixed: false,
-        template: function (data) {
+        template: function (value) {
           let buttons = [{
             classes: ["btn-sm", "btn-success"], text: "查看細節",
             handler: function (e) {
               e.stopPropagation();//避免觸發選取該row
-              Notification.modal(this, { customContent: `<div>${JSON.stringify(data)}</div>` });
+              Notification.modal(this, { customContent: `<div>${JSON.stringify(value)}</div>` });
             }
           },
           {
             classes: ["btn-sm", "btn-danger"], text: "刪除此列",
             handler: function (e) {
               e.stopPropagation();//避免觸發選取該row
-              console.log("btn handler get data:", data);
+              console.log("btn handler get value:", value);
             }
           }];
           let btnContainer = document.createElement("div");
           UIUtils.addClass(btnContainer, ["flex", "gap-2"]);
           UIUtils.setBtnGroup(buttons, btnContainer);
-          this.getElem().appendChild(btnContainer);
+          this._elem.appendChild(btnContainer);
         }
       },
     ],
