@@ -41,6 +41,7 @@ export class UIUtils {
         element.removeAttribute(attributeName);
     }
     static setProperty(element, propertyName, propertyValue) {
+        let property = `--${propertyName}`;
         element.style.setProperty(propertyName, propertyValue);
     }
 
@@ -407,39 +408,6 @@ export function compareNum(array) {
 
 export function checkDevice() { }
 
-/**
- * HEX to RGB
- */
-export function hexTorgb(hexString) {
-    let match = { A: 10, B: 11, C: 12, D: 13, E: 14, F: 15 };
-    let R = Array.from(hexString.slice(1, 3));
-    let G = Array.from(hexString.slice(3, 5));
-    let B = Array.from(hexString.slice(5, 7));
-
-    let toR = changeDigit(R);
-    let toG = changeDigit(G);
-    let toB = changeDigit(B);
-
-    function changeDigit(item) {
-        let digit = item.map((str, index) => {
-            let isAlphabet = Object.keys(match).find(
-                (key) => key === str.toUpperCase()
-            );
-            if (isAlphabet) {
-                return match[isAlphabet];
-            } else {
-                return Number(str);
-            }
-        });
-        return digit[0] * 16 + digit[1];
-    }
-
-    let hexDigit = [R, G, B].map((color) => {
-        return color.toString(16).padStart(2, "0");
-    });
-
-    return `rgb(${toR},${toG},${toB})`;
-}
 
 /**
  * Debounce 節流

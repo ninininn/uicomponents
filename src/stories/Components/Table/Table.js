@@ -10,7 +10,7 @@ const DATA_ATTR_INDEX = "index";
 const DATA_ATTR_ROWSELECTED = "rowselected";
 const DATA_ATTR_FIELD = "field";
 const DATA_ATTR_SORT = "sort";
-const PAGE_LIMITS = [10, 20, 25, 50, 100];
+const PAGE_LIMITS = [10, 20, 25, 50, 100, 1000];
 
 var defaultTableConfig = {
   id: "",
@@ -56,7 +56,7 @@ export class Table extends BaseComponent {
       colNum: this.config.selection ? colsCount + 1 : colsCount,
     });
 
-    this.data = dataArr;
+    this._data = dataArr?.map((data, i) => Object.assign({}, { index: i + 1, data: data }));
     this.dataCounts = this.data?.length || 0;
 
     this._createPagination(); //建立對應分頁元件
@@ -67,11 +67,9 @@ export class Table extends BaseComponent {
     return this._config;
   }
 
-  //!取得內部快取
-  get cacheKey() {//內部快取key
-    return this.UItype + "-" + this.id;
+  get data() {
+    return this._data;
   }
-
 
   async pullData(url) {
     let table = this;
@@ -99,7 +97,7 @@ export class Table extends BaseComponent {
     super.setTheme(this.config.theme);
     UIUtils.setProperty(this._elem, "--theme", this._theme);
 
-    //TODO 渲染完成前顯示skeleton;
+    //渲染完成前顯示skeleton;
     if (this.dataCounts < 1) {
       this.tableBody.appendChild(this.skeleton.getElem());
       this.skeleton.show();
@@ -177,7 +175,9 @@ export class Table extends BaseComponent {
           UIUtils.addClass(popover, ["tools-popover"]);
           popover.addEventListener("click", (e) => {
             e.stopImmediatePropagation();
-            const attr = e.target.getAttribute("name");
+            if (e.target.nodeName === 'INPUT') {
+              UIUtils.toggleClass(popover, ["visible"]);
+            }
           });
           let cols = this.config.cols;
           for (let col of cols) {
@@ -238,15 +238,15 @@ export class Table extends BaseComponent {
     }
 
     colConfig.forEach(config => {
-      const fieldData = data[config.field] || data;
-      const td = this._createCell(fieldData, config);
+      const td = this._createCell(data, config);
       tr.appendChild(td);
     });
 
     return tr;
   }
 
-  _createCell(value, config) {
+  //建立TableCell
+  _createCell(data, config) {
     const td = document.createElement("td");
     let { field, align = "left", template, fixed } = config;
     let textContainer = document.createElement("span");
@@ -264,29 +264,30 @@ export class Table extends BaseComponent {
 
     UIUtils.setAttribute(td, DATA_ATTR_FIELD, field);
     //TODO template function - 傳入自訂函式來建立內容
-    if (typeof (value) === "string" || typeof (value) === "number") {
-      UIUtils.setText(textContainer, value);
+
+    if (data.data[field]) {
+      UIUtils.setText(textContainer, data.data[field]);
+      td.appendChild(textContainer);
     }
-    td.appendChild(textContainer);
 
     if (template) {
-      template.call({ _elem: td }, value);
+      let transData = data.data[field] || this.data[data.index - 1];
+      template.call({ _elem: td }, transData);
     }
 
     return td;
   }
 
 
-  //依據欄位排序設定排序(只針對當前頁)
+  //依據欄位排序設定排序
   _rowSort(rule, field) {
+    //BUG 這邊sort()this._data才會調整順序，但是每次this.data(也就是get data)時，又會依照i排序而導致一直無法變換順序!
     switch (rule) {
       case 'asc'://小到大 升冪
-        // currentRows.sort((x, y) => x.data[field] - y.data[field]);
-        this.data.sort((x, y) => x[field] - y[field]);
+        this.data.sort((x, y) => x.data[field] - y.data[field]);
         break;
       case 'dec'://大到小 降冪
-        // currentRows.sort((x, y) => y.data[field] - x.data[field]);
-        this.data.sort((x, y) => y[field] - x[field]);
+        this.data.sort((x, y) => y.data[field] - x.data[field]);
         break;
     }
 
@@ -305,12 +306,13 @@ export class Table extends BaseComponent {
   _showRows() {
     const colConfig = this.config.cols.filter(col => col.visible !== false);
     const pageData = this.getCurrentData();
+    console.log("showRow's pageData:", pageData);
     let rowFragment = document.createDocumentFragment();
 
     pageData.forEach((dataObj, i) => {
+      //TODO 是否可以轉換table-index、DATA_ATTR_INDEX?依據當前頁切換之類的...?
       const index = ((this.getCurrentPage() - 1) * this.config.limits) + i + 1;
-
-      const tr = this._createRow(dataObj, index, colConfig);
+      const tr = this._createRow(dataObj, dataObj.index, colConfig);
       rowFragment.appendChild(tr);
     });
 
@@ -362,20 +364,20 @@ export class Table extends BaseComponent {
     );
 
     const selectedData = this.data.filter((data, index) => {
-      if (checkedIndex.includes((index + 1).toString())) { return data; }
+      if (checkedIndex.includes((index + 1).toString())) { return data.data; }
     });
     return selectedData;
   }
 
-  //[外部控制]-取得指定過濾條件Rows
+  //[外部控制]-取得指定過濾條件DataRow
   getFiltedRows(fn) {
-    let filtedDataRow = this.tableRows.filter(fn);
+    let filtedDataRow = this._data.filter(fn);
     return filtedDataRow;
   }
 
   //[外部控制]-直接放入資料
   setData(dataArr) {
-    this.data = dataArr;
+    this._data = dataArr.map((data, i) => Object.assign({}, { index: i + 1, data: data }));;
     this.dataCounts = this.data.length;
     this._pagination.renderPage(this.dataCounts); //更新pagination資料數量
 
@@ -389,7 +391,6 @@ export class Table extends BaseComponent {
   //[外部控制]-全選全頁
   selectedFullPage(pageNum, selected = true) {
     const pageData = this.getCurrentData(pageNum);
-    console.log(pageData);
     pageData.forEach((data, i) => {
       const index = ((pageNum - 1) * this.config.limits) + i + 1;
       this.selectedRows[index] = selected;
@@ -408,8 +409,8 @@ export class Table extends BaseComponent {
       controlPage: this.config.controlPage,
       handler: ({ page, size }) => {
         this.config.limits = size;
-        this._showRows();
         this.restoreState();
+        this._showRows();
         //設定HeaderSelected值
         console.log("目前selected的row:", this.getSelectedRows());
       },
@@ -431,8 +432,10 @@ export class Table extends BaseComponent {
   }
 
   checkPageSelected() {
+    //檢查當頁全部rows是否全選(有在SelectedRows記錄內)
+    const selectedRows = this.selectedRows;
     const rows = Array.from(this.tableBody.querySelectorAll("tr[data-index]"));
-    const isfullSelected = rows.every((row) => row.dataset[DATA_ATTR_ROWSELECTED] === '');
+    const isfullSelected = rows.every((row) => row.dataset[DATA_ATTR_INDEX] in selectedRows);
     return isfullSelected;
   }
 
@@ -523,14 +526,17 @@ class TableHeader extends BaseComponent {
     for (let col of this.cols) {
       if (!col.visible) continue;
       let th = this._createCol(col);
+
       main.appendChild(th);
     }
+
     return main;
   }
 
   _createCol(colconfig) {
-    let { field, title, sort, visible } = colconfig;
+    let { field, title, sort, visible, resize } = colconfig;
     if (!visible) return;
+
     let th = document.createElement("th");
     let sortIcon = document.createElement("span");
     UIUtils.setAttribute(th, DATA_ATTR_FIELD, field);
@@ -543,6 +549,13 @@ class TableHeader extends BaseComponent {
 </svg>
 `;
     }
+    if (resize) {
+      let resizer = document.createElement("div");
+      UIUtils.addClass(resizer, ["table-resizer"]);
+      resizer.style.height = `${this.table.getElem().offsetHeight}px`;
+      th.appendChild(resizer);
+    }
+
     th.appendChild(sortIcon);
     return th;
   }
@@ -555,6 +568,9 @@ class TableHeader extends BaseComponent {
         theme: this._theme,
         checked: false,
         handlers: (checked) => {
+          const currentPage = this.table.getCurrentPage();
+          this.table.selectedFullPage(currentPage, checked);
+
           const rows = this.table.tableBody.querySelectorAll("tr[data-index]");
           rows.forEach((row) => {
             const checkbox = row.querySelector("input[type='checkbox']");
@@ -564,7 +580,6 @@ class TableHeader extends BaseComponent {
             } else {
               delete row.dataset[DATA_ATTR_ROWSELECTED];
             }
-            this.table.selectedRows[row.getAttribute("data-index")] = checked;
           });
           console.log(this.table);
         },

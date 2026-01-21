@@ -202,29 +202,36 @@ export const Table = {
           this._elem.innerHTML = template;
         }
       },
-      { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "center", visible: false },
+      { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "right", visible: false, resize: true },
       { field: 'name', title: '名字', sort: false, fixed: false, align: "center" },
       { field: 'email', title: 'email', sort: false, fixed: true, align: "center" },
       { field: 'body', title: '內容', sort: false, fixed: false },
       {
         field: 'operate', title: '操作', sort: false, fixed: false,
-        template: function (value) {
+        template: function (data) {
+          //手動測試資料為undefined
+          if (data.index === 1) {
+            data = undefined;
+          }
+          let isSelectable = Boolean(data);
+          
           let buttons = [{
-            classes: ["btn-sm", "btn-success"], text: "查看細節",
+            classes: ["btn-sm", `${isSelectable ? "btn-success" : "btn-secondary"}`], text: "查看細節",
             handler: function (e) {
               e.stopPropagation();//避免觸發選取該row
-              Notification.modal(this, { customContent: `<div>${JSON.stringify(value)}</div>` });
+              console.log(data);
+              Notification.modal(this, { customContent: `<div>${JSON.stringify(data)}</div>` });
             }
           },
           {
             classes: ["btn-sm", "btn-danger"], text: "刪除此列",
             handler: function (e) {
               e.stopPropagation();//避免觸發選取該row
-              console.log("btn handler get value:", value);
+              console.log("btn handler get value:", data);
             }
           }];
           let btnContainer = document.createElement("div");
-          UIUtils.addClass(btnContainer, ["flex", "gap-2"]);
+          UIUtils.addClass(btnContainer, ["flex", "gap-2", "justify-center"]);
           UIUtils.setBtnGroup(buttons, btnContainer);
           this._elem.appendChild(btnContainer);
         }
