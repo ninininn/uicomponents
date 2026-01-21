@@ -114,19 +114,6 @@ import {
 ```
 ### 其他類別  
 
-<span className="sb-unstyled methods">function hexTorgb(hexString)</span>
- - **Parameters**  
-    - **hexString<span className="text-red-600">*</span>** HEX色碼
-    <span className="sb-unstyled data-type str">string</span>
- - **Returns**  
- 回傳一組rgb色碼
-
- 設定指定DOM節點的自訂css-property屬性
-
-``` javascript
-  let newColor = hexTorgb("#878787"); //rgb(135,135,135)
-```
-
 <span className="sb-unstyled methods">function compareNum(arrayNum)</span>
  - **Parameters**  
     - **arrayNum<span className="text-red-600">*</span>** 數組
@@ -146,3 +133,64 @@ import {
   // other opereations...
   checkDevice();
 ```
+
+### 色彩相關
+
+<span className="sb-unstyled methods">function Palette(config)</span>
+> 隨機產生一組/單一色碼，色碼模式可以是 hsl | rgb | hex `Color.js` 
+ - **Parameters**  
+    - **config<span className="text-red-600">*</span>** 色彩設定 <span className="sb-unstyled data-type obj">object</span>
+      ```javascript
+        const paletteConfig = {
+          colorCounts: 1, //顏色數量
+          alpha: 1, //透明度
+          colorMode: 'hsl', //色碼模式
+          style: 'random', //隨機(random)、相近色(same)、對比色(contrast)
+          tone: 'red', //指定色系(red,yellow,green,cyan,blue,purple)
+          offset: 20 //偏移
+        }
+      ```
+    
+ - **Returns**  
+ 回傳一組(或一個)指定模式色碼(預設為HSL)  
+   
+
+<span className="sb-unstyled methods">ColorFormat</span>
+> 顏色相關轉換函式 `Color.js` 
+
+ <div className="sb-unstyled table-container overflow-hidden">
+    <table className="sb-unstyled table-content">
+      <thead>
+        <tr className="text-center">
+          <td>methods</td><td>descriptions</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>`.hexTorgb(hexString, opacity)`</td><td>HEX色碼(#FFFFFAAA)轉為RGB(rgb(R,G,B))</td></tr>
+        <tr><td>`.rgbTohsl(rgbStr, opacity)`</td><td>RGB轉換為HSL(hsl(h deg, s, l))</td></tr>
+        <tr><td>`.hslTorgb({h,s,l,a})`</td><td>HSL轉換為RGB</td></tr>
+        <tr><td>`.rgbTohex(rgbStr, opacity)`</td><td>RGB轉換為HEX</td></tr>
+        <tr><td>`.hslTohex({h,s,l,a})`</td><td>HSL轉換為HEX</td></tr>
+      </tbody>
+    </table>
+</div>
+
+<span className="sb-unstyled methods">ColorHelper</span>
+> 顏色相關輔助函式 `Color.js`  
+
+ <div className="sb-unstyled table-container overflow-hidden">
+    <table className="sb-unstyled table-content">
+      <thead>
+        <tr className="text-center">
+          <td>methods</td><td>descriptions</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>`.getRandomNum(min, max)`</td><td>隨機取得一個在指定區間min~max的數字</td></tr>
+        <tr><td>`.randomDigit()`</td><td>隨機取得一個16進制數字</td></tr>
+        <tr><td>`.randomHexColor()`</td><td>隨機取得一個HEX色碼</td></tr>
+        <tr><td>`.tohexDigits(strDigit)`</td><td>將一個十進制數字轉換為十六進制</td></tr>
+        <tr><td>`.circular_distance(a,b)`</td><td>以圓形計算兩值之間差值(ex.359-1=2)</td></tr>
+      </tbody>
+    </table>
+</div>
