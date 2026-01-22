@@ -1,4 +1,4 @@
-import{B as y}from"./Utils-C1LUlqXq.js";import{N as v}from"./Notification-CyWVO7vM.js";import{D as I}from"./Dropdown-BFbw9Seo.js";import C from"./CardsAPIdoc-Bh3TBTh-.js";/* empty css                     *//* empty css                 */import"./iframe-DRkchdRO.js";import"./preload-helper-DLLWEBaG.js";import"./index-ksVrQ76b.js";class k extends y{constructor(e,s){let t=document.createElement("div");t.classList.add("card"),t.innerHTML=` <div class="card-header">
+import{B as y}from"./Utils-D9cYNN_F.js";import{N as v}from"./Notification-DWN4lmg0.js";import{D as I}from"./Dropdown-BFbw9Seo.js";import C from"./CardsAPIdoc-CxTxIpYu.js";/* empty css                     *//* empty css                 */import"./iframe-DOtvq2Ys.js";import"./preload-helper-DLLWEBaG.js";import"./index-ksVrQ76b.js";class k extends y{constructor(e,s){let t=document.createElement("div");t.classList.add("card"),t.innerHTML=` <div class="card-header">
             <div class="data-title">${e}</div>
             <div class="flex flex-row-reverse">
               <button type="button" class="closeBtn btn icon-btn text-btn" data-modal-target="close-data-modal">
