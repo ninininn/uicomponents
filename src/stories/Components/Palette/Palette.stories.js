@@ -85,17 +85,55 @@ export default {
         type: { summary: "number" },
       },
     },
-    handler: {
-      action: "click",
-      control: "function",
-      description: "點擊觸發元素後的callback函式",
+    saturationFixed: {
+      control: "boolean",
+      description: "是否固定飽和度",
       table: {
-        // type: { required: true },
         category: "configurations",
-        defaultValue: { summary: "null" },
-        type: { summary: "function" },
+        defaultValue: { summary: "false" },
+        type: { summary: "number | boolean" },
       },
     },
+    saturation: {
+      if: { arg: 'saturationFixed', truthy: true },
+      control: { type: "number", min: 0, max: 100 },
+      description: "飽和度固定值",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "random(20~90)" },
+        type: { summary: "number" },
+      },
+    },
+    lightnessFixed: {
+      control: "boolean",
+      description: "是否固定明度",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "false" },
+        type: { summary: "number | boolean" },
+      },
+    },
+    lightness: {
+      if: { arg: 'lightnessFixed', truthy: true },
+      control: { type: "number", min: 0, max: 100 },
+      description: "明度固定值",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "random(20~90)" },
+        type: { summary: "number" },
+      },
+    },
+    // handler: {
+    //   action: "click",
+    //   control: "function",
+    //   description: "點擊觸發元素後的callback函式",
+    //   table: {
+    //     // type: { required: true },
+    //     category: "configurations",
+    //     defaultValue: { summary: "null" },
+    //     type: { summary: "function" },
+    //   },
+    // },
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // 預設args
@@ -104,7 +142,10 @@ export default {
     colorMode: 'hsl',
     alpha: 1,
     style: 'random',
-    offset: 10
+    offset: 10,
+    tone: 'red',
+    saturationFixed: false,
+    lightnessFixed: false,
   },
 };
 
@@ -112,10 +153,14 @@ export default {
 export const Palette = {
   args: {
     colorCounts: 10,
-    colorMode: 'hex',
+    colorMode: 'hsl',
     style: 'random',
     alpha: 1,
-    offset: 20
+    offset: 20,
+    saturationFixed: false,
+    lightnessFixed: true,
+    saturation: 90,
+    lightness: 70,
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

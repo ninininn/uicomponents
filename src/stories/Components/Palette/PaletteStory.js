@@ -3,8 +3,7 @@ import { Palette } from "../../../Utils/Color";
 import "./Palette.css";
 
 export const createPalette = ({
-    colorCounts, colorMode, alpha, style, tone, offset,
-    handler,
+    colorCounts, colorMode, alpha, style, tone, offset, saturationFixed, lightnessFixed, saturation, lightness
 }) => {
     let parent = document.createElement("div");
     parent.className = "flex";
@@ -14,9 +13,11 @@ export const createPalette = ({
         colorMode: colorMode,
         alpha: alpha,
         style: style,
-        tone: tone || null,
+        tone: tone || 'red',
         offset: offset,
-        handler: handler,
+        saturationFixed: saturationFixed ? saturation : saturationFixed,
+        lightnessFixed: lightnessFixed ? lightness : lightnessFixed,
+        // handler: handler,
     };
 
     // let notification_instance = new Notification(trigger, initOptions, type);
@@ -40,8 +41,7 @@ export const createPalette = ({
         palette.style.width = '30px';
         palette.style.height = '30px';
         palette.style.backgroundColor = randomPalette[i];
-        palette.style.borderLeft = '1px solid white';
-        console.log(randomPalette[i]);
+        // palette.style.borderLeft = '1px solid white';
         parent.appendChild(palette);
     }
     return parent;

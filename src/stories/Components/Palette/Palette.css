@@ -16,6 +16,11 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+
+  /*覆蓋storybook樣式*/
+  input[type=checkbox]:checked {
+    background-color: transparent !important;
+  }
 }
 
 @layer components {

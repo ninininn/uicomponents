@@ -2,18 +2,21 @@ const COLOR_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b'
 const COLOR_HUEDEGS = [0, 60, 120, 180, 240, 300];
 const COLOR_TONE = ['red', 'yellow', 'green', 'cyan', 'blue', 'purple'];
 
-const color_circle = COLOR_TONE.reduce((hueObj, key, index) => {
-    hueObj[key] = COLOR_HUEDEGS[index];
+const color_circle = COLOR_TONE.reduce((hueObj, tone, index) => {
+    hueObj[tone] = COLOR_HUEDEGS[index];
     return hueObj;
 }, {});
 
-const digitsMap = new Map();
+const DIGITs_MAP = new Map();
 
 for (let i = 0; i < COLOR_DIGITS.length; i++) {
-    digitsMap.set(i, COLOR_DIGITS[i]);
+    DIGITs_MAP.set(i, COLOR_DIGITS[i]);
 }
 //@ Helper functions
 export class ColorHelper {
+    static normalizeCircular(hue) {
+        return ((hue % 360) + 360) % 360;
+    }
     static getRandomNum(min, max) {
         //防呆排序
         let rangeBuffer = [min, max].sort((a, b) => a - b);
@@ -26,18 +29,27 @@ export class ColorHelper {
     static randomHexColor() {
         let hexColor = '#';
         for (let i = 0; i < 6; i++) {
-            hexColor += digitsMap.get(ColorHelper.randomDigit());
+            hexColor += DIGITs_MAP.get(ColorHelper.randomDigit());
         }
         return hexColor;
     }
+
     static tohexDigits(strDigit) {
-        let digit = strDigit.map((str) => Array.from(digitsMap.values()).indexOf(str.toLowerCase()));
+        let digit = strDigit.map((str) => Array.from(DIGITs_MAP.values()).indexOf(str.toLowerCase()));
         return digit[0] * 16 + digit[1];
     }
 
     static circular_distance(a, b) {
         const distance = Math.abs(a - b);
         return Math.min(distance, 360 - distance);
+    }
+
+    static luminance(rgbStr) {
+        // relative luminance
+        // let L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+        //contrast ratio = (L1 + 0.05) / (L2 + 0.05)
+        let [R, G, B] = rgbStr.replace(/[rgb()\s+]/g, "").split(",");
+        return (0.2126 * R + 0.7152 * G + 0.0722 * B) / 255;
     }
 }
 
@@ -46,92 +58,115 @@ var defaultPaletteConfig = {
     alpha: 1, //opacity, number between 0~1
     colorMode: 'hex', //which color mode system represented
     style: 'random', //random/contrast/same
-    tone: COLOR_TONE[ColorHelper.getRandomNum(5, 0)], //specific color tone?
-    offset: 20
+    tone: COLOR_TONE[ColorHelper.getRandomNum(0, 5)], //specific color tone?
+    offset: 10,
+    saturationFixed: false,
+    lightnessFixed: false,
 };
 
 //@ core - Palette
 export function Palette(colorConfig = defaultPaletteConfig) {
     let paletteConfig = Object.assign({}, defaultPaletteConfig, colorConfig);
-    let { colorCounts, alpha, colorMode, style, tone, offset } = paletteConfig;
+    let colorMode = paletteConfig.colorMode;
 
-    let hues = createHue(colorCounts, style, tone, offset);
-    let saturations = createSaturation(colorCounts, style);
-    let lightnesses = createLightness(colorCounts, style);
-
-    let palette = paletteGenarator(colorCounts, hues, saturations, lightnesses, alpha);
+    let palette = paletteGenarator(paletteConfig);
     switch (colorMode) {
         case 'hex':
             return palette.map((color) => color.toHex());
         case 'rgb':
             return palette.map((color) => color.toRgb());
-        case 'hsl':
-            return palette.map((color) => `hsl(${color.hue}deg,${color.saturation}%,${color.lightness}%)`);
+        default:
+            return palette.map((color) => color.toHsl());
     }
 }
 
-function paletteGenarator(colorCounts, hues, saturations, lightnesses, alpha) {
+function paletteGenarator({ colorCounts, alpha, style, tone, offset, saturationFixed, lightnessFixed }) {
     let palette = [];
+    let mainHue = color_circle[tone];
     for (let i = 0; i < colorCounts; i++) {
-        palette.push(new Color(hues[i], saturations[i], lightnesses[i], alpha));
+        let hue = createHue(style, mainHue, offset);
+        let saturation = createSaturation(saturationFixed);
+        let lightness = createLightness(lightnessFixed);
+        let color = new Color(hue, saturation, lightness, alpha);
+        palette.push(color);
     }
-    return palette;
+
+    return palette.sort(function (c1, c2) {
+        //依照視覺上的顏色[淺->深]排序
+        let L1 = 116 * Math.pow((c1.luminance + 0.055) / 1.055, 2) - 16;
+        let L2 = 116 * Math.pow((c2.luminance + 0.055) / 1.055, 2) - 16;
+
+        return L2 - L1;
+
+        //判斷在main左還是右
+        function hueDelta(h, main) {
+            let d = ColorHelper.normalizeCircular(h - main);
+            if (d >= 180) d -= 360;
+            return d;
+        }
+        const da = hueDelta(c1.hue, mainHue);
+        const db = hueDelta(c2.hue, mainHue);
+
+        const sideA = da === 0 ? 0 : (da < 0 ? -1 : +1); // -1 left, +1 right, 0 center
+        const sideB = db === 0 ? 0 : (db < 0 ? -1 : +1);
+
+        if (sideA !== sideB) {
+            if (sideA === 0) return -1;
+            if (sideB === 0) return 1;
+
+            return sideA - sideB;  // left(-1) 會在 right(+1) 前
+        }
+
+        //距離近 -> 遠
+        const distA = Math.abs(da);
+        const distB = Math.abs(db);
+        if (distA !== distB) return distA - distB;
+
+        //同側同距離
+        return c1 - c2;
+    });
 }
 
 //個別產生H/S/L數值
-function createHue(colorCounts, style, tone, offset) {
-    let mainHue = color_circle[tone];
-    let hues = [];
-
-    for (let i = 0; i < colorCounts; i++) {
-        hues.push(setHue());
-    }
-
-    function setHue() {
+function createHue(style, mainHue, offset) {
+    function randomHue(styleType) {
         let hue;
-        switch (style) {
+        switch (styleType) {
             case 'contrast':
-                hue = mainHue + ColorHelper.getRandomNum(100, 179);
+                hue = mainHue + ColorHelper.getRandomNum(120, 240);
                 break;
             case 'same':
-                hue = mainHue + ColorHelper.getRandomNum(-59, 59);
+                hue = mainHue + ColorHelper.getRandomNum(-30, 30);
                 break;
             default:
                 hue = ColorHelper.getRandomNum(0, 359);
                 break;
         }
-        return ColorFormat.normalizeHue(hue);
+
+        return ColorHelper.normalizeCircular(hue);
     }
 
     //check repeat、instance
-    function checkHue(hueLists) {
-        return checkOffset(hueLists, offset, () => { setHue(); });
+    function checkHue(hueList) {
+        if (style !== 'random')
+            return checkOffset(hueList, offset, () => { return randomHue(style); });
+        return hueList;
     }
-
-    return checkHue(hues).sort((a, b) => a - b);
+    return randomHue(style);
 }
 
-function createSaturation(colorCounts, style) {
-    let staurations = [];
-    for (let i = 0; i < colorCounts; i++) {
-        staurations.push(ColorHelper.getRandomNum(20, 95));
-    }
-    //由灰->彩排序
-    return staurations.sort((a, b) => a - b);
+function createSaturation(fixed = false) {
+    let saturation = typeof (fixed) === 'number' ? fixed : ColorHelper.getRandomNum(20, 90);
+    return saturation;
 }
 
-function createLightness(colorCounts, style) {
-    let lightnesses = [];
-    for (let i = 0; i < colorCounts; i++) {
-        lightnesses.push(ColorHelper.getRandomNum(20, 90));
-    }
-    //由亮->暗排序
-    return lightnesses.sort((a, b) => b - a);
+function createLightness(fixed = false) {
+    let lightness = typeof (fixed) === 'number' ? fixed : ColorHelper.getRandomNum(20, 90);
+    return lightness;
 }
 
-function checkOffset(colors, offset, callback) {
-    let count = colors.length;
-    let checkedColors = colors.reduce((checked, curr) => {
+function checkOffset(list, offset, callback) {
+    let checkedColors = list.reduce((checked, curr) => {
         let lastIndex = checked.length - 1;
         let distance = ColorHelper.circular_distance(checked[lastIndex], curr);
         if (distance < offset || distance == 0) {
@@ -140,52 +175,51 @@ function checkOffset(colors, offset, callback) {
         return checked.concat(curr);
     }, []);
 
-    // relative luminance
-    // let L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
-    //contrast ratio = (L1 + 0.05) / (L2 + 0.05)
     return checkedColors;
 }
 
 //@ color
 class Color {
     constructor(hue, saturation, lightness, alpha) {
-        this.hue = hue;
-        this.saturation = saturation;
-        this.lightness = lightness;
-        this.alpha = alpha;
-
-        this.base = { h: this.hue, s: this.saturation, l: this.lightness, a: this.alpha };
+        this.base = { h: hue, s: saturation, l: lightness, a: alpha };
+        this.luminance = ColorHelper.luminance(this.toRgb());
     }
 
     toRgb() {
-        return ColorFormat.hslTorgb(this.base);
+        return ColorFormat.hslTorgb(this.toHsl());
     }
 
     toHex() {
-        return ColorFormat.hslTohex(this.base);
+        return ColorFormat.hslTohex(this.toHsl());
+    }
+
+    toHsl() {
+        let { h, s, l, a } = this.base;
+        if (a !== 1) {
+            return `hsl(${h} ${s} ${l} / ${a})`;
+        }
+        return `hsl(${h} ${s} ${l})`;
     }
 }
 
 //@ formatter
 export class ColorFormat {
-    static normalizeHue(hue) {
-        return ((hue % 360) + 360) % 360;
-    }
-    static hexTorgb(hexString, opacity = 1) {
+    static hexTorgb(hexString) {
         let rgbResult = '';
-        const isWithAlpha = opacity >= 0 && opacity <= 1;
         const Rstr = Array.from(hexString.slice(1, 3));
         const Gstr = Array.from(hexString.slice(3, 5));
         const Bstr = Array.from(hexString.slice(5, 7));
+        const Astr = Array.from(hexString.slice(7, 9));
 
         let R = ColorHelper.tohexDigits(Rstr);
         let G = ColorHelper.tohexDigits(Gstr);
         let B = ColorHelper.tohexDigits(Bstr);
+        let A = Math.round((ColorHelper.tohexDigits(Astr) / 255) * 100) / 100;
 
-        if (!isWithAlpha) {
+        if (A == 1) {
             rgbResult = `rgb(${R},${G},${B})`;
         } else {
-            rgbResult = `rgb(${R},${G},${B},${opacity})`;
+            rgbResult = `rgb(${R},${G},${B},${A})`;
         }
 
         return rgbResult;
@@ -193,13 +227,13 @@ export class ColorFormat {
     static rgbTohsl(rgbString) {
         let trimStr = rgbString.toLowerCase().replace(/[rgb()\s+]/g, "").split(",");
         let eachRgb = trimStr.map(strNum => Math.round((strNum / 255) * 100) / 100);
-        let [R, G, B] = eachRgb;
+        let [R, G, B, A] = eachRgb;
 
         let max = Math.max(...eachRgb);
         let min = Math.min(...eachRgb);
         let delta = max - min;
 
-        let hue, saturation, lightness;
+        let hue, saturation, lightness, alpha;
         if (max === min) {
             hue = 0;
         } else if (max == R && G >= B) {
@@ -224,14 +258,19 @@ export class ColorFormat {
         saturation = saturation > 100 ? 100 : saturation;
         lightness = lightness * 100 > 100 ? 100 : lightness * 100;
 
+        alpha = A ? A : 1;
+        if (alpha !== 1) {
+            return `hsl(${Math.round(hue)},${saturation}%,${lightness}%/${alpha})`;
+        }
         return `hsl(${Math.round(hue)},${saturation}%,${lightness}%)`;
     }
-    static hslTorgb({ h, s, l, a }) {
-
+    static hslTorgb(hslString) {
+        let trimStr = hslString.toLowerCase().replace(/[hsl()/+]/g, "").replace(/\s+/g, ",").split(",");
+        let [h, s, l, a] = trimStr;
         //整理回去原始數值
         h = ((h % 360) + 360) % 360;
-        s = s / 100;
-        l = l / 100;
+        s = parseInt(s) / 100;
+        l = parseInt(l) / 100;
 
         //RGB向量
         const chroma = (1 - Math.abs(2 * l - 1)) * s;//
@@ -251,20 +290,28 @@ export class ColorFormat {
         const g = Math.round((g1 + m) * 255);
         const b = Math.round((b1 + m) * 255);
 
+        if (a) {
+            if (a !== 1) {
+                return `rgb(${r},${g},${b},${a})`;
+            }
+        }
         return `rgb(${r},${g},${b})`;
     }
-    static rgbTohex(rgbStr) {
-        let colors = rgbStr.replace(/[rgb()\s+]/g, "").split(",");
+    static rgbTohex(rgbString) {
+        let colors = rgbString.replace(/[rgb()\s+]/g, "").split(",");
         let hexResult = colors.map((color) => {
-            color = parseInt(color);
+            color = parseFloat(color);
+            if (color < 1) {
+                color = Math.floor((color * 255));
+            }
             let mod = color % 16;
-            let hexStr = `${digitsMap.get(Math.floor(color / 16))}${digitsMap.get(mod)}`;
+            let hexStr = `${DIGITs_MAP.get(Math.floor(color / 16))}${DIGITs_MAP.get(mod)}`;
             return hexStr;
         });
         return `#${hexResult.join("")}`;
     }
-    static hslTohex({ h, s, l, a }) {
-        let turnRgb = ColorFormat.hslTorgb({ h, s, l, a });
+    static hslTohex(hslString) {
+        let turnRgb = ColorFormat.hslTorgb(hslString);
         return ColorFormat.rgbTohex(turnRgb);
     }
 }

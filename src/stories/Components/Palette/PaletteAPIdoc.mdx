@@ -8,17 +8,16 @@ import {
   Unstyled,
 } from "@storybook/addon-docs/blocks";
 
-<Meta isTemplate title="How to use Table" />
+<Meta isTemplate title="How to use Palette" />
 
 <Title />
-常見表格資料表，可以載入資料並更新Table畫面 (此頁面測試用API來源 : [公開API
-(https://jsonplaceholder.typicode.com/todos)](https://jsonplaceholder.typicode.com/todos))
+調色盤功能(此處先以`Palette()`函式使用說明)，後續可能制作成元件?
 
 <Primary />
 
 # Controls
 
-Table 元件由多個子元件所組成，但其餘子元件之設定在使用時都不會直接操作到，所以僅示意`config`參數。
+生成單色或一組指定樣式(random/contrast/same)的色碼。
 
 <Controls />
 
@@ -26,43 +25,30 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
 
 # Usage API
 
-使用`new`關鍵字初始化一個`Table`元件，並帶入`config`設定參數。
+直接使用`Palette()`函式，並帶入`config`設定參數。
 
 ```javascript
-let table = new Table(config);
+let palette = Palette(config);
 ```
 
 > ### parameters 參數設定
 
 - <span className="sb-unstyled font-black">config</span>
 <span className="sb-unstyled data-type">object</span>  
-各屬性的型別及說明可參考上方**Controls區塊**，各類別的私有屬性則可以參考**子類別**區塊的各個說明，此處僅列出共同設定的屬性。
+各屬性的型別及說明可參考上方**Controls區塊**。
   ```javascript
     const initConfig = {
-      id: "table_A",                                 //tableId
-      name: "測試用表格",                             //自定義table名稱
-      limits: 20,                                    //單頁顯示筆數限制
-      container: ".table-test-target",               //要放入的DOM元素(容器)
-      cols:cols,                                     //欄位設定
-      tools: true,                                   //是否顯示工具列
-      selection: "checkbox",                         //是否開啟勾選列
-      classes: ["table-container"],                  //自定義class
-      complete: complete,                            //渲染完成後要執行的fn
-      error: error,                                  //渲染失敗執行的fn
-      handler: handler,                              //渲染時執行的fn(非同步)
+      colorCounts: 1,                              //需要的色碼數量
+      colorMode: "hsl",                            //色彩模式(hsl/rgb/hex)
+      alpha: 1,                                   //透明度
+      style: "random",                            //樣式
+      tone:null,                                  //指定色系
+      saturationFixed: false,                     //是否固定飽和度
+      lightnessFixed: false,                      //是否固定明度
+      offset: 10,                                 //偏移量(暫時先不要用)
     };
   ```  
 <br/>
-  - <span className="sb-unstyled font-black">column configuration</span>
-    ```javascript
-    const cols = [
-      {field:'id', title:'ID', sort:true, fixed:true},
-      {field:'name', title:'名稱', sort:false, fixed:false},
-      {field:'count', title:'數量', sort:true, fixed:false},
-    ];
-    ```
-    <br/>
-    每個 column <span className="sb-unstyled data-type">object</span> 都可以設定以下屬性 :  
     <div className="sb-unstyled table-container">
       <table className="sb-unstyled table-content">
         <thead>
@@ -76,60 +62,49 @@ let table = new Table(config);
         </thead>
         <tbody>
           <tr>
-            <td className="font-bold text-center">field</td>
+            <td className="font-bold text-center">colorCounts</td>
+            <td className="text-center">1</td>
+            <td className="text-center">number</td>
+            <td>需要的色碼數量</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">colorMode</td>
+            <td className="text-center">hsl</td>
+            <td className="text-center">string</td>
+            <td>色彩模式</td>
+            <td>hsl | rgb | hex</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">alpha</td>
+            <td className="text-center">1</td>
+            <td className="text-center">number</td>
+            <td>透明度(0~1)</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">style</td>
+            <td className="text-center">random</td>
+            <td className="text-center">string</td>
+            <td>色彩樣式</td>
+            <td>random(隨機) | same(同色系) | contrast(對比色系)</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">tone</td>
             <td className="text-center">-</td>
             <td className="text-center">string</td>
-            <td>欄位屬性/特徵</td>
+            <td>指定色系</td>
+            <td>red | yellow | green | cyan | blue | purple</td>
           </tr>
           <tr>
-            <td className="font-bold text-center">title</td>
-            <td className="text-center">-</td>
-            <td className="text-center">string</td>
-            <td>欄位文字</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">sort</td>
-            <td className="text-center">asc</td>
-            <td className="text-center">string / boolean</td>
-            <td>是否有排序功能，`false`關閉排序功能，asc(升冪)、desc(降冪)</td>
-            <td>`false`關閉排序功能 / asc(升冪) / desc(降冪)</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">fixed</td>
+            <td className="font-bold text-center">saturationFixed</td>
             <td className="text-center">false</td>
-            <td className="text-center">boolean</td>
-            <td>是否固定該欄</td>
+            <td className="text-center">boolean | number</td>
+            <td>是否統一飽和度</td>
           </tr>
           <tr>
-            <td className="font-bold text-center">align</td>
-            <td className="text-center">left</td>
-            <td className="text-center">string</td>
-            <td>欄位對齊位置</td>
-            <td> left / center / right</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">template</td>
-            <td className="text-center">-</td>
-            <td className="text-center">function</td>
-            <td>自訂義tablecell的渲染函式</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">visible</td>
-            <td className="text-center">`true`</td>
-            <td className="text-center">boolean</td>
-            <td>控制該欄顯示與否</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">rowspan</td>
-            <td className="text-center">-</td>
-            <td className="text-center">number</td>
-            <td>控制合併列數量</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">colspan</td>
-            <td className="text-center">-</td>
-            <td className="text-center">number</td>
-            <td>控制合併欄數量</td>
+            <td className="font-bold text-center">lightnessFixed</td>
+            <td className="text-center">false</td>
+            <td className="text-center">boolean | number</td>
+            <td>是否統一明度</td>
           </tr>
         </tbody>
       </table>
@@ -137,82 +112,36 @@ let table = new Table(config);
 <br />
 
 ---
+# ColorFormat方法
 
-> ### prototype properties 原型屬性
+> 顏色格式切換相關方法
 
-<div className="sb-unstyled table-container">
+各模式標準表示方式如下:
+
+<div className="sb-unstyled table-container overflow-hidden">
   <table className="sb-unstyled table-content">
     <thead>
       <tr className="text-center">
-        <td>property</td>
-        <td>default</td>
-        <td>type</td>
-        <td>descriptions</td>
+        <td>模式</td>
+        <td>表示範例</td>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td className="font-bold">UItype</td>
-        <td>Table</td>
-        <td>string</td>
-        <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
+        <td>RGB</td>
+        <td>rgb(rr,gg,bb,aa)</td>
       </tr>
       <tr>
-        <td className="font-bold">id</td>
-        <td>`-`</td>
-        <td>string</td>
-        <td>Table ID</td>
+        <td>HSL</td>
+        <td>hsl(h s l / a)</td>
       </tr>
       <tr>
-        <td className="font-bold">_tableRows</td>
-        <td>[]</td>
-        <td>array</td>
-        <td>多個`TableRow`元件</td>
-      </tr>
-      <tr>
-        <td className="font-bold">_tableHeader</td>
-        <td>`TableHeader`</td>
-        <td>Object</td>
-        <td>
-          `TableHeader`元件
-        </td>
-      </tr>
-      <tr>
-        <td className="font-bold">tableBody</td>
-        <td>`<tbody>`</td>
-        <td>`HTMLElement`</td>
-        <td>`<tbody>`主體DOM</td>
-      </tr>
-      <tr>
-        <td className="font-bold">table</td>
-        <td>`<table>`</td>
-        <td>HTMLElement</td>
-        <td>`<table>` 元素</td>
-      </tr>
-      <tr>
-        <td className="font-bold">data</td>
-        <td>[]</td>
-        <td>array</td>
-        <td>呼叫API後取回的資料陣列</td>
-      </tr>
-      <tr>
-        <td className="font-bold">dataCounts</td>
-        <td>0</td>
-        <td>number</td>
-        <td>資料總筆數</td>
-      </tr>
-      <tr>
-        <td className="font-bold">_pagination</td>
-        <td>`Pagination`元件</td>
-        <td>Object</td>
-        <td>綁定的`Pagination`分頁元件</td>
+        <td>HEX</td>
+        <td>#RRGGBBFF</td>
       </tr>
     </tbody>
   </table>
 </div>
----
-
-> ### methods 控制方法
 
 <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
 
@@ -226,220 +155,25 @@ let table = new Table(config);
     </thead>
     <tbody>
       <tr>
-        <td>`.setSelected(rowIndex)`</td>
-        <td>設定預設勾選列</td>
+        <td>`.hexTorgb(hexString)`</td>
+        <td>HEX->RGB</td>
       </tr>
       <tr>
-        <td>`.setData(dataArr)`</td>
-        <td>放入資料重新渲染</td>
+        <td>`.rgbTohsl(rgbString)`</td>
+        <td>RGB->HSL</td>
       </tr>
       <tr>
-        <td>`.setSize(width,height)`</td>
-        <td>設定表格尺寸</td>
+        <td>`.hslTorgb(hslString)`</td>
+        <td>HSL->RGB</td>
       </tr>
       <tr>
-        <td>`.reload()`</td>
-        <td>重新呼叫API抓資料</td>
+        <td>`.rgbTohex(rgbString)`</td>
+        <td>RGB->HEX</td>
       </tr>
       <tr>
-        <td>`.updateRow(index,data)`</td>
-        <td>更新指定列資料</td>
-      </tr>
-      <tr>
-        <td>`.getTableData()`</td>
-        <td>取得表格所有資料</td>
-      </tr>
-      <tr>
-        <td>`.getSelected()`</td>
-        <td>取得表格內所有選取的Row</td>
-      </tr>
-      <tr>
-        <td>`.exportTable()`</td>
-        <td>匯出成csv文件/pdf?</td>
-      </tr>
-      <tr>
-        <td>`.getElem()`</td>
-        <td>取得table DOM節點</td>
-      </tr>
-      <tr>
-        <td>`.setTheme()`</td>
-        <td>設定主題色</td>
+        <td>`.hslTohex(hslString)`</td>
+        <td>HSL->HEX</td>
       </tr>
     </tbody>
   </table>
 </div>
---- 
-# Pagination 元件
-
-<div className="sb-unstyled note-msg">
-  詳細說明可參考Pagination元件說明頁(尚未建置...)
-</div>
-- **properties 屬性**
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-            <td>inherits</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold">UItype</td>
-            <td>Pagination</td>
-            <td>string</td>
-            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-            <td>`BaseComponent`</td>
-          </tr>
-          <tr>
-            <td className="font-bold">currentPage</td>
-            <td>1</td>
-            <td>number</td>
-            <td>當前頁數</td>
-          </tr>
-          <tr>
-            <td className="font-bold">total</td>
-            <td>-</td>
-            <td>number</td>
-            <td>資料總數</td>
-          </tr>
-          <tr>
-            <td className="font-bold">pages</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>全部頁數(page)</td>
-          </tr>
-          <tr>
-            <td className="font-bold">handler</td>
-            <td>-</td>
-            <td>function</td>
-            <td>點擊各頁籤要執行的function</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-<br />
----
-
-# 子元件
-
-<div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>
-<br />
-<h3 id="TableHeader">TableHeader</h3>
-- **properties 屬性**
-<div className="sb-unstyled table-container overflow-hidden">
-  <table className="sb-unstyled table-content">
-    <thead>
-      <tr className="text-center">
-        <td>property</td>
-        <td>default</td>
-        <td>type</td>
-        <td>descriptions</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td className="font-bold text-center">UItype</td>
-        <td className="text-center">TableHeader</td>
-        <td className="text-center">string</td>
-        <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-      </tr>
-      <tr>
-        <td className="font-bold text-center">cols</td>
-        <td className="text-center">-</td>
-        <td className="text-center">string</td>
-        <td>各欄位設定陣列(= cols 傳入參數)</td>
-      </tr>
-      <tr>
-        <td className="font-bold text-center">selection</td>
-        <td className="text-center">checkbox</td>
-        <td className="text-center">string</td>
-        <td>勾選功能，可用 checkbox / radio，其餘視為靜態 table</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<br />
----
-<h3 id="TableRow">TableRow</h3>
-
-- **properties 屬性**
-
-      <div className="sb-unstyled table-container overflow-hidden">
-        <table className="sb-unstyled table-content">
-          <thead>
-            <tr className="text-center">
-              <td>property</td>
-              <td>default</td>
-              <td>type</td>
-              <td>descriptions</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="font-bold text-center">UItype</td>
-              <td className="text-center">TableRow</td>
-              <td className="text-center">string</td>
-              <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-            </tr>
-            <tr>
-              <td className="font-bold text-center">popover</td>
-              <td className="text-center">flowbite `Popover`物件</td>
-              <td className="text-center">object</td>
-              <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-  <br />
-
-- **options 參數可設定的私有屬性**
-  - `triggerType` 觸發動作類型，可以選擇hover|click|none
-  - `offset` 距離triggerElem的距離
-  <br />
-
----
-
-> <h3 id="TableCell">TableCell</h3>
-
-- **properties 屬性**
-
-      <div className="sb-unstyled table-container overflow-hidden">
-        <table className="sb-unstyled table-content">
-          <thead>
-            <tr className="text-center">
-              <td>property</td>
-              <td>default</td>
-              <td>type</td>
-              <td>descriptions</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="font-bold text-center">UItype</td>
-              <td className="text-center">TableCell</td>
-              <td className="text-center">string</td>
-              <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-            </tr>
-            <tr>
-              <td className="font-bold text-center">dataValue</td>
-              <td className="text-center">-</td>
-              <td className="text-center">string/number</td>
-              <td>資料格的資料內容</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-  <br />
-
-- **options 參數可設定的私有屬性**
-  - `backdrop` 遮罩類型，可分為static|dynamic，是否可以點擊螢幕任一處關閉
-  - `backdropClasses` 遮罩classes
-  - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal
