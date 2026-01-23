@@ -18,9 +18,9 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   /*覆蓋storybook樣式*/
-  input[type=checkbox]:checked {
+  /* input[type=checkbox]:checked {
     background-color: transparent !important;
-  }
+  } */
 }
 
 @layer components {

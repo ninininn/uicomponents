@@ -1,5 +1,5 @@
 import { Dismiss, Modal, Popover } from "flowbite";
-import { BaseComponent, UIUtils, debounce } from "../../../Utils";
+import { BaseComponent, UIUtils, debounce } from "../../../Utils/Utils";
 
 //TODO 1.點擊trigger觸發時要做debounce(點太多次只認一次)
 //TODO 2.清除重複的通知元素/關閉後要清掉該元素或是替換成新內容
@@ -14,7 +14,7 @@ export class Notification {
     }
     return toastManager.pushItem(options);
   }
-  static modal(trigger = null, options = {}) {
+  static modal(options = {}, trigger = null) {
     let targetEl = Notification._createTargetContainer();
     if (options.handler) {
       trigger.addEventListener("click", options.handler);

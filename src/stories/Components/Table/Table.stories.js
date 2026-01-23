@@ -5,7 +5,7 @@ import { action } from "storybook/actions";
 import { createTable } from './TableStory';
 import "./Table.css";
 import TableAPIdoc from "./TableAPIdoc.mdx";
-import { UIUtils } from "../../../Utils";
+import { UIUtils } from "../../../Utils/Utils";
 import { Notification } from '../Notification/Notification';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
@@ -197,15 +197,13 @@ export const Table = {
     name: "測試表格",
     cols: [
       {
-        field: 'postId', title: 'postId', sort: 'asc', fixed: false, align: "center", template: function (data) {
+        field: '日期', title: '日期', sort: 'asc', fixed: false, align: "center", template: function (data) {
           let template = `<div>${data}</div>`;
           this._elem.innerHTML = template;
         }
       },
-      { field: 'id', title: 'id', sort: 'dec', fixed: false, align: "right", visible: false, resize: true },
-      { field: 'name', title: '名字', sort: false, fixed: false, align: "center" },
-      { field: 'email', title: 'email', sort: false, fixed: true, align: "center" },
-      { field: 'body', title: '內容', sort: false, fixed: false },
+      { field: '項目', title: '項目', sort: 'dec', fixed: false, align: "center", visible: false, resize: true },
+      { field: '網址', title: '網址', sort: false, fixed: false, align: "center" },
       {
         field: 'operate', title: '操作', sort: false, fixed: false,
         template: function (data) {
@@ -214,13 +212,13 @@ export const Table = {
             data = undefined;
           }
           let isSelectable = Boolean(data);
-          
+
           let buttons = [{
             classes: ["btn-sm", `${isSelectable ? "btn-success" : "btn-secondary"}`], text: "查看細節",
             handler: function (e) {
               e.stopPropagation();//避免觸發選取該row
               console.log(data);
-              Notification.modal(this, { customContent: `<div>${JSON.stringify(data)}</div>` });
+              Notification.modal({ customContent: `<div>${JSON.stringify(data)}</div>` });
             }
           },
           {
@@ -234,7 +232,7 @@ export const Table = {
           UIUtils.addClass(btnContainer, ["flex", "gap-2", "justify-center"]);
           UIUtils.setBtnGroup(buttons, btnContainer);
           this._elem.appendChild(btnContainer);
-        }
+        }, print: false
       },
     ],
     limits: 25,

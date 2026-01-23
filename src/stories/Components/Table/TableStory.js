@@ -1,4 +1,4 @@
-import { UIUtils, debounce } from "../../../Utils";
+import { UIUtils, debounce } from "../../../Utils/Utils";
 import { Table, Skeleton } from "./Table";
 import { Checkbox } from "../Checkbox/Checkbox";
 import "./Table.css";
@@ -53,7 +53,7 @@ export const createTable = ({
         complete: complete,     //渲染完成後要執行的fn
         error: error,           //渲染失敗執行的fn
         handler: handler,       //渲染時執行的fn(非同步)
-        url: "https://jsonplaceholder.typicode.com/comments",
+        url: "https://data.moa.gov.tw/Service/OpenData/FromM/BoatBulletinData.aspx?IsTransData=1&UnitId=041",
         controlPage: true,
     };
 

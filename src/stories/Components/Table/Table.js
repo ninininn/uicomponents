@@ -2,9 +2,12 @@ import {
   BaseComponent,
   UIUtils,
   findElem,
-} from "../../../Utils";
+} from "../../../Utils/Utils";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
+import { Notification } from '../Notification/Notification';
+import { Printer } from '../../../Utils/Printer';
+import { Exporter } from '../../../Utils/Exporter';
 
 const DATA_ATTR_INDEX = "index";
 const DATA_ATTR_ROWSELECTED = "rowselected";
@@ -31,6 +34,7 @@ var defaultColumnConfig = {
   sort: undefined,
   template: undefined,
   visible: true,
+  print: true,
 };
 
 export class Table extends BaseComponent {
@@ -82,11 +86,11 @@ export class Table extends BaseComponent {
   //初始化
   //資料改變應在邏輯層進行，然後再呼叫 _render()
   _init() {
+    this.table.appendChild(this.tableHeader.getElem());
     //建立工具列
     if (this.config.tools) {
       this._createToolBar(this.config.tools);
     }
-
     this._render();
     this._bindEvent();
   }
@@ -116,7 +120,7 @@ export class Table extends BaseComponent {
 
     //組裝
     this.table.id = this.id;
-    this.table.appendChild(this.tableHeader.getElem());
+
     this.table.appendChild(this.tableBody);
 
     //class設定
@@ -206,11 +210,58 @@ export class Table extends BaseComponent {
           toolBar.appendChild(popover);
           break;
         case 'exports':
-          btnHandler = () => { };
+          btnHandler = () => {
+            const table = this;
+            let rowData = table.data;
+            if (table.getSelectedRows().length >= 1) {
+              rowData = table.getSelectedRows();
+            }
+            const showCols = table.config.cols.filter(config => config.visible && config.print).map((config) => {
+              return { name: config.title };
+            });
+            const exportData = {
+              columns: showCols,
+              rows: rowData.map((d) => {
+                const item = table.config.cols.filter(config => config.visible && config.print).map((config) => {
+                  return config.field;
+                }).reduce((obj, key) => {
+                  obj[key] = d.data[key];
+                  return obj;
+                }, {});
+                return Object.values(item);
+              })
+            };
+
+            const exportObj = {
+              title: '測試用匯出',
+              data: exportData,
+              type: 'xslx',
+              name: `table-${table.id}`
+            };
+            Exporter(exportObj);
+          };
           btn = UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/export.svg', handler: btnHandler });
           break;
         case 'print':
-          btnHandler = () => { };
+          btnHandler = () => {
+            const tableHeader = this.tableHeader.getElem().cloneNode(true);
+            const selectedRows = this.getSelectedRows();
+            const table = document.createElement("table");
+            let rowFragment = document.createDocumentFragment();
+            let printData = this.data;
+            //如果有選取rows->印勾選列，沒有任何選取rows=>印全表
+            if (selectedRows.length >= 1) {
+              printData = selectedRows;
+            }
+            const showColumns = this.config.cols.filter((config) => config.print !== false && config.visible !== false);
+            console.log(showColumns);
+            printData.forEach((row) => {
+              const tr = this._createRow(row, row.index, showColumns, true);
+              rowFragment.appendChild(tr);
+            });
+            table.append(tableHeader, rowFragment);
+            Printer(table, selectedRows, "table");
+          };
           btn = UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/print.svg', handler: btnHandler });
           break;
         default:
@@ -224,17 +275,19 @@ export class Table extends BaseComponent {
   }
 
   //建立TableRow
-  _createRow(data, index, colConfig) {
+  _createRow(data, index, colConfig, printMode = false) {
     const tr = document.createElement("tr");
     UIUtils.setAttribute(tr, DATA_ATTR_INDEX, index);
 
-    if (this.config.selection === 'checkbox') {
-      const td = document.createElement("td");
-      const checkbox = new Checkbox(td, {
-        checked: false,
-        theme: this._theme,
-      });
-      tr.appendChild(checkbox.container);
+    if (!printMode) {
+      if (this.config.selection === 'checkbox') {
+        const td = document.createElement("td");
+        const checkbox = new Checkbox(td, {
+          checked: false,
+          theme: this._theme,
+        });
+        tr.appendChild(checkbox.container);
+      }
     }
 
     colConfig.forEach(config => {
@@ -247,8 +300,8 @@ export class Table extends BaseComponent {
 
   //建立TableCell
   _createCell(data, config) {
-    const td = document.createElement("td");
     let { field, align = "left", template, fixed } = config;
+    const td = document.createElement("td");
     let textContainer = document.createElement("span");
     switch (align) {
       case "center":
@@ -265,7 +318,7 @@ export class Table extends BaseComponent {
     UIUtils.setAttribute(td, DATA_ATTR_FIELD, field);
     //TODO template function - 傳入自訂函式來建立內容
 
-    if (data.data[field]) {
+    if (data?.data[field]) {
       UIUtils.setText(textContainer, data.data[field]);
       td.appendChild(textContainer);
     }
@@ -472,6 +525,7 @@ class TableHeader extends BaseComponent {
   _init() {
     if (this.selection.UItype === "Checkbox") {
       const th = document.createElement("th");
+      UIUtils.setAttribute(th, "print", "print");
       th.appendChild(this.selection.getElem());
       this._elem.querySelector("tr").appendChild(th);
     }
@@ -534,7 +588,7 @@ class TableHeader extends BaseComponent {
   }
 
   _createCol(colconfig) {
-    let { field, title, sort, visible, resize } = colconfig;
+    let { field, title, sort, visible, resize, print } = colconfig;
     if (!visible) return;
 
     let th = document.createElement("th");
@@ -544,7 +598,7 @@ class TableHeader extends BaseComponent {
     if (sort) {
       UIUtils.setAttribute(th, DATA_ATTR_SORT, sort);
       sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
+      <path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
 <path d="M4.24999 10.7617V15C4.24999 15.4142 4.58578 15.75 4.99999 15.75C5.4142 15.75 5.74999 15.4142 5.74999 15V10.7617C5.83248 10.875 5.9131 10.9879 5.9912 11.0967L5.9958 11.1031C6.1467 11.3133 6.30972 11.5404 6.43847 11.6855C6.71335 11.9954 7.18818 12.0239 7.49804 11.749C7.80761 11.4742 7.83604 11.0002 7.56151 10.6904C7.49513 10.6156 7.38199 10.4613 7.20995 10.2217L7.19283 10.1978C7.0366 9.98019 6.84876 9.71852 6.65526 9.46875C6.45751 9.2135 6.23286 8.94285 6.00487 8.73047C5.89083 8.62424 5.75714 8.51521 5.60937 8.42871C5.46887 8.34647 5.25683 8.25 4.99999 8.25C4.74316 8.25 4.53111 8.34647 4.39062 8.42871C4.24284 8.51521 4.10915 8.62424 3.99511 8.73047C3.76712 8.94285 3.54247 9.2135 3.34472 9.46875C3.14409 9.72771 2.94956 9.99947 2.79003 10.2217C2.61799 10.4613 2.50485 10.6156 2.43847 10.6904C2.16394 11.0002 2.19237 11.4742 2.50194 11.749C2.8118 12.0239 3.28663 11.9954 3.56151 11.6855C3.69026 11.5403 3.85328 11.3133 4.00418 11.1031L4.00878 11.0967C4.08689 10.9879 4.1675 10.875 4.24999 10.7617Z" fill="currentColor"/>
 </svg>
 `;
@@ -554,6 +608,9 @@ class TableHeader extends BaseComponent {
       UIUtils.addClass(resizer, ["table-resizer"]);
       resizer.style.height = `${this.table.getElem().offsetHeight}px`;
       th.appendChild(resizer);
+    }
+    if (!print) {
+      UIUtils.setAttribute(th, "print", "print");
     }
 
     th.appendChild(sortIcon);
