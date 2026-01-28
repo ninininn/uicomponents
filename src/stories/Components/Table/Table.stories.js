@@ -136,6 +136,15 @@ export default {
         type: { summary: "string" },
       },
     },
+    controlPage: {
+      control: "boolean",
+      description: "是否可以操作每頁顯示數量",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "false" },
+        type: { summary: "boolean" },
+      },
+    },
     complete: {
       control: "function",
       description: "完成資料載入後要執行的函式",

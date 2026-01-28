@@ -1,5 +1,5 @@
-import tableCss from "/storybook-static/assets/Table-DxuPI7tj.css?raw";
-import indexCss from "/dist/assets/index-yBittNtT.css?raw";
+// import tableCss from "/storybook-static/assets/Table-DxuPI7tj.css?raw";
+// import indexCss from "/dist/assets/index-yBittNtT.css?raw";
 export function Printer(elem, dataObj, type = 'table') {
     const printObj = Object.assign({}, dataObj);
     const printElem = elem;

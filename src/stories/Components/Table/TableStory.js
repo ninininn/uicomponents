@@ -20,6 +20,7 @@ export const createTable = ({
     classes,
     complete,
     error,
+    controlPage,
     handler,
 }) => {
     let parent = document.createElement("div");
@@ -54,7 +55,7 @@ export const createTable = ({
         error: error,           //渲染失敗執行的fn
         handler: handler,       //渲染時執行的fn(非同步)
         url: "https://data.moa.gov.tw/Service/OpenData/FromM/BoatBulletinData.aspx?IsTransData=1&UnitId=041",
-        controlPage: true,
+        controlPage: controlPage,
     };
 
     //fake data
