@@ -119,9 +119,8 @@ export class Dropdown extends flowbiteDropdown {
   _bindBasicHandler() {
     //0826 如果有傳入<select/>的change監聽器
     if (this.changeHandler)
-      this.bindSelect.addEventListener("change", this.changeHandler);
-    //BUG mouse event 手機沒有，要再調整成pointer event
-    this._targetEl.addEventListener("mousedown", (event) => {
+      this.bindSelect.addEventListener("click", this.changeHandler);
+    this._targetEl.addEventListener("pointerdown", (event) => {
       event.stopPropagation();
       let updateValue = event.target.textContent;
       this._triggerEl.value = updateValue;
