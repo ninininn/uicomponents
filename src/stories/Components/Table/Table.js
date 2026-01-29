@@ -160,7 +160,7 @@ export class Table extends BaseComponent {
         }
         let targetRowIndex = parseInt(e.target.closest("tr[data-index]").dataset.index);
         this.selectedRows[targetRowIndex] = isChecked;
-        this.restoreState();
+        // this.restoreState();
 
         const isfullSelected = this.checkPageSelected();
         this.tableHeader.selection.setChecked(isfullSelected);
@@ -254,7 +254,6 @@ export class Table extends BaseComponent {
               printData = selectedRows;
             }
             const showColumns = this.config.cols.filter((config) => config.print !== false && config.visible !== false);
-            console.log(showColumns);
             printData.forEach((row) => {
               const tr = this._createRow(row, row.index, showColumns, true);
               rowFragment.appendChild(tr);
@@ -464,8 +463,6 @@ export class Table extends BaseComponent {
         this.config.limits = size;
         this.restoreState();
         this._showRows();
-        //設定HeaderSelected值
-        console.log("目前selected的row:", this.getSelectedRows());
       },
     });
   }
@@ -488,7 +485,7 @@ export class Table extends BaseComponent {
     //檢查當頁全部rows是否全選(有在SelectedRows記錄內)
     const selectedRows = this.selectedRows;
     const rows = Array.from(this.tableBody.querySelectorAll("tr[data-index]"));
-    const isfullSelected = rows.every((row) => row.dataset[DATA_ATTR_INDEX] in selectedRows);
+    const isfullSelected = rows.every((row) => row.dataset[DATA_ATTR_INDEX] in selectedRows && selectedRows[row.dataset[DATA_ATTR_INDEX]] === true);
     return isfullSelected;
   }
 
@@ -498,7 +495,6 @@ export class Table extends BaseComponent {
     for (let i = 1; i <= totalPages; i++) {
       this.selectedFullPage(i, false);
       this.restoreState();
-      console.log(this);
     }
 
     this.tableHeader.selection.setChecked(false);
@@ -638,7 +634,6 @@ class TableHeader extends BaseComponent {
               delete row.dataset[DATA_ATTR_ROWSELECTED];
             }
           });
-          console.log(this.table);
         },
       });
       return checkbox;
@@ -1034,7 +1029,6 @@ class Pagination extends BaseComponent {
 
   //前往指定頁
   goPage(page) {
-    console.log(`go ${page} page`);
     if (page < 1 || page > this.total) return;
     this.setCurrentPage(page); //更新currentPage
 
