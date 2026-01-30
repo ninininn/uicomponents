@@ -97,26 +97,9 @@ export class Table extends BaseComponent {
 
   //樣式渲染(UI snpshot)把目前狀態→轉成畫面
   //根據目前的 state 產出畫面結構
-  _render() {
+  async _render() {
     super.setTheme(this.config.theme);
     UIUtils.setProperty(this._elem, "--theme", this._theme);
-
-    //渲染完成前顯示skeleton;
-    if (this.dataCounts < 1) {
-      this.tableBody.appendChild(this.skeleton.getElem());
-      this.skeleton.show();
-    } else {
-      this.skeleton.hide();
-    }
-
-    if (!this.data && this.config.url) {
-      this.pullData(this.config.url)
-        .then((res) => res.json())
-        .then((data) => {
-          this.setData(data);
-          this.skeleton.hide();
-        });
-    }
 
     //組裝
     this.table.id = this.id;
@@ -139,8 +122,48 @@ export class Table extends BaseComponent {
 
     //放入分頁元件
     this._elem.after(this._pagination.getElem());
+
+
+    if (this.data?.length === 0) {
+      this._showEmpty();
+    }
+    if (!this.data && this.config.url) {
+      //渲染完成前顯示skeleton;
+      this.tableBody.appendChild(this.skeleton.getElem());
+      this.skeleton.show();
+      try {
+        const res = await this.pullData(this.config.url);
+        const data = await res.json();
+        this.skeleton.hide();
+
+        if (!data || data.length === 0) {
+          this._showEmpty();
+        } else {
+          this.setData(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        this.skeleton.hide();
+        // this.showError();
+      }
+    }
+    this.skeleton.hide();
   }
 
+  //空資料
+  _showEmpty() {
+    this.tableBody.innerHTML = '';
+
+    // Create empty state element
+    const emptyRow = document.createElement('tr');
+    const emptyCell = document.createElement('td');
+    emptyCell.colSpan = this.config.cols?.length || 1;
+    emptyCell.className = 'table-empty';
+    emptyCell.textContent = this.config.emptyText || 'No data available';
+
+    emptyRow.appendChild(emptyCell);
+    this.tableBody.appendChild(emptyRow);
+  }
   //事件綁定
   _bindEvent() {
     //click TableHeader的Checkbox時要全選該頁Rows
@@ -334,6 +357,7 @@ export class Table extends BaseComponent {
   //依據欄位排序設定排序
   _rowSort(rule, field) {
     //BUG 這邊sort()this._data才會調整順序，但是每次this.data(也就是get data)時，又會依照i排序而導致一直無法變換順序!
+    //BUG 如果是要做時間排序，可能要先把回傳資料(data)的時間做轉換
     switch (rule) {
       case 'asc'://小到大 升冪
         this.data.sort((x, y) => x.data[field] - y.data[field]);

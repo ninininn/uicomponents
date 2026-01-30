@@ -58,7 +58,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .table tbody {
-    @apply w-full h-full min-h-50;
+    @apply w-full h-full min-h-50 [&_.table-empty]:text-center;
   }
 
   .table tbody tr {
@@ -115,6 +115,6 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   .tools-popover {
     --position-x: 5rem;
-    @apply absolute top-full -translate-x-[var(--position-x)] p-3 bg-white rounded-sm shadow-sm z-10 invisible transition-[visibility] ease-in-out
+    @apply absolute top-full -translate-x-[var(--position-x)] p-3 bg-white rounded-sm shadow-sm z-10 invisible transition-[visibility] ease-in-out flex flex-col
   }
 }
