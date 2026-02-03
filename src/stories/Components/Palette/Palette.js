@@ -1,6 +1,6 @@
 import {
   BaseComponent,
-  UIUtils,
+  Dom,
   findElem,
 } from "../../../Utils";
 import { Checkbox } from "../Checkbox/Checkbox";
@@ -95,7 +95,7 @@ export class Table extends BaseComponent {
   //根據目前的 state 產出畫面結構
   _render() {
     super.setTheme(this.config.theme);
-    UIUtils.setProperty(this._elem, "--theme", this._theme);
+    Dom.setProperty(this._elem, "--theme", this._theme);
 
     //渲染完成前顯示skeleton;
     if (this.dataCounts < 1) {
@@ -120,8 +120,8 @@ export class Table extends BaseComponent {
     this.table.appendChild(this.tableBody);
 
     //class設定
-    UIUtils.addClass(this.table, ["table"]);
-    UIUtils.addClass(this._elem, this.config.classes);
+    Dom.addClass(this.table, ["table"]);
+    Dom.addClass(this._elem, this.config.classes);
 
     //判斷是否有容器
     let container = findElem(this.config.container);
@@ -172,11 +172,11 @@ export class Table extends BaseComponent {
       switch (feature) {
         case 'group':
           let popover = document.createElement("div");
-          UIUtils.addClass(popover, ["tools-popover"]);
+          Dom.addClass(popover, ["tools-popover"]);
           popover.addEventListener("click", (e) => {
             e.stopImmediatePropagation();
             if (e.target.nodeName === 'INPUT') {
-              UIUtils.toggleClass(popover, ["visible"]);
+              Dom.toggleClass(popover, ["visible"]);
             }
           });
           let cols = this.config.cols;
@@ -193,13 +193,13 @@ export class Table extends BaseComponent {
             popover.appendChild(colsCheck.container);
           }
 
-          btn = UIUtils.setButtons({
+          btn = Dom.setButtons({
             classes: ["btn-sm", "outline-btn", "relative"],
             icon: '/filter.svg',
             handler: (e) => {
               e.stopImmediatePropagation();
               if (e.target === btn) {
-                UIUtils.toggleClass(popover, ["visible"]);
+                Dom.toggleClass(popover, ["visible"]);
               }
             }
           });
@@ -207,26 +207,26 @@ export class Table extends BaseComponent {
           break;
         case 'exports':
           btnHandler = () => { };
-          btn = UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/export.svg', handler: btnHandler });
+          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/export.svg', handler: btnHandler });
           break;
         case 'print':
           btnHandler = () => { };
-          btn = UIUtils.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/print.svg', handler: btnHandler });
+          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/print.svg', handler: btnHandler });
           break;
         default:
-          toolBar.appendChild(UIUtils.setButtons(feature));
+          toolBar.appendChild(Dom.setButtons(feature));
           break;
       }
       toolBar.appendChild(btn);
     }
-    UIUtils.addClass(toolBar, ["table-tools"]);
+    Dom.addClass(toolBar, ["table-tools"]);
     this.tools = toolBar;
   }
 
   //建立TableRow
   _createRow(data, index, colConfig) {
     const tr = document.createElement("tr");
-    UIUtils.setAttribute(tr, DATA_ATTR_INDEX, index);
+    Dom.setAttribute(tr, DATA_ATTR_INDEX, index);
 
     if (this.config.selection === 'checkbox') {
       const td = document.createElement("td");
@@ -252,21 +252,21 @@ export class Table extends BaseComponent {
     let textContainer = document.createElement("span");
     switch (align) {
       case "center":
-        UIUtils.addClass(td, ["text-center"]);
+        Dom.addClass(td, ["text-center"]);
         break;
       case "right":
-        UIUtils.addClass(td, ["text-right"]);
+        Dom.addClass(td, ["text-right"]);
         break;
       default:
-        UIUtils.clearClass(td);
+        Dom.clearClass(td);
         break;
     }
 
-    UIUtils.setAttribute(td, DATA_ATTR_FIELD, field);
+    Dom.setAttribute(td, DATA_ATTR_FIELD, field);
     //TODO template function - 傳入自訂函式來建立內容
 
     if (data.data[field]) {
-      UIUtils.setText(textContainer, data.data[field]);
+      Dom.setText(textContainer, data.data[field]);
       td.appendChild(textContainer);
     }
 
@@ -334,7 +334,7 @@ export class Table extends BaseComponent {
 
       if (checkbox) checkbox.checked = isChecked;
       if (isChecked) {
-        UIUtils.setAttribute(row, DATA_ATTR_ROWSELECTED);
+        Dom.setAttribute(row, DATA_ATTR_ROWSELECTED);
       } else {
         delete row.dataset[DATA_ATTR_ROWSELECTED];
       }
@@ -346,8 +346,8 @@ export class Table extends BaseComponent {
   //[外部控制]-設定表格尺寸
   //!如果超過max-width,max-height則直接用max-width/height
   setSize(width, height = "auto") {
-    UIUtils.setStyle(this._elem, "width", `${width}px`);
-    UIUtils.setStyle(this._elem, "height", `${height}px`);
+    Dom.setStyle(this._elem, "width", `${width}px`);
+    Dom.setStyle(this._elem, "height", `${height}px`);
   }
 
   //[外部控制]-取得表格所有資料
@@ -485,7 +485,7 @@ class TableHeader extends BaseComponent {
       if (e.currentTarget.dataset.sort) {
         let sort = e.currentTarget.dataset.sort === 'asc' ? 'dec' : 'asc';
         this.table._rowSort(sort, e.currentTarget.dataset.field);
-        UIUtils.setAttribute(e.currentTarget, DATA_ATTR_SORT, sort);
+        Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, sort);
       }
     }
     if (this.cols.some((col) => col.sort)) {
@@ -539,10 +539,10 @@ class TableHeader extends BaseComponent {
 
     let th = document.createElement("th");
     let sortIcon = document.createElement("span");
-    UIUtils.setAttribute(th, DATA_ATTR_FIELD, field);
-    UIUtils.setText(sortIcon, title);
+    Dom.setAttribute(th, DATA_ATTR_FIELD, field);
+    Dom.setText(sortIcon, title);
     if (sort) {
-      UIUtils.setAttribute(th, DATA_ATTR_SORT, sort);
+      Dom.setAttribute(th, DATA_ATTR_SORT, sort);
       sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
 <path d="M4.24999 10.7617V15C4.24999 15.4142 4.58578 15.75 4.99999 15.75C5.4142 15.75 5.74999 15.4142 5.74999 15V10.7617C5.83248 10.875 5.9131 10.9879 5.9912 11.0967L5.9958 11.1031C6.1467 11.3133 6.30972 11.5404 6.43847 11.6855C6.71335 11.9954 7.18818 12.0239 7.49804 11.749C7.80761 11.4742 7.83604 11.0002 7.56151 10.6904C7.49513 10.6156 7.38199 10.4613 7.20995 10.2217L7.19283 10.1978C7.0366 9.98019 6.84876 9.71852 6.65526 9.46875C6.45751 9.2135 6.23286 8.94285 6.00487 8.73047C5.89083 8.62424 5.75714 8.51521 5.60937 8.42871C5.46887 8.34647 5.25683 8.25 4.99999 8.25C4.74316 8.25 4.53111 8.34647 4.39062 8.42871C4.24284 8.51521 4.10915 8.62424 3.99511 8.73047C3.76712 8.94285 3.54247 9.2135 3.34472 9.46875C3.14409 9.72771 2.94956 9.99947 2.79003 10.2217C2.61799 10.4613 2.50485 10.6156 2.43847 10.6904C2.16394 11.0002 2.19237 11.4742 2.50194 11.749C2.8118 12.0239 3.28663 11.9954 3.56151 11.6855C3.69026 11.5403 3.85328 11.3133 4.00418 11.1031L4.00878 11.0967C4.08689 10.9879 4.1675 10.875 4.24999 10.7617Z" fill="currentColor"/>
@@ -551,7 +551,7 @@ class TableHeader extends BaseComponent {
     }
     if (resize) {
       let resizer = document.createElement("div");
-      UIUtils.addClass(resizer, ["table-resizer"]);
+      Dom.addClass(resizer, ["table-resizer"]);
       resizer.style.height = `${this.table.getElem().offsetHeight}px`;
       th.appendChild(resizer);
     }
@@ -576,7 +576,7 @@ class TableHeader extends BaseComponent {
             const checkbox = row.querySelector("input[type='checkbox']");
             checkbox.checked = checked;
             if (checked) {
-              UIUtils.setAttribute(row, DATA_ATTR_ROWSELECTED);
+              Dom.setAttribute(row, DATA_ATTR_ROWSELECTED);
             } else {
               delete row.dataset[DATA_ATTR_ROWSELECTED];
             }
@@ -626,7 +626,7 @@ class TableHeader extends BaseComponent {
 //       if (cell.config.visible) fragment.appendChild(cell.getElem());
 //     }
 //     this._elem.appendChild(fragment);
-//     UIUtils.setAttribute(this._elem, DATA_ATTR_INDEX, this.index);
+//     Dom.setAttribute(this._elem, DATA_ATTR_INDEX, this.index);
 //     this._render();
 //     this._bindEvent();
 //   }
@@ -634,7 +634,7 @@ class TableHeader extends BaseComponent {
 //   _render() {
 //     let isChecked = this.selection.getChecked();
 //     if (isChecked) {
-//       UIUtils.setAttribute(this._elem, DATA_ATTR_ROWSELECTED);
+//       Dom.setAttribute(this._elem, DATA_ATTR_ROWSELECTED);
 //     } else {
 //       delete this._elem.dataset[DATA_ATTR_ROWSELECTED];
 //     }
@@ -692,19 +692,19 @@ class TableHeader extends BaseComponent {
 //     let textContainer = document.createElement("span");
 //     switch (align) {
 //       case "center":
-//         UIUtils.addClass(this._elem, ["text-center"]);
+//         Dom.addClass(this._elem, ["text-center"]);
 //         break;
 //       case "right":
-//         UIUtils.addClass(this._elem, ["text-right"]);
+//         Dom.addClass(this._elem, ["text-right"]);
 //         break;
 //       default:
-//         UIUtils.clearClass(this._elem);
+//         Dom.clearClass(this._elem);
 //         break;
 //     }
-//     UIUtils.setAttribute(this._elem, DATA_ATTR_FIELD, field);
+//     Dom.setAttribute(this._elem, DATA_ATTR_FIELD, field);
 //     //TODO template function - 傳入自訂函式來建立內容
 //     if (typeof (this.dataValue) === "string" || typeof (this.dataValue) === "number") {
-//       UIUtils.setText(textContainer, this.dataValue);
+//       Dom.setText(textContainer, this.dataValue);
 //     }
 //     this._elem.appendChild(textContainer);
 
@@ -734,7 +734,7 @@ var defaultPaginatioConfig = {
 class Pagination extends BaseComponent {
   constructor(config) {
     const componentContainer = document.createElement("div");
-    UIUtils.addClass(componentContainer, ["pagination"]);
+    Dom.addClass(componentContainer, ["pagination"]);
 
     super(componentContainer, config.theme = "var(--color-primary-500)");
     this.UItype = "Pagination";
@@ -758,34 +758,34 @@ class Pagination extends BaseComponent {
   _render() {
     this._elem.innerHTML = ``; //清空
     super.setTheme(this._theme);
-    UIUtils.setProperty(this._elem, "--theme", this._theme);
+    Dom.setProperty(this._elem, "--theme", this._theme);
 
     let pageFragment = document.createDocumentFragment();
     for (let i = 0; i < this.pages.length; i++) {
       let pageBtn = document.createElement("button");
       pageBtn.type = "button";
       let isCurrent = this.pages[i].current;
-      if (isCurrent) UIUtils.setAttribute(pageBtn, DATA_ATTR_CUR_PAGE);
-      UIUtils.addClass(pageBtn, ["page-item"]);
+      if (isCurrent) Dom.setAttribute(pageBtn, DATA_ATTR_CUR_PAGE);
+      Dom.addClass(pageBtn, ["page-item"]);
       switch (this.pages[i].type) {
         case "prev-page":
-          UIUtils.setText(pageBtn, "<<");
-          UIUtils.setAttribute(pageBtn, DATA_ATTR_PREV);
+          Dom.setText(pageBtn, "<<");
+          Dom.setAttribute(pageBtn, DATA_ATTR_PREV);
           break;
         case "next-page":
-          UIUtils.setText(pageBtn, ">>");
-          UIUtils.setAttribute(pageBtn, DATA_ATTR_NEXT);
+          Dom.setText(pageBtn, ">>");
+          Dom.setAttribute(pageBtn, DATA_ATTR_NEXT);
           break;
         case "start-ellipsis":
-          UIUtils.setText(pageBtn, "...");
+          Dom.setText(pageBtn, "...");
           pageBtn.disabled = true;
           break;
         case "end-ellipsis":
-          UIUtils.setText(pageBtn, "...");
+          Dom.setText(pageBtn, "...");
           pageBtn.disabled = true;
           break;
         default:
-          UIUtils.setText(pageBtn, this.pages[i].page);
+          Dom.setText(pageBtn, this.pages[i].page);
           pageBtn.dataset.page = this.pages[i].page;
           break;
       }
@@ -886,7 +886,7 @@ class Pagination extends BaseComponent {
   _createJumpCompo() {
     if (this.total <= 0) return;
     let jumpCompo = document.createElement("div");
-    UIUtils.addClass(jumpCompo, ["pagination-jump"]);
+    Dom.addClass(jumpCompo, ["pagination-jump"]);
     let pagesOption = [];
     for (let i = 1; i <= this.total; i++) {
       let opt = { value: i, text: i };
@@ -929,7 +929,7 @@ class Pagination extends BaseComponent {
 
   _createPageControl() {
     let pageController = document.createElement("div");
-    UIUtils.addClass(pageController, ["pagination-jump"]);
+    Dom.addClass(pageController, ["pagination-jump"]);
     let pagesOption = [];
     for (let i = 0; i < PAGE_LIMITS.length; i++) {
       let opt = { value: PAGE_LIMITS[i], text: `${PAGE_LIMITS[i]}條` };
@@ -1008,15 +1008,15 @@ export class Skeleton extends BaseComponent {
   }
 
   _render() {
-    UIUtils.addClass(this._elem, ["skeleton"]);
+    Dom.addClass(this._elem, ["skeleton"]);
     this.defineType(this.options.type, this.options?.colNum);
   }
 
   defineType(type, colNum) {
-    UIUtils.clearClass(this._elem, ["skeleton"]);
+    Dom.clearClass(this._elem, ["skeleton"]);
     switch (type) {
       case "table":
-        UIUtils.addClass(this._elem, ["table-skeleton"]);
+        Dom.addClass(this._elem, ["table-skeleton"]);
         this._elem.innerHTML = `
           <td colspan='${colNum}' class="shadow-sm animate-pulse">
               <div class="flex items-center justify-between">
@@ -1044,7 +1044,7 @@ export class Skeleton extends BaseComponent {
           </td>`;
         break;
       case "text":
-        UIUtils.addClass(this._elem, ["text-skeleton"]);
+        Dom.addClass(this._elem, ["text-skeleton"]);
         this._elem.innerHTML = `
           <div role="status" class="max-w-sm animate-pulse">
               <div class="h-2.5 bg-gray-200 rounded-full w-48 mb-4"></div>
@@ -1057,7 +1057,7 @@ export class Skeleton extends BaseComponent {
           </div>`;
         break;
       case "img":
-        UIUtils.addClass(this._elem, ["img-skeleton"]);
+        Dom.addClass(this._elem, ["img-skeleton"]);
         this._elem.innerHTML = `
           <div role="status" class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse">
               <svg class="w-10 h-10 text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
@@ -1071,11 +1071,11 @@ export class Skeleton extends BaseComponent {
   }
 
   show() {
-    UIUtils.removeClass(this._elem, ["hidden"]);
+    Dom.removeClass(this._elem, ["hidden"]);
   }
 
   hide() {
-    UIUtils.addClass(this._elem, ["hidden"]);
+    Dom.addClass(this._elem, ["hidden"]);
   }
 }
 

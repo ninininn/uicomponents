@@ -1,23 +1,23 @@
 import { Dismiss, Modal, Popover } from "flowbite";
-import { BaseComponent, UIUtils } from "../../../Utils";
+import { BaseComponent, Dom } from "../../../Utils";
 
 
 export class Notification extends BaseComponent {
-  static toast(trigger,options={}){
+  static toast(trigger, options = {}) {
     let targetEl = this._createTargetContainer();
-    return new ToastMsg(targetEl,options)
+    return new ToastMsg(targetEl, options);
   }
-  static modal(trigger,options={}){
+  static modal(trigger, options = {}) {
     let targetEl = this._createTargetContainer();
-    return new ModalMsg(targetEl,options)
+    return new ModalMsg(targetEl, options);
   }
-  static popover(trigger,options={}){
+  static popover(trigger, options = {}) {
     let targetEl = this._createTargetContainer();
-    return new PopoverMsg(targetEl,options)
+    return new PopoverMsg(targetEl, options);
   }
-  static msg(trigger,options={}){
+  static msg(trigger, options = {}) {
     let targetEl = this._createTargetContainer();
-    return new DefaultMsg(targetEl,options)
+    return new DefaultMsg(targetEl, options);
   }
 
 
@@ -83,7 +83,7 @@ export class Notification extends BaseComponent {
     this._show();
   }
 
-  _createTargetContainer(){
+  _createTargetContainer() {
     let targetElem = document.createElement("div");
     targetElem.className = "notify-container";
 
@@ -118,14 +118,14 @@ export class Notification extends BaseComponent {
     if (msgTitle && (msgTitle).toLowerCase() !== "false") {
       let header = this._elem.querySelector(".notify-header");
       let notifyTitle = document.createElement("h3");
-      UIUtils.setText(notifyTitle, msgTitle);
+      Dom.setText(notifyTitle, msgTitle);
       header.appendChild(notifyTitle);
     }
 
     //msgContent
     if (msgContent) {
       let contentDiv = this._elem.querySelector(".notify-content");
-      UIUtils.setText(contentDiv, msgContent);
+      Dom.setText(contentDiv, msgContent);
     }
     //是否有自製內容innerHTML
     if (customContent) {
@@ -136,7 +136,7 @@ export class Notification extends BaseComponent {
     if (btnList) {
       let actionbtnDiv = this._elem.querySelector(".notify-actionbtns");
       for (let btnConfig of btnList) {
-        let btn = UIUtils.setButtons(btnConfig);
+        let btn = Dom.setButtons(btnConfig);
         actionbtnDiv.appendChild(btn);
       }
     }
@@ -160,15 +160,15 @@ export class Notification extends BaseComponent {
     //主題色
     let themeColor = this._theme === "dark" ? "#1e222789" : "#F3F4F6";
     let textColor = this._theme === "dark" ? "#F3F4F6" : "#1F2937";
-    UIUtils.setProperty(this._elem, "--theme", themeColor);
-    UIUtils.setProperty(this._elem, "--text", textColor);
+    Dom.setProperty(this._elem, "--theme", themeColor);
+    Dom.setProperty(this._elem, "--text", textColor);
 
 
     //尺寸設定
-    UIUtils.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
-    UIUtils.setProperty(this._elem, "--w", this.options.area[0]);
-    UIUtils.setProperty(this._elem, "--h", this.options.area[1]);
-    // UIUtils.addClass(this._elem, ["hidden"]);
+    Dom.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
+    Dom.setProperty(this._elem, "--w", this.options.area[0]);
+    Dom.setProperty(this._elem, "--h", this.options.area[1]);
+    // Dom.addClass(this._elem, ["hidden"]);
   }
 
   //[內部控制]-綁定事件
@@ -203,38 +203,38 @@ export class Notification extends BaseComponent {
     let btn = document.createElement("button");
     let btnClasses = ["btn", "btn-primary"];
     btnConfig.actionType !== "confirm" && btnClasses.push("outline-btn");
-    UIUtils.addClass(btn, btnClasses);
-    UIUtils.setText(btn, btnConfig.btnTxt);
-    UIUtils.setAttribute(btn, `${btnConfig.actionType}btn`);
+    Dom.addClass(btn, btnClasses);
+    Dom.setText(btn, btnConfig.btnTxt);
+    Dom.setAttribute(btn, `${btnConfig.actionType}btn`);
     btnsblock.appendChild(btn);
     return btn;
   }
 
   //[內部控制]-設定位置
   _setPosition(position) {
-    UIUtils.clearClass(this._elem, ["notify-container", ...this.options.classes]);
+    Dom.clearClass(this._elem, ["notify-container", ...this.options.classes]);
     switch (position) {
       case "right-top":
-        UIUtils.addClass(this._elem, ["right-[5rem]", "top-[2rem]"]);
+        Dom.addClass(this._elem, ["right-[5rem]", "top-[2rem]"]);
         break;
       case "right-bottom":
-        UIUtils.addClass(this._elem, ["right-[5rem]", "bottom-[2rem]"]);
+        Dom.addClass(this._elem, ["right-[5rem]", "bottom-[2rem]"]);
         break;
       case "left-top":
-        UIUtils.addClass(this._elem, ["left-[5rem]", "top-[2rem]"]);
+        Dom.addClass(this._elem, ["left-[5rem]", "top-[2rem]"]);
         break;
       case "left-bottom":
-        UIUtils.addClass(this._elem, ["left-[5rem]", "bottom-[2rem]"]);
+        Dom.addClass(this._elem, ["left-[5rem]", "bottom-[2rem]"]);
         break;
       case "center-top":
-        UIUtils.addClass(this._elem, ["left-[50%]", "top-[2rem]", "-translate-x-[50%]"]);
+        Dom.addClass(this._elem, ["left-[50%]", "top-[2rem]", "-translate-x-[50%]"]);
         break;
       case "center-bottom":
-        UIUtils.addClass(this._elem, ["left-[50%]", "bottom-[2rem]", "-translate-x-[50%]"]);
+        Dom.addClass(this._elem, ["left-[50%]", "bottom-[2rem]", "-translate-x-[50%]"]);
         break;
       case "center":
         //center
-        UIUtils.addClass(this._elem, ["top-[50%]", "left-[50%]", "translate-[-50%]"]);
+        Dom.addClass(this._elem, ["top-[50%]", "left-[50%]", "translate-[-50%]"]);
         break;
       default:
         break;
@@ -282,7 +282,7 @@ class ToastMsg {
   }
 
   _init() {
-    UIUtils.setAttribute(this.msgContainer, "notifytoast");
+    Dom.setAttribute(this.msgContainer, "notifytoast");
     this._bindEvent();
   }
 
@@ -331,7 +331,7 @@ class ToastItem extends Dismiss {
   }
 
   _init() {
-    UIUtils.setAttribute(this._targetEl, "notifytoast");
+    Dom.setAttribute(this._targetEl, "notifytoast");
     // garbage collection...
   }
 
@@ -372,7 +372,7 @@ class ModalMsg extends Modal {
   }
 
   _init() {
-    UIUtils.setAttribute(this._targetEl, "notifymodal");
+    Dom.setAttribute(this._targetEl, "notifymodal");
     // this.confirmBtn.forEach((btn) => {
     //   btn.addEventListener("click", this.bindHandler);
     // });
@@ -383,7 +383,7 @@ class ModalMsg extends Modal {
   onShow() {
     document.body.appendChild(this._targetEl);
     super.show();
-    UIUtils.removeClass(this._targetEl, ["flex"]);//flowbite會自動加入flex，所以要移除
+    Dom.removeClass(this._targetEl, ["flex"]);//flowbite會自動加入flex，所以要移除
   }
   onHide() {
     super.hide();
@@ -403,7 +403,7 @@ class PopoverMsg extends Popover {
   }
 
   _init() {
-    UIUtils.setAttribute(this._targetEl, "notifypopover");
+    Dom.setAttribute(this._targetEl, "notifypopover");
   }
   get config() {
     return this._options;
@@ -438,18 +438,18 @@ class DefaultMsg {
     this._render();
   }
   _render() {
-    UIUtils.setAttribute(this._targetEl, "notifymsg");
+    Dom.setAttribute(this._targetEl, "notifymsg");
   }
   onShow() {
-    UIUtils.removeClass(this._targetEl, ["hidden", "opacity-0"]);
-    UIUtils.addClass(this._targetEl, ["opacity-100"]);
+    Dom.removeClass(this._targetEl, ["hidden", "opacity-0"]);
+    Dom.addClass(this._targetEl, ["opacity-100"]);
     this._render();
     setTimeout(this.onHide.bind(this), 100);
   }
   onHide() {
     setTimeout(() => {
-      UIUtils.removeClass(this._targetEl, ["opacity-100"]);
-      UIUtils.addClass(this._targetEl, ["opacity-0"]);
+      Dom.removeClass(this._targetEl, ["opacity-100"]);
+      Dom.addClass(this._targetEl, ["opacity-0"]);
     }, this._options.countdown);
   }
 }

@@ -1,4 +1,4 @@
-import { UIUtils, debounce } from "../../../Utils";
+import { Dom, debounce } from "../../../Utils";
 import { Palette } from "../../../Utils/Color";
 import "./Palette.css";
 

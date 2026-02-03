@@ -1,4 +1,4 @@
-import { BaseComponent, UIUtils, debounce, createContext, useContext } from "../../../Utils";
+import { BaseComponent, Dom, debounce, createContext, useContext } from "../../../Utils";
 import Sortable from 'sortablejs/modular/sortable.complete.esm.js';
 
 export class DraggableItem extends BaseComponent {

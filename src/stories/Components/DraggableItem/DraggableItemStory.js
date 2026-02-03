@@ -1,4 +1,4 @@
-import { UIUtils, debounce } from "../../../Utils";
+import { Dom, debounce } from "../../../Utils";
 import { DraggableItem } from "./DraggableItem";
 import "./DraggableItem.css";
 

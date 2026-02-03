@@ -1,9 +1,8 @@
 import {
-    UIUtils,
+    Dom,
     BaseComponent,
     defineArgs,
     bindState,
-    compareNum,
 } from "../../../Utils/Utils";
 
 export class Checkbox extends BaseComponent {
@@ -95,24 +94,24 @@ export class Checkbox extends BaseComponent {
         this._elem.type = "checkbox";
         this._elem.checked = this.options.checked;
         this._elem.value = this.inputValue;
-        UIUtils.addClass(this._elem, this.options.classes);
-        UIUtils.setAttribute(
+        Dom.addClass(this._elem, this.options.classes);
+        Dom.setAttribute(
             this._elem,
             "checkstyle",
             this.options.style || "default",
         );
         // 2. theme設定
-        UIUtils.setProperty(this.label, "--themeColor", this._theme);
+        Dom.setProperty(this.label, "--themeColor", this._theme);
         //3. 判斷樣式
         switch (this.options.style) {
             case "switch":
-                UIUtils.addClass(this.label, ["label"]);
+                Dom.addClass(this.label, ["label"]);
                 //切換文字節點
                 let titlenode = document.createTextNode(this._defineInputValue(this.options.style, this.options.title, this.options.value).displayText);
                 this.label.replaceChild(titlenode, this.label.childNodes[1]);
                 break;
             case "toggle":
-                UIUtils.setProperty(
+                Dom.setProperty(
                     this.label,
                     "--toggle-img",
                     `url(${this.activeImg})`,
@@ -120,18 +119,18 @@ export class Checkbox extends BaseComponent {
                 break;
             case "tag":
                 //label classes:input-label,input-tag-group
-                UIUtils.addClass(this.label, ["input-label", "input-tag-group"]);
-                UIUtils.addClass(this._elem, ["tag-input"]);
+                Dom.addClass(this.label, ["input-label", "input-tag-group"]);
+                Dom.addClass(this._elem, ["tag-input"]);
                 break;
             default:
                 break;
         }
         //4. 判斷是否設定為禁止操作
         if (!this.options.disabled) {
-            UIUtils.removeClass(this._elem, ["disabled"]);
+            Dom.removeClass(this._elem, ["disabled"]);
             this._elem.removeAttribute("disabled");
         } else {
-            UIUtils.addClass(this._elem, ["disabled"]);
+            Dom.addClass(this._elem, ["disabled"]);
             this._elem.setAttribute("disabled", true);
         }
     }

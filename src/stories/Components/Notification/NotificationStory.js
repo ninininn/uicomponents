@@ -1,4 +1,4 @@
-import { UIUtils, debounce } from "../../../Utils";
+import { Dom, debounce } from "../../../Utils";
 import { Notification } from "./Notification";
 import "./Notification.css";
 

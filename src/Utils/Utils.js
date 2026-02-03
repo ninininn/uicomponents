@@ -1,12 +1,9 @@
-// import { signal, computed, effect } from '@preact/signals-core';
-
-import { cache } from "react";
 
 /**
  * 工具Functions
  */
 
-export class UIUtils {
+export class Dom {
     static setStyle(element, property, styleValue) {
         element.style[property] = styleValue;
     }
@@ -41,7 +38,6 @@ export class UIUtils {
         element.removeAttribute(attributeName);
     }
     static setProperty(element, propertyName, propertyValue) {
-        let property = `--${propertyName}`;
         element.style.setProperty(propertyName, propertyValue);
     }
 
@@ -61,16 +57,16 @@ export class UIUtils {
                 default:
                     classes.push("icon-text-btn");
                     let img = document.createElement("img");
-                    UIUtils.addClass(img, ["icon"]);
+                    Dom.addClass(img, ["icon"]);
                     img.src = `${icon}`;
                     btn.appendChild(img);
                     break;
             }
         }
         //設定按鈕文字
-        if (text) UIUtils.setTextnode(btn, text);
+        if (text) Dom.setTextnode(btn, text);
         //設定按鈕其他相關
-        UIUtils.addClass(btn, ["btn", ...classes]);
+        Dom.addClass(btn, ["btn", ...classes]);
         btn.type = "button";
 
         if (handler) {
@@ -83,7 +79,7 @@ export class UIUtils {
     }
 
     static setBtnGroup(btns, container) {
-        let buttons = btns.map((btnConfig) => UIUtils.setButtons(btnConfig));
+        let buttons = btns.map((btnConfig) => Dom.setButtons(btnConfig));
         if (container) {
             container.append(...buttons);
             return container;
@@ -92,29 +88,29 @@ export class UIUtils {
     }
 
     static setPosition(element, position, excludeClasses = []) {
-        UIUtils.clearClass(element, excludeClasses);
+        Dom.clearClass(element, excludeClasses);
         switch (position) {
             case "right-top":
-                UIUtils.addClass(element, ["right-[5rem]", "top-[2rem]"]);
+                Dom.addClass(element, ["right-[5rem]", "top-[2rem]"]);
                 break;
             case "right-bottom":
-                UIUtils.addClass(element, ["right-[5rem]", "bottom-[2rem]"]);
+                Dom.addClass(element, ["right-[5rem]", "bottom-[2rem]"]);
                 break;
             case "left-top":
-                UIUtils.addClass(element, ["left-[5rem]", "top-[2rem]"]);
+                Dom.addClass(element, ["left-[5rem]", "top-[2rem]"]);
                 break;
             case "left-bottom":
-                UIUtils.addClass(element, ["left-[5rem]", "bottom-[2rem]"]);
+                Dom.addClass(element, ["left-[5rem]", "bottom-[2rem]"]);
                 break;
             case "center-top":
-                UIUtils.addClass(element, [
+                Dom.addClass(element, [
                     "left-[50%]",
                     "top-[2rem]",
                     "-translate-x-[50%]",
                 ]);
                 break;
             case "center-bottom":
-                UIUtils.addClass(element, [
+                Dom.addClass(element, [
                     "left-[50%]",
                     "bottom-[2rem]",
                     "-translate-x-[50%]",
@@ -122,7 +118,7 @@ export class UIUtils {
                 break;
             case "center":
                 //center
-                UIUtils.addClass(element, [
+                Dom.addClass(element, [
                     "top-[50%]",
                     "left-[50%]",
                     "translate-[-50%]",
@@ -133,7 +129,7 @@ export class UIUtils {
                 try {
                     let xposition = position[0];
                     let yposition = position[1];
-                    UIUtils.addClass(element, [
+                    Dom.addClass(element, [
                         `top-[${xposition}]`,
                         `left-[${yposition}]`,
                     ]);
@@ -207,7 +203,7 @@ export function defineContainer(container, type = null) {
 /**
  * 轉換id/class selector 尋找元素是否存在
  * @param {*} id
- * @returns
+ * @returns DOMs
  */
 export function findElem(selector) {
     if (!selector) console.error("請放入有效的容器元素");
@@ -293,13 +289,14 @@ export class BaseComponent {
 
     appendElem(elem) {
         this._elem.appendChild(elem);
-        UIUtils.addClass(elem, ["opacity-0", "transition-all"]);
+        dom.addClass(elem, ["opacity-0", "transition-all"]);
 
         setTimeout(() => {
-            UIUtils.addClass(elem, ["opacity-100"]);
+            dom.addClass(elem, ["opacity-100"]);
         }, 100);
     }
 }
+
 
 //快取設定
 class componentCache {
@@ -334,7 +331,6 @@ function createCacheData(cache_key, initValue) {
             localStorage.setItem(cache_key, {});
         }
 
-        console.log(JSON.parse(localStorage.getItem(cache_key)));
         return JSON.parse(localStorage.getItem(cache_key));
     };
 
@@ -344,6 +340,45 @@ function createCacheData(cache_key, initValue) {
 
     return { cache, set, get, remove };
 }
+
+
+//TODO 改成Proxy機制?
+let activeEffect = null;
+let subscribersMap = new Map();
+
+function watchEffect(callback) {
+    activeEffect = callback;
+    const result = callback();
+    activeEffect = null;
+}
+
+function reactive(obj) {
+    return new Proxy(obj, {
+        get: function (target, prop, receiver) {
+            const result = Reflect.get(target, prop, receiver);
+            if (activeEffect) {
+                let currentSubscribers = subscribersMap.get(prop);
+                if (!currentSubscribers) currentSubscribers = [];
+                currentSubscribers.push(activeEffect);
+                subscribersMap.set(prop, currentSubscribers);
+            }
+            return result;
+        },
+
+        set: function (target, prop, value, receiver) {
+            const result = Reflect.set(target, prop, value, receiver);
+            const currentSubscribers = subscribersMap.get(prop) || [];
+            currentSubscribers.forEach(fn => fn());
+            return result;
+        }
+    });
+}
+
+const state = reactive({ count: 1 });
+
+watchEffect(() => {
+    console.log('update!', state.count);
+});
 
 
 /**
@@ -384,7 +419,7 @@ export function bindState(initState) {
  * 1. createContext 建立共享Context，紀錄數據
  * 2. useContext 使用共享數據
  */
-window.CoreContexts = new Map();
+// window.CoreContexts = new Map();
 export function createContext(provider, defaultContext) {
     window.CoreContexts.set(provider, defaultContext);
     return window.CoreContexts;
@@ -395,19 +430,23 @@ export function useContext(provider) {
 }
 
 /**
- * compare number 工具函式
+ * compare number比較數字大小
  * @param {array} - number array
  */
-export function compareNum(array) {
+function compareNum(array) {
     return array[1] > array[0] ? array.reverse() : array;
 }
 
 /**
- * checkDevice 判斷裝置尺寸 工具函式
+ * checkDevice 判斷裝置尺寸
  */
 
-export function checkDevice() { }
+function checkDevice() {
+    const device = navigator.userAgent;
+    const size = window.matchMedia("(max-width: 768px)").matches ? "mobile" : "desktop";
 
+    return { device, size };
+}
 
 /**
  * Debounce 節流
@@ -422,3 +461,13 @@ export function debounce(callback, delay) {
         }, delay);
     };
 }
+
+
+/**
+ * shared object
+ * 包裝共用函式，方便未來import元件模組
+ */
+export const tools = {
+    checkDevice: checkDevice,
+    compareNum: compareNum,
+};

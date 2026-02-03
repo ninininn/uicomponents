@@ -1,5 +1,5 @@
-import { UIUtils, debounce } from "../../../Utils/Utils";
-import { Table, Skeleton } from "./Table";
+import { Dom, debounce } from "../../../Utils/Utils";
+import { Table } from "./Table";
 import { Checkbox } from "../Checkbox/Checkbox";
 import "./Table.css";
 import "../Checkbox/Checkbox.css";
@@ -90,3 +90,16 @@ export const createTable = ({
     return parent;
 };
 
+
+//自動更新UI範例
+// const state = {};
+
+// Object.defineProperties(state, {
+//     name: {
+//         get: function () { return this._name; },
+//         set: function (value) {
+//             this._name = value;
+//             render(this);
+//         }
+//     }
+// });

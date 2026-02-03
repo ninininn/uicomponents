@@ -5,7 +5,7 @@ import { action } from "storybook/actions";
 import { createTable } from './TableStory';
 import "./Table.css";
 import TableAPIdoc from "./TableAPIdoc.mdx";
-import { UIUtils } from "../../../Utils/Utils";
+import { Dom } from "../../../Utils/Utils";
 import { Notification } from '../Notification/Notification';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
@@ -193,6 +193,7 @@ export default {
     selection: "checkbox",
     tools: true,
     theme: "var(--color-primary-500)",
+    controlPage: true,
     groupTool: true,
     exportsTool: true,
     printTool: true
@@ -238,8 +239,8 @@ export const Table = {
             }
           }];
           let btnContainer = document.createElement("div");
-          UIUtils.addClass(btnContainer, ["flex", "gap-2", "justify-center"]);
-          UIUtils.setBtnGroup(buttons, btnContainer);
+          Dom.addClass(btnContainer, ["flex", "gap-2", "justify-center"]);
+          Dom.setBtnGroup(buttons, btnContainer);
           this._elem.appendChild(btnContainer);
         }, print: false
       },

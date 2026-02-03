@@ -1,4 +1,4 @@
-import { UIUtils, BaseComponent } from '../../../Utils';
+import { Dom, BaseComponent } from '../../../Utils';
 
 // custom btn components
 // props:
@@ -36,8 +36,8 @@ export class Button extends BaseComponent {
     }
     // overwrite render()
     render() {
-        UIUtils.addClass(this.getElem(), this.options.classes);
-        UIUtils.setText(this.getElem(), this.options.text);
+        Dom.addClass(this.getElem(), this.options.classes);
+        Dom.setText(this.getElem(), this.options.text);
     }
 
     // overwrite bindEvents()

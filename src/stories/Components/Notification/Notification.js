@@ -1,5 +1,5 @@
 import { Dismiss, Modal, Popover } from "flowbite";
-import { BaseComponent, UIUtils, debounce } from "../../../Utils/Utils";
+import { BaseComponent, Dom, debounce } from "../../../Utils/Utils";
 
 //TODO 1.點擊trigger觸發時要做debounce(點太多次只認一次)
 //TODO 2.清除重複的通知元素/關閉後要清掉該元素或是替換成新內容
@@ -100,14 +100,14 @@ class BaseMsg extends BaseComponent {
 
       //直接傳入DOM元素
       let notifyTitle = document.createElement("h3");
-      UIUtils.setText(notifyTitle, msgTitle);
+      Dom.setText(notifyTitle, msgTitle);
       header.appendChild(notifyTitle);
     }
 
     //msgContent
     if (msgContent) {
       let contentDiv = this._elem.querySelector(".notify-content");
-      UIUtils.setText(contentDiv, msgContent);
+      Dom.setText(contentDiv, msgContent);
     }
     //是否有自製內容innerHTML
     if (customContent) {
@@ -123,7 +123,7 @@ class BaseMsg extends BaseComponent {
     if (btnList) {
       let actionbtnDiv = this._elem.querySelector(".notify-actionbtns");
       for (let btnConfig of btnList) {
-        let btn = UIUtils.setButtons(btnConfig);
+        let btn = Dom.setButtons(btnConfig);
         actionbtnDiv.appendChild(btn);
       }
     }
@@ -145,15 +145,15 @@ class BaseMsg extends BaseComponent {
     //主題色
     let themeColor = this._theme === "dark" ? "#1e222789" : "#F3F4F6";
     let textColor = this._theme === "dark" ? "#F3F4F6" : "#1F2937";
-    UIUtils.setProperty(this._elem, "--theme", themeColor);
-    UIUtils.setProperty(this._elem, "--text", textColor);
+    Dom.setProperty(this._elem, "--theme", themeColor);
+    Dom.setProperty(this._elem, "--text", textColor);
 
 
     //尺寸設定
-    UIUtils.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
-    UIUtils.setProperty(this._elem, "--w", this.options.area[0]);
-    UIUtils.setProperty(this._elem, "--h", this.options.area[1]);
-    // UIUtils.addClass(this._elem, ["hidden"]);
+    Dom.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
+    Dom.setProperty(this._elem, "--w", this.options.area[0]);
+    Dom.setProperty(this._elem, "--h", this.options.area[1]);
+    // Dom.addClass(this._elem, ["hidden"]);
 
     if (this.options.type !== "toast" && this.options.type !== "popover") {
       this._setPosition(this.options.placement);
@@ -173,23 +173,23 @@ class BaseMsg extends BaseComponent {
     // let btn = document.createElement("button");
     let btnClasses = ["btn", "btn-primary"];
     btnConfig.actionType !== "confirm" && btnClasses.push("outline-btn");
-    // UIUtils.addClass(btn, btnClasses);
-    // UIUtils.setText(btn, btnConfig.btnTxt);
-    let btn = UIUtils.setButtons(
+    // Dom.addClass(btn, btnClasses);
+    // Dom.setText(btn, btnConfig.btnTxt);
+    let btn = Dom.setButtons(
       {
         classes: btnClasses,
         text: btnTxt,
         handler: handler
       }
     );
-    UIUtils.setAttribute(btn, `${btnConfig.actionType}btn`);
+    Dom.setAttribute(btn, `${btnConfig.actionType}btn`);
     btnsblock.appendChild(btn);
     return btn;
   }
 
   //[內部控制]-設定位置
   _setPosition(position) {
-    UIUtils.setPosition(this._elem, position, ["notify-container", ...this.options.classes]);
+    Dom.setPosition(this._elem, position, ["notify-container", ...this.options.classes]);
   }
 }
 
@@ -208,7 +208,7 @@ class ToastItem extends BaseComponent {
       timing: timing || "ease-out"
     };
     let itemContainer = Notification._createTargetContainer();
-    let dismissBtn = UIUtils.setButtons({ icon: "close", classes: ["text-btn"] });
+    let dismissBtn = Dom.setButtons({ icon: "close", classes: ["text-btn"] });
     itemContainer.querySelector(".notify-header").appendChild(dismissBtn);
     super(itemContainer, options.theme || "light");
 
@@ -223,19 +223,19 @@ class ToastItem extends BaseComponent {
   _init() {
     //設定對應顏色
     if (this._base.options.icon) {
-      UIUtils.setProperty(this._elem, "--style", `var(--${this._base.options.icon})`);
+      Dom.setProperty(this._elem, "--style", `var(--${this._base.options.icon})`);
     } else {
-      UIUtils.setProperty(this._elem, "--style", "var(--graystyle)");
+      Dom.setProperty(this._elem, "--style", "var(--graystyle)");
     }
     switch (this.style) {
       case "bordered":
-        UIUtils.setAttribute(this._elem, `toast-${this.style}`);
+        Dom.setAttribute(this._elem, `toast-${this.style}`);
         break;
       case "accent":
-        UIUtils.setAttribute(this._elem, `toast-${this.style}`);
+        Dom.setAttribute(this._elem, `toast-${this.style}`);
         break;
     }
-    // UIUtils.addClass(this._elem, ["animate-msgIn"]);
+    // Dom.addClass(this._elem, ["animate-msgIn"]);
 
     this._bindEvent();
   }
@@ -292,8 +292,8 @@ class ToastMsg {
   _init() {
     // this._bindEvent();
     this.toastContainer = document.createElement("div");
-    UIUtils.addClass(this.toastContainer, ["toast-container"]);
-    UIUtils.setPosition(this.toastContainer, this.options.placement, ["toast-container"]);
+    Dom.addClass(this.toastContainer, ["toast-container"]);
+    Dom.setPosition(this.toastContainer, this.options.placement, ["toast-container"]);
     document.body.appendChild(this.toastContainer);
 
     //監聽子訊息DOM是否有移除
@@ -350,11 +350,11 @@ class ModalMsg extends BaseComponent {
     document.body.append(this._elem);
     this.onShow();
     this._bindEvent();
-    UIUtils.setAttribute(this._elem, "notifymodal");
+    Dom.setAttribute(this._elem, "notifymodal");
   }
   onShow() {
     this.modal.show();
-    UIUtils.removeClass(this._elem, ["flex"]);//flowbite會自動加入flex，所以要移除
+    Dom.removeClass(this._elem, ["flex"]);//flowbite會自動加入flex，所以要移除
   }
   onHide() {
     this.modal.hide();
@@ -396,7 +396,7 @@ class PopoverMsg extends BaseComponent {
 
   _init() {
     document.body.append(this._elem);
-    UIUtils.setAttribute(this._elem, "notifypopover");
+    Dom.setAttribute(this._elem, "notifypopover");
     this._bindEvent();
   }
   get config() {
@@ -441,7 +441,7 @@ class DefaultMsg extends BaseComponent {
   }
   _init() {
     document.body.append(this._elem);
-    UIUtils.setAttribute(this._elem, "notifymsg");
+    Dom.setAttribute(this._elem, "notifymsg");
     this._bindEvent(this._options.countdown);
   }
   _bindEvent(countdown) {
@@ -454,7 +454,7 @@ class DefaultMsg extends BaseComponent {
 
       await delay(countdown);
       //先隱藏
-      UIUtils.addClass(this._elem, ["opacity-0"]);
+      Dom.addClass(this._elem, ["opacity-0"]);
       await delay(1000);
       //再移除
       this._elem.remove();

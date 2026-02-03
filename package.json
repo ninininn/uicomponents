@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main":"./dist/index.js",
+  "style":"./dist/index.css",
+  "files":[
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

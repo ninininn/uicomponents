@@ -1,14 +1,11 @@
-import {
-  Meta,
-  Title
-} from "@storybook/addon-docs/blocks";
+import { Meta, Title } from "@storybook/addon-docs/blocks";
 
-<Meta title="Configure your project" />
-# 工具函式
+<Meta title="Configure your project" /># 工具函式
 提供多種共用functions，方便在各種情境使用。
 
-### UIUtils 類別
-> 共同控制DOM UI樣式的工具函式  
+### Dom 類別
+
+> 共同控制DOM UI樣式的工具函式
 
     <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
 
@@ -31,107 +28,105 @@ import {
       </table>
     </div>
 
-<span className="sb-unstyled methods">.addClass(element, classes)</span>
- - **Parameters**  
-    - **element<span className="text-red-600">*</span>** DOM元素
-    <span className="sb-unstyled data-type element">HTMLElement</span>
-    - **classes<span className="text-red-600">*</span>** 要加入的 classes
-    <span className="sb-unstyled data-type arr">array</span>
+<span className="sb-unstyled methods">.addClass(element, classes)</span>-
+**Parameters** - **element<span className="text-red-600">*</span>** DOM元素
+<span className="sb-unstyled data-type element">HTMLElement</span>- **classes
+<span className="text-red-600">*</span>** 要加入的 classes
+<span className="sb-unstyled data-type arr">array</span>
 
- 在指定DOM節點上加入指定classes
+在指定DOM節點上加入指定classes
 
-``` javascript
- UIUtils.addClass(this._elem,["container","absolute"]); 
-```  
-
-<span className="sb-unstyled methods">.removeClass(element, classes)</span>
- - **Parameters**  
-    - **element<span className="text-red-600">*</span>** DOM元素
-    <span className="sb-unstyled data-type element">HTMLElement</span>
-    - **classes<span className="text-red-600">*</span>** 要移除的 classes
-    <span className="sb-unstyled data-type arr">array</span>
-
- 在指定DOM節點上移除指定classes
-
-``` javascript
- UIUtils.removeClass(this._elem,["container","absolute"]); 
+```javascript
+Dom.addClass(this._elem, ["container", "absolute"]);
 ```
 
-<span className="sb-unstyled methods">.clearClass(element, excludeClasses)</span>
- - **Parameters**  
-    - **element<span className="text-red-600">*</span>** DOM元素
-    <span className="sb-unstyled data-type element">HTMLElement</span>
-    - **excludeClasses** 除外classes
-    <span className="sb-unstyled data-type arr">array</span>
+<span className="sb-unstyled methods">.removeClass(element, classes)</span>-
+**Parameters** - **element<span className="text-red-600">*</span>** DOM元素
+<span className="sb-unstyled data-type element">HTMLElement</span>- **classes
+<span className="text-red-600">*</span>** 要移除的 classes
+<span className="sb-unstyled data-type arr">array</span>
 
- 移除指定節點上的所有classes(除了指定excludeClasses)
+在指定DOM節點上移除指定classes
 
-``` javascript
- UIUtils.clearClass(this._elem,["name_id"]); 
+```javascript
+Dom.removeClass(this._elem, ["container", "absolute"]);
 ```
 
-<span className="sb-unstyled methods">.setText(element, text)</span>
- - **Parameters**  
-    - **element<span className="text-red-600">*</span>** DOM元素
-    <span className="sb-unstyled data-type element">HTMLElement</span>
-    - **text<span className="text-red-600">*</span>** 文字內容
-    <span className="sb-unstyled data-type str">string</span>
+<span className="sb-unstyled methods">
+  .clearClass(element, excludeClasses)
+</span>
+- **Parameters** - **element<span className="text-red-600">*</span>** DOM元素
+<span className="sb-unstyled data-type element">HTMLElement</span>-
+**excludeClasses** 除外classes
+<span className="sb-unstyled data-type arr">array</span>
 
- 設定指定DOM節點的textContent內容
+移除指定節點上的所有classes(除了指定excludeClasses)
 
-``` javascript
- UIUtils.setText(this._elem,"測試文字"); 
+```javascript
+Dom.clearClass(this._elem, ["name_id"]);
 ```
 
-<span className="sb-unstyled methods">.setAttribute(element, attributeName, attributeValue)</span>
- - **Parameters**  
-    - **element<span className="text-red-600">*</span>** DOM元素
-    <span className="sb-unstyled data-type element">HTMLElement</span>
-    - **attributeName<span className="text-red-600">*</span>** 屬性名稱
-    <span className="sb-unstyled data-type str">string</span>
-    - **attributeValue<span className="text-red-600">*</span>** 要設定的值
-    <span className="sb-unstyled data-type str">string</span>
+<span className="sb-unstyled methods">.setText(element, text)</span>-
+**Parameters** - **element<span className="text-red-600">*</span>** DOM元素
+<span className="sb-unstyled data-type element">HTMLElement</span>- **text
+<span className="text-red-600">*</span>** 文字內容
+<span className="sb-unstyled data-type str">string</span>
 
- 設定指定DOM節點的自訂`data-`屬性
+設定指定DOM節點的textContent內容
 
-``` javascript
- UIUtils.setAttribute(this._elem,"initialize","true"); 
+```javascript
+Dom.setText(this._elem, "測試文字");
 ```
 
-<span className="sb-unstyled methods">.setProperty(element, propertyName, propertyValue)</span>
- - **Parameters**  
-    - **element<span className="text-red-600">*</span>** DOM元素
-    <span className="sb-unstyled data-type element">HTMLElement</span>
-    - **propertyName<span className="text-red-600">*</span>** CSS propertyName
-    <span className="sb-unstyled data-type str">string</span>
-    - **propertyValue<span className="text-red-600">*</span>** 要設定的值
-    <span className="sb-unstyled data-type str">string</span>
+<span className="sb-unstyled methods">
+  .setAttribute(element, attributeName, attributeValue)
+</span>
+- **Parameters** - **element<span className="text-red-600">*</span>** DOM元素
+<span className="sb-unstyled data-type element">HTMLElement</span>-
+**attributeName<span className="text-red-600">*</span>** 屬性名稱
+<span className="sb-unstyled data-type str">string</span>- **attributeValue
+<span className="text-red-600">*</span>** 要設定的值
+<span className="sb-unstyled data-type str">string</span>
 
- 設定指定DOM節點的自訂css-property屬性
+設定指定DOM節點的自訂`data-`屬性
 
-``` javascript
- UIUtils.setProperty(this._elem,"--theme","#878787"); 
-```
-### 其他類別  
-
-<span className="sb-unstyled methods">function compareNum(arrayNum)</span>
- - **Parameters**  
-    - **arrayNum<span className="text-red-600">*</span>** 數組
-    <span className="sb-unstyled data-type arr">array</span>
- - **Returns**  
- 回傳已排序的數組參數
-
-``` javascript
-  let sortNumArr = compareNum([15,13]); //[13, 15]
+```javascript
+Dom.setAttribute(this._elem, "initialize", "true");
 ```
 
-<span className="sb-unstyled methods">function checkDevice()</span>
- - **Returns**  
- 判斷裝置尺寸
+<span className="sb-unstyled methods">
+  .setProperty(element, propertyName, propertyValue)
+</span>
+- **Parameters** - **element<span className="text-red-600">*</span>** DOM元素
+<span className="sb-unstyled data-type element">HTMLElement</span>-
+**propertyName<span className="text-red-600">*</span>** CSS propertyName
+<span className="sb-unstyled data-type str">string</span>- **propertyValue
+<span className="text-red-600">*</span>** 要設定的值
+<span className="sb-unstyled data-type str">string</span>
 
-``` javascript
-  // other opereations...
-  checkDevice();
+設定指定DOM節點的自訂css-property屬性
+
+```javascript
+Dom.setProperty(this._elem, "--theme", "#878787");
+```
+
+### 其他類別
+
+<span className="sb-unstyled methods">function compareNum(arrayNum)</span>-
+**Parameters** - **arrayNum<span className="text-red-600">*</span>** 數組
+<span className="sb-unstyled data-type arr">array</span>- **Returns**
+回傳已排序的數組參數
+
+```javascript
+let sortNumArr = compareNum([15, 13]); //[13, 15]
+```
+
+<span className="sb-unstyled methods">function checkDevice()</span>- **Returns**
+判斷裝置尺寸
+
+```javascript
+// other opereations...
+checkDevice();
 ```
 
 ### 色彩相關
@@ -152,45 +147,76 @@ import {
       ```
     
  - **Returns**  
- 回傳一組(或一個)指定模式色碼(預設為HSL)  
-   
+ 回傳一組(或一個)指定模式色碼(預設為HSL)
 
-<span className="sb-unstyled methods">ColorFormat</span>
-> 顏色相關轉換函式 `Color.js` 
+<span className="sb-unstyled methods">ColorFormat</span>> 顏色相關轉換函式
+`Color.js`
 
- <div className="sb-unstyled table-container overflow-hidden">
-    <table className="sb-unstyled table-content">
-      <thead>
-        <tr className="text-center">
-          <td>methods</td><td>descriptions</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>`.hexTorgb(hexString, opacity)`</td><td>HEX色碼(#FFFFFAAA)轉為RGB(rgb(R,G,B))</td></tr>
-        <tr><td>`.rgbTohsl(rgbStr, opacity)`</td><td>RGB轉換為HSL(hsl(h deg, s, l))</td></tr>
-        <tr><td>`.hslTorgb({h,s,l,a})`</td><td>HSL轉換為RGB</td></tr>
-        <tr><td>`.rgbTohex(rgbStr, opacity)`</td><td>RGB轉換為HEX</td></tr>
-        <tr><td>`.hslTohex({h,s,l,a})`</td><td>HSL轉換為HEX</td></tr>
-      </tbody>
-    </table>
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>`.hexTorgb(hexString, opacity)`</td>
+        <td>HEX色碼(#FFFFFAAA)轉為RGB(rgb(R,G,B))</td>
+      </tr>
+      <tr>
+        <td>`.rgbTohsl(rgbStr, opacity)`</td>
+        <td>RGB轉換為HSL(hsl(h deg, s, l))</td>
+      </tr>
+      <tr>
+        <td>`.hslTorgb({(h, s, l, a)})`</td>
+        <td>HSL轉換為RGB</td>
+      </tr>
+      <tr>
+        <td>`.rgbTohex(rgbStr, opacity)`</td>
+        <td>RGB轉換為HEX</td>
+      </tr>
+      <tr>
+        <td>`.hslTohex({(h, s, l, a)})`</td>
+        <td>HSL轉換為HEX</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-<span className="sb-unstyled methods">ColorHelper</span>
-> 顏色相關輔助函式 `Color.js`  
+<span className="sb-unstyled methods">ColorHelper</span>> 顏色相關輔助函式
+`Color.js`
 
- <div className="sb-unstyled table-container overflow-hidden">
-    <table className="sb-unstyled table-content">
-      <thead>
-        <tr className="text-center">
-          <td>methods</td><td>descriptions</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>`.getRandomNum(min, max)`</td><td>隨機取得一個在指定區間min~max的數字</td></tr>
-        <tr><td>`.randomDigit()`</td><td>隨機取得一個16進制數字</td></tr>
-        <tr><td>`.randomHexColor()`</td><td>隨機取得一個HEX色碼</td></tr>
-        <tr><td>`.tohexDigits(strDigit)`</td><td>將一個十進制數字轉換為十六進制</td></tr>
-        <tr><td>`.circular_distance(a,b)`</td><td>以圓形計算兩值之間差值(ex.359-1=2)</td></tr>
-      </tbody>
-    </table>
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>`.getRandomNum(min, max)`</td>
+        <td>隨機取得一個在指定區間min~max的數字</td>
+      </tr>
+      <tr>
+        <td>`.randomDigit()`</td>
+        <td>隨機取得一個16進制數字</td>
+      </tr>
+      <tr>
+        <td>`.randomHexColor()`</td>
+        <td>隨機取得一個HEX色碼</td>
+      </tr>
+      <tr>
+        <td>`.tohexDigits(strDigit)`</td>
+        <td>將一個十進制數字轉換為十六進制</td>
+      </tr>
+      <tr>
+        <td>`.circular_distance(a,b)`</td>
+        <td>以圓形計算兩值之間差值(ex.359-1=2)</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

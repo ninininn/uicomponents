@@ -26,5 +26,9 @@ export function Exporter({ title, data, type, name }) {
             break;
         case 'csv':
             break;
+        case 'pdf':
+            break;
+        case 'docx':
+            break;
     }
 }

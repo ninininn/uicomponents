@@ -1,9 +1,8 @@
 import {
-  UIUtils,
+  Dom,
   BaseComponent,
   defineArgs,
   bindState,
-  compareNum,
 } from "../../../Utils.js";
 
 // custom Slider components
@@ -130,15 +129,15 @@ export class Slider extends BaseComponent {
   render() {
     //1. 判斷是否為雙向
     this._checkRange();
-    UIUtils.addClass(this.getElem(), this.options.classes);
+    Dom.addClass(this.getElem(), this.options.classes);
     this.options.range &&
-      UIUtils.setAttribute(this.getElem(), "slider", "range");
+      Dom.setAttribute(this.getElem(), "slider", "range");
 
     //2. 判斷操作與否(僅操作DOM相關動作)
     if (this.disabled) {
-      UIUtils.addClass(this.getElem(), ["disabled"]);
+      Dom.addClass(this.getElem(), ["disabled"]);
     } else {
-      UIUtils.removeClass(this.getElem(), ["disabled"]);
+      Dom.removeClass(this.getElem(), ["disabled"]);
     }
   }
 
@@ -235,10 +234,10 @@ export class Slider extends BaseComponent {
     //1. disabled更新要切換監聽器綁定
     if (this.disabled) {
       super.destroy(); //clear all pointer listener
-      UIUtils.addClass(this.getElem(), ["disabled"]);
+      Dom.addClass(this.getElem(), ["disabled"]);
     } else {
       this._bindEvents();
-      UIUtils.removeClass(this.getElem(), ["disabled"]);
+      Dom.removeClass(this.getElem(), ["disabled"]);
     }
   }
 }
@@ -273,13 +272,13 @@ class SliderThumb extends BaseComponent {
   }
 
   render() {
-    UIUtils.addClass(this.getElem(), ["slider-thumb"]);
-    UIUtils.setProperty(this.getElem(), "--bgColor", this._theme);
+    Dom.addClass(this.getElem(), ["slider-thumb"]);
+    Dom.setProperty(this.getElem(), "--bgColor", this._theme);
 
     //是否有傳入客製圖標路徑
     if (this._thumbImg) {
       this.getElem().style.setProperty("--tmb-img", `url(${this._thumbImg})`);
-      UIUtils.addClass(this.getElem(), ["custom-thumb"]);
+      Dom.addClass(this.getElem(), ["custom-thumb"]);
     }
   }
   _setThumbValue(value) {
@@ -321,8 +320,8 @@ class SliderBar extends BaseComponent {
     this.getElem().appendChild(this.mask);
   }
   render() {
-    UIUtils.addClass(this.getElem(), this.options.classes);
-    UIUtils.setProperty(this.mask, "--bgColor", this._theme);
+    Dom.addClass(this.getElem(), this.options.classes);
+    Dom.setProperty(this.mask, "--bgColor", this._theme);
   }
 
   _setBarValue(value) {
