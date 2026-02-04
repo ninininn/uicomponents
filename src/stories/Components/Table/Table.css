@@ -54,7 +54,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
     --themeUnactive: color-mix(in srgb, var(--theme) 80%, var(--color-black) 20%);
     --themeActive: color-mix(in srgb, var(--theme) 10%, var(--color-black) 90%);
-    @apply cursor-pointer [&_span]:flex [&_span]:justify-center [&_span]:items-center [&_span]:gap-1 [&_.icon]:w-6 [&_.icon]:h-6 [&_.icon]:text-(--themeColor) data-[sort='dec']:[&_.icon]:rotate-x-180 data-[sort='dec']:[&_.icon]:transition-all data-[sort='dec']:[&_.icon]:duration-75 hover:[&_.icon]:text-(--themeActive) relative;
+    @apply cursor-pointer [&_span]:flex [&_span]:justify-center [&_span]:items-center [&_span]:gap-1 [&_.icon]:w-6 [&_.icon]:h-6 [&_.icon]:text-(--themeColor) aria-[sort='descending']:[&_.icon]:rotate-x-180 aria-[sort='descending']:[&_.icon]:transition-all aria-[sort='descending']:[&_.icon]:duration-75 hover:[&_.icon]:text-(--themeActive) relative;
   }
 
   .table tbody {

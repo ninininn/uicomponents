@@ -1,7 +1,7 @@
 import {
   BaseComponent,
   Dom,
-  findElem,
+  findElem, defineTypeof
 } from "../../../Utils/Utils";
 
 import { Checkbox } from "../Checkbox/Checkbox";
@@ -91,7 +91,7 @@ export class Table extends BaseComponent {
     if (this.config.tools) {
       this._createToolBar(this.config.tools);
     }
-    this.selectedRows = Reactive({});
+    this.selectedRows = {};
     this._render();
     this._bindEvent();
   }
@@ -184,7 +184,7 @@ export class Table extends BaseComponent {
         }
         let targetRowIndex = parseInt(e.target.closest("tr[data-index]").dataset.index);
         this.selectedRows[targetRowIndex] = isChecked;
-        this.restoreState();
+        // this.restoreUIstate();
 
         const isfullSelected = this.checkPageSelected();
         this.tableHeader.selection.setChecked(isfullSelected);
@@ -356,16 +356,22 @@ export class Table extends BaseComponent {
 
 
   //依據欄位排序設定排序
-  _rowSort(rule, field) {
-    //BUG 這邊sort()this._data才會調整順序，但是每次this.data(也就是get data)時，又會依照i排序而導致一直無法變換順序!
-    //BUG 如果是要做時間排序，可能要先把回傳資料(data)的時間做轉換
-    switch (rule) {
-      case 'asc'://小到大 升冪
-        this.data.sort((x, y) => x.data[field] - y.data[field]);
-        break;
-      case 'dec'://大到小 降冪
-        this.data.sort((x, y) => y.data[field] - x.data[field]);
-        break;
+  _rowSort(field, rule) {
+    //TODO 判斷rule資料型別，如果是function則作為sortFunc使用
+    if (defineTypeof(rule, 'func')) {
+      this.data.sort(rule).reverse();
+    } else {
+      switch (rule) {
+        case 'asc'://小到大 升冪
+          this.data.sort((x, y) => x.data[field] - y.data[field]);
+          break;
+        case 'dec'://大到小 降冪
+          this.data.sort((x, y) => y.data[field] - x.data[field]);
+          break;
+        default:
+          this.data.sort();
+          break;
+      }
     }
 
     this._showRows();
@@ -395,11 +401,12 @@ export class Table extends BaseComponent {
 
     this.tableBody.innerHTML = ``;
     this.tableBody.appendChild(rowFragment);
-    this.restoreState();
+    this.restoreUIstate();
     this._elem.scrollTop = 0;
   }
 
-  restoreState() {
+  restoreUIstate() {
+    console.log(this);
     const isfullSelected = this.checkPageSelected();
     this.tableHeader.selection.setChecked(isfullSelected);
     const rows = this.tableBody.querySelectorAll("tr[data-index]");
@@ -484,9 +491,9 @@ export class Table extends BaseComponent {
       pageSize: this.config.limits,
       total: this.dataCounts,
       controlPage: this.config.controlPage,
-      handler: ({ page, size }) => {
+      handler: ({ size }) => {
         this.config.limits = size;
-        this.restoreState();
+        this.restoreUIstate();
         this._showRows();
       },
     });
@@ -519,7 +526,7 @@ export class Table extends BaseComponent {
     let totalPages = this._pagination.total;
     for (let i = 1; i <= totalPages; i++) {
       this.selectedFullPage(i, false);
-      this.restoreState();
+      this.restoreUIstate();
     }
 
     this.tableHeader.selection.setChecked(false);
@@ -557,10 +564,27 @@ class TableHeader extends BaseComponent {
   _bindEvent() {
     function setSortCursor(e) {
       e.stopPropagation();
-      if (e.currentTarget.dataset.sort) {
-        let sort = e.currentTarget.dataset.sort === 'asc' ? 'dec' : 'asc';
-        this.table._rowSort(sort, e.currentTarget.dataset.field);
-        Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, sort);
+      let sort = e.currentTarget.dataset.sort;
+      if (sort) {
+        let ariaSort = e.currentTarget.getAttribute("aria-sort");
+        let tableSortWith, updateSort;
+        switch (sort) {
+          case "asc":
+            updateSort = 'desc';
+            tableSortWith = "desc";
+            break;
+          case "desc":
+            updateSort = 'asc';
+            tableSortWith = "asc";
+            break;
+          case "custom":
+            updateSort = 'custom';
+            tableSortWith = this.cols.find((col) => col.field === e.currentTarget.dataset.field).sort;
+            break;
+        }
+        this.table._rowSort(e.currentTarget.dataset.field, tableSortWith);
+        Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort);//set to the toggle one.
+        e.currentTarget.setAttribute("aria-sort", `${ariaSort === 'ascending' ? 'descending' : 'ascending'}`);//for accessibility
       }
     }
     if (this.cols.some((col) => col.sort)) {
@@ -617,7 +641,13 @@ class TableHeader extends BaseComponent {
     Dom.setAttribute(th, DATA_ATTR_FIELD, field);
     Dom.setText(sortIcon, title);
     if (sort) {
-      Dom.setAttribute(th, DATA_ATTR_SORT, sort);
+      if (defineTypeof(sort, 'func')) {
+        Dom.setAttribute(th, DATA_ATTR_SORT, 'custom'); //初始沒有排序
+        th.setAttribute("aria-sort", "none");//for accessibility
+      } else {
+        Dom.setAttribute(th, DATA_ATTR_SORT, sort);
+        th.setAttribute("aria-sort", `${sort === 'asc' ? 'ascending' : 'descending'}`);//for accessibility
+      }
       sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
 <path d="M4.24999 10.7617V15C4.24999 15.4142 4.58578 15.75 4.99999 15.75C5.4142 15.75 5.74999 15.4142 5.74999 15V10.7617C5.83248 10.875 5.9131 10.9879 5.9912 11.0967L5.9958 11.1031C6.1467 11.3133 6.30972 11.5404 6.43847 11.6855C6.71335 11.9954 7.18818 12.0239 7.49804 11.749C7.80761 11.4742 7.83604 11.0002 7.56151 10.6904C7.49513 10.6156 7.38199 10.4613 7.20995 10.2217L7.19283 10.1978C7.0366 9.98019 6.84876 9.71852 6.65526 9.46875C6.45751 9.2135 6.23286 8.94285 6.00487 8.73047C5.89083 8.62424 5.75714 8.51521 5.60937 8.42871C5.46887 8.34647 5.25683 8.25 4.99999 8.25C4.74316 8.25 4.53111 8.34647 4.39062 8.42871C4.24284 8.51521 4.10915 8.62424 3.99511 8.73047C3.76712 8.94285 3.54247 9.2135 3.34472 9.46875C3.14409 9.72771 2.94956 9.99947 2.79003 10.2217C2.61799 10.4613 2.50485 10.6156 2.43847 10.6904C2.16394 11.0002 2.19237 11.4742 2.50194 11.749C2.8118 12.0239 3.28663 11.9954 3.56151 11.6855C3.69026 11.5403 3.85328 11.3133 4.00418 11.1031L4.00878 11.0967C4.08689 10.9879 4.1675 10.875 4.24999 10.7617Z" fill="currentColor"/>
