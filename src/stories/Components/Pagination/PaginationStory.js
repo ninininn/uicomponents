@@ -1,11 +1,10 @@
 import { Dom, debounce } from "../../../Utils/Utils";
-import { Table } from "./Pagination";
-import { Checkbox } from "../Checkbox/Checkbox";
-import "./Table.css";
+import { Pagination } from "./Pagination";
+import "./Pagination.css";
 import "../Checkbox/Checkbox.css";
 import "../Dropdown/Dropdown.css";
 
-export const createTable = ({
+export const createPagination = ({
     id,
     name,
     limits,

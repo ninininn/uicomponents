@@ -2,15 +2,15 @@ import { fn, expect } from "storybook/test";
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from "storybook/actions";
 
-import { createTable } from './PaginationStory';
-import "./Table.css";
-import TableAPIdoc from "./TableAPIdoc.mdx";
+import { createPagination } from './PaginationStory';
+import "./Pagination.css";
+import PaginationAPIdoc from "./PaginationAPIdoc.mdx";
 import { Dom } from "../../../Utils/Utils";
 import { Notification } from '../Notification/Notification';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: "Components/Table",
+  title: "Components/Pagination",
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -18,13 +18,13 @@ export default {
         format: true,
         language: "html",
       },
-      page: TableAPIdoc,
+      page: PaginationAPIdoc,
     },
   },
   // decorators: [withActions],
   render: ({ ...args }) => {
     // You can either use a function to create DOM elements or use a plain html string!
-    let instance = createTable({ ...args });
+    let instance = createPagination({ ...args });
     return instance;
 
   },
@@ -201,7 +201,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Table = {
+export const Pagination = {
   args: {
     id: "test-table",
     name: "測試表格",
@@ -212,7 +212,7 @@ export const Table = {
         sort: function (x, y) {
           let xDate = new Date(x.data['日期']);
           let yDate = new Date(y.data['日期']);
-         return xDate - yDate;
+          return xDate - yDate;
         },
         fixed: false,
         align: "center",
