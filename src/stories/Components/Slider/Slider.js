@@ -3,7 +3,7 @@ import {
   BaseComponent,
   defineArgs,
   bindState,
-} from "../../../Utils.js";
+} from "../../../Utils/Utils";
 
 // custom Slider components
 // props:

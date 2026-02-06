@@ -1,4 +1,5 @@
-import { BaseComponent } from "../../../Utils";
+import { BaseComponent } from "../../../Utils/Utils";
+
 import { Notification } from "../Notification/Notification";
 
 export class Card extends BaseComponent {

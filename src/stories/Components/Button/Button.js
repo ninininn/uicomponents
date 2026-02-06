@@ -1,4 +1,4 @@
-import { Dom, BaseComponent } from '../../../Utils';
+import { Dom, BaseComponent } from "../../../Utils/Utils";
 
 // custom btn components
 // props:
