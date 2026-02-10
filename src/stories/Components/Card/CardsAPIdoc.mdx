@@ -163,6 +163,7 @@ new BasicInfoCard(title, infoList, cardSize = 1);
           <tr><td>`.clearBlocks()`</td><td>清空dataContent</td></tr>
           <tr><td>`.deleteBlock(label)`</td><td>刪除單一欄位UI&對應資料</td></tr>
           <tr><td>`.toggleBlock(groupId)`</td><td>切換區塊visible</td></tr>
+          <tr><td>`.updateLabel(labelStr,updateStr)`</td><td>替換指定label的值</td></tr>
         </tbody>
       </table>
     </div>
@@ -204,6 +205,20 @@ new BasicInfoCard(title, infoList, cardSize = 1);
  可以切換同一個card內的group(有點類似tab)；使用`addBlock({once})`後會綁定內部屬性`_groupId`，可以用來切換
 ``` javascript
 BasicInfoCard.toggleBlock("buildno_1");
+```  
+<span className="sb-unstyled methods">.updateLabel(label,updateValue)</span>
+ - **Parameters**  
+    - <span className="sb-unstyled font-black">label</span>
+      <span className="sb-unstyled data-type str">string</span>  
+      指定的`label`文字 
+        
+    - <span className="sb-unstyled font-black">updateValue</span>
+      <span className="sb-unstyled data-type str">string</span>  
+      要替換的新value
+
+ 傳入一個指定的`label`文字，會去替換掉對應的`value`
+``` javascript
+BasicInfoCard.updateLabel("資料欄位A :","更新A");
 ```  
 ---  
 
