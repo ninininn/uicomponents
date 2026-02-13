@@ -222,7 +222,7 @@ export class Table extends BaseComponent {
 
           btn = Dom.setButtons({
             classes: ["btn-sm", "outline-btn", "relative"],
-            icon: '/filter.svg',
+            icon: './filter.svg',
             handler: (e) => {
               e.stopImmediatePropagation();
               if (e.target === btn) {
@@ -263,7 +263,7 @@ export class Table extends BaseComponent {
             };
             Exporter(exportObj);
           };
-          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/export.svg', handler: btnHandler });
+          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: './export.svg', handler: btnHandler });
           break;
         case 'print':
           btnHandler = () => {
@@ -284,7 +284,7 @@ export class Table extends BaseComponent {
             table.append(tableHeader, rowFragment);
             Printer(table, selectedRows, "table");
           };
-          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: '/print.svg', handler: btnHandler });
+          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: './print.svg', handler: btnHandler });
           break;
         default:
           toolBar.appendChild(Dom.setButtons(feature));
