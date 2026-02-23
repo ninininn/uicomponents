@@ -207,13 +207,17 @@ export const Table = {
     name: "測試表格",
     cols: [
       {
-        field: '日期', title: '日期', sort: 'asc', fixed: false, align: "center", template: function (data) {
+        field: 'sex',
+        title: '性別',
+        sort: true,
+        fixed: false,
+        align: "center",
+        template: function (data) {
           let template = `<div>${data}</div>`;
           this._elem.innerHTML = template;
         }
       },
-      { field: '項目', title: '項目', sort: 'dec', fixed: false, align: "center", visible: false, resize: true },
-      { field: '網址', title: '網址', sort: false, fixed: false, align: "center" },
+      { field: 'nation', title: '國籍', sort: 'desc', fixed: false, align: "center", visible: false, resize: true },
       {
         field: 'operate', title: '操作', sort: false, fixed: false,
         template: function (data) {

@@ -36,6 +36,8 @@ var defaultColumnConfig = {
   template: undefined,
   visible: true,
   print: true,
+  maxWidth: undefined,
+  minWidth: undefined
 };
 
 export class Table extends BaseComponent {
@@ -123,14 +125,14 @@ export class Table extends BaseComponent {
     //放入分頁元件
     this._elem.after(this._pagination.getElem());
 
-
-    if (this.data?.length === 0) {
+    if (this.dataCounts === 0) {
       this._showEmpty();
     }
     if (!this.data && this.config.url) {
       //渲染完成前顯示skeleton;
       this.tableBody.appendChild(this.skeleton.getElem());
       this.skeleton.show();
+
       try {
         const res = await this.pullData(this.config.url);
         const data = await res.json();
@@ -139,13 +141,19 @@ export class Table extends BaseComponent {
         if (!data || data.length === 0) {
           this._showEmpty();
         } else {
-          this.setData(data);
+          this.setData(data.responseData);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
         this.skeleton.hide();
         // this.showError();
       }
+    } else if (this.dataCounts > 0) {
+      this._pagination.renderPage(this.dataCounts); //更新pagination資料數量
+      this.selectedRows = {};
+      this._showRows();//渲染部分TableRow
+    } else {
+      this._showEmpty();
     }
     this.skeleton.hide();
   }
@@ -166,7 +174,7 @@ export class Table extends BaseComponent {
   }
   //事件綁定
   _bindEvent() {
-    //click TableHeader的Checkbox時要全選該頁Rows
+    this.callbacks = [];
 
     //檢查該row是否已經在cache內
     this.onevent(
@@ -183,7 +191,10 @@ export class Table extends BaseComponent {
         }
         let targetRowIndex = parseInt(e.target.closest("tr[data-index]").dataset.index);
         this.selectedRows[targetRowIndex] = isChecked;
-        // this.restoreUIstate();
+        this.restoreUIstate();
+
+        const targetData = this.getRowData(targetRowIndex).data;
+        this.callbacks.forEach(fn => fn.call(targetData));
 
         const isfullSelected = this.checkPageSelected();
         this.tableHeader.selection.setChecked(isfullSelected);
@@ -405,7 +416,6 @@ export class Table extends BaseComponent {
   }
 
   restoreUIstate() {
-    console.log(this);
     const isfullSelected = this.checkPageSelected();
     this.tableHeader.selection.setChecked(isfullSelected);
     const rows = this.tableBody.querySelectorAll("tr[data-index]");
@@ -424,6 +434,11 @@ export class Table extends BaseComponent {
     });
 
   }
+  //[外部控制]-指定點擊row觸發的函式
+  on(callbackFn) {
+    this.callbacks.push(callbackFn);
+    console.log(this);
+  }
 
 
   //[外部控制]-設定表格尺寸
@@ -438,6 +453,11 @@ export class Table extends BaseComponent {
     if (!this.data) {
       console.error("No Data Yet!");
     }
+  }
+
+  //[外部控制]-取得指定列資料
+  getRowData(index) {
+    return this.data.filter((row) => row.index === index)[0];
   }
 
   //[外部控制]-取得全表格內所有選取的Row
@@ -632,13 +652,15 @@ class TableHeader extends BaseComponent {
   }
 
   _createCol(colconfig) {
-    let { field, title, sort, visible, resize, print } = colconfig;
+    let { field, title, sort, visible, resize, print, maxWidth, minWidth } = colconfig;
     if (!visible) return;
 
     let th = document.createElement("th");
     let sortIcon = document.createElement("span");
     Dom.setAttribute(th, DATA_ATTR_FIELD, field);
     Dom.setText(sortIcon, title);
+    if (maxWidth) th.style.maxWidth = `${maxWidth}px`;
+    if (minWidth) th.style.minWidth = `${minWidth}px`;
     if (sort) {
       if (defineTypeof(sort, 'func')) {
         Dom.setAttribute(th, DATA_ATTR_SORT, 'custom'); //初始沒有排序
@@ -741,119 +763,6 @@ class TableHeader extends BaseComponent {
   }
 }
 
-//TableRow 表列
-// class TableRow extends BaseComponent {
-//   constructor({ data, index, selection = "checkbox", table }) {
-//     const rowContainer = document.createElement("tr");
-//     super(rowContainer, table._theme);
-//     this.UItype = "TableRow";
-//     this.data = data;
-//     this.table = table;
-//     this.selection = this._checkSelection(selection);
-//     this.cells = this._setTableCells(this.data, table.config.cols);
-//     this.index = index;
-//     this._init();
-//   }
-
-//   _init() {
-//     let fragment = document.createDocumentFragment();
-//     if (this.selection) fragment.appendChild(this.selection.container);
-//     for (let cell of this.cells) {
-//       if (cell.config.visible) fragment.appendChild(cell.getElem());
-//     }
-//     this._elem.appendChild(fragment);
-//     Dom.setAttribute(this._elem, DATA_ATTR_INDEX, this.index);
-//     this._render();
-//     this._bindEvent();
-//   }
-
-//   _render() {
-//     let isChecked = this.selection.getChecked();
-//     if (isChecked) {
-//       Dom.setAttribute(this._elem, DATA_ATTR_ROWSELECTED);
-//     } else {
-//       delete this._elem.dataset[DATA_ATTR_ROWSELECTED];
-//     }
-//   }
-
-//   _bindEvent() {
-//     function checkEvent(e) {
-//       let isChecked = this.selection.getChecked();
-//       this.selection.setChecked(!isChecked);
-//       //紀錄checked的row-index放入cache
-//       this.table.selectedRows[this.index] = !isChecked;
-//       //TODO 點擊時 執行設定好的on();
-//       this._render();
-//     }
-
-//     if (this.selection)
-//       this.onevent(this.getElem(), "click", checkEvent.bind(this));
-//   }
-
-//   _checkSelection(selectionType) {
-//     let cellElem = document.createElement("td");
-//     if (selectionType === "checkbox") {
-//       let checkbox = new Checkbox(cellElem, {
-//         checked: false,
-//         theme: this._theme,
-//       });
-//       return checkbox;
-//     } else if (selectionType === "radio") {
-//       return;
-//     }
-//   }
-//   _setTableCells(data, colConfig) {
-//     let cells = colConfig.map((config) => {
-//       const cellValue = data[config.field];
-//       return new TableCell(cellValue || data, config);
-//     });
-//     return cells;
-//   }
-// }
-
-//TableCell 資料格
-// class TableCell extends BaseComponent {
-//   constructor(dataValue, colConfig) {
-//     const td = document.createElement("td");
-//     super(td);
-//     this.UItype = "TableCell";
-//     this.dataValue = dataValue;
-//     this.config = Object.assign({}, defaultColumnConfig, colConfig);
-//     this._init();
-//   }
-
-//   _init() {
-//     let { field, align = "left", template, fixed, visible } = this.config;
-//     if (!visible) return;
-//     let textContainer = document.createElement("span");
-//     switch (align) {
-//       case "center":
-//         Dom.addClass(this._elem, ["text-center"]);
-//         break;
-//       case "right":
-//         Dom.addClass(this._elem, ["text-right"]);
-//         break;
-//       default:
-//         Dom.clearClass(this._elem);
-//         break;
-//     }
-//     Dom.setAttribute(this._elem, DATA_ATTR_FIELD, field);
-//     //TODO template function - 傳入自訂函式來建立內容
-//     if (typeof (this.dataValue) === "string" || typeof (this.dataValue) === "number") {
-//       Dom.setText(textContainer, this.dataValue);
-//     }
-//     this._elem.appendChild(textContainer);
-
-//     if (template) {
-//       template.bind(this, this.dataValue)();
-//     }
-//   }
-
-//   _render() {
-//   }
-// }
-
-
 //Skeleton 元件
 //! 未來要獨自拆出檔案
 export class Skeleton extends BaseComponent {
@@ -950,17 +859,3 @@ export class Skeleton extends BaseComponent {
 
 //掛到全域window上供外部使用
 window.Table = Table;
-
-
-
-
-Object.defineProperty(Table, 'config', {
-  get: function () {
-    console.log("getter");
-    return this._config;
-  },
-  set: function (value) {
-    console.log("setter:", value);
-    // this.render()
-  }
-});

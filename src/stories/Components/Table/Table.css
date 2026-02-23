@@ -84,7 +84,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .table-tools {
-    @apply flex gap-2 justify-end w-full mb-2 pr-5 items-center relative
+    @apply flex gap-2 justify-end w-full my-2 pr-5 items-center relative
   }
 
 
@@ -92,26 +92,6 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     @apply absolute cursor-col-resize w-0.5 select-none hover:[.resizing]:border-r-2 right-0 hover:bg-primary-900 transition-all
   }
 
-  .pagination {
-    --theme: var(--themeColor, var(--color-primary-500));
-    @apply flex gap-2 my-3 pr-5 items-center
-  }
-
-  .page-item {
-    @apply aspect-square hover:bg-[var(--theme)] rounded-full w-8 select-none transition-all duration-75 disabled:text-gray-300 disabled:pointer-events-none;
-  }
-
-  .page-item:not([disabled]) {
-    @apply hover:bg-[var(--theme)]/30 hover:text-[var(--theme)] cursor-pointer
-  }
-
-  .page-item[data-currentPage] {
-    @apply bg-[var(--theme)] text-white;
-  }
-
-  .pagination-jump {
-    @apply flex grow-[2] mr-3 justify-end gap-1 items-center text-gray-400 text-nowrap select-none [&>div]:max-w-20
-  }
 
   .tools-popover {
     --position-x: 5rem;
