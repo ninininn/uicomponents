@@ -296,90 +296,46 @@ export class BaseComponent {
         }, 100);
     }
 }
-
-
-//快取設定
-class componentCache {
-    constructor(cacheKey, value) {
-        this._key = cacheKey;
-        this._value = value;
-        this._getCache = this.cache();
-    }
-
-    get cache() {
-        return;
-    }
-
-    get key() {
-        return this._key;
-    }
-
-    get value() {
-        return this._value;
-    }
+/**
+ * 判斷變數型別用
+ * @param {*} variable 
+ * @param {string} type 
+ * @returns boolean
+ */
+const DATA_TYPES_FLAGS = {
+    STRING: '[object String]',
+    ARRAY: '[object Array]',
+    OBJECT: '[object Object]',
+    FUNC: '[object Function]',
+    NUM: '[object Number]',
+    UNDEFINED: '[object Undefined]',
+    NULL: '[object Null]',
+    SYMBOL: '[object Symbol]',
+    DATE: '[Object Date]',
+};
+export function defineTypeof(variable, type) {
+    const type_flag = type.toUpperCase() in DATA_TYPES_FLAGS ? DATA_TYPES_FLAGS[type.toUpperCase()] : null;
+    return Object.prototype.toString.call(variable) === type_flag;
 }
 
-function createCacheData(cache_key, initValue) {
-    let cache = new componentCache(cache_key, initValue);
-    let set = function (value) {
-        localStorage.setItem(cache_key, value);
-    };
-
-    let get = function () {
-        let data = JSON.parse(localStorage.getItem(cache_key));
-        if (!data) {
-            localStorage.setItem(cache_key, {});
+/**
+ * 綜合排序
+ * @param {string} key 指定排序的key
+ * @param {string} sortRule 升序/降序/自訂/群組
+ */
+export function sorting(arr, { key, sortRule = 'asc' }) {
+    arr.sort(function (data1, data2) {
+        const v1 = data1[key];
+        const v2 = data2[key];
+        //1.數字|數字
+        if (defineTypeof(v1, "num") && defineTypeof(v2, "num")) {
+            return data1 - data2;
         }
-
-        return JSON.parse(localStorage.getItem(cache_key));
-    };
-
-    let remove = function () {
-        localStorage.removeItem(cache_key);
-    };
-
-    return { cache, set, get, remove };
-}
-
-
-//TODO 改成Proxy機制?
-let activeEffect = null;
-let subscribersMap = new Map();
-
-function watchEffect(callback) {
-    activeEffect = callback;
-    const result = callback();
-    activeEffect = null;
-}
-
-function reactive(obj) {
-    return new Proxy(obj, {
-        get: function (target, prop, receiver) {
-            const result = Reflect.get(target, prop, receiver);
-            if (activeEffect) {
-                let currentSubscribers = subscribersMap.get(prop);
-                if (!currentSubscribers) currentSubscribers = [];
-                currentSubscribers.push(activeEffect);
-                subscribersMap.set(prop, currentSubscribers);
-            }
-            return result;
-        },
-
-        set: function (target, prop, value, receiver) {
-            const result = Reflect.set(target, prop, value, receiver);
-            const currentSubscribers = subscribersMap.get(prop) || [];
-            currentSubscribers.forEach(fn => fn());
-            return result;
-        }
+        //2.日期|日期
+        //3.預設字典序
+        //4.指定key
     });
 }
-
-const state = reactive({ count: 1 });
-
-watchEffect(() => {
-    console.log('update!', state.count);
-});
-
 
 /**
  * State 控制器
@@ -462,7 +418,22 @@ export function debounce(callback, delay) {
     };
 }
 
+/**
+ * 隨機生成一組UUID
+ * @returns 
+ */
+export function setUUID() {
+    return crypto.randomUUID();
+}
 
+/**
+ * 比較物件內容是否完全相等
+ * @param {*} objA 
+ * @param {*} objB 
+ */
+export function ObjectWithsameVal(objA, objB) {
+
+}
 /**
  * shared object
  * 包裝共用函式，方便未來import元件模組
@@ -470,4 +441,5 @@ export function debounce(callback, delay) {
 export const tools = {
     checkDevice: checkDevice,
     compareNum: compareNum,
+    defineTypeof: defineTypeof,
 };
