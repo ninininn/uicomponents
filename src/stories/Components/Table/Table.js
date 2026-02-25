@@ -1,7 +1,7 @@
 import {
   BaseComponent,
   Dom,
-  findElem, defineTypeof, sorter
+  findElem, defineTypeof, dataSorter
 } from "../../../Utils/Utils";
 
 import { Checkbox } from "../Checkbox/Checkbox";
@@ -98,14 +98,15 @@ export class Table extends BaseComponent {
     this.selectedRows = {};
     super.setTheme(this.config.theme);
     Dom.setProperty(this._elem, "--theme", this._theme);
+
     //組裝
     this.table.id = this.id;
-
     this.table.appendChild(this.tableBody);
 
     //class設定
     Dom.addClass(this.table, ["table"]);
     Dom.addClass(this._elem, this.config.classes);
+
     //判斷是否有容器
     let container = findElem(this.config.container);
     if (!container) {
@@ -142,8 +143,8 @@ export class Table extends BaseComponent {
         if (!data || data.length === 0) {
           this._showEmpty();
         } else {
-          this.cache = data.responseData;
-          this.setData(this.cache);
+          this.cache = data;
+          this.setData(this._cache);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -184,7 +185,6 @@ export class Table extends BaseComponent {
       "click",
       function (e) {
         e.stopPropagation();
-        console.log(e.target);
         let isChecked;
         if (e.target.nodeName === 'INPUT') {
           isChecked = e.target.checked;
@@ -395,24 +395,8 @@ export class Table extends BaseComponent {
       this._data = [...this._cache];
     } else {
       //TODO 判斷rule資料型別，如果是function則作為sortFunc使用
-      this._data = sorter({ key: field, rule: rule, data: this.data });
-      // this.data.sort(sorter({ key: field, rule: rule, data: this.data }));
+      this._data = dataSorter({ key: field, rule: rule, data: this.data });
     }
-    // if (defineTypeof(rule, 'func')) {
-    //   this.data.sort(rule).reverse();
-    // } else {
-    // switch (rule) {
-    //   case 'ascending'://小到大 升冪
-    //     this.data.sort((x, y) => x.data[field] - y.data[field]);
-    //     break;
-    //   case 'descending'://大到小 降冪
-    //     this.data.sort((x, y) => y.data[field] - x.data[field]);
-    //     break;
-    //   default:
-    //     this.data.sort();
-    //     break;
-    // }
-    //}
 
     this._showRows();
   }
@@ -509,8 +493,6 @@ export class Table extends BaseComponent {
       }
     });
 
-    // this._data = searchedData;
-    // this._showRows();
     this.setData(searchedData);
   }
 
@@ -760,7 +742,7 @@ class TableHeader extends BaseComponent {
           updateSort = 'descending';
           break;
         case "descending":
-          updateSort = 'ascending';
+          updateSort = 'none';
           break;
         case "custom":
           updateSort = 'custom';

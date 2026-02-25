@@ -317,7 +317,7 @@ export function defineTypeof(variable, type) {
 /**
  * 綜合排序
  * @param {string} key 指定排序的key
- * @param {string} sortRule 升序/降序/自訂/群組
+ * @param {string} sortRule 升序/降序/無排序
  */
 function defaultCompare(a, b) {
     const va = Number(a);
@@ -326,17 +326,18 @@ function defaultCompare(a, b) {
     if (!isNaN(va) && !isNaN(vb)) return va - vb;
 
     // !num|!num
-    if (isNaN(va) && isNaN(vb)) return a > b ? 1 : -1;
+    if (isNaN(va) && isNaN(vb)) return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
     return 0;
 
 }
-export function sorter({ key, rule, data }) {
+export function dataSorter({ key, rule, data }) {
     const isDesc = rule === 'none' ? 0 : rule === 'descending' ? -1 : 1;
     const clone = data ? JSON.parse(JSON.stringify(data)) : [];
 
     clone.sort(function comparator(a, b) {
         const result = defaultCompare(a.data[key], b.data[key]);
         if (result !== 0) return result * isDesc;
+        return result;
     });
     return clone;
 };

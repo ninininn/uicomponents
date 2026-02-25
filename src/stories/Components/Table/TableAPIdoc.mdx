@@ -252,6 +252,10 @@ let table = new Table(config);
         <td>放入資料重新渲染</td>
       </tr>
       <tr>
+        <td>`.on(callbackFn)`</td>
+        <td>指定點擊row觸發的函式</td>
+      </tr>
+      <tr>
         <td>`.setSize(width,height)`</td>
         <td>設定表格尺寸</td>
       </tr>
@@ -292,8 +296,12 @@ let table = new Table(config);
         <td>取得指定過濾條件data</td>
       </tr>
       <tr>
-        <td>`.exportTable()`</td>
-        <td>匯出成csv文件/pdf?</td>
+        <td>`.searchInFilter(keyWord)`</td>
+        <td>關鍵字過濾</td>
+      </tr>
+      <tr>
+        <td>`.clearSelected()`</td>
+        <td>清除所有選取狀態</td>
       </tr>
       <tr>
         <td>`.getElem()`</td>
@@ -306,67 +314,13 @@ let table = new Table(config);
     </tbody>
   </table>
 </div>
---- # Pagination 元件
-
-<div className="sb-unstyled note-msg">
-  詳細說明可參考Pagination元件說明頁(尚未建置...)
-</div>
-- **properties 屬性**
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-            <td>inherits</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold">UItype</td>
-            <td>Pagination</td>
-            <td>string</td>
-            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-            <td>`BaseComponent`</td>
-          </tr>
-          <tr>
-            <td className="font-bold">currentPage</td>
-            <td>1</td>
-            <td>number</td>
-            <td>當前頁數</td>
-          </tr>
-          <tr>
-            <td className="font-bold">total</td>
-            <td>-</td>
-            <td>number</td>
-            <td>資料總數</td>
-          </tr>
-          <tr>
-            <td className="font-bold">pages</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>全部頁數(page)</td>
-          </tr>
-          <tr>
-            <td className="font-bold">handler</td>
-            <td>-</td>
-            <td>function</td>
-            <td>點擊各頁籤要執行的function</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-## <br />
-
+---
 # 子元件
 
 <div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>
 <br />
-<h3 id="TableHeader">TableHeader</h3>- **properties 屬性**
+<h3 id="TableHeader">TableHeader</h3>
+- **properties 屬性**
 <div className="sb-unstyled table-container overflow-hidden">
   <table className="sb-unstyled table-content">
     <thead>
@@ -400,81 +354,3 @@ let table = new Table(config);
   </table>
 </div>
 <br />
----
-<h3 id="TableRow">TableRow</h3>
-
-- **properties 屬性**
-
-      <div className="sb-unstyled table-container overflow-hidden">
-        <table className="sb-unstyled table-content">
-          <thead>
-            <tr className="text-center">
-              <td>property</td>
-              <td>default</td>
-              <td>type</td>
-              <td>descriptions</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="font-bold text-center">UItype</td>
-              <td className="text-center">TableRow</td>
-              <td className="text-center">string</td>
-              <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-            </tr>
-            <tr>
-              <td className="font-bold text-center">popover</td>
-              <td className="text-center">flowbite `Popover`物件</td>
-              <td className="text-center">object</td>
-              <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-  <br />
-
-- **options 參數可設定的私有屬性**
-  - `triggerType` 觸發動作類型，可以選擇hover|click|none
-  - `offset` 距離triggerElem的距離
-    <br />
-
----
-
-> <h3 id="TableCell">TableCell</h3>
-
-- **properties 屬性**
-
-      <div className="sb-unstyled table-container overflow-hidden">
-        <table className="sb-unstyled table-content">
-          <thead>
-            <tr className="text-center">
-              <td>property</td>
-              <td>default</td>
-              <td>type</td>
-              <td>descriptions</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="font-bold text-center">UItype</td>
-              <td className="text-center">TableCell</td>
-              <td className="text-center">string</td>
-              <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-            </tr>
-            <tr>
-              <td className="font-bold text-center">dataValue</td>
-              <td className="text-center">-</td>
-              <td className="text-center">string/number</td>
-              <td>資料格的資料內容</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-  <br />
-
-- **options 參數可設定的私有屬性**
-  - `backdrop` 遮罩類型，可分為static|dynamic，是否可以點擊螢幕任一處關閉
-  - `backdropClasses` 遮罩classes
-  - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal
