@@ -1,4 +1,4 @@
-import{u as l,j as e,M as d,T as r,P as c,C as i}from"./iframe--i4Q7PXz.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use DraggableItem"}),`
+import{u as l,j as e,M as d,T as r,P as c,C as i}from"./iframe-DpQgjgPA.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use DraggableItem"}),`
 `,e.jsx(r,{}),`
 `,e.jsx(s.p,{children:"拖曳排序元件"}),`
 `,e.jsx(c,{}),`

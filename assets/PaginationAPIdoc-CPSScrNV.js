@@ -1,4 +1,4 @@
-import{u as d,j as e,M as l,T as r,P as c,C as i}from"./iframe--i4Q7PXz.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h2:"h2",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Table"}),`
+import{u as d,j as e,M as l,T as r,P as c,C as i}from"./iframe-DpQgjgPA.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h2:"h2",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Table"}),`
 `,e.jsx(r,{}),`
 `,e.jsxs(s.p,{children:["常見表格資料表，可以載入資料並更新Table畫面 (此頁面測試用API來源 : ",e.jsx(s.a,{href:"https://jsonplaceholder.typicode.com/todos",rel:"nofollow",children:`公開API\r
 (https://jsonplaceholder.typicode.com/todos)`}),")"]}),`
