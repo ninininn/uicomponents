@@ -5,7 +5,6 @@ import { action } from "storybook/actions";
 import { createPalette } from './PaletteStory';
 import "./Palette.css";
 import PaletteAPIdoc from "./PaletteAPIdoc.mdx";
-import { Dom } from "../../../Utils";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {

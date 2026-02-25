@@ -1,4 +1,5 @@
-import { Dom, debounce } from "../../../Utils";
+import { Dom, BaseComponent } from "../../../Utils/Utils";
+import { ColorPicker } from "./ColorPicker";
 import { Palette } from "../../../Utils/Color";
 import "./Palette.css";
 
@@ -44,6 +45,15 @@ export const createPalette = ({
         // palette.style.borderLeft = '1px solid white';
         parent.appendChild(palette);
     }
+    var defaultPickerConfig = {
+        limits: 5,//maxium color number stored in container
+        defaults: [...randomPalette.slice(0, 3)],
+    };
+
+
+    const picker = new ColorPicker(defaultPickerConfig);
+    console.log(picker);
+    parent.appendChild(picker.getElem());
     return parent;
 };
 
