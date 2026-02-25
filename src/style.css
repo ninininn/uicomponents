@@ -81,7 +81,7 @@
   --color-secondary-700: #445d5f;
   --color-secondary-800: #294042;
   --color-secondary-900: #1c2f31;
-  --font-rounded: "Huninn";
+  /* --font-rounded: "Huninn"; */
   --font-sans: "Inter",
     "ui-sans-serif",
     "system-ui",
@@ -191,7 +191,7 @@
 @layer base {
 
   body {
-    font-family: var(--font-rounded);
+    font-family: var(--font-sans);
     color: var(--color-black);
     overscroll-behavior: none;
   }

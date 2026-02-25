@@ -127,6 +127,17 @@ export default {
         type: { summary: "boolean" },
       },
     },
+    searchTool: {
+      control: "boolean",
+      if: { arg: 'tools', truthy: true },
+      description: "關鍵字過濾工具",
+      table: {
+        category: "configurations",
+        subcategory: "tools feature",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
+      },
+    },
     theme: {
       control: "color",
       description: "表格色系",
@@ -196,7 +207,8 @@ export default {
     controlPage: true,
     groupTool: true,
     exportsTool: true,
-    printTool: true
+    printTool: true,
+    searchTool: true,
   },
 };
 
@@ -217,7 +229,9 @@ export const Table = {
           this._elem.innerHTML = template;
         }
       },
-      { field: 'nation', title: '國籍', sort: 'desc', fixed: false, align: "center", visible: false, resize: true },
+      { field: 'marry_count', title: '結婚次數', sort: true, fixed: false, align: "center" },
+      { field: 'nation', title: '國籍', sort: 'descending', fixed: false, align: "center", visible: false, resize: true },
+      { field: 'edu', title: '學歷', sort: 'descending', fixed: false, align: "center", resize: true },
       {
         field: 'operate', title: '操作', sort: false, fixed: false,
         template: function (data) {

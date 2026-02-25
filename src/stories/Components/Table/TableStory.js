@@ -17,6 +17,7 @@ export const createTable = ({
     groupTool,
     exportsTool,
     printTool,
+    searchTool,
     theme,
     classes,
     complete,
@@ -40,7 +41,7 @@ export const createTable = ({
     parent.appendChild(trigger);
     parent.appendChild(tableTarget);
     parent.appendChild(clear);
-    let toolFeature = [groupTool = 'group', exportsTool = 'exports', printTool = 'print'];
+    let toolFeature = [groupTool = 'group', exportsTool = 'exports', printTool = 'print', searchTool = 'search'];
 
     let initOptions = {
         id: id,                 //tableId
@@ -62,8 +63,13 @@ export const createTable = ({
     //fake data
     async function fetchData(url) {
         let data = await fetch(url);
-        return data;
+        return data.json();
     }
+
+    let originData;
+    fetchData("https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP032/106").then(res => {
+        originData = res.responseData;
+    });
 
     // let notification_instance = new Notification(trigger, initOptions, type);
 
@@ -78,13 +84,13 @@ export const createTable = ({
     //     // 把checked 及 value一次顯示(僅storybook測試用)
     // });
     trigger.addEventListener("click", () => {
-        let table_instance = new Table(initOptions);
+        let table_instance = new Table(initOptions, originData);
         console.log("table_instance:", table_instance);
 
+        table_instance.setSelected(5);
+    
         clear.addEventListener("click", () => {
-            table_instance.setSize(500,
-                100
-            );
+            table_instance.searchInFilter('女');
         });
     });
 

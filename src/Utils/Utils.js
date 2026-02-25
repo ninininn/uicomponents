@@ -222,11 +222,6 @@ export class BaseComponent {
         this._eventListeners = []; // record eventListeners
     }
 
-    get cache() {
-        let initData = createCacheData(this.cacheKey, {});
-        return initData;
-    }
-
     // 資料初始化
     _init() {
         this.render();
@@ -311,7 +306,8 @@ const DATA_TYPES_FLAGS = {
     UNDEFINED: '[object Undefined]',
     NULL: '[object Null]',
     SYMBOL: '[object Symbol]',
-    DATE: '[Object Date]',
+    DATE: '[object Date]',
+    BOOLEAN: '[object Boolean]',
 };
 export function defineTypeof(variable, type) {
     const type_flag = type.toUpperCase() in DATA_TYPES_FLAGS ? DATA_TYPES_FLAGS[type.toUpperCase()] : null;
@@ -323,19 +319,27 @@ export function defineTypeof(variable, type) {
  * @param {string} key 指定排序的key
  * @param {string} sortRule 升序/降序/自訂/群組
  */
-export function sorting(arr, { key, sortRule = 'asc' }) {
-    arr.sort(function (data1, data2) {
-        const v1 = data1[key];
-        const v2 = data2[key];
-        //1.數字|數字
-        if (defineTypeof(v1, "num") && defineTypeof(v2, "num")) {
-            return data1 - data2;
-        }
-        //2.日期|日期
-        //3.預設字典序
-        //4.指定key
-    });
+function defaultCompare(a, b) {
+    const va = Number(a);
+    const vb = Number(b);
+    // num|num
+    if (!isNaN(va) && !isNaN(vb)) return va - vb;
+
+    // !num|!num
+    if (isNaN(va) && isNaN(vb)) return a > b ? 1 : -1;
+    return 0;
+
 }
+export function sorter({ key, rule, data }) {
+    const isDesc = rule === 'none' ? 0 : rule === 'descending' ? -1 : 1;
+    const clone = data ? JSON.parse(JSON.stringify(data)) : [];
+
+    clone.sort(function comparator(a, b) {
+        const result = defaultCompare(a.data[key], b.data[key]);
+        if (result !== 0) return result * isDesc;
+    });
+    return clone;
+};
 
 /**
  * State 控制器

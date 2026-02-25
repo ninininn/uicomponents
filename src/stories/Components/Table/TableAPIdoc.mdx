@@ -91,7 +91,7 @@ let table = new Table(config);
             <td className="font-bold text-center">sort</td>
             <td className="text-center">asc</td>
             <td className="text-center">string / boolean</td>
-            <td>是否有排序功能，`false`關閉排序功能，asc(升冪)、desc(降冪)</td>
+            <td>是否有排序功能，`false`關閉排序功能，`true`預設為 asc(升冪)、desc(降冪)</td>
             <td>`false`關閉排序功能 / asc(升冪) / desc(降冪)</td>
           </tr>
           <tr>
@@ -114,6 +114,12 @@ let table = new Table(config);
             <td>自訂義tablecell的渲染函式</td>
           </tr>
           <tr>
+            <td className="font-bold text-center">print</td>
+            <td className="text-center">`true`</td>
+            <td className="text-center">boolean</td>
+            <td>列印是否要顯示</td>
+          </tr>
+          <tr>
             <td className="font-bold text-center">visible</td>
             <td className="text-center">`true`</td>
             <td className="text-center">boolean</td>
@@ -130,6 +136,18 @@ let table = new Table(config);
             <td className="text-center">-</td>
             <td className="text-center">number</td>
             <td>控制合併欄數量</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">minWidth</td>
+            <td className="text-center">`undefined`</td>
+            <td className="text-center">number</td>
+            <td>最小寬度(單位為px)</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">maxWidth</td>
+            <td className="text-center">`undefined`</td>
+            <td className="text-center">number</td>
+            <td>最大寬度(單位為px)</td>
           </tr>
         </tbody>
       </table>
@@ -242,16 +260,36 @@ let table = new Table(config);
         <td>重新呼叫API抓資料</td>
       </tr>
       <tr>
-        <td>`.updateRow(index,data)`</td>
-        <td>更新指定列資料</td>
-      </tr>
-      <tr>
         <td>`.getTableData()`</td>
         <td>取得表格所有資料</td>
       </tr>
       <tr>
-        <td>`.getSelected()`</td>
+        <td>`.getRowData(index)`</td>
+        <td>取得指定列資料</td>
+      </tr>
+      <tr>
+        <td>`.getSelectedRows()`</td>
         <td>取得表格內所有選取的Row</td>
+      </tr>
+      <tr>
+        <td>`.getCurrentData(pageNum)`</td>
+        <td>取得當前頁rows的data資料</td>
+      </tr>
+      <tr>
+        <td>`.getCurrentPage()`</td>
+        <td>取得當前頁碼</td>
+      </tr>
+      <tr>
+        <td>`.checkPageSelected()`</td>
+        <td>檢查當頁全部rows是否全選</td>
+      </tr>
+      <tr>
+        <td>`.selectedFullPage(pageNum)`</td>
+        <td>全選當前頁所有列</td>
+      </tr>
+      <tr>
+        <td>`.getFiltedRows(fn)`</td>
+        <td>取得指定過濾條件data</td>
       </tr>
       <tr>
         <td>`.exportTable()`</td>
@@ -268,8 +306,7 @@ let table = new Table(config);
     </tbody>
   </table>
 </div>
---- 
-# Pagination 元件
+--- # Pagination 元件
 
 <div className="sb-unstyled note-msg">
   詳細說明可參考Pagination元件說明頁(尚未建置...)
@@ -323,15 +360,13 @@ let table = new Table(config);
       </table>
     </div>
 
-<br />
----
+## <br />
 
 # 子元件
 
 <div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>
 <br />
-<h3 id="TableHeader">TableHeader</h3>
-- **properties 屬性**
+<h3 id="TableHeader">TableHeader</h3>- **properties 屬性**
 <div className="sb-unstyled table-container overflow-hidden">
   <table className="sb-unstyled table-content">
     <thead>
@@ -402,7 +437,7 @@ let table = new Table(config);
 - **options 參數可設定的私有屬性**
   - `triggerType` 觸發動作類型，可以選擇hover|click|none
   - `offset` 距離triggerElem的距離
-  <br />
+    <br />
 
 ---
 

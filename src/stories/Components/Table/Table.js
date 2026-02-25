@@ -1,7 +1,7 @@
 import {
   BaseComponent,
   Dom,
-  findElem, defineTypeof
+  findElem, defineTypeof, sorter
 } from "../../../Utils/Utils";
 
 import { Checkbox } from "../Checkbox/Checkbox";
@@ -24,7 +24,7 @@ var defaultTableConfig = {
   classes: ["table-container"],
   cols: [],
   selection: "checkbox",
-  tools: ["group", "exports", "print"],
+  tools: ["group", "exports", "print", "search"],
 };
 
 var defaultColumnConfig = {
@@ -62,14 +62,17 @@ export class Table extends BaseComponent {
       type: "table",
       colNum: this.config.selection ? colsCount + 1 : colsCount,
     });
-
-    this._data = dataArr?.map((data, i) => Object.assign({}, { index: i + 1, data: data }));
+    this._cache = dataArr?.map((data, i) => Object.assign({}, { index: i + 1, data: data }));
+    this._data = this._cache ? JSON.parse(JSON.stringify(this._cache)) : [];
     this.dataCounts = this.data?.length || 0;
 
     this._createPagination(); //建立對應分頁元件
     this._init();
   }
 
+  set cache(value) {
+    this._cache = value.map((data, i) => Object.assign({}, { index: i + 1, data: data }));
+  }
   get config() {
     return this._config;
   }
@@ -93,16 +96,8 @@ export class Table extends BaseComponent {
       this._createToolBar(this.config.tools);
     }
     this.selectedRows = {};
-    this._render();
-    this._bindEvent();
-  }
-
-  //樣式渲染(UI snpshot)把目前狀態→轉成畫面
-  //根據目前的 state 產出畫面結構
-  async _render() {
     super.setTheme(this.config.theme);
     Dom.setProperty(this._elem, "--theme", this._theme);
-
     //組裝
     this.table.id = this.id;
 
@@ -111,7 +106,6 @@ export class Table extends BaseComponent {
     //class設定
     Dom.addClass(this.table, ["table"]);
     Dom.addClass(this._elem, this.config.classes);
-
     //判斷是否有容器
     let container = findElem(this.config.container);
     if (!container) {
@@ -125,6 +119,13 @@ export class Table extends BaseComponent {
     //放入分頁元件
     this._elem.after(this._pagination.getElem());
 
+    this._render();
+    this._bindEvent();
+  }
+
+  //樣式渲染(UI snpshot)把目前狀態→轉成畫面
+  //根據目前的 state 產出畫面結構
+  async _render() {
     if (this.dataCounts === 0) {
       this._showEmpty();
     }
@@ -141,7 +142,8 @@ export class Table extends BaseComponent {
         if (!data || data.length === 0) {
           this._showEmpty();
         } else {
-          this.setData(data.responseData);
+          this.cache = data.responseData;
+          this.setData(this.cache);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -150,7 +152,7 @@ export class Table extends BaseComponent {
       }
     } else if (this.dataCounts > 0) {
       this._pagination.renderPage(this.dataCounts); //更新pagination資料數量
-      this.selectedRows = {};
+      // this.selectedRows = {};
       this._showRows();//渲染部分TableRow
     } else {
       this._showEmpty();
@@ -181,6 +183,8 @@ export class Table extends BaseComponent {
       this.tableBody,
       "click",
       function (e) {
+        e.stopPropagation();
+        console.log(e.target);
         let isChecked;
         if (e.target.nodeName === 'INPUT') {
           isChecked = e.target.checked;
@@ -297,6 +301,26 @@ export class Table extends BaseComponent {
           };
           btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: './print.svg', handler: btnHandler });
           break;
+        case 'search':
+          const searchGroup = document.createElement("div");
+          Dom.addClass(searchGroup, ["table-search"]);
+          const searchInput = document.createElement("input");
+          searchInput.type = 'text';
+
+          btn = Dom.setButtons({
+            classes: ["btn-sm", "outline-btn", "relative"],
+            icon: './search.svg',
+            handler: (e) => {
+              e.stopImmediatePropagation();
+              if (e.target === btn) {
+                console.log(searchInput.value, this);
+                this.searchInFilter(searchInput.value);
+              }
+            }
+          });
+          searchGroup.append(searchInput);
+          toolBar.appendChild(searchGroup);
+          break;
         default:
           toolBar.appendChild(Dom.setButtons(feature));
           break;
@@ -367,22 +391,28 @@ export class Table extends BaseComponent {
 
   //依據欄位排序設定排序
   _rowSort(field, rule) {
-    //TODO 判斷rule資料型別，如果是function則作為sortFunc使用
-    if (defineTypeof(rule, 'func')) {
-      this.data.sort(rule).reverse();
+    if (rule === 'none') {
+      this._data = [...this._cache];
     } else {
-      switch (rule) {
-        case 'asc'://小到大 升冪
-          this.data.sort((x, y) => x.data[field] - y.data[field]);
-          break;
-        case 'dec'://大到小 降冪
-          this.data.sort((x, y) => y.data[field] - x.data[field]);
-          break;
-        default:
-          this.data.sort();
-          break;
-      }
+      //TODO 判斷rule資料型別，如果是function則作為sortFunc使用
+      this._data = sorter({ key: field, rule: rule, data: this.data });
+      // this.data.sort(sorter({ key: field, rule: rule, data: this.data }));
     }
+    // if (defineTypeof(rule, 'func')) {
+    //   this.data.sort(rule).reverse();
+    // } else {
+    // switch (rule) {
+    //   case 'ascending'://小到大 升冪
+    //     this.data.sort((x, y) => x.data[field] - y.data[field]);
+    //     break;
+    //   case 'descending'://大到小 降冪
+    //     this.data.sort((x, y) => y.data[field] - x.data[field]);
+    //     break;
+    //   default:
+    //     this.data.sort();
+    //     break;
+    // }
+    //}
 
     this._showRows();
   }
@@ -399,7 +429,7 @@ export class Table extends BaseComponent {
   _showRows() {
     const colConfig = this.config.cols.filter(col => col.visible !== false);
     const pageData = this.getCurrentData();
-    console.log("showRow's pageData:", pageData);
+    // console.log("showRow's pageData:", pageData);
     let rowFragment = document.createDocumentFragment();
 
     pageData.forEach((dataObj, i) => {
@@ -422,7 +452,6 @@ export class Table extends BaseComponent {
     rows.forEach(row => {
       const index = parseInt(row.dataset.index);
       const isChecked = this.selectedRows[index] || false;
-
       const checkbox = row.querySelector('input[type="checkbox"]');
 
       if (checkbox) checkbox.checked = isChecked;
@@ -437,7 +466,6 @@ export class Table extends BaseComponent {
   //[外部控制]-指定點擊row觸發的函式
   on(callbackFn) {
     this.callbacks.push(callbackFn);
-    console.log(this);
   }
 
 
@@ -472,15 +500,30 @@ export class Table extends BaseComponent {
     return selectedData;
   }
 
+  //[外部控制]-關鍵字過濾
+  searchInFilter(keyWord) {
+    if (keyWord === '') { this.setData(this._cache); return; };
+    const searchedData = this.getFiltedRows((rowData) => {
+      if (Object.values(rowData).indexOf(keyWord) > 0) {
+        return rowData;
+      }
+    });
+
+    // this._data = searchedData;
+    // this._showRows();
+    this.setData(searchedData);
+  }
+
   //[外部控制]-取得指定過濾條件DataRow
   getFiltedRows(fn) {
-    let filtedDataRow = this._data.filter(fn);
+    let filtedDataRow = this._cache.filter(obj => fn(obj.data));
     return filtedDataRow;
   }
 
   //[外部控制]-直接放入資料
   setData(dataArr) {
-    this._data = dataArr.map((data, i) => Object.assign({}, { index: i + 1, data: data }));;
+    // this._cache = dataArr.map((data, i) => Object.assign({}, { index: i + 1, data: data }));
+    this._data = dataArr ? JSON.parse(JSON.stringify(dataArr)) : [];
     this.dataCounts = this.data.length;
     this._pagination.renderPage(this.dataCounts); //更新pagination資料數量
 
@@ -488,6 +531,13 @@ export class Table extends BaseComponent {
     this._showRows();//渲染部分TableRow
     this._render();
 
+    return this;
+  }
+
+  //[外部控制]-勾選指定列
+  setSelected(index) {
+    this.selectedRows[index] = true;
+    this.restoreUIstate();
     return this;
   }
 
@@ -512,7 +562,7 @@ export class Table extends BaseComponent {
       controlPage: this.config.controlPage,
       handler: ({ size }) => {
         this.config.limits = size;
-        this.restoreUIstate();
+        // this.restoreUIstate();
         this._showRows();
       },
     });
@@ -542,13 +592,9 @@ export class Table extends BaseComponent {
 
   //清除所有選取狀態
   clearSelected() {
-    let totalPages = this._pagination.total;
-    for (let i = 1; i <= totalPages; i++) {
-      this.selectedFullPage(i, false);
-      this.restoreUIstate();
-    }
-
-    this.tableHeader.selection.setChecked(false);
+    const selectedKeys = Object.keys(this.selectedRows);
+    selectedKeys.forEach(key => this.selectedRows[key] = false);
+    this.restoreUIstate();
   }
 }
 
@@ -580,38 +626,39 @@ class TableHeader extends BaseComponent {
     // this._bindEvent();
   }
 
-  _bindEvent() {
-    function setSortCursor(e) {
-      e.stopPropagation();
-      let sort = e.currentTarget.dataset.sort;
-      if (sort) {
-        let ariaSort = e.currentTarget.getAttribute("aria-sort");
-        let tableSortWith, updateSort;
-        switch (sort) {
-          case "asc":
-            updateSort = 'desc';
-            tableSortWith = "desc";
-            break;
-          case "desc":
-            updateSort = 'asc';
-            tableSortWith = "asc";
-            break;
-          case "custom":
-            updateSort = 'custom';
-            tableSortWith = this.cols.find((col) => col.field === e.currentTarget.dataset.field).sort;
-            break;
-        }
-        this.table._rowSort(e.currentTarget.dataset.field, tableSortWith);
-        Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort);//set to the toggle one.
-        e.currentTarget.setAttribute("aria-sort", `${ariaSort === 'ascending' ? 'descending' : 'ascending'}`);//for accessibility
-      }
-    }
-    if (this.cols.some((col) => col.sort)) {
-      this.getElem().querySelectorAll("[data-sort]").forEach((th) => {
-        this.onevent(th, "click", setSortCursor.bind(this));
-      });
-    }
-  }
+  // _bindEvent() {
+  //   function setSortCursor(e) {
+  //     e.stopPropagation();
+  //     let sort = e.currentTarget.dataset.sort;
+  //     if (!sort) return;
+
+  //     let ariaSort = e.currentTarget.getAttribute("aria-sort");
+  //     let tableSortWith, updateSort;
+  //     switch (sort) {
+  //       case "ascending":
+  //         updateSort = 'descending';
+  //         tableSortWith = "descending";
+  //         break;
+  //       case "descending":
+  //         updateSort = 'ascending';
+  //         tableSortWith = "ascending";
+  //         break;
+  //       case "custom":
+  //         updateSort = 'custom';
+  //         tableSortWith = this.cols.find((col) => col.field === e.currentTarget.dataset.field).sort;
+  //         break;
+  //     }
+  //     this.table._rowSort(e.currentTarget.dataset.field, tableSortWith);
+  //     Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort);//set to the toggle one.
+  //     e.currentTarget.setAttribute("aria-sort", `${ariaSort === 'ascending' ? 'descending' : 'ascending'}`);//for accessibility
+
+  //   }
+  //   if (this.cols.some((col) => col.sort)) {
+  //     this.getElem().querySelectorAll("[data-sort]").forEach((th) => {
+  //       this.onevent(th, "click", setSortCursor.bind(this));
+  //     });
+  //   }
+  // }
 
   _render() {
     const oldFragment = document.createDocumentFragment();
@@ -656,9 +703,10 @@ class TableHeader extends BaseComponent {
     if (!visible) return;
 
     let th = document.createElement("th");
+    let td = document.createElement("td");
     let sortIcon = document.createElement("span");
     Dom.setAttribute(th, DATA_ATTR_FIELD, field);
-    Dom.setText(sortIcon, title);
+    Dom.setText(td, title);
     if (maxWidth) th.style.maxWidth = `${maxWidth}px`;
     if (minWidth) th.style.minWidth = `${minWidth}px`;
     if (sort) {
@@ -666,14 +714,17 @@ class TableHeader extends BaseComponent {
         Dom.setAttribute(th, DATA_ATTR_SORT, 'custom'); //初始沒有排序
         th.setAttribute("aria-sort", "none");//for accessibility
       } else {
-        Dom.setAttribute(th, DATA_ATTR_SORT, sort);
-        th.setAttribute("aria-sort", `${sort === 'asc' ? 'ascending' : 'descending'}`);//for accessibility
-      }
-      sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        const sortAttr = defineTypeof(sort, 'boolean') ? 'none' : sort;
+        Dom.setAttribute(th, DATA_ATTR_SORT, sortAttr);
+        th.setAttribute("aria-sort", sortAttr);
+        sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
 <path d="M4.24999 10.7617V15C4.24999 15.4142 4.58578 15.75 4.99999 15.75C5.4142 15.75 5.74999 15.4142 5.74999 15V10.7617C5.83248 10.875 5.9131 10.9879 5.9912 11.0967L5.9958 11.1031C6.1467 11.3133 6.30972 11.5404 6.43847 11.6855C6.71335 11.9954 7.18818 12.0239 7.49804 11.749C7.80761 11.4742 7.83604 11.0002 7.56151 10.6904C7.49513 10.6156 7.38199 10.4613 7.20995 10.2217L7.19283 10.1978C7.0366 9.98019 6.84876 9.71852 6.65526 9.46875C6.45751 9.2135 6.23286 8.94285 6.00487 8.73047C5.89083 8.62424 5.75714 8.51521 5.60937 8.42871C5.46887 8.34647 5.25683 8.25 4.99999 8.25C4.74316 8.25 4.53111 8.34647 4.39062 8.42871C4.24284 8.51521 4.10915 8.62424 3.99511 8.73047C3.76712 8.94285 3.54247 9.2135 3.34472 9.46875C3.14409 9.72771 2.94956 9.99947 2.79003 10.2217C2.61799 10.4613 2.50485 10.6156 2.43847 10.6904C2.16394 11.0002 2.19237 11.4742 2.50194 11.749C2.8118 12.0239 3.28663 11.9954 3.56151 11.6855C3.69026 11.5403 3.85328 11.3133 4.00418 11.1031L4.00878 11.0967C4.08689 10.9879 4.1675 10.875 4.24999 10.7617Z" fill="currentColor"/>
 </svg>
 `;
+        td.appendChild(sortIcon);
+      };
+
       this.onevent(th, "click", setSortCursor.bind(this));
     }
     if (resize) {
@@ -686,33 +737,42 @@ class TableHeader extends BaseComponent {
       Dom.setAttribute(th, "print", "print");
     }
 
-    th.appendChild(sortIcon);
+    th.appendChild(td);
 
     //add sorting handler
     function setSortCursor(e) {
       e.stopPropagation();
-      let sort = e.currentTarget.dataset.sort;
-      if (sort) {
-        let ariaSort = e.currentTarget.getAttribute("aria-sort");
-        let tableSortWith, updateSort;
-        switch (sort) {
-          case "asc":
-            updateSort = 'desc';
-            tableSortWith = "desc";
-            break;
-          case "desc":
-            updateSort = 'asc';
-            tableSortWith = "asc";
-            break;
-          case "custom":
-            updateSort = 'custom';
-            tableSortWith = this.cols.find((col) => col.field === e.currentTarget.dataset.field).sort;
-            break;
+      const otherTh = this.getElem().querySelectorAll("th");
+      otherTh.forEach(th => {
+        if (th !== e.currentTarget && th.dataset) {
+          Dom.setAttribute(th, DATA_ATTR_SORT, "none");
+          th.setAttribute("aria-sort", "none");
         }
-        this.table._rowSort(e.currentTarget.dataset.field, tableSortWith);
-        Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort);//set to the toggle one.
-        e.currentTarget.setAttribute("aria-sort", `${ariaSort === 'ascending' ? 'descending' : 'ascending'}`);//for accessibility
+      });
+      const field = e.currentTarget.dataset.field;
+      const sort = e.currentTarget.dataset.sort;
+      if (!sort) return;
+
+      let ariaSort = e.currentTarget.getAttribute("aria-sort");
+      let tableSortWith, updateSort;
+      switch (sort) {
+        case "ascending":
+          updateSort = 'descending';
+          break;
+        case "descending":
+          updateSort = 'ascending';
+          break;
+        case "custom":
+          updateSort = 'custom';
+          tableSortWith = this.cols.find((col) => col.field === field).sort;
+          break;
+        default:
+          updateSort = 'ascending';
+          break;
       }
+      Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort);//set to the toggle one.
+      e.currentTarget.setAttribute("aria-sort", updateSort);
+      this.table._rowSort(field, updateSort);
     }
 
 
