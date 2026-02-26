@@ -1,4 +1,4 @@
-import { Dom, debounce } from "../../../Utils";
+import { Dom, debounce } from "../../../Utils/Utils";
 import { DraggableItem } from "./DraggableItem";
 import "./DraggableItem.css";
 

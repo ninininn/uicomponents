@@ -20,101 +20,32 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
 @layer components {
 
-  /*table容器*/
-  .table-container {
-    --theme: var(--themeColor, var(--color-primary-100));
-    @apply relative w-full h-fit max-w-full max-h-80 overflow-auto scroll-smooth isolate;
+  .tabs {
+    --theme: var(--theme);
+    @apply flex justify-center items-center gap-10
   }
 
-  .table-container label {
-    @apply justify-center
+  .tab-list {
+    @apply justify-center gap-3 px-3 py-2 [&_.tab-item]:flex [&_.tab-item]:cursor-pointer [&_.tab-item]:gap-2 [&_.tab-item]:px-6 [&_.tab-item]:relative [&_.tab-item]:overflow-hidden
   }
 
-  .table:empty {
-    @apply mx-auto w-10/12 h-20
+  .tab-list .tab-item:not(:last-of-type) {
+    @apply border-r-2 border-r-(--theme)
   }
 
-  .table-skeleton {
-    @apply w-full h-full max-h-full overflow-hidden bg-white;
+  .tab-list .tab-item[data-tabselected]::before {
+    @apply top-1/2 -translate-y-1/2 opacity-100
   }
 
-  /*table本體*/
-  .table {
-    /*checkbox變數*/
-    --themeColor: var(--theme);
-    @apply mr-2 bg-white table-auto w-full;
+  .tab-list .tab-item::before {
+    @apply absolute content-[''] inline-block w-3 aspect-square bg-(--theme) rounded-full opacity-10 -translate-x-5 transition-all duration-75 -translate-y-full ease-in-out
   }
 
-  .table thead {
-    --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
-    @apply w-full sticky top-0 overflow-hidden [&_th]:bg-[var(--theme)] [&_th:is(:first-child)]:rounded-l-xs [&_th:is(:last-child)]:rounded-r-xs tracking-[1px] text-white select-none text-nowrap hidden md:table-header-group;
+  .tabs[aria-orientation="vertical"] .tab-list {
+    @apply flex
   }
 
-  .table thead th[data-sort] {
-    --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
-    --themeUnactive: color-mix(in srgb, var(--theme) 80%, var(--color-black) 20%);
-    --themeActive: color-mix(in srgb, var(--theme) 10%, var(--color-black) 90%);
-    @apply cursor-pointer [&_span]:flex [&_span]:justify-center [&_span]:items-center [&_span]:gap-1 [&_.icon]:w-6 [&_.icon]:h-6 [&_.icon]:text-(--themeColor) aria-[sort='descending']:[&_.icon]:rotate-x-180 aria-[sort='descending']:[&_.icon]:transition-all aria-[sort='descending']:[&_.icon]:duration-75 hover:[&_.icon]:text-(--themeActive) relative;
-  }
-
-  .table tbody {
-    @apply w-full h-full min-h-50 [&_.table-empty]:text-center;
-  }
-
-  .table tbody tr {
-    --hover-text-theme: color-mix(in srgb, var(--themeColor) 60%, var(--color-black) 40%);
-    @apply w-full border-b border-gray-300 transition-all bg-[#fff] odd:bg-gray-50 odd:data-[rowSelected]:bg-[var(--theme)]/40 data-[rowSelected]:bg-[var(--theme)]/20 data-[rowSelected]:hover:bg-gray-100 has-[td:hover]:bg-gray-100 cursor-pointer hover:[&_.checkbox]:border-[var(--theme)] hover:[&_.checkbox]:ring-2 hover:[&_.checkbox]:ring-[var(--theme)]/50 [&_.checkbox]:checked:text-[var(--theme)];
-  }
-
-  .table thead th,
-  .table td {
-    @apply py-1.5 px-3 text-[0.5em];
-  }
-
-  @media screen and (max-width: 500px) {
-
-    .table :is(tr, td) {
-      @apply block
-    }
-
-    .table td:not(:first-child)::before {
-      @apply content-[attr(data-field)] bg-(--themeColor) block;
-    }
-
-  }
-
-  .table-tools {
-    @apply flex gap-2 justify-end w-full mb-2 pr-5 items-center relative
-  }
-
-
-  .table-resizer {
-    @apply absolute cursor-col-resize w-0.5 select-none hover:[.resizing]:border-r-2 right-0 hover:bg-primary-900 transition-all
-  }
-
-  .pagination {
-    --theme: var(--themeColor, var(--color-primary-500));
-    @apply flex gap-2 my-3 pr-5 items-center
-  }
-
-  .page-item {
-    @apply aspect-square hover:bg-[var(--theme)] rounded-full w-8 select-none transition-all duration-75 disabled:text-gray-300 disabled:pointer-events-none;
-  }
-
-  .page-item:not([disabled]) {
-    @apply hover:bg-[var(--theme)]/30 hover:text-[var(--theme)] cursor-pointer
-  }
-
-  .page-item[data-currentPage] {
-    @apply bg-[var(--theme)] text-white;
-  }
-
-  .pagination-jump {
-    @apply flex grow-[2] mr-3 justify-end gap-1 items-center text-gray-400 text-nowrap select-none [&>div]:max-w-20
-  }
-
-  .tools-popover {
-    --position-x: 5rem;
-    @apply absolute top-full -translate-x-[var(--position-x)] p-3 bg-white rounded-sm shadow-sm z-10 invisible transition-[visibility] ease-in-out flex flex-col
+  .panel-container {
+    @apply py-2 px-3 rounded-lg max-w-[80%]
   }
 }

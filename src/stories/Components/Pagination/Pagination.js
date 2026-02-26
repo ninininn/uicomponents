@@ -9,6 +9,7 @@ import { Dropdown } from "../Dropdown/Dropdown";
 import { Notification } from '../Notification/Notification';
 
 //Pagination 分頁元件
+const PAGE_LIMITS = [10, 20, 25, 50, 100, 1000];
 const DATA_ATTR_CUR_PAGE = "currentPage";
 const DATA_ATTR_PREV = "prev";
 const DATA_ATTR_NEXT = "next";
