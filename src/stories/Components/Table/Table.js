@@ -488,7 +488,7 @@ export class Table extends BaseComponent {
   searchInFilter(keyWord) {
     if (keyWord === '') { this.setData(this._cache); return; };
     const searchedData = this.getFiltedRows((rowData) => {
-      if (Object.values(rowData).indexOf(keyWord) > 0) {
+      if (Object.values(rowData).join("").includes(keyWord)) {
         return rowData;
       }
     });
@@ -605,42 +605,7 @@ class TableHeader extends BaseComponent {
       this._elem.querySelector("tr").appendChild(th);
     }
     this._elem.querySelector("tr").appendChild(this._createHead());
-    // this._bindEvent();
   }
-
-  // _bindEvent() {
-  //   function setSortCursor(e) {
-  //     e.stopPropagation();
-  //     let sort = e.currentTarget.dataset.sort;
-  //     if (!sort) return;
-
-  //     let ariaSort = e.currentTarget.getAttribute("aria-sort");
-  //     let tableSortWith, updateSort;
-  //     switch (sort) {
-  //       case "ascending":
-  //         updateSort = 'descending';
-  //         tableSortWith = "descending";
-  //         break;
-  //       case "descending":
-  //         updateSort = 'ascending';
-  //         tableSortWith = "ascending";
-  //         break;
-  //       case "custom":
-  //         updateSort = 'custom';
-  //         tableSortWith = this.cols.find((col) => col.field === e.currentTarget.dataset.field).sort;
-  //         break;
-  //     }
-  //     this.table._rowSort(e.currentTarget.dataset.field, tableSortWith);
-  //     Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort);//set to the toggle one.
-  //     e.currentTarget.setAttribute("aria-sort", `${ariaSort === 'ascending' ? 'descending' : 'ascending'}`);//for accessibility
-
-  //   }
-  //   if (this.cols.some((col) => col.sort)) {
-  //     this.getElem().querySelectorAll("[data-sort]").forEach((th) => {
-  //       this.onevent(th, "click", setSortCursor.bind(this));
-  //     });
-  //   }
-  // }
 
   _render() {
     const oldFragment = document.createDocumentFragment();
@@ -681,14 +646,25 @@ class TableHeader extends BaseComponent {
   }
 
   _createCol(colconfig) {
-    let { field, title, sort, visible, resize, print, maxWidth, minWidth } = colconfig;
+    let { align, field, title, sort, visible, resize, print, maxWidth, minWidth } = colconfig;
     if (!visible) return;
 
     let th = document.createElement("th");
-    let td = document.createElement("td");
     let sortIcon = document.createElement("span");
     Dom.setAttribute(th, DATA_ATTR_FIELD, field);
-    Dom.setText(td, title);
+    Dom.setText(th, title);
+    switch (align) {
+      case 'right':
+        Dom.addClass(th, ["text-right"]);
+        break;
+      case 'center':
+        Dom.addClass(th, ["text-center"]);
+        break;
+      default:
+        Dom.addClass(th, ["text-left"]);
+        break;
+
+    }
     if (maxWidth) th.style.maxWidth = `${maxWidth}px`;
     if (minWidth) th.style.minWidth = `${minWidth}px`;
     if (sort) {
@@ -704,7 +680,7 @@ class TableHeader extends BaseComponent {
 <path d="M4.24999 10.7617V15C4.24999 15.4142 4.58578 15.75 4.99999 15.75C5.4142 15.75 5.74999 15.4142 5.74999 15V10.7617C5.83248 10.875 5.9131 10.9879 5.9912 11.0967L5.9958 11.1031C6.1467 11.3133 6.30972 11.5404 6.43847 11.6855C6.71335 11.9954 7.18818 12.0239 7.49804 11.749C7.80761 11.4742 7.83604 11.0002 7.56151 10.6904C7.49513 10.6156 7.38199 10.4613 7.20995 10.2217L7.19283 10.1978C7.0366 9.98019 6.84876 9.71852 6.65526 9.46875C6.45751 9.2135 6.23286 8.94285 6.00487 8.73047C5.89083 8.62424 5.75714 8.51521 5.60937 8.42871C5.46887 8.34647 5.25683 8.25 4.99999 8.25C4.74316 8.25 4.53111 8.34647 4.39062 8.42871C4.24284 8.51521 4.10915 8.62424 3.99511 8.73047C3.76712 8.94285 3.54247 9.2135 3.34472 9.46875C3.14409 9.72771 2.94956 9.99947 2.79003 10.2217C2.61799 10.4613 2.50485 10.6156 2.43847 10.6904C2.16394 11.0002 2.19237 11.4742 2.50194 11.749C2.8118 12.0239 3.28663 11.9954 3.56151 11.6855C3.69026 11.5403 3.85328 11.3133 4.00418 11.1031L4.00878 11.0967C4.08689 10.9879 4.1675 10.875 4.24999 10.7617Z" fill="currentColor"/>
 </svg>
 `;
-        td.appendChild(sortIcon);
+        th.appendChild(sortIcon);
       };
 
       this.onevent(th, "click", setSortCursor.bind(this));
@@ -719,7 +695,7 @@ class TableHeader extends BaseComponent {
       Dom.setAttribute(th, "print", "print");
     }
 
-    th.appendChild(td);
+    // th.appendChild(td);
 
     //add sorting handler
     function setSortCursor(e) {
@@ -756,7 +732,6 @@ class TableHeader extends BaseComponent {
       e.currentTarget.setAttribute("aria-sort", updateSort);
       this.table._rowSort(field, updateSort);
     }
-
 
     return th;
   }

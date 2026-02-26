@@ -235,12 +235,7 @@ export const Table = {
       {
         field: 'operate', title: '操作', sort: false, fixed: false,
         template: function (data) {
-          //手動測試資料為undefined
-          if (data.index === 1) {
-            data = undefined;
-          }
           let isSelectable = Boolean(data);
-
           let buttons = [{
             classes: ["btn-sm", `${isSelectable ? "btn-success" : "btn-secondary"}`], text: "查看細節",
             handler: function (e) {
