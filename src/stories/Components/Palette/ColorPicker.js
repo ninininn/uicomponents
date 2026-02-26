@@ -56,13 +56,38 @@ export class ColorPicker extends BaseComponent {
   _bindEvent() {
     const huePicker = this._picker.querySelector(".hue-range .picker-btn");
     const alphaPicker = this._picker.querySelector(".alpha-range .picker-btn");
-    function togglePicker() {
-      const { x, y } = this._addBtn.getBoundingClientRect();
-      Dom.toggleClass(this._picker, ["visible"]);
-    }
+    const canvasPicker = this._picker.querySelector(".color-range .picker-btn");
+
+    let startX, startY, endX, endY;
     this.onevent(this._addBtn, "click", togglePicker.bind(this));
+    this.onevent(canvasPicker, "pointerdown", (e) => {
+      console.log("pointer down");
+      e.preventDefault();
+      canvasPicker.setPointerCapture(1);
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+    this.onevent(this._picker, "pointermove", (e) => {
+      endX = e.clientX;
+      endY = e.clientY;
+    });
+    this.onevent(canvasPicker, "pointerup", (e) => {
+      e.preventDefault();
+      checkPickerPosition();
+    });
     this.onevent(huePicker, "pointerdown", () => { console.log("pointerdown!"); });
     this.onevent(alphaPicker, "pointerdown", () => { console.log("pointerdown!"); });
+
+    function togglePicker() {
+      Dom.toggleClass(this._picker, ["visible"]);
+    }
+
+    function checkPickerPosition() {
+      console.log(endY);
+      canvasPicker.style.left = `${endX}px`;
+      canvasPicker.style.top = `${endY}px`;
+      console.log(canvasPicker);
+    }
   }
 
   _createCanvas() {
