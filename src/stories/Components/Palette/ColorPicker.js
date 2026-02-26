@@ -54,16 +54,16 @@ export class ColorPicker extends BaseComponent {
   }
 
   _bindEvent() {
-    const huePicker = this._picker.querySelector(".hue-range .picker-btn");
-    const alphaPicker = this._picker.querySelector(".alpha-range .picker-btn");
-    const canvasPicker = this._picker.querySelector(".color-range .picker-btn");
+    const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
+    const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
+    const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
 
     let startX, startY, endX, endY;
     this.onevent(this._addBtn, "click", togglePicker.bind(this));
-    this.onevent(canvasPicker, "pointerdown", (e) => {
+    this.onevent(canvasThumb, "pointerdown", (e) => {
       console.log("pointer down");
       e.preventDefault();
-      canvasPicker.setPointerCapture(1);
+      canvasThumb.setPointerCapture(1);
       startX = e.clientX;
       startY = e.clientY;
     });
@@ -71,12 +71,12 @@ export class ColorPicker extends BaseComponent {
       endX = e.clientX;
       endY = e.clientY;
     });
-    this.onevent(canvasPicker, "pointerup", (e) => {
+    this.onevent(canvasThumb, "pointerup", (e) => {
       e.preventDefault();
       checkPickerPosition();
     });
-    this.onevent(huePicker, "pointerdown", () => { console.log("pointerdown!"); });
-    this.onevent(alphaPicker, "pointerdown", () => { console.log("pointerdown!"); });
+    this.onevent(hueThumb, "pointerdown", () => { console.log("pointerdown!"); });
+    this.onevent(alphaThumb, "pointerdown", () => { console.log("pointerdown!"); });
 
     function togglePicker() {
       Dom.toggleClass(this._picker, ["visible"]);
@@ -84,9 +84,9 @@ export class ColorPicker extends BaseComponent {
 
     function checkPickerPosition() {
       console.log(endY);
-      canvasPicker.style.left = `${endX}px`;
-      canvasPicker.style.top = `${endY}px`;
-      console.log(canvasPicker);
+      canvasThumb.style.left = `${endX}px`;
+      canvasThumb.style.top = `${endY}px`;
+      console.log(canvasThumb);
     }
   }
 
@@ -114,23 +114,23 @@ export class ColorPicker extends BaseComponent {
 
     context.fillStyle = darkGradient;
     context.fillRect(0, 0, w, h);
-    const canvasPicker = document.createElement("button");
-    const huePicker = document.createElement("button");
-    const alphaPicker = document.createElement("button");
-    const alphaRange = document.createElement("div");
-    const hueRange = document.createElement("div");
-    canvasContainer.append(canvas, canvasPicker);
-    alphaRange.append(alphaPicker);
-    hueRange.append(huePicker);
-    pickerContainer.append(canvasContainer, hueRange, alphaRange);
-    Dom.addClass(canvasContainer, ["color-range"]);
-    Dom.addClass(alphaRange, ["alpha-range"]);
-    Dom.addClass(hueRange, ["hue-range"]);
+    const canvasThumb = document.createElement("button");
+    const hueThumb = document.createElement("button");
+    const alphaThumb = document.createElement("button");
+    const alphaTrack = document.createElement("div");
+    const hueTrack = document.createElement("div");
+    canvasContainer.append(canvas, canvasThumb);
+    alphaTrack.append(alphaThumb);
+    hueTrack.append(hueThumb);
+    pickerContainer.append(canvasContainer, hueTrack, alphaTrack);
+    Dom.addClass(canvasContainer, ["color-track"]);
+    Dom.addClass(alphaTrack, ["alpha-track"]);
+    Dom.addClass(hueTrack, ["hue-track"]);
 
 
-    Dom.addClass(canvasPicker, ["picker-btn"]);
-    Dom.addClass(huePicker, ["picker-btn"]);
-    Dom.addClass(alphaPicker, ["picker-btn"]);
+    Dom.addClass(canvasThumb, ["picker-btn"]);
+    Dom.addClass(hueThumb, ["picker-btn"]);
+    Dom.addClass(alphaThumb, ["picker-btn"]);
 
     return pickerContainer;
   }

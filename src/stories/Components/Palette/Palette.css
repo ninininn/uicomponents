@@ -44,15 +44,15 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     @apply absolute w-5 h-5 aspect-square rounded-full border-5
   }
 
-  .color-range .picker-btn{
+  .color-track .picker-btn{
     @apply -translate-x-1 -translate-y-2.5
   }
 
-  .alpha-range, .hue-range {
+  .alpha-track, .hue-track {
     @apply rounded-full w-full h-5;
   }
 
-  .alpha-range {
+  .alpha-track {
   --hue: 0;
     /* 0~360 */
     --hue-color: hsl(var(--hue) 100% 50%);
@@ -74,7 +74,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     @apply bg-[#9c9c9c]
   }
 
-  .hue-range {
+  .hue-track {
     background: linear-gradient(to right,
           hsl(0 100% 50%),
           hsl(60 100% 50%),
