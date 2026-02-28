@@ -1,0 +1,109 @@
+@reference "../../../style.css";
+
+@layer base {
+  @property --theme {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: var(--color-primary-500);
+  }
+
+  /*
+Source - https://stackoverflow.com/a
+Posted by Alex Char, modified by community. See post 'Timeline' for change history
+Retrieved 2025-11-28, License - CC BY-SA 4.0
+*/
+
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  /*覆蓋storybook樣式*/
+  /* input[type=checkbox]:checked {
+    background-color: transparent !important;
+  } */
+}
+
+@layer components {
+  .color-picker {
+    @apply w-fit max-w-full h-fit max-h-10 px-3 py-4 flex gap-2 items-center shadow-sm rounded-full;
+  }
+
+  .color-picker .color {
+    @apply w-5 h-5 aspect-square rounded-full;
+  }
+
+  .add-color-btn {
+    @apply relative;
+  }
+
+  .picker {
+    --picker-bg:hsl(0 100 0);
+    @apply max-w-[200px] p-2 rounded-xs shadow-xs bg-white absolute translate-x-[70%] -translate-y-[50%] invisible transition-all duration-75 [&_canvas]:w-full [&>div]:relative grid gap-2;
+  }
+
+  .picker>div:nth-child(2){
+    @apply grid grid-cols-[0.5fr_1fr] gap-y-2 items-center
+  }
+  .current-picked-color {
+    @apply row-span-2 m-2 aspect-square rounded-full bg-(--picker-bg);
+  }
+
+  .picker .picker-btn {
+    @apply absolute w-5 h-5 aspect-square rounded-full border-3 border-[#fff] ring-1 ring-gray-500;
+  }
+
+  .color-track .picker-btn {
+    @apply -translate-x-1 -translate-y-2.5;
+  }
+
+  .alpha-track,
+  .hue-track {
+    @apply rounded-full w-full h-5;
+  }
+
+  .alpha-track {
+    --hue: 0;
+    /* 0~360 */
+    --hue-color: hsl(var(--hue) 100% 50%);
+    --cell: 8px;
+
+    background:
+      linear-gradient(to right, transparent, var(--hue-color)),
+      linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.5) 25%,
+        transparent 25% 75%,
+        rgba(255, 255, 255, 0.5) 75%
+      ),
+      linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.5) 25%,
+        transparent 25% 75%,
+        rgba(255, 255, 255, 0.5) 75%
+      );
+    background-size:
+      100% 100%,
+      calc(var(--cell) * 2) calc(var(--cell) * 2),
+      calc(var(--cell) * 2) calc(var(--cell) * 2);
+    background-position:
+      0 0,
+      0 0,
+      var(--cell) var(--cell);
+
+    @apply bg-[#9c9c9c];
+  }
+
+  .hue-track {
+    background: linear-gradient(
+      to right,
+      hsl(0 100% 50%),
+      hsl(60 100% 50%),
+      hsl(120 100% 50%),
+      hsl(180 100% 50%),
+      hsl(240 100% 50%),
+      hsl(300 100% 50%),
+      hsl(360 100% 50%)
+    );
+    @apply [&_.picker-btn]:bg-[hsl(var(--hue)_100_50)]
+  }
+}

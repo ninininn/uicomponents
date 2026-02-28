@@ -1,5 +1,5 @@
 import { Dismiss, Modal, Popover } from "flowbite";
-import { BaseComponent, Dom, debounce } from "../../../Utils/Utils";
+import { BaseComponent, Dom, debounce } from "../../Utils/Utils";
 
 //TODO 1.點擊trigger觸發時要做debounce(點太多次只認一次)
 //TODO 2.清除重複的通知元素/關閉後要清掉該元素或是替換成新內容
@@ -54,7 +54,6 @@ export class Notification {
   }
 }
 
-
 //config 內容相關&UI設定
 // BaseMsg 不負責行為，只是 UI 的基礎
 class BaseMsg extends BaseComponent {
@@ -67,25 +66,34 @@ class BaseMsg extends BaseComponent {
 
   get config() {
     return {
-      type: "modal",        //類型
+      type: "modal", //類型
       theme: "light",
       maxWidth: null,
       area: ["auto", "auto"], //尺寸
-      msgContent: null,         //主要文字內容
-      customContent: null,         //自定義HTML內容
-      msgTitle: "通知",         //title文字
-      classes: [],         //自定義class
-      placement: "center",         //自定義class
-      confirm: ["確認", null],           //確認按鈕文字&動作
-      cancel: ["取消", null],         //取消按鈕文字&動作
-      handler: null,      //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
+      msgContent: null, //主要文字內容
+      customContent: null, //自定義HTML內容
+      msgTitle: "通知", //title文字
+      classes: [], //自定義class
+      placement: "center", //自定義class
+      confirm: ["確認", null], //確認按鈕文字&動作
+      cancel: ["取消", null], //取消按鈕文字&動作
+      handler: null, //單純綁定在觸發元素上，如果是選擇完才要進行的動作，可以放在btn.handler內
       btnList: [],
     };
   }
 
   _init() {
     // header
-    let { type, msgTitle, icon, msgContent, customContent, btnList, confirm, cancel } = this.options;
+    let {
+      type,
+      msgTitle,
+      icon,
+      msgContent,
+      customContent,
+      btnList,
+      confirm,
+      cancel,
+    } = this.options;
     //icon
     if (icon) {
       let header = this._elem.querySelector(".notify-header");
@@ -95,7 +103,6 @@ class BaseMsg extends BaseComponent {
     }
     //是否需要標題
     if (msgTitle && msgTitle.toLowerCase() !== "false") {
-
       let header = this._elem.querySelector(".notify-header");
 
       //直接傳入DOM元素
@@ -114,8 +121,7 @@ class BaseMsg extends BaseComponent {
       let contentDiv = this._elem.querySelector(".notify-content");
       if (customContent instanceof HTMLElement) {
         contentDiv.appendChild(customContent);
-      }
-      else {
+      } else {
         contentDiv.innerHTML += customContent;
       }
     }
@@ -148,7 +154,6 @@ class BaseMsg extends BaseComponent {
     Dom.setProperty(this._elem, "--theme", themeColor);
     Dom.setProperty(this._elem, "--text", textColor);
 
-
     //尺寸設定
     Dom.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
     Dom.setProperty(this._elem, "--w", this.options.area[0]);
@@ -175,13 +180,11 @@ class BaseMsg extends BaseComponent {
     btnConfig.actionType !== "confirm" && btnClasses.push("outline-btn");
     // Dom.addClass(btn, btnClasses);
     // Dom.setText(btn, btnConfig.btnTxt);
-    let btn = Dom.setButtons(
-      {
-        classes: btnClasses,
-        text: btnTxt,
-        handler: handler
-      }
-    );
+    let btn = Dom.setButtons({
+      classes: btnClasses,
+      text: btnTxt,
+      handler: handler,
+    });
     Dom.setAttribute(btn, `${btnConfig.actionType}btn`);
     btnsblock.appendChild(btn);
     return btn;
@@ -189,7 +192,10 @@ class BaseMsg extends BaseComponent {
 
   //[內部控制]-設定位置
   _setPosition(position) {
-    Dom.setPosition(this._elem, position, ["notify-container", ...this.options.classes]);
+    Dom.setPosition(this._elem, position, [
+      "notify-container",
+      ...this.options.classes,
+    ]);
   }
 }
 
@@ -205,7 +211,7 @@ class ToastItem extends BaseComponent {
     let dismissOptions = {
       transition: transition || "transition-opacity",
       duration: duration || 300,
-      timing: timing || "ease-out"
+      timing: timing || "ease-out",
     };
     let itemContainer = Notification._createTargetContainer();
     let dismissBtn = Dom.setButtons({ icon: "close", classes: ["text-btn"] });
@@ -223,7 +229,11 @@ class ToastItem extends BaseComponent {
   _init() {
     //設定對應顏色
     if (this._base.options.icon) {
-      Dom.setProperty(this._elem, "--style", `var(--${this._base.options.icon})`);
+      Dom.setProperty(
+        this._elem,
+        "--style",
+        `var(--${this._base.options.icon})`
+      );
     } else {
       Dom.setProperty(this._elem, "--style", "var(--graystyle)");
     }
@@ -252,7 +262,7 @@ class ToastItem extends BaseComponent {
   clearItem() {
     async function clearDOM() {
       const delay = (ms) => {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           setTimeout(resolve, ms);
         });
       };
@@ -271,7 +281,6 @@ class ToastItem extends BaseComponent {
 // toast類型，為容器&負責管理ToastItem
 class ToastMsg {
   constructor(trigger, options) {
-
     // 如果 trigger 已經綁定過，直接返回同一個 instance
     if (trigger.dataset.toastInit) {
       return ToastMsg.instances[trigger.dataset.toastInit];
@@ -279,7 +288,7 @@ class ToastMsg {
 
     this.options = options;
     this.trigger = trigger;
-    this.toastItems = [];//所有子訊息
+    this.toastItems = []; //所有子訊息
     this._init();
 
     this.id = `toast-${Date.now()}`;
@@ -287,13 +296,15 @@ class ToastMsg {
     ToastMsg.instances[this.id] = this;
   }
 
-  static instances = {};//建立過的ToastMsg
+  static instances = {}; //建立過的ToastMsg
 
   _init() {
     // this._bindEvent();
     this.toastContainer = document.createElement("div");
     Dom.addClass(this.toastContainer, ["toast-container"]);
-    Dom.setPosition(this.toastContainer, this.options.placement, ["toast-container"]);
+    Dom.setPosition(this.toastContainer, this.options.placement, [
+      "toast-container",
+    ]);
     document.body.appendChild(this.toastContainer);
 
     //監聽子訊息DOM是否有移除
@@ -305,11 +316,12 @@ class ToastMsg {
     itemsObserver.observe(this.toastContainer, { childList: true });
   }
 
-  //BUG 沒有使用到(?)  
+  //BUG 沒有使用到(?)
   _bindEvent() {
-    if (this.options.handler) this.onevent(this.trigger, "click", this.options.handler);
+    if (this.options.handler)
+      this.onevent(this.trigger, "click", this.options.handler);
     this.onevent(this.trigger, "click", debounce(this.pushItem, 400));
-    this.clearItem();//由於toastItem會自己清除，這邊只需要移除toastItems裏的資料
+    this.clearItem(); //由於toastItem會自己清除，這邊只需要移除toastItems裏的資料
   }
 
   pushItem() {
@@ -319,7 +331,6 @@ class ToastMsg {
     fragment.appendChild(toastItem._elem);
     this.toastContainer.appendChild(fragment);
 
-
     // this.toastContainer.appendChild(toastItem._elem);
   }
 
@@ -327,7 +338,6 @@ class ToastMsg {
     this.toastItems.shift();
   }
 }
-
 
 //Modal類型
 //flowbite needed: target,options
@@ -337,7 +347,7 @@ class ModalMsg extends BaseComponent {
     let modalOptions = {
       backdrop: backdrop || "static",
       backdropClasses: "backdrop " + backdropClasses || "",
-      closable: closable || false
+      closable: closable || false,
     };
     super(target, options.theme);
     this.UIType = "ModalMsg";
@@ -354,7 +364,7 @@ class ModalMsg extends BaseComponent {
   }
   onShow() {
     this.modal.show();
-    Dom.removeClass(this._elem, ["flex"]);//flowbite會自動加入flex，所以要移除
+    Dom.removeClass(this._elem, ["flex"]); //flowbite會自動加入flex，所以要移除
   }
   onHide() {
     this.modal.hide();
@@ -384,7 +394,7 @@ class PopoverMsg extends BaseComponent {
     let { triggerType, offset } = options;
     let popoverOptions = {
       triggerType: triggerType || "click",
-      offset: offset || 10
+      offset: offset || 10,
     };
     super(target, options.theme || "light");
     this.UIType = "PopoverMsg";
@@ -436,7 +446,7 @@ class DefaultMsg extends BaseComponent {
   }
   get config() {
     return {
-      countdown: 1000
+      countdown: 1000,
     };
   }
   _init() {
@@ -447,7 +457,7 @@ class DefaultMsg extends BaseComponent {
   _bindEvent(countdown) {
     async function clearDOM() {
       const delay = (ms) => {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           setTimeout(resolve, ms);
         });
       };
@@ -462,7 +472,6 @@ class DefaultMsg extends BaseComponent {
     clearDOM.bind(this)();
   }
 }
-
 
 //掛到全域window上供外部使用
 window.Notification = Notification;

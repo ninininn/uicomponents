@@ -1,14 +1,16 @@
 import {
   BaseComponent,
   Dom,
-  findElem, defineTypeof, dataSorter
-} from "../../../Utils/Utils";
+  findElem,
+  defineTypeof,
+  dataSorter,
+} from "../../Utils/Utils";
 
 import { Checkbox } from "../Checkbox/Checkbox";
-import { Pagination } from '../Pagination/Pagination';
-import { Printer } from '../../../Utils/Printer';
-import { Exporter } from '../../../Utils/Exporter';
-import { Reactive } from '../../../Utils/Reactive';
+import { Pagination } from "../Pagination/Pagination";
+import { Printer } from "../../Utils/Printer";
+import { Exporter } from "../../Utils/Exporter";
+import { Reactive } from "../../Utils/Reactive";
 
 const DATA_ATTR_INDEX = "index";
 const DATA_ATTR_ROWSELECTED = "rowselected";
@@ -37,7 +39,7 @@ var defaultColumnConfig = {
   visible: true,
   print: true,
   maxWidth: undefined,
-  minWidth: undefined
+  minWidth: undefined,
 };
 
 export class Table extends BaseComponent {
@@ -48,9 +50,11 @@ export class Table extends BaseComponent {
     tableContainer.appendChild(tableElem);
     //!把初始設定值定義好-cols
     let tableCols = options.cols;
-    options.cols = tableCols.map((col) => Object.assign({}, defaultColumnConfig, col));
+    options.cols = tableCols.map((col) =>
+      Object.assign({}, defaultColumnConfig, col)
+    );
 
-    super(tableContainer, options.theme = "var(--color-primary-500)");
+    super(tableContainer, (options.theme = "var(--color-primary-500)"));
     this.UItype = "Table";
     this.id = options.id;
     this._config = Object.assign({}, defaultTableConfig, options);
@@ -62,7 +66,9 @@ export class Table extends BaseComponent {
       type: "table",
       colNum: this.config.selection ? colsCount + 1 : colsCount,
     });
-    this._cache = dataArr?.map((data, i) => Object.assign({}, { index: i + 1, data: data }));
+    this._cache = dataArr?.map((data, i) =>
+      Object.assign({}, { index: i + 1, data: data })
+    );
     this._data = this._cache ? JSON.parse(JSON.stringify(this._cache)) : [];
     this.dataCounts = this.data?.length || 0;
 
@@ -71,7 +77,9 @@ export class Table extends BaseComponent {
   }
 
   set cache(value) {
-    this._cache = value.map((data, i) => Object.assign({}, { index: i + 1, data: data }));
+    this._cache = value.map((data, i) =>
+      Object.assign({}, { index: i + 1, data: data })
+    );
   }
   get config() {
     return this._config;
@@ -85,7 +93,6 @@ export class Table extends BaseComponent {
     let data = await fetch(url);
     return data;
   }
-
 
   //初始化
   //資料改變應在邏輯層進行，然後再呼叫 _render()
@@ -147,14 +154,14 @@ export class Table extends BaseComponent {
           this.setData(this._cache);
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error("Failed to fetch data:", error);
         this.skeleton.hide();
         // this.showError();
       }
     } else if (this.dataCounts > 0) {
       this._pagination.renderPage(this.dataCounts); //更新pagination資料數量
       // this.selectedRows = {};
-      this._showRows();//渲染部分TableRow
+      this._showRows(); //渲染部分TableRow
     } else {
       this._showEmpty();
     }
@@ -163,14 +170,14 @@ export class Table extends BaseComponent {
 
   //空資料
   _showEmpty() {
-    this.tableBody.innerHTML = '';
+    this.tableBody.innerHTML = "";
 
     // Create empty state element
-    const emptyRow = document.createElement('tr');
-    const emptyCell = document.createElement('td');
+    const emptyRow = document.createElement("tr");
+    const emptyCell = document.createElement("td");
     emptyCell.colSpan = this.config.cols?.length || 1;
-    emptyCell.className = 'table-empty';
-    emptyCell.textContent = this.config.emptyText || 'No data available';
+    emptyCell.className = "table-empty";
+    emptyCell.textContent = this.config.emptyText || "No data available";
 
     emptyRow.appendChild(emptyCell);
     this.tableBody.appendChild(emptyRow);
@@ -186,19 +193,23 @@ export class Table extends BaseComponent {
       function (e) {
         e.stopPropagation();
         let isChecked;
-        if (e.target.nodeName === 'INPUT') {
+        if (e.target.nodeName === "INPUT") {
           isChecked = e.target.checked;
         } else {
-          const checkbox = e.target.closest("tr[data-index]").querySelector("input[type='checkbox']");
+          const checkbox = e.target
+            .closest("tr[data-index]")
+            .querySelector("input[type='checkbox']");
           isChecked = !checkbox.checked;
           checkbox.checked = isChecked;
         }
-        let targetRowIndex = parseInt(e.target.closest("tr[data-index]").dataset.index);
+        let targetRowIndex = parseInt(
+          e.target.closest("tr[data-index]").dataset.index
+        );
         this.selectedRows[targetRowIndex] = isChecked;
         this.restoreUIstate();
 
         const targetData = this.getRowData(targetRowIndex).data;
-        this.callbacks.forEach(fn => fn.call(targetData));
+        this.callbacks.forEach((fn) => fn.call(targetData));
 
         const isfullSelected = this.checkPageSelected();
         this.tableHeader.selection.setChecked(isfullSelected);
@@ -212,12 +223,12 @@ export class Table extends BaseComponent {
     for (let feature of toolConfig) {
       let btn, btnHandler;
       switch (feature) {
-        case 'group':
+        case "group":
           let popover = document.createElement("div");
           Dom.addClass(popover, ["tools-popover"]);
           popover.addEventListener("click", (e) => {
             e.stopImmediatePropagation();
-            if (e.target.nodeName === 'INPUT') {
+            if (e.target.nodeName === "INPUT") {
               Dom.toggleClass(popover, ["visible"]);
             }
           });
@@ -225,62 +236,71 @@ export class Table extends BaseComponent {
           for (let col of cols) {
             let colsCheck = new Checkbox({
               theme: this._theme,
-              checked: col.visible,//!依據初始設定值
+              checked: col.visible, //!依據初始設定值
               title: col.title,
               handlers: (checked) => {
                 col.visible = checked;
                 this.tableHeader._updateCol(`${col.field}`, col);
-              }
+              },
             });
             popover.appendChild(colsCheck.container);
           }
 
           btn = Dom.setButtons({
             classes: ["btn-sm", "outline-btn", "relative"],
-            icon: './filter.svg',
+            icon: "./filter.svg",
             handler: (e) => {
               e.stopImmediatePropagation();
               if (e.target === btn) {
                 Dom.toggleClass(popover, ["visible"]);
               }
-            }
+            },
           });
           toolBar.appendChild(popover);
           break;
-        case 'exports':
+        case "exports":
           btnHandler = () => {
             const table = this;
             let rowData = table.data;
             if (table.getSelectedRows().length >= 1) {
               rowData = table.getSelectedRows();
             }
-            const showCols = table.config.cols.filter(config => config.visible && config.print).map((config) => {
-              return { name: config.title };
-            });
+            const showCols = table.config.cols
+              .filter((config) => config.visible && config.print)
+              .map((config) => {
+                return { name: config.title };
+              });
             const exportData = {
               columns: showCols,
               rows: rowData.map((d) => {
-                const item = table.config.cols.filter(config => config.visible && config.print).map((config) => {
-                  return config.field;
-                }).reduce((obj, key) => {
-                  obj[key] = d.data[key];
-                  return obj;
-                }, {});
+                const item = table.config.cols
+                  .filter((config) => config.visible && config.print)
+                  .map((config) => {
+                    return config.field;
+                  })
+                  .reduce((obj, key) => {
+                    obj[key] = d.data[key];
+                    return obj;
+                  }, {});
                 return Object.values(item);
-              })
+              }),
             };
 
             const exportObj = {
-              title: '測試用匯出',
+              title: "測試用匯出",
               data: exportData,
-              type: 'xslx',
-              name: `table-${table.id}`
+              type: "xslx",
+              name: `table-${table.id}`,
             };
             Exporter(exportObj);
           };
-          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: './export.svg', handler: btnHandler });
+          btn = Dom.setButtons({
+            classes: ["btn-sm", "outline-btn"],
+            icon: "./export.svg",
+            handler: btnHandler,
+          });
           break;
-        case 'print':
+        case "print":
           btnHandler = () => {
             const tableHeader = this.tableHeader.getElem().cloneNode(true);
             const selectedRows = this.getSelectedRows();
@@ -291,7 +311,9 @@ export class Table extends BaseComponent {
             if (selectedRows.length >= 1) {
               printData = selectedRows;
             }
-            const showColumns = this.config.cols.filter((config) => config.print !== false && config.visible !== false);
+            const showColumns = this.config.cols.filter(
+              (config) => config.print !== false && config.visible !== false
+            );
             printData.forEach((row) => {
               const tr = this._createRow(row, row.index, showColumns, true);
               rowFragment.appendChild(tr);
@@ -299,24 +321,28 @@ export class Table extends BaseComponent {
             table.append(tableHeader, rowFragment);
             Printer(table, selectedRows, "table");
           };
-          btn = Dom.setButtons({ classes: ["btn-sm", "outline-btn"], icon: './print.svg', handler: btnHandler });
+          btn = Dom.setButtons({
+            classes: ["btn-sm", "outline-btn"],
+            icon: "./print.svg",
+            handler: btnHandler,
+          });
           break;
-        case 'search':
+        case "search":
           const searchGroup = document.createElement("div");
           Dom.addClass(searchGroup, ["table-search"]);
           const searchInput = document.createElement("input");
-          searchInput.type = 'text';
+          searchInput.type = "text";
 
           btn = Dom.setButtons({
             classes: ["btn-sm", "outline-btn", "relative"],
-            icon: './search.svg',
+            icon: "./search.svg",
             handler: (e) => {
               e.stopImmediatePropagation();
               if (e.target === btn) {
                 console.log(searchInput.value, this);
                 this.searchInFilter(searchInput.value);
               }
-            }
+            },
           });
           searchGroup.append(searchInput);
           toolBar.appendChild(searchGroup);
@@ -337,7 +363,7 @@ export class Table extends BaseComponent {
     Dom.setAttribute(tr, DATA_ATTR_INDEX, index);
 
     if (!printMode) {
-      if (this.config.selection === 'checkbox') {
+      if (this.config.selection === "checkbox") {
         const td = document.createElement("td");
         const checkbox = new Checkbox(td, {
           checked: false,
@@ -347,7 +373,7 @@ export class Table extends BaseComponent {
       }
     }
 
-    colConfig.forEach(config => {
+    colConfig.forEach((config) => {
       const td = this._createCell(data, config);
       tr.appendChild(td);
     });
@@ -388,10 +414,9 @@ export class Table extends BaseComponent {
     return td;
   }
 
-
   //依據欄位排序設定排序
   _rowSort(field, rule) {
-    if (rule === 'none') {
+    if (rule === "none") {
       this._data = [...this._cache];
     } else {
       //TODO 判斷rule資料型別，如果是function則作為sortFunc使用
@@ -411,14 +436,14 @@ export class Table extends BaseComponent {
   //渲染指定範圍的rows
   //使用時機:goPage()、_rowSort()
   _showRows() {
-    const colConfig = this.config.cols.filter(col => col.visible !== false);
+    const colConfig = this.config.cols.filter((col) => col.visible !== false);
     const pageData = this.getCurrentData();
     // console.log("showRow's pageData:", pageData);
     let rowFragment = document.createDocumentFragment();
 
     pageData.forEach((dataObj, i) => {
       //TODO 是否可以轉換table-index、DATA_ATTR_INDEX?依據當前頁切換之類的...?
-      const index = ((this.getCurrentPage() - 1) * this.config.limits) + i + 1;
+      const index = (this.getCurrentPage() - 1) * this.config.limits + i + 1;
       const tr = this._createRow(dataObj, dataObj.index, colConfig);
       rowFragment.appendChild(tr);
     });
@@ -433,7 +458,7 @@ export class Table extends BaseComponent {
     const isfullSelected = this.checkPageSelected();
     this.tableHeader.selection.setChecked(isfullSelected);
     const rows = this.tableBody.querySelectorAll("tr[data-index]");
-    rows.forEach(row => {
+    rows.forEach((row) => {
       const index = parseInt(row.dataset.index);
       const isChecked = this.selectedRows[index] || false;
       const checkbox = row.querySelector('input[type="checkbox"]');
@@ -445,13 +470,11 @@ export class Table extends BaseComponent {
         delete row.dataset[DATA_ATTR_ROWSELECTED];
       }
     });
-
   }
   //[外部控制]-指定點擊row觸發的函式
   on(callbackFn) {
     this.callbacks.push(callbackFn);
   }
-
 
   //[外部控制]-設定表格尺寸
   //!如果超過max-width,max-height則直接用max-width/height
@@ -474,19 +497,24 @@ export class Table extends BaseComponent {
 
   //[外部控制]-取得全表格內所有選取的Row
   getSelectedRows() {
-    const checkedIndex = Object.keys(this.selectedRows).filter((key) =>
-      this.selectedRows[key] !== false
+    const checkedIndex = Object.keys(this.selectedRows).filter(
+      (key) => this.selectedRows[key] !== false
     );
 
     const selectedData = this.data.filter((data, index) => {
-      if (checkedIndex.includes((index + 1).toString())) { return data.data; }
+      if (checkedIndex.includes((index + 1).toString())) {
+        return data.data;
+      }
     });
     return selectedData;
   }
 
   //[外部控制]-關鍵字過濾
   searchInFilter(keyWord) {
-    if (keyWord === '') { this.setData(this._cache); return; };
+    if (keyWord === "") {
+      this.setData(this._cache);
+      return;
+    }
     const searchedData = this.getFiltedRows((rowData) => {
       if (Object.values(rowData).join("").includes(keyWord)) {
         return rowData;
@@ -498,7 +526,7 @@ export class Table extends BaseComponent {
 
   //[外部控制]-取得指定過濾條件DataRow
   getFiltedRows(fn) {
-    let filtedDataRow = this._cache.filter(obj => fn(obj.data));
+    let filtedDataRow = this._cache.filter((obj) => fn(obj.data));
     return filtedDataRow;
   }
 
@@ -509,8 +537,7 @@ export class Table extends BaseComponent {
     this.dataCounts = this.data.length;
     this._pagination.renderPage(this.dataCounts); //更新pagination資料數量
 
-
-    this._showRows();//渲染部分TableRow
+    this._showRows(); //渲染部分TableRow
     this._render();
 
     return this;
@@ -527,7 +554,7 @@ export class Table extends BaseComponent {
   selectedFullPage(pageNum, selected = true) {
     const pageData = this.getCurrentData(pageNum);
     pageData.forEach((data, i) => {
-      const index = ((pageNum - 1) * this.config.limits) + i + 1;
+      const index = (pageNum - 1) * this.config.limits + i + 1;
       this.selectedRows[index] = selected;
     });
     return this;
@@ -568,14 +595,18 @@ export class Table extends BaseComponent {
     //檢查當頁全部rows是否全選(有在SelectedRows記錄內)
     const selectedRows = this.selectedRows;
     const rows = Array.from(this.tableBody.querySelectorAll("tr[data-index]"));
-    const isfullSelected = rows.every((row) => row.dataset[DATA_ATTR_INDEX] in selectedRows && selectedRows[row.dataset[DATA_ATTR_INDEX]] === true);
+    const isfullSelected = rows.every(
+      (row) =>
+        row.dataset[DATA_ATTR_INDEX] in selectedRows &&
+        selectedRows[row.dataset[DATA_ATTR_INDEX]] === true
+    );
     return isfullSelected;
   }
 
   //清除所有選取狀態
   clearSelected() {
     const selectedKeys = Object.keys(this.selectedRows);
-    selectedKeys.forEach(key => this.selectedRows[key] = false);
+    selectedKeys.forEach((key) => (this.selectedRows[key] = false));
     this.restoreUIstate();
   }
 }
@@ -620,9 +651,12 @@ class TableHeader extends BaseComponent {
     const existCol = Array.from(existNodes).map((node) => node.dataset.field);
 
     for (let i = 0; i < this.cols.length; i++) {
-      if (this.cols[i].visible) {//如果是可見的欄位，去現有的node找存不存在
+      if (this.cols[i].visible) {
+        //如果是可見的欄位，去現有的node找存不存在
         if (existCol.includes(this.cols[i].field)) {
-          let node = oldFragment.querySelector(`[data-field=${this.cols[i].field}]`);
+          let node = oldFragment.querySelector(
+            `[data-field=${this.cols[i].field}]`
+          );
           newFragment.appendChild(node);
         } else {
           newFragment.appendChild(this._createCol(this.cols[i]));
@@ -646,7 +680,17 @@ class TableHeader extends BaseComponent {
   }
 
   _createCol(colconfig) {
-    let { align, field, title, sort, visible, resize, print, maxWidth, minWidth } = colconfig;
+    let {
+      align,
+      field,
+      title,
+      sort,
+      visible,
+      resize,
+      print,
+      maxWidth,
+      minWidth,
+    } = colconfig;
     if (!visible) return;
 
     let th = document.createElement("th");
@@ -654,25 +698,24 @@ class TableHeader extends BaseComponent {
     Dom.setAttribute(th, DATA_ATTR_FIELD, field);
     Dom.setText(th, title);
     switch (align) {
-      case 'right':
+      case "right":
         Dom.addClass(th, ["text-right"]);
         break;
-      case 'center':
+      case "center":
         Dom.addClass(th, ["text-center"]);
         break;
       default:
         Dom.addClass(th, ["text-left"]);
         break;
-
     }
     if (maxWidth) th.style.maxWidth = `${maxWidth}px`;
     if (minWidth) th.style.minWidth = `${minWidth}px`;
     if (sort) {
-      if (defineTypeof(sort, 'func')) {
-        Dom.setAttribute(th, DATA_ATTR_SORT, 'custom'); //初始沒有排序
-        th.setAttribute("aria-sort", "none");//for accessibility
+      if (defineTypeof(sort, "func")) {
+        Dom.setAttribute(th, DATA_ATTR_SORT, "custom"); //初始沒有排序
+        th.setAttribute("aria-sort", "none"); //for accessibility
       } else {
-        const sortAttr = defineTypeof(sort, 'boolean') ? 'none' : sort;
+        const sortAttr = defineTypeof(sort, "boolean") ? "none" : sort;
         Dom.setAttribute(th, DATA_ATTR_SORT, sortAttr);
         th.setAttribute("aria-sort", sortAttr);
         sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -681,7 +724,7 @@ class TableHeader extends BaseComponent {
 </svg>
 `;
         th.appendChild(sortIcon);
-      };
+      }
 
       this.onevent(th, "click", setSortCursor.bind(this));
     }
@@ -701,7 +744,7 @@ class TableHeader extends BaseComponent {
     function setSortCursor(e) {
       e.stopPropagation();
       const otherTh = this.getElem().querySelectorAll("th");
-      otherTh.forEach(th => {
+      otherTh.forEach((th) => {
         if (th !== e.currentTarget && th.dataset) {
           Dom.setAttribute(th, DATA_ATTR_SORT, "none");
           th.setAttribute("aria-sort", "none");
@@ -715,20 +758,20 @@ class TableHeader extends BaseComponent {
       let tableSortWith, updateSort;
       switch (sort) {
         case "ascending":
-          updateSort = 'descending';
+          updateSort = "descending";
           break;
         case "descending":
-          updateSort = 'none';
+          updateSort = "none";
           break;
         case "custom":
-          updateSort = 'custom';
+          updateSort = "custom";
           tableSortWith = this.cols.find((col) => col.field === field).sort;
           break;
         default:
-          updateSort = 'ascending';
+          updateSort = "ascending";
           break;
       }
-      Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort);//set to the toggle one.
+      Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort); //set to the toggle one.
       e.currentTarget.setAttribute("aria-sort", updateSort);
       this.table._rowSort(field, updateSort);
     }

@@ -1,12 +1,8 @@
-import {
-  BaseComponent,
-  Dom,
-  findElem, defineTypeof
-} from "../../../Utils/Utils";
+import { BaseComponent, Dom, findElem, defineTypeof } from "../../Utils/Utils";
 
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
-import { Notification } from '../Notification/Notification';
+import { Notification } from "../Notification/Notification";
 
 //Pagination 分頁元件
 const PAGE_LIMITS = [10, 20, 25, 50, 100, 1000];
@@ -19,7 +15,7 @@ var defaultPaginatioConfig = {
   initCurrentPage: 1,
   pageSize: PAGE_LIMITS[1], //limits單頁顯示數量
   total: 0, //資料總數
-  controlPage: false,//是否可以操作每頁顯示數量
+  controlPage: false, //是否可以操作每頁顯示數量
 };
 
 export class Pagination extends BaseComponent {
@@ -27,7 +23,7 @@ export class Pagination extends BaseComponent {
     const componentContainer = document.createElement("div");
     Dom.addClass(componentContainer, ["pagination"]);
 
-    super(componentContainer, config.theme = "var(--color-primary-500)");
+    super(componentContainer, (config.theme = "var(--color-primary-500)"));
     this.UItype = "Pagination";
     this._config = Object.assign(defaultPaginatioConfig, config);
     this.currentPage = config.currentPage || 1;
@@ -226,13 +222,14 @@ export class Pagination extends BaseComponent {
       let opt = { value: PAGE_LIMITS[i], text: `${PAGE_LIMITS[i]}條` };
       if (PAGE_LIMITS[i] === this.config.pageSize) {
         opt.selected = true;
-      };
+      }
       pagesOption.push(opt);
     }
 
     let tablepageDropdown = new Dropdown(
       "table-page-dropdown",
-      pagesOption, null,
+      pagesOption,
+      null,
       function (e) {
         let pageSize = Number(e.target.value);
         this._config.pageSize = pageSize;
