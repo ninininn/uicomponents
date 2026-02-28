@@ -1,4 +1,4 @@
-@reference "../../../style.css";
+@reference "../../style.css";
 
 @layer components {
   .card .data-title {

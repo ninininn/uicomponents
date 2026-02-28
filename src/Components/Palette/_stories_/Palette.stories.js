@@ -3,7 +3,7 @@ import { fn, expect } from "storybook/test";
 import { action } from "storybook/actions";
 
 import { createPalette } from './PaletteStory';
-import "./Palette.css";
+import "../Palette.css";
 import PaletteAPIdoc from "./PaletteAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

@@ -2,11 +2,11 @@ import { fn, expect } from "storybook/test";
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from "storybook/actions";
 
-import { createTable } from './TableStory';
-import "./Table.css";
+import { createTable } from "./TableStory";
+import "../Table.css";
 import TableAPIdoc from "./TableAPIdoc.mdx";
 import { Dom } from "../../../Utils/Utils";
-import { Notification } from '../Notification/Notification';
+import { Notification } from "../../Notification/Notification";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -26,7 +26,6 @@ export default {
     // You can either use a function to create DOM elements or use a plain html string!
     let instance = createTable({ ...args });
     return instance;
-
   },
   argTypes: {
     id: {
@@ -96,7 +95,7 @@ export default {
     },
     groupTool: {
       control: "boolean",
-      if: { arg: 'tools', truthy: true },
+      if: { arg: "tools", truthy: true },
       description: "群組篩選工具",
       table: {
         category: "configurations",
@@ -107,7 +106,7 @@ export default {
     },
     exportsTool: {
       control: "boolean",
-      if: { arg: 'tools', truthy: true },
+      if: { arg: "tools", truthy: true },
       description: "匯出工具",
       table: {
         category: "configurations",
@@ -118,7 +117,7 @@ export default {
     },
     printTool: {
       control: "boolean",
-      if: { arg: 'tools', truthy: true },
+      if: { arg: "tools", truthy: true },
       description: "列印工具",
       table: {
         category: "configurations",
@@ -129,7 +128,7 @@ export default {
     },
     searchTool: {
       control: "boolean",
-      if: { arg: 'tools', truthy: true },
+      if: { arg: "tools", truthy: true },
       description: "關鍵字過濾工具",
       table: {
         category: "configurations",
@@ -219,47 +218,81 @@ export const Table = {
     name: "測試表格",
     cols: [
       {
-        field: 'sex',
-        title: '性別',
+        field: "sex",
+        title: "性別",
         sort: true,
         fixed: false,
         align: "center",
         template: function (data) {
           let template = `<div>${data}</div>`;
           this._elem.innerHTML = template;
-        }
+        },
       },
-      { field: 'marry_count', title: '結婚次數', sort: true, fixed: false, align: "center" },
-      { field: 'nation', title: '國籍', sort: 'descending', fixed: false, align: "center", visible: false, resize: true },
-      { field: 'edu', title: '學歷', sort: 'descending', fixed: false, align: "center", resize: true },
       {
-        field: 'operate', title: '操作', sort: false, fixed: false,
+        field: "marry_count",
+        title: "結婚次數",
+        sort: true,
+        fixed: false,
+        align: "center",
+      },
+      {
+        field: "nation",
+        title: "國籍",
+        sort: "descending",
+        fixed: false,
+        align: "center",
+        visible: false,
+        resize: true,
+      },
+      {
+        field: "edu",
+        title: "學歷",
+        sort: "descending",
+        fixed: false,
+        align: "center",
+        resize: true,
+      },
+      {
+        field: "operate",
+        title: "操作",
+        sort: false,
+        fixed: false,
         template: function (data) {
           let isSelectable = Boolean(data);
-          let buttons = [{
-            classes: ["btn-sm", `${isSelectable ? "btn-success" : "btn-secondary"}`], text: "查看細節",
-            handler: function (e) {
-              e.stopPropagation();//避免觸發選取該row
-              console.log(data);
-              Notification.modal({ customContent: `<div>${JSON.stringify(data)}</div>` });
-            }
-          },
-          {
-            classes: ["btn-sm", "btn-danger"], text: "刪除此列",
-            handler: function (e) {
-              e.stopPropagation();//避免觸發選取該row
-              console.log("btn handler get value:", data);
-            }
-          }];
+          let buttons = [
+            {
+              classes: [
+                "btn-sm",
+                `${isSelectable ? "btn-success" : "btn-secondary"}`,
+              ],
+              text: "查看細節",
+              handler: function (e) {
+                e.stopPropagation(); //避免觸發選取該row
+                console.log(data);
+                Notification.modal({
+                  customContent: `<div>${JSON.stringify(data)}</div>`,
+                });
+              },
+            },
+            {
+              classes: ["btn-sm", "btn-danger"],
+              text: "刪除此列",
+              handler: function (e) {
+                e.stopPropagation(); //避免觸發選取該row
+                console.log("btn handler get value:", data);
+              },
+            },
+          ];
           let btnContainer = document.createElement("div");
           Dom.addClass(btnContainer, ["flex", "gap-2", "justify-center"]);
           Dom.setBtnGroup(buttons, btnContainer);
           this._elem.appendChild(btnContainer);
-        }, print: false
+        },
+        print: false,
       },
     ],
     limits: 25,
-    container: '.table-test-target'
+    container: ".table-test-target",
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

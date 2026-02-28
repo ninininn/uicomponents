@@ -3,7 +3,7 @@ import { fn, expect } from "storybook/test";
 import { action } from "storybook/actions";
 
 import { createCheckbox } from './CheckboxStory';
-import "./Checkbox.css";
+import "../Checkbox.css";
 import CheckboxAPIdoc from "./CheckboxAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

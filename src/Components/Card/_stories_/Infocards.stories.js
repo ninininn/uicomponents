@@ -2,14 +2,14 @@ import { fn, expect } from "storybook/test";
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from "storybook/actions";
 
-import { createCards } from './CardsStory';
-import "./Cards.css";
+import { createCards } from "./CardsStory";
+import "../Cards.css";
 import CardsAPIdoc from "./CardsAPIdoc.mdx";
 
 //其他元件相關css
-import "../Notification/Notification.css";
-import "../Dropdown/Dropdown.css"
-import "../Checkbox/Checkbox.css"
+import "../../Notification/Notification.css";
+import "../../Dropdown/Dropdown.css";
+import "../../Checkbox/Checkbox.css";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -108,7 +108,7 @@ export default {
       control: "function",
       description: "所有按鈕設定",
       table: {
-        readonly:true,
+        readonly: true,
         category: "infoList poperties",
         type: { summary: "array" },
       },
@@ -162,8 +162,8 @@ export default {
   // 預設args
   args: {
     // handlers: action("change"),
-    label:"資料欄位A",
-    value:"資料A"
+    label: "資料欄位A",
+    value: "資料A",
   },
 };
 
@@ -174,14 +174,14 @@ export const defaultInfocard = {
     blockclass: ["gap-3"],
     label: "資料欄位A: ",
     value: "資料內容A",
-    customInner:`<div class="border-2 border-gray-400 rounded-sm p-2">自訂義區塊</div>`,
+    customInner: `<div class="border-2 border-gray-400 rounded-sm p-2">自訂義區塊</div>`,
     title: "測試面板", //文字
     cardSize: 1,
-    btn:[],
+    btn: [],
     text: "開始查詢",
     class: ["btn-secondary"],
-    btngroupClass: "flex flex-nowrap ml-2"
-  }
+    btngroupClass: "flex flex-nowrap ml-2",
+  },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');
   //   await userEvent.click(canvas.getByLabelText('一般勾選框'));

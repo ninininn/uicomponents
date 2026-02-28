@@ -1,4 +1,4 @@
-import { Dropdown } from "./Dropdown";
+import { Dropdown } from "../Dropdown";
 
 export const createDropdown = ({ target, trigger, bindFilteroption = {}, filter, filterHandler, changeHandler = null }) => {
     bindFilteroption.filter = filter;

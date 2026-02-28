@@ -2,11 +2,10 @@ import { fn, expect } from "storybook/test";
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from "storybook/actions";
 
-import { createTabs } from './TabsStory';
-import "./Tabs.css";
+import { createTabs } from "./TabsStory";
+import "../Tabs.css";
 import TabsAPIdoc from "./TabsAPIdoc.mdx";
 import { Dom } from "../../../Utils/Utils";
-import { Notification } from '../Notification/Notification';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -26,12 +25,11 @@ export default {
     // You can either use a function to create DOM elements or use a plain html string!
     let instance = createTabs({ ...args });
     return instance;
-
   },
   argTypes: {
     orientation: {
       control: "select",
-      options: ['vertical', 'horizontal'],
+      options: ["vertical", "horizontal"],
       description: "tabs元件排列方向",
       table: {
         category: "configurations",
@@ -104,9 +102,9 @@ export default {
     orientation: "vertical",
     placement: "top",
     theme: "var(--color-primary-500)",
-    title: 'custom Tab 2',
-    content: 'custom content 2',
-    active: false
+    title: "custom Tab 2",
+    content: "custom content 2",
+    active: false,
   },
 };
 
@@ -116,9 +114,9 @@ export const Tabs = {
     orientation: "vertical",
     placement: "top",
     theme: "var(--color-primary-500)",
-    title: 'custom Tab 2',
-    content: 'custom content 2',
-    active: false
+    title: "custom Tab 2",
+    content: "custom content 2",
+    active: false,
   },
   // play: async ({ args, canvas, userEvent }) => {
   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');

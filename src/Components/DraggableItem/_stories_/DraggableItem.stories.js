@@ -3,7 +3,7 @@ import { fn, expect } from "storybook/test";
 import { action } from "storybook/actions";
 
 import { createDraggableItem } from './DraggableItemStory';
-import "./DraggableItem.css";
+import "../DraggableItem.css";
 import DraggableItemAPIdoc from "./DraggableItemAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

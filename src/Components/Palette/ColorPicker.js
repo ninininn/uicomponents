@@ -1,7 +1,7 @@
 import { BaseComponent, Dom, findElem } from "../../Utils/Utils";
 
 import { Palette, ColorFormat, Color } from "../../Utils/Color";
-import addSvg from "../../../../public/add.svg";
+import addSvg from "../../../public/add.svg";
 
 var defaultPickerConfig = {
   limits: 5, //maxium color number stored in container

@@ -3,7 +3,7 @@ import { fn } from "storybook/test";
 import { action } from "storybook/actions";
 
 import { createDropdown } from './DropdownStory';
-import "./Dropdown.css";
+import "../Dropdown.css";
 import DropdownAPIdoc from "./DropdownAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

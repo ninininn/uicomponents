@@ -1,6 +1,6 @@
 import { Dom, debounce } from "../../../Utils/Utils";
-import { DraggableItem } from "./DraggableItem";
-import "./DraggableItem.css";
+import { DraggableItem } from "../DraggableItem";
+import "../DraggableItem.css";
 
 export const createDraggableItem = ({
     group,

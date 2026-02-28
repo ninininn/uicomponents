@@ -3,7 +3,7 @@ import { fn } from 'storybook/test';
 import { action } from 'storybook/actions';
 
 import { createSlider } from './SliderStory.js';
-import './Slider.css';
+import '../Slider.css';
 import SliderAPIdoc from './SliderAPIdoc.mdx';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

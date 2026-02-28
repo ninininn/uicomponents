@@ -1,4 +1,4 @@
-import { BaseComponent, setUUID, defineTypeof } from "../../../Utils/Utils";
+import { BaseComponent, setUUID, defineTypeof } from "../../Utils/Utils";
 
 import { Notification } from "../Notification/Notification";
 
@@ -46,8 +46,11 @@ export class Card extends BaseComponent {
   }
 
   _bindEvent() {
-    this.onevent(this.cardContainer
-      .querySelector(".miniBtn"), "click", miniCard.bind(this));
+    this.onevent(
+      this.cardContainer.querySelector(".miniBtn"),
+      "click",
+      miniCard.bind(this)
+    );
 
     function miniCard() {
       this.minimize = !this.minimize;
@@ -63,15 +66,22 @@ export class Card extends BaseComponent {
 </svg>`;
       this.cardContainer.querySelector(".miniBtn").innerHTML = icon;
     }
-    this.cardContainer.querySelector(".closeBtn").addEventListener("click", closeNotify.bind(this));
+    this.cardContainer
+      .querySelector(".closeBtn")
+      .addEventListener("click", closeNotify.bind(this));
 
     function closeNotify() {
       Notification.modal(this.cardContainer.querySelector(".closeBtn"), {
         msgContent: "確定關閉此資料區塊? 關閉後須重新查詢",
         placement: "center",
-        confirm: ["確定關閉", () => { this.cardContainer.remove(); }],
+        confirm: [
+          "確定關閉",
+          () => {
+            this.cardContainer.remove();
+          },
+        ],
         cancel: "取消",
-        backdropClasses: "bg-gray-800/50"
+        backdropClasses: "bg-gray-800/50",
       });
     }
   }
@@ -310,7 +320,7 @@ export class BasicInfoCard extends Card {
   /**
    * [外部控制]-移除某一塊欄位
    * @description 刪除單一欄位UI&對應資料
-   * @param {string} label-欄位文字 
+   * @param {string} label-欄位文字
    * 須注意是針對單一欄位來做刪除(要有label)!
    */
   deleteBlock(label) {
@@ -326,12 +336,14 @@ export class BasicInfoCard extends Card {
    */
   toggleBlock(groupId) {
     this._infoStruct.toggle(groupId);
-    this.blocks.forEach((block) => { if (block.id === groupId) block.classList.add("hidden"); });
+    this.blocks.forEach((block) => {
+      if (block.id === groupId) block.classList.add("hidden");
+    });
   }
 
   /**
    * [外部控制]-更新某欄位資料
-   * 
+   *
    */
   updateLabel(label, value) {
     this._infoStruct.update(label, value);
@@ -339,7 +351,6 @@ export class BasicInfoCard extends Card {
     this._render();
   }
 }
-
 
 /**
  * Info
@@ -355,7 +366,7 @@ var defaultInfoConfig = {
   valueId: null,
   customInner: [],
   btn: undefined,
-  btngroupClass: undefined
+  btngroupClass: undefined,
 };
 
 class Info {
@@ -389,38 +400,49 @@ class Info {
 
   /**
    * @description 整理包裝個欄位屬性資料
-   * @param {Array} infoArray 
+   * @param {Array} infoArray
    * @returns {Object} wrapped - 整併的全屬性 object
    */
   _wrapInfos(infoArray) {
-    return infoArray.reduce((wrapped, info) => {
-      wrapped.blockId.push(info.blockId || "");
-      wrapped.label.push(info.label || "");
-      wrapped.blockClass.push(info.blockclass || "");
-      wrapped.value.push(info.value || "");
-      wrapped.valueId.push(info?.valueId || "");
-      wrapped.customInner.push(
-        !info.customInner ? [] :
-          Array.isArray(info.customInner) ? info.customInner : [info.customInner]
-      );
-      wrapped.btn.push(info.btn);
-      wrapped.btngroupClass.push(info.btngroupClass);
-      return wrapped;
-    }, {
-      blockId: [], label: [], blockClass: [], value: [],
-      valueId: [], customInner: [], btn: [], btngroupClass: []
-    });
+    return infoArray.reduce(
+      (wrapped, info) => {
+        wrapped.blockId.push(info.blockId || "");
+        wrapped.label.push(info.label || "");
+        wrapped.blockClass.push(info.blockclass || "");
+        wrapped.value.push(info.value || "");
+        wrapped.valueId.push(info?.valueId || "");
+        wrapped.customInner.push(
+          !info.customInner
+            ? []
+            : Array.isArray(info.customInner)
+              ? info.customInner
+              : [info.customInner]
+        );
+        wrapped.btn.push(info.btn);
+        wrapped.btngroupClass.push(info.btngroupClass);
+        return wrapped;
+      },
+      {
+        blockId: [],
+        label: [],
+        blockClass: [],
+        value: [],
+        valueId: [],
+        customInner: [],
+        btn: [],
+        btngroupClass: [],
+      }
+    );
   }
 
   /**
    * @description 取得對應property的value array
-   * @param {String} key - 要取得的欄位資料 
+   * @param {String} key - 要取得的欄位資料
    * @returns {Array} 該屬性欄位所有 values
    */
   getInfoKeys(key) {
     return this.infoProps[key];
   }
-
 
   _createInfoRows(infoArray) {
     const wrapped = this._wrapInfos(infoArray);
@@ -447,7 +469,7 @@ class Info {
   add(addedInfoArray, { once = false, id } = {}) {
     // 扁平化傳入的infoArray成多個rows object
     const newRows = this._createInfoRows(addedInfoArray);
-    newRows.forEach((rowObj) => rowObj._groupId = id || null);
+    newRows.forEach((rowObj) => (rowObj._groupId = id || null));
 
     if (once) {
       if (!id) {
@@ -471,10 +493,14 @@ class Info {
    */
   delete(label) {
     //直接從label文字去找，沒有label就找blockId
-    let valueIndex = this.getInfoKeys("label").findIndex((val) => val.includes(label));
+    let valueIndex = this.getInfoKeys("label").findIndex((val) =>
+      val.includes(label)
+    );
     if (valueIndex < 0) {
       //check blockId
-      valueIndex = this.getInfoKeys("blockId").findIndex((val) => val === label);
+      valueIndex = this.getInfoKeys("blockId").findIndex(
+        (val) => val === label
+      );
       if (valueIndex < 0) {
         console.error("沒有對應的block");
         return;
@@ -483,25 +509,38 @@ class Info {
       //check if innerArray
       if (Array.isArray(this.getInfoKeys("label")[valueIndex])) {
         //is in innerArray
-        let innerIndex = this.getInfoKeys("label")[valueIndex].findIndex(val => val.includes(label));
+        let innerIndex = this.getInfoKeys("label")[valueIndex].findIndex(
+          (val) => val.includes(label)
+        );
         //value&label要對應修改
-        this.getInfoKeys("label")[valueIndex] = this.getInfoKeys("label")[valueIndex].filter((val, index) => index !== innerIndex);
-        this.getInfoKeys("value")[valueIndex] = this.getInfoKeys("value")[valueIndex].filter((val, index) => index !== innerIndex);
+        this.getInfoKeys("label")[valueIndex] = this.getInfoKeys("label")[
+          valueIndex
+        ].filter((val, index) => index !== innerIndex);
+        this.getInfoKeys("value")[valueIndex] = this.getInfoKeys("value")[
+          valueIndex
+        ].filter((val, index) => index !== innerIndex);
 
         if (this.getInfoKeys("label")[valueIndex].length === 1) {
           //只剩一個可以扁平化
-          this.getInfoKeys("label")[valueIndex] = this.getInfoKeys("label")[valueIndex].toString();
-          this.getInfoKeys("value")[valueIndex] = this.getInfoKeys("value")[valueIndex].toString();
+          this.getInfoKeys("label")[valueIndex] =
+            this.getInfoKeys("label")[valueIndex].toString();
+          this.getInfoKeys("value")[valueIndex] =
+            this.getInfoKeys("value")[valueIndex].toString();
           this.infos[valueIndex].label = this.getInfoKeys("label")[valueIndex];
           this.rows[valueIndex].value = this.getInfoKeys("value")[valueIndex];
         } else {
-          this.rows[valueIndex].label = this.getInfoKeys("label")[valueIndex].filter((val, index) => index !== innerIndex);
-          this.rows[valueIndex].value = this.getInfoKeys("value")[valueIndex].filter((val, index) => index !== innerIndex);
+          this.rows[valueIndex].label = this.getInfoKeys("label")[
+            valueIndex
+          ].filter((val, index) => index !== innerIndex);
+          this.rows[valueIndex].value = this.getInfoKeys("value")[
+            valueIndex
+          ].filter((val, index) => index !== innerIndex);
         }
-
       } else {
         for (let prop in this.infoProps) {
-          this.infoProps[prop] = this.infoProps[prop].filter((arr, index) => index !== valueIndex);
+          this.infoProps[prop] = this.infoProps[prop].filter(
+            (arr, index) => index !== valueIndex
+          );
         }
         this.rowNum = this.rowNum - 1;
         this.infos = this.infos.filter((info, index) => index !== valueIndex);
@@ -521,7 +560,7 @@ class Info {
 
   /**
    * @description 如果有groupId的資料可以控制可視(visibility)，就能做切換
-   * @param {string} groupId 
+   * @param {string} groupId
    */
   toggle(groupId) {
     this.infos.forEach((infoObj) => {
@@ -544,7 +583,9 @@ class Info {
       let valueIndex = labelKeys.findIndex((val) => val.includes(updateInfo));
       if (valueIndex < 0) {
         //check blockId
-        valueIndex = this.getInfoKeys("blockId").findIndex((val) => val === updateInfo);
+        valueIndex = this.getInfoKeys("blockId").findIndex(
+          (val) => val === updateInfo
+        );
         if (valueIndex < 0) {
           console.error("沒有對應的block");
           return;
@@ -552,7 +593,9 @@ class Info {
       }
       if (Array.isArray(labelKeys[valueIndex])) {
         //is in innerArray
-        let innerIndex = labelKeys[valueIndex].findIndex(val => val.includes(updateInfo));
+        let innerIndex = labelKeys[valueIndex].findIndex((val) =>
+          val.includes(updateInfo)
+        );
         //value要對應修改
         valueKeys[valueIndex][innerIndex] = updateValue;
       } else {
@@ -560,12 +603,10 @@ class Info {
       }
       this.infos[valueIndex].value = valueKeys[valueIndex];
     } else {
-
       console.log(updateInfo, updateValue, groupId);
       //移掉有groupId的row object
       // this.infos = this.infos.filter((r) => r._groupId !== id);
     }
-
   }
 }
 
@@ -596,8 +637,6 @@ let testCard = [
   },
 ];
 
-
-
 //圖例card
 export class LevelCard {
   constructor({ labels, legends }) {
@@ -608,7 +647,9 @@ export class LevelCard {
   }
 
   _init() {
-    this.entries = Object.fromEntries(this.labels.map((lb, index) => [lb, this.legends[index]]));
+    this.entries = Object.fromEntries(
+      this.labels.map((lb, index) => [lb, this.legends[index]])
+    );
     this._render();
   }
 
@@ -628,5 +669,8 @@ export class LevelCard {
   }
 }
 
-let testLevelCard = new LevelCard({ labels: ["a", "b", "c"], legends: ["bg-red-700", "bg-green-500", "bg-blue-500"] });
+let testLevelCard = new LevelCard({
+  labels: ["a", "b", "c"],
+  legends: ["bg-red-700", "bg-green-500", "bg-blue-500"],
+});
 // console.log(testLevelCard);

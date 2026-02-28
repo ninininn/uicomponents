@@ -1,7 +1,7 @@
-import { Dom, BaseComponent } from "../../Utils/Utils";
-import { ColorPicker } from "./ColorPicker";
-import { Palette } from "../../Utils/Color";
-import "./Palette.css";
+import { Dom, BaseComponent } from "../../../Utils/Utils";
+import { ColorPicker } from "../ColorPicker";
+import { Palette } from "../../../Utils/Color";
+import "../Palette.css";
 
 export const createPalette = ({
   colorCounts,

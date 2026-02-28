@@ -3,7 +3,7 @@ import { fn, expect } from "storybook/test";
 import { action } from "storybook/actions";
 
 import { createNotification } from './NotificationStory';
-import "./Notification.css";
+import "../Notification.css";
 import NotificationAPIdoc from "./NotificationAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

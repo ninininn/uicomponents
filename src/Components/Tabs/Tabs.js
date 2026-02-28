@@ -2,7 +2,7 @@ import {
   BaseComponent,
   Dom,
   findElem, defineTypeof
-} from "../../../Utils/Utils";
+} from "../../Utils/Utils";
 
 var defaultTabsConfig = {
   orientation: 'vertical',//horizontal,vertical

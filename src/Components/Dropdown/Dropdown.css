@@ -1,6 +1,6 @@
-/* @import "tailwindcss"; */
+@import "tailwindcss";
 
-@reference "../../../style.css";
+@reference "../../style.css";
 
 @layer components {
   /* dropdown 相關 */

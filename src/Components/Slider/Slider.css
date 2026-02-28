@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@reference "../../../style.css";
+@reference "../../style.css";
 
 @layer components {
 

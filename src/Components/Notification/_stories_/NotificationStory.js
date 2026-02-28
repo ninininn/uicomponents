@@ -1,6 +1,6 @@
 import { Dom, debounce } from "../../../Utils/Utils";
-import { Notification } from "./Notification";
-import "./Notification.css";
+import { Notification } from "../Notification";
+import "../Notification.css";
 
 export const createNotification = ({ type, area, theme, maxWidth, msgContent, icon, customContent, msgTitle, classes, placement, confirm, cancel, btnList, handler, backdrop, backdropClasses, closable, triggerType, offset, countdown, style }) => {
     let parent = document.createElement("div");
