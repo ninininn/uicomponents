@@ -1,6 +1,7 @@
 /** @type { import('@storybook/html-vite').StorybookConfig } */
 const config = {
   stories: [
+    "../src/docs/**/*.mdx",
     "../src/Components/**/_stories_/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     "../src/Components/**/_stories_/**/*.mdx",
   ],
