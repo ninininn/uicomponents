@@ -1,4 +1,4 @@
-import{u as r,j as e,M as t}from"./iframe-DpQgjgPA.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h3:"h3",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsxs(s.p,{children:[e.jsx(t,{title:"Configure your project"}),`# 工具函式
+import{u as r,j as e,M as t}from"./iframe-hvrkV3Yv.js";import"./preload-helper-DLLWEBaG.js";function l(n){const s={blockquote:"blockquote",br:"br",code:"code",h3:"h3",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsxs(s.p,{children:[e.jsx(t,{title:"Configure your project"}),`# 工具函式
 提供多種共用functions，方便在各種情境使用。`]}),`
 `,e.jsx(s.h3,{id:"dom-類別",children:"Dom 類別"}),`
 `,e.jsxs(s.blockquote,{children:[`

@@ -1,4 +1,4 @@
-import{u as r,j as e,M as l,T as d,P as c,C as i}from"./iframe-DpQgjgPA.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Palette"}),`
+import{u as r,j as e,M as l,T as d,P as c,C as i}from"./iframe-hvrkV3Yv.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Palette"}),`
 `,e.jsx(d,{}),`
 `,e.jsxs(s.p,{children:["調色盤功能(此處先以",e.jsx(s.code,{children:"Palette()"}),"函式使用說明)，後續可能制作成元件?"]}),`
 `,e.jsx(c,{}),`
@@ -14,18 +14,18 @@ import{u as r,j as e,M as l,T as d,P as c,C as i}from"./iframe-DpQgjgPA.js";impo
 `,e.jsx(s.h3,{id:"parameters-參數設定",children:"parameters 參數設定"}),`
 `]}),`
 `,e.jsxs(s.ul,{children:[`
-`,e.jsxs(s.li,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"config"}),`\r
+`,e.jsxs(s.li,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"config"}),`
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"object"}),e.jsx(s.br,{}),`
 `,"各屬性的型別及說明可參考上方",e.jsx(s.strong,{children:"Controls區塊"}),"。",`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  const initConfig = {\r
-    colorCounts: 1,                              //需要的色碼數量\r
-    colorMode: "hsl",                            //色彩模式(hsl/rgb/hex)\r
-    alpha: 1,                                   //透明度\r
-    style: "random",                            //樣式\r
-    tone:null,                                  //指定色系\r
-    saturationFixed: false,                     //是否固定飽和度\r
-    lightnessFixed: false,                      //是否固定明度\r
-    offset: 10,                                 //偏移量(暫時先不要用)\r
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  const initConfig = {
+    colorCounts: 1,                              //需要的色碼數量
+    colorMode: "hsl",                            //色彩模式(hsl/rgb/hex)
+    alpha: 1,                                   //透明度
+    style: "random",                            //樣式
+    tone:null,                                  //指定色系
+    saturationFixed: false,                     //是否固定飽和度
+    lightnessFixed: false,                      //是否固定明度
+    offset: 10,                                 //偏移量(暫時先不要用)
   };
 `})}),`
 `]}),`

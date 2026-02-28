@@ -1,4 +1,4 @@
-import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";import"./preload-helper-DLLWEBaG.js";function l(n){const e={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",h4:"h4",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Cards"}),`
+import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-hvrkV3Yv.js";import"./preload-helper-DLLWEBaG.js";function l(n){const e={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",h4:"h4",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Cards"}),`
 `,s.jsx(c,{}),`
 `,s.jsx(e.p,{children:"適用 : 資訊面板的資料呈現"}),`
 `,s.jsx("div",{className:"sb-unstyled alert-msg",children:s.jsxs("span",{children:["卡片元件的呈現方式可能會有多種變化，這邊僅先以基礎",s.jsx(e.strong,{children:"資訊面板"}),"(BasicInfoCard)作為示意說明"]})}),`
@@ -25,20 +25,20 @@ import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";impo
 `,s.jsx("span",{className:"sb-unstyled font-black",children:"infoList"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type arr",children:"array"}),`
 `,s.jsxs(e.p,{children:["各屬性的型別及說明可參考上方Controls區塊；每個",s.jsx(e.code,{children:"{}"}),"都是一個 row 區塊，排列組成完整資訊面板。"]}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`const infoList = [{\r
-  blockId: "default", //區塊指定id\r
-  blockclass: ["flex","gap-4"], //tailwindcss 樣式\r
-  label: "", //資料標題文字\r
-  value: "", //資料內容\r
-  customInner: \`<div class="container"></div>\`, //直接放入innerHTML或是帶入其他HTMLElement的容器\r
-  btn: [ //按鈕清單，每個{}視為一個btn資料\r
-    {\r
-      text:"", //按鈕文字\r
-      class:[], //按鈕樣式(預設已經帶入.btn)\r
-      handler:null //click事件函式\r
-    }\r
-  ],\r
-  btngroupClass: "flex-col gap-[4px]",//按鈕群組樣式(string)\r
+`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`const infoList = [{
+  blockId: "default", //區塊指定id
+  blockclass: ["flex","gap-4"], //tailwindcss 樣式
+  label: "", //資料標題文字
+  value: "", //資料內容
+  customInner: \`<div class="container"></div>\`, //直接放入innerHTML或是帶入其他HTMLElement的容器
+  btn: [ //按鈕清單，每個{}視為一個btn資料
+    {
+      text:"", //按鈕文字
+      class:[], //按鈕樣式(預設已經帶入.btn)
+      handler:null //click事件函式
+    }
+  ],
+  btngroupClass: "flex-col gap-[4px]",//按鈕群組樣式(string)
 }];
 `})}),`
 `,s.jsx("br",{}),`
@@ -62,7 +62,7 @@ import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";impo
 `,s.jsx("br",{}),`
 `]}),`
 `,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"cardSize"}),`\r
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"cardSize"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type num",children:"number"}),s.jsx(e.br,{}),`
 `,"卡片尺寸大小，預設為1(最小)，也可以設定為2或3(全滿)的尺寸。"]}),`
 `]}),`
@@ -86,12 +86,12 @@ import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";impo
 `,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"Parameters"}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"addInfo"}),`\r
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"addInfo"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type arr",children:"array"}),s.jsx(e.br,{}),`
 `,"要加入的資訊區塊設定，等同於 ",s.jsx(e.code,{children:"infoList"})," 參數設定"]}),`
 `]}),`
 `,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"options"}),`\r
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"options"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type",children:"object"}),s.jsx(e.br,{}),`
 `,"onceSetting，是否只新增一次，其他時候則用替換方式取代原內容。"]}),`
 `,s.jsxs(e.ul,{children:[`
@@ -114,7 +114,7 @@ import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";impo
 `,s.jsx("span",{className:"sb-unstyled methods",children:".deleteBlock(label)"}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"Parameters"}),s.jsx(e.br,{}),`
-`,`傳入欄位文字來刪除單一欄位UI&對應資料\r
+`,`傳入欄位文字來刪除單一欄位UI&對應資料
 `,s.jsx("span",{className:"sb-unstyled alert-msg",children:"須注意是針對單一欄位來做刪除(要有label)!"})]}),`
 `]}),`
 `,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:` BasicInfoCard.deleteBlock("資料欄位A"); 
@@ -131,12 +131,12 @@ import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";impo
 `,s.jsxs(e.li,{children:[s.jsx(e.strong,{children:"Parameters"}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"label"}),`\r
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"label"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),s.jsx(e.br,{}),`
 `,"指定的",s.jsx(e.code,{children:"label"}),"文字"]}),`
 `]}),`
 `,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"updateValue"}),`\r
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"updateValue"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),s.jsx(e.br,{}),`
 `,"要替換的新value"]}),`
 `]}),`
@@ -157,7 +157,7 @@ import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";impo
 `,s.jsx(e.h4,{id:"parameters-參數設定-1",children:"parameters 參數設定"}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"title"}),`\r
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"title"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type str",children:"string"}),s.jsx(e.br,{}),`
 `,"卡片標題名稱(Header部分)"]}),`
 `]}),`
@@ -179,14 +179,14 @@ import{u as d,j as s,M as r,T as c,P as i,C as a}from"./iframe-DpQgjgPA.js";impo
 `,s.jsx(e.h3,{id:"info-類別",children:"Info 類別"}),`
 `,s.jsx("span",{className:"sb-unstyled alert-msg",children:"負責整併card資料欄位(不會直接操作到!)"}),`
 `]}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  BasicInfoCard._infoStruct = new Info(infoArray);\r
+`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  BasicInfoCard._infoStruct = new Info(infoArray);
   //此處的_infoStruct屬性禁止外部取用!
 `})}),`
 `,s.jsxs(e.ul,{children:[`
 `,s.jsxs(e.li,{children:[`
 `,s.jsx(e.h4,{id:"parameters-參數設定-2",children:"parameters 參數設定"}),`
 `,s.jsxs(e.ul,{children:[`
-`,s.jsxs(e.li,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"infoArray"}),`\r
+`,s.jsxs(e.li,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"infoArray"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type str",children:"array"}),s.jsx(e.br,{}),`
 `,s.jsx(e.code,{children:"BasicInfoCard"}),"傳入的資料設定陣列(infolist)"]}),`
 `]}),`
