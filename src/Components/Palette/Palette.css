@@ -37,15 +37,15 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .picker {
-    --picker-bg:hsl(0 100 0);
+    --picker-bg: hsl(0 100 0);
     @apply max-w-[200px] p-2 rounded-xs shadow-xs bg-white absolute translate-x-[70%] -translate-y-[50%] invisible transition-all duration-75 [&_canvas]:w-full [&>div]:relative grid gap-2;
   }
 
-  .picker>div:nth-child(2){
-    @apply grid grid-cols-[0.5fr_1fr] gap-y-2 items-center
+  .picker > div:nth-child(2) {
+    @apply flex gap-2;
   }
   .current-picked-color {
-    @apply row-span-2 m-2 aspect-square rounded-full bg-(--picker-bg);
+    @apply row-span-2 m-2 aspect-square rounded-full bg-(--picker-bg) [&+div]:w-full;
   }
 
   .picker .picker-btn {
@@ -58,7 +58,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   .alpha-track,
   .hue-track {
-    @apply rounded-full w-full h-5;
+    @apply rounded-full w-full h-5 relative;
   }
 
   .alpha-track {
@@ -90,7 +90,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
       0 0,
       var(--cell) var(--cell);
 
-    @apply bg-[#9c9c9c];
+    @apply bg-[#9c9c9c] mt-3;
   }
 
   .hue-track {
@@ -104,6 +104,6 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
       hsl(300 100% 50%),
       hsl(360 100% 50%)
     );
-    @apply [&_.picker-btn]:bg-[hsl(var(--hue)_100_50)]
+    @apply [&_.picker-btn]:bg-[hsl(var(--hue)_100_50)];
   }
 }

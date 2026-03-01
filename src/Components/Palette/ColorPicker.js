@@ -15,6 +15,7 @@ export class ColorPicker extends BaseComponent {
     Dom.addClass(pickerContainer, ["color-picker"]);
 
     super(pickerContainer);
+    this.UItype = "ColorPicker";
     this._config = Object.assign({}, defaultPickerConfig, options);
     this.defaultColors = [...this._config.defaults].slice(
       0,
@@ -24,6 +25,7 @@ export class ColorPicker extends BaseComponent {
     this.current = this.colors[0];
     this._picker = this._createPickerpanel();
     this._init();
+    this._render();
     this._bindEvent();
   }
 
@@ -44,6 +46,7 @@ export class ColorPicker extends BaseComponent {
       Dom.setAttribute(colorDiv, "colorpick", color);
       this.onevent(colorDiv, "click", (e) => {
         const colorPicked = e.target.dataset.colorpick;
+        this.current = colorPicked;
         //點擊打開picker面板
         Dom.addClass(this._picker, ["visible"]);
         //傳入dataset.colorpick作為面板當前顏色
@@ -52,27 +55,14 @@ export class ColorPicker extends BaseComponent {
           this._picker.querySelector("canvas"),
           ColorFormat.rgbTohsl(colorPicked)
         );
-        Dom.setProperty(
-          this._picker,
-          "--picker-bg",
-          ColorFormat.rgbTohsl(colorPicked)
-        );
-        Dom.setProperty(
-          this._picker.querySelector(".hue-track"),
-          "--hue",
-          ColorFormat.rgbTohsl(colorPicked)
-            .toLowerCase()
-            .replace(/[hsl()/+]/g, "")
-            .replace(/\s+/g, ",")
-            .split(",")[0]
-        );
+        this._updatePanel();
       });
       this.getElem().appendChild(colorDiv);
     }
 
     Dom.addClass(this._picker, ["picker"]);
 
-    //新增顏色的操作按鈕
+    //加入新增顏色用的操作按鈕
     const addBtn = document.createElement("button");
     addBtn.type = "button";
     const addImg = document.createElement("img");
@@ -82,12 +72,7 @@ export class ColorPicker extends BaseComponent {
     this.getElem().appendChild(addBtn);
     this._addBtn = addBtn;
 
-    const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
-    const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
-    const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
-
     this.getElem().appendChild(this._picker);
-    this._render();
   }
 
   _bindEvent() {
@@ -108,19 +93,22 @@ export class ColorPicker extends BaseComponent {
 
     //pointer-down
     this.onevent(colorTrack, "pointerdown", (e) => {
+      console.log("e.target:", e.target);
       colorTrack.setPointerCapture(e.pointerId);
-      update.call(this);
+      // updateCurrentColor.call(this);
       e.preventDefault();
     });
 
     this.onevent(hueTrack, "pointerdown", (e) => {
+      console.log("e.target:", e.target);
       hueTrack.setPointerCapture(e.pointerId);
-      update.call(this);
+      // updateCurrentColor.call(this);
       e.preventDefault();
     });
     this.onevent(alphaTrack, "pointerdown", (e) => {
+      console.log("e.target:", e.target);
       alphaTrack.setPointerCapture(e.pointerId);
-      update.call(this);
+      // updateCurrentColor.call(this);
       e.preventDefault();
     });
 
@@ -132,25 +120,23 @@ export class ColorPicker extends BaseComponent {
       lightness = clamp(1 - (e.clientY - top) / height);
     });
     this.onevent(hueTrack, "pointermove", (e) => {
-      const { left, top, width, height } =
-        e.currentTarget.getBoundingClientRect();
+      const { left, width } = e.currentTarget.getBoundingClientRect();
       hue = clamp((e.clientX - left) / width) * 360;
     });
     this.onevent(alphaTrack, "pointermove", (e) => {
-      const { left, top, width, height } =
-        e.currentTarget.getBoundingClientRect();
+      const { left, width } = e.currentTarget.getBoundingClientRect();
       alpha = clamp((e.clientX - left) / width);
     });
 
     //pointer-up
     this.onevent(colorTrack, "pointerup", (e) => {
-      update.call(this);
+      updateCurrentColor.call(this);
     });
     this.onevent(hueTrack, "pointerup", (e) => {
-      update.call(this);
+      updateCurrentColor.call(this);
     });
     this.onevent(alphaTrack, "pointerup", (e) => {
-      update.call(this);
+      updateCurrentColor.call(this);
     });
 
     function togglePicker() {
@@ -159,19 +145,22 @@ export class ColorPicker extends BaseComponent {
     function clamp(value, min = 0, max = 1) {
       return Math.min(max, Math.max(min, value));
     }
-    function update() {
-      console.log(saturation, lightness, hue, alpha);
-      const hslStr = `hsl(${Math.round(hue)},${Math.round(saturation * 100)},${Math.round(lightness * 100)})`;
-      this.current = ColorFormat.hslTorgb(hslStr);
-      console.log("update", this);
-      this._paintCanvas(colorTrack.querySelector("canvas"), hslStr);
-      Dom.setProperty(hueThumb, "--hue", hue);
-      hueThumb.style.left = (hue / 360) * hueTrack.offsetWidth + "px";
-      Dom.setProperty(this._picker, "--picker-bg", this.current);
+
+    function updateCurrentColor() {
+      const updateColor = new Color(
+        Math.round(hue),
+        Math.round(saturation * 100),
+        Math.round(lightness * 100),
+        alpha
+      );
+      console.log("updateCurrentColor:", updateColor);
+      this.current = updateColor.toRgb();
+      this._updatePanel();
     }
   }
 
   _render() {
+    this._updatePanel();
     if (this.colors.length > this._config.limits) {
       Dom.addClass(this._addBtn, ["hidden"]);
     }
@@ -182,6 +171,7 @@ export class ColorPicker extends BaseComponent {
     const canvas = document.createElement("canvas");
 
     const trackContainer = document.createElement("div");
+    const subTrackContainer = document.createElement("div");
     const currentColor = document.createElement("div");
     Dom.addClass(currentColor, ["current-picked-color"]);
 
@@ -195,7 +185,8 @@ export class ColorPicker extends BaseComponent {
     canvasContainer.append(canvas, canvasThumb);
     alphaTrack.append(alphaThumb);
     hueTrack.append(hueThumb);
-    trackContainer.append(currentColor, hueTrack, alphaTrack);
+    subTrackContainer.append(hueTrack, alphaTrack);
+    trackContainer.append(currentColor, subTrackContainer);
     pickerContainer.append(canvasContainer, trackContainer);
     Dom.addClass(canvasContainer, ["color-track"]);
     Dom.addClass(alphaTrack, ["alpha-track"]);
@@ -221,7 +212,6 @@ export class ColorPicker extends BaseComponent {
         .split(",")[0]
     },100%,50%)`;
 
-    console.log(fill);
     context.fillRect(0, 0, w, h);
     // White → transparent (left to right)
     const whiteGrad = context.createLinearGradient(0, 0, w, 0);
@@ -237,5 +227,32 @@ export class ColorPicker extends BaseComponent {
     context.fillRect(0, 0, w, h);
   }
 
-  _update() {}
+  _updatePanel() {
+    console.log("updatepanel's this.current:", this.current);
+    const [h, s, l, a = 1] = ColorFormat.rgbTohsl(this.current)
+      .toLowerCase()
+      .replace(/[hsl()/+]/g, "")
+      .replace(/\s+/g, ",")
+      .split(",");
+
+    const currentColor = new Color(h, s, l, a);
+
+    const colorTrack = this._picker.querySelector(".color-track");
+    const hueTrack = this._picker.querySelector(".hue-track");
+    const alphaTrack = this._picker.querySelector(".alpha-track");
+    const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
+    const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
+    const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
+    this._paintCanvas(colorTrack.querySelector("canvas"), currentColor.toHsl());
+    Dom.setProperty(hueThumb, "--hue", h);
+    Dom.setProperty(alphaTrack, "--hue", h);
+    canvasThumb.style.left =
+      s * colorTrack.querySelector("canvas").offsetWidth + "px";
+    canvasThumb.style.top =
+      (1 - l) * colorTrack.querySelector("canvas").offsetHeight + "px";
+    hueThumb.style.left = (h / 360) * hueTrack.offsetWidth + "px";
+    alphaThumb.style.left = a * alphaTrack.offsetWidth + "px";
+    console.log(a, a * alphaTrack.offsetWidth);
+    Dom.setProperty(this._picker, "--picker-bg", this.current);
+  }
 }
