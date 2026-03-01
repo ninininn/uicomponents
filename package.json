@@ -1,11 +1,12 @@
 {
-  "name": "uicomponents",
+  "name": "uiCompos",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main":"./dist/index.js",
-  "style":"./dist/index.css",
-  "files":[
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "style": "./dist/index.css",
+  "files": [
     "dist"
   ],
   "scripts": {
