@@ -1,8 +1,8 @@
-import{u as d,j as e,M as l,T as c,P as r,C as i}from"./iframe-hvrkV3Yv.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h2:"h2",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Table"}),`
-`,e.jsx(c,{}),`
-`,e.jsxs(s.p,{children:["常見表格資料表，可以載入資料並更新Table畫面 (此頁面測試用API來源 : ",e.jsx(s.a,{href:"https://jsonplaceholder.typicode.com/todos",rel:"nofollow",children:`公開API
-(https://jsonplaceholder.typicode.com/todos)`}),")"]}),`
+import{u as d,j as e,M as l,T as r,P as c,C as i}from"./iframe-BVS5Mtot.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h2:"h2",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(l,{isTemplate:!0,title:"How to use Table"}),`
 `,e.jsx(r,{}),`
+`,e.jsxs(s.p,{children:["常見表格資料表，可以載入資料並更新Table畫面 (此頁面測試用API來源 : ",e.jsx(s.a,{href:"https://jsonplaceholder.typicode.com/todos",rel:"nofollow",children:`公開API\r
+(https://jsonplaceholder.typicode.com/todos)`}),")"]}),`
+`,e.jsx(c,{}),`
 `,e.jsx(s.h1,{id:"controls",children:"Controls"}),`
 `,e.jsxs(s.p,{children:["Table 元件由多個子元件所組成，但其餘子元件之設定在使用時都不會直接操作到，所以僅示意",e.jsx(s.code,{children:"config"}),"參數。"]}),`
 `,e.jsx(i,{}),`
@@ -15,21 +15,21 @@ import{u as d,j as e,M as l,T as c,P as r,C as i}from"./iframe-hvrkV3Yv.js";impo
 `,e.jsx(s.h3,{id:"parameters-參數設定",children:"parameters 參數設定"}),`
 `]}),`
 `,e.jsxs(s.ul,{children:[`
-`,e.jsxs(s.li,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"config"}),`
+`,e.jsxs(s.li,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"config"}),`\r
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"object"}),e.jsx(s.br,{}),`
 `,"各屬性的型別及說明可參考上方",e.jsx(s.strong,{children:"Controls區塊"}),"，各類別的私有屬性則可以參考",e.jsx(s.strong,{children:"子類別"}),"區塊的各個說明，此處僅列出共同設定的屬性。",`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  const initConfig = {
-    id: "table_A",                                 //tableId
-    name: "測試用表格",                             //自定義table名稱
-    limits: 20,                                    //單頁顯示筆數限制
-    container: ".table-test-target",               //要放入的DOM元素(容器)
-    cols:cols,                                     //欄位設定
-    tools: true,                                   //是否顯示工具列
-    selection: "checkbox",                         //是否開啟勾選列
-    classes: ["table-container"],                  //自定義class
-    complete: complete,                            //渲染完成後要執行的fn
-    error: error,                                  //渲染失敗執行的fn
-    handler: handler,                              //渲染時執行的fn(非同步)
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  const initConfig = {\r
+    id: "table_A",                                 //tableId\r
+    name: "測試用表格",                             //自定義table名稱\r
+    limits: 20,                                    //單頁顯示筆數限制\r
+    container: ".table-test-target",               //要放入的DOM元素(容器)\r
+    cols:cols,                                     //欄位設定\r
+    tools: true,                                   //是否顯示工具列\r
+    selection: "checkbox",                         //是否開啟勾選列\r
+    classes: ["table-container"],                  //自定義class\r
+    complete: complete,                            //渲染完成後要執行的fn\r
+    error: error,                                  //渲染失敗執行的fn\r
+    handler: handler,                              //渲染時執行的fn(非同步)\r
   };
 `})}),`
 `]}),`
@@ -38,10 +38,10 @@ import{u as d,j as e,M as l,T as c,P as r,C as i}from"./iframe-hvrkV3Yv.js";impo
 `,e.jsxs(s.ul,{children:[`
 `,e.jsxs(s.li,{children:[`
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"column configuration"}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const cols = [
-  {field:'id', title:'ID', sort:true, fixed:true},
-  {field:'name', title:'名稱', sort:false, fixed:false},
-  {field:'count', title:'數量', sort:true, fixed:false},
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const cols = [\r
+  {field:'id', title:'ID', sort:true, fixed:true},\r
+  {field:'name', title:'名稱', sort:false, fixed:false},\r
+  {field:'count', title:'數量', sort:true, fixed:false},\r
 ];
 `})}),`
 `,e.jsx("br",{}),`

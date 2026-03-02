@@ -1,4 +1,4 @@
-import{u as l,j as e,M as d,T as r,P as c,C as i}from"./iframe-hvrkV3Yv.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use DraggableItem"}),`
+import{u as l,j as e,M as d,T as r,P as c,C as i}from"./iframe-BVS5Mtot.js";import"./preload-helper-DLLWEBaG.js";function t(n){const s={blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(d,{isTemplate:!0,title:"How to use DraggableItem"}),`
 `,e.jsx(r,{}),`
 `,e.jsx(s.p,{children:"拖曳排序元件"}),`
 `,e.jsx(c,{}),`
@@ -14,31 +14,31 @@ import{u as l,j as e,M as d,T as r,P as c,C as i}from"./iframe-hvrkV3Yv.js";impo
 `,e.jsx(s.h3,{id:"parameters-參數設定",children:"parameters 參數設定"}),`
 `]}),`
 `,e.jsxs(s.ul,{children:[`
-`,e.jsxs(s.li,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"config"}),`
+`,e.jsxs(s.li,{children:[e.jsx("span",{className:"sb-unstyled font-black",children:"config"}),`\r
 `,e.jsx("span",{className:"sb-unstyled data-type",children:"object"}),e.jsx(s.br,{}),`
 `,"各屬性的型別及說明可參考上方",e.jsx(s.strong,{children:"Controls區塊"}),"，各類別的私有屬性則可以參考",e.jsx(s.strong,{children:"子類別"}),"區塊的各個說明，此處僅列出共同設定的屬性。",`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  const initConfig = {
-    id: id,                 //tableId
-    name: name,             //自定義table名稱
-    limits: limits,         //單頁顯示筆數限制
-    container: parent,      //要放入的DOM元素(容器)
-    cols:cols,              //欄位設定
-    tools: tools,           //是否顯示工具列
-    selection: selection,   //是否開啟勾選列
-    classes: classes,       //自定義class
-    complete: complete,     //渲染完成後要執行的fn
-    error: error,           //渲染失敗執行的fn
-    handler: handler,       //渲染時執行的fn(非同步)
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`  const initConfig = {\r
+    id: id,                 //tableId\r
+    name: name,             //自定義table名稱\r
+    limits: limits,         //單頁顯示筆數限制\r
+    container: parent,      //要放入的DOM元素(容器)\r
+    cols:cols,              //欄位設定\r
+    tools: tools,           //是否顯示工具列\r
+    selection: selection,   //是否開啟勾選列\r
+    classes: classes,       //自定義class\r
+    complete: complete,     //渲染完成後要執行的fn\r
+    error: error,           //渲染失敗執行的fn\r
+    handler: handler,       //渲染時執行的fn(非同步)\r
   };
 `})}),`
 `,e.jsx("br",{}),`
 `,e.jsxs(s.ul,{children:[`
 `,e.jsxs(s.li,{children:[`
 `,e.jsx("span",{className:"sb-unstyled font-black",children:"column configuration"}),`
-`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const cols = [
-  {field:'id', title:'ID', sort:true, fixed:true},
-  {field:'name', title:'名稱', sort:false, fixed:false},
-  {field:'count', title:'數量', sort:true, fixed:false},
+`,e.jsx(s.pre,{children:e.jsx(s.code,{className:"language-javascript",children:`const cols = [\r
+  {field:'id', title:'ID', sort:true, fixed:true},\r
+  {field:'name', title:'名稱', sort:false, fixed:false},\r
+  {field:'count', title:'數量', sort:true, fixed:false},\r
 ];
 `})}),`
 `,e.jsx("br",{}),`

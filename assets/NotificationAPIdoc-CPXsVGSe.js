@@ -1,5 +1,5 @@
-import{u as l,j as s,M as t,T as r,P as c,C as i}from"./iframe-hvrkV3Yv.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(t,{isTemplate:!0,title:"How to use Notification"}),`
-`,s.jsx(r,{}),`
+import{u as l,j as s,M as r,T as t,P as c,C as i}from"./iframe-BVS5Mtot.js";import"./preload-helper-DLLWEBaG.js";function d(n){const e={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...l(),...n.components};return s.jsxs(s.Fragment,{children:[s.jsx(r,{isTemplate:!0,title:"How to use Notification"}),`
+`,s.jsx(t,{}),`
 `,s.jsx(e.p,{children:"適用 : 基本跳出視窗及通知，分為四種類型(toast、modal、popover及msg)。"}),`
 `,s.jsx(c,{}),`
 `,s.jsx(e.h1,{id:"controls",children:"Controls"}),`
@@ -8,7 +8,7 @@ import{u as l,j as s,M as t,T as r,P as c,C as i}from"./iframe-hvrkV3Yv.js";impo
 `,s.jsx(e.hr,{}),`
 `,s.jsx(e.h1,{id:"usage-api",children:"Usage API"}),`
 `,s.jsxs(e.p,{children:["Notification 元件和其他元件不同，不需要",s.jsx(e.code,{children:"new"}),"初始化，用法為直接呼叫對應類型的靜態方法，並帶入參數 ",s.jsx(e.code,{children:"trigger"}),"及",s.jsx(e.code,{children:"options"}),"即可。"]}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  Notification.modal(trigger,options);
+`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  Notification.modal(trigger,options);\r
   //直接呼叫對應方法
 `})}),`
 `,s.jsx("p",{className:"sb-unstyled font-bold text-yellow-500",children:"Quick reference"}),`
@@ -43,32 +43,32 @@ import{u as l,j as s,M as t,T as r,P as c,C as i}from"./iframe-hvrkV3Yv.js";impo
 `,s.jsx("span",{className:"sb-unstyled font-black",children:"trigger"}),`
 `,s.jsx("span",{className:"sb-unstyled data-type element",children:"HTMLElement"}),`
 `,s.jsx(e.p,{children:"傳入HTMLElement作為觸發元素，控制Notification出現與否。"}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-html",children:`<!-- 基本靜態結構 -->
-<label class="label input-label">
-  <input type="checkbox" class="checkbox" />
-  文字內容
+`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-html",children:`<!-- 基本靜態結構 -->\r
+<label class="label input-label">\r
+  <input type="checkbox" class="checkbox" />\r
+  文字內容\r
 </label>
 `})}),`
 `,s.jsx("br",{}),`
 `]}),`
 `,s.jsxs(e.li,{children:[`
-`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"options"}),`
+`,s.jsxs(e.p,{children:[s.jsx("span",{className:"sb-unstyled font-black",children:"options"}),`\r
 `,s.jsx("span",{className:"sb-unstyled data-type",children:"object"}),s.jsx(e.br,{}),`
 `,"各屬性的型別及說明可參考上方",s.jsx(e.strong,{children:"Controls區塊"}),"，各類別的私有屬性則可以參考",s.jsx(e.strong,{children:"子類別"}),"區塊的各個說明，此處僅列出共同設定的屬性。"]}),`
-`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  const options = {
-    type: "msg",                       //類型
-    theme: "light",                    //主題色
-    maxWidth: "auto",                  //最大尺寸
-    area: ["auto", "auto"],            //尺寸
-    icon:"notice",                     //icon圖標，用做主要分類
-    msgContent: null,                  //主要文字內容
-    customContent: null,               //自定義HTML內容
-    msgTitle: null,                    //title文字
-    classes: [],                       //自定義class
-    placement:"center",                //位置
-    confirm:["確認", function(){}],    //確認按鈕文字&callback
-    cancel:["取消", function(){}],     //取消按鈕文字&callback
-    handler:null,
+`,s.jsx(e.pre,{children:s.jsx(e.code,{className:"language-javascript",children:`  const options = {\r
+    type: "msg",                       //類型\r
+    theme: "light",                    //主題色\r
+    maxWidth: "auto",                  //最大尺寸\r
+    area: ["auto", "auto"],            //尺寸\r
+    icon:"notice",                     //icon圖標，用做主要分類\r
+    msgContent: null,                  //主要文字內容\r
+    customContent: null,               //自定義HTML內容\r
+    msgTitle: null,                    //title文字\r
+    classes: [],                       //自定義class\r
+    placement:"center",                //位置\r
+    confirm:["確認", function(){}],    //確認按鈕文字&callback\r
+    cancel:["取消", function(){}],     //取消按鈕文字&callback\r
+    handler:null,\r
   };
 `})}),`
 `,s.jsx("br",{}),`
