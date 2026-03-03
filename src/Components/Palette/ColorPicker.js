@@ -6,6 +6,7 @@ import addSvg from "../../../public/add.svg";
 var defaultPickerConfig = {
   limits: 5, //maxium color number stored in container
   defaults: [],
+  mode: 'hex'
 };
 
 export class ColorPicker extends BaseComponent {
@@ -17,12 +18,13 @@ export class ColorPicker extends BaseComponent {
     super(pickerContainer);
     this.UItype = "ColorPicker";
     this._config = Object.assign({}, defaultPickerConfig, options);
-    this.defaultColors = [...this._config.defaults].slice(
+    this.mode = this._config.mode;
+    this.defaultColors = this._convertColorMode([...this._config.defaults], this.mode).slice(
       0,
       this._config.limits
     );
     this.colors = [...this.defaultColors];
-    this.current = this.colors[0];
+    this._current = this.colors[0];
     this._picker = this._createPickerpanel();
     this._init();
     this._render();
@@ -33,8 +35,8 @@ export class ColorPicker extends BaseComponent {
     return this._picker;
   }
 
-  get _picked() {
-    return ColorFormat.rgbTohsl(this.current);
+  get current() {
+    return this._current;
   }
 
   _init() {
@@ -44,19 +46,6 @@ export class ColorPicker extends BaseComponent {
       Dom.addClass(colorDiv, ["color"]);
       colorDiv.style.backgroundColor = color;
       Dom.setAttribute(colorDiv, "colorpick", color);
-      this.onevent(colorDiv, "click", (e) => {
-        const colorPicked = e.target.dataset.colorpick;
-        this.current = colorPicked;
-        //點擊打開picker面板
-        Dom.addClass(this._picker, ["visible"]);
-        //傳入dataset.colorpick作為面板當前顏色
-        Dom.setAttribute(this._picker, "currentpick", colorPicked);
-        this._paintCanvas(
-          this._picker.querySelector("canvas"),
-          ColorFormat.rgbTohsl(colorPicked)
-        );
-        this._updatePanel();
-      });
       this.getElem().appendChild(colorDiv);
     }
 
@@ -76,68 +65,138 @@ export class ColorPicker extends BaseComponent {
   }
 
   _bindEvent() {
-    const colorTrack = this._picker.querySelector(".color-track");
+    const colorTrack = this._picker.querySelector(".color-track canvas");
     const hueTrack = this._picker.querySelector(".hue-track");
     const alphaTrack = this._picker.querySelector(".alpha-track");
     const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
     const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
     const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
 
-    let saturation = 1,
-      lightness = 1,
-      hue = 0,
-      alpha = 1;
-
-    if (this._addBtn)
-      this.onevent(this._addBtn, "click", togglePicker.bind(this));
+    const syncCurrent = () => {
+      let buffer;
+      switch (this.mode) {
+        case 'hsl':
+          buffer = this.current;
+          break;
+        case 'rgb':
+          buffer = ColorFormat.rgbTohsl(this.current);
+          break;
+        case 'hex':
+          buffer = ColorFormat.hexTohsl(this.current);
+          break;
+      }
+      const currentPicked = buffer
+        .toLowerCase()
+        .replace(/[hsl()/+]/g, "")
+        .replace(/\s+/g, ",")
+        .split(",").map(str => Number(str));
+      // [hue, saturation, lightness, alpha = 1] = currentPicked;
+      return currentPicked;
+    };
+    // if (this._addBtn)
+    //   this.onevent(this._addBtn, "click", togglePicker.bind(this));
 
     //pointer-down
-    this.onevent(colorTrack, "pointerdown", (e) => {
-      console.log("e.target:", e.target);
-      colorTrack.setPointerCapture(e.pointerId);
-      // updateCurrentColor.call(this);
-      e.preventDefault();
-    });
+    // this.onevent(colorTrack, "pointerdown", (e) => {
+    //   syncCurrent();
+    //   colorTrack.setPointerCapture(e.pointerId);
+    //   updateCurrentColor.call(this);
+    //   e.preventDefault();
+    // });
 
-    this.onevent(hueTrack, "pointerdown", (e) => {
-      console.log("e.target:", e.target);
-      hueTrack.setPointerCapture(e.pointerId);
-      // updateCurrentColor.call(this);
-      e.preventDefault();
-    });
-    this.onevent(alphaTrack, "pointerdown", (e) => {
-      console.log("e.target:", e.target);
-      alphaTrack.setPointerCapture(e.pointerId);
-      // updateCurrentColor.call(this);
-      e.preventDefault();
+    const colorDivs = this.getElem().querySelectorAll(".color");
+    colorDivs.forEach(div => {
+      this.onevent(div, "click", (e) => {
+        const colorPicked = e.target.dataset.colorpick;
+        this._current = colorPicked;
+        //點擊打開picker面板
+        Dom.addClass(this._picker, ["visible"]);
+        //傳入dataset.colorpick作為面板當前顏色
+        Dom.setAttribute(this._picker, "currentpick", colorPicked);
+        this._updatePanel();
+      });
+
     });
 
     //pointer-move
-    this.onevent(colorTrack, "pointermove", (e) => {
-      const { left, top, width, height } =
-        e.currentTarget.getBoundingClientRect();
-      saturation = clamp((e.clientX - left) / width);
-      lightness = clamp(1 - (e.clientY - top) / height);
+    dragging.call(this, colorTrack, (e) => {
+      let [hue, sat, lig, alp] = syncCurrent();
+      const { left, top, width, height } = colorTrack.getBoundingClientRect();
+      //! canvas上的分布是HSV，要轉成HSL
+      let satHSV = clamp((e.clientX - left) / width);
+      let brightness = clamp(1 - (e.clientY - top) / height);
+      let saturation = Math.round(satHSV * 100);
+      let lightness = Math.round(brightness * (1 - (satHSV / 2)) * 100);
+      const updateColor = new Color(hue, saturation, lightness, alp);
+      switch (this.mode) {
+        case 'rgb':
+          this._current = updateColor.toRgb();
+          break;
+        case 'hsl':
+          this._current = updateColor.toHsl();
+          break;
+        case 'hex':
+          this._current = updateColor.toHex();
+          break;
+      }
+      updateCurrentColor.call(this);
     });
-    this.onevent(hueTrack, "pointermove", (e) => {
-      const { left, width } = e.currentTarget.getBoundingClientRect();
+    dragging.call(this, hueTrack, (e) => {
+      let [hue, saturation, lightness, alp] = syncCurrent();
+      const { left, top, width, height } = hueTrack.getBoundingClientRect();
       hue = clamp((e.clientX - left) / width) * 360;
+      const updateColor = new Color(hue, saturation, lightness, alp);
+      switch (this.mode) {
+        case 'rgb':
+          this._current = updateColor.toRgb();
+          break;
+        case 'hsl':
+          this._current = updateColor.toHsl();
+          break;
+        case 'hex':
+          this._current = updateColor.toHex();
+          break;
+      }
+      console.log("hue move:", hue);
+      updateCurrentColor.call(this);
     });
-    this.onevent(alphaTrack, "pointermove", (e) => {
-      const { left, width } = e.currentTarget.getBoundingClientRect();
+    dragging.call(this, alphaTrack, (e) => {
+      let [hue, saturation, lightness, alpha] = syncCurrent();
+      const { left, top, width, height } = alphaTrack.getBoundingClientRect();
       alpha = clamp((e.clientX - left) / width);
+      const updateColor = new Color(hue, saturation, lightness, alpha);
+      switch (this.mode) {
+        case 'rgb':
+          this._current = updateColor.toRgb();
+          break;
+        case 'hsl':
+          this._current = updateColor.toHsl();
+          break;
+        case 'hex':
+          this._current = updateColor.toHex();
+          break;
+      }
+      updateCurrentColor.call(this);
     });
 
-    //pointer-up
-    this.onevent(colorTrack, "pointerup", (e) => {
-      updateCurrentColor.call(this);
-    });
-    this.onevent(hueTrack, "pointerup", (e) => {
-      updateCurrentColor.call(this);
-    });
-    this.onevent(alphaTrack, "pointerup", (e) => {
-      updateCurrentColor.call(this);
-    });
+    function dragging(target, onMove) {
+      let active = false;
+      this.onevent(target, "pointerdown", (e) => {
+        active = true;
+        target.setPointerCapture(e.pointerId);
+        onMove(e);
+        e.preventDefault();
+      });
+      this.onevent(target, "pointermove", (e) => {
+        if (!active) return;
+        onMove(e);
+      });
+      this.onevent(target, "pointerup", (e) => {
+        if (!active) return;
+        active = false;
+        updateCurrentColor.call(this);
+      });
+    }
 
     function togglePicker() {
       Dom.toggleClass(this._picker, ["visible"]);
@@ -147,15 +206,24 @@ export class ColorPicker extends BaseComponent {
     }
 
     function updateCurrentColor() {
+      const [hue, saturation, lightness, alpha] = syncCurrent();
       const updateColor = new Color(
-        Math.round(hue),
-        Math.round(saturation * 100),
-        Math.round(lightness * 100),
-        alpha
+        Math.round(hue), saturation, lightness,
+        Math.round(alpha * 100) / 100
       );
-      console.log("updateCurrentColor:", updateColor);
-      this.current = updateColor.toRgb();
+      switch (this.mode) {
+        case 'rgb':
+          this._current = updateColor.toRgb();
+          break;
+        case 'hex':
+          this._current = updateColor.toHex();
+          break;
+        case 'hsl':
+          this._current = updateColor.toHsl();
+          break;
+      }
       this._updatePanel();
+      //! 如果是點現有顏色來更改，應該要改回去該Div
     }
   }
 
@@ -165,6 +233,7 @@ export class ColorPicker extends BaseComponent {
       Dom.addClass(this._addBtn, ["hidden"]);
     }
   }
+
   _createPickerpanel() {
     const pickerContainer = document.createElement("div");
     const canvasContainer = document.createElement("div");
@@ -175,8 +244,8 @@ export class ColorPicker extends BaseComponent {
     const currentColor = document.createElement("div");
     Dom.addClass(currentColor, ["current-picked-color"]);
 
-    Dom.setAttribute(pickerContainer, "currentpick", this._picked);
-    this._paintCanvas(canvas, this._picked);
+    Dom.setAttribute(pickerContainer, "currentpick", this.current);
+    this._paintCanvas(canvas, 0);
     const canvasThumb = document.createElement("button");
     const hueThumb = document.createElement("button");
     const alphaThumb = document.createElement("button");
@@ -199,22 +268,23 @@ export class ColorPicker extends BaseComponent {
     return pickerContainer;
   }
 
-  _paintCanvas(canvasElem, fill) {
+  _paintCanvas(canvasElem, hue) {
     const w = canvasElem.width;
     const h = canvasElem.height;
     const context = canvasElem.getContext("2d");
+
+    // const [hue, sat, light] = fill
+    //   .toLowerCase()
+    //   .replace(/[hsl()/+]/g, "")
+    //   .replace(/\s+/g, ",")
+    //   .split(",");
+
     // Base hue fill
-    context.fillStyle = `hsl(${
-      fill
-        .toLowerCase()
-        .replace(/[hsl()/+]/g, "")
-        .replace(/\s+/g, ",")
-        .split(",")[0]
-    },100%,50%)`;
+    context.fillStyle = `hsl(${hue},100%,50%)`;
 
     context.fillRect(0, 0, w, h);
     // White → transparent (left to right)
-    const whiteGrad = context.createLinearGradient(0, 0, w, 0);
+    const whiteGrad = context.createLinearGradient(0, 0, w, h);
     whiteGrad.addColorStop(0, "rgba(255,255,255,1)");
     whiteGrad.addColorStop(1, "rgba(255,255,255,0)");
     context.fillStyle = whiteGrad;
@@ -228,31 +298,92 @@ export class ColorPicker extends BaseComponent {
   }
 
   _updatePanel() {
-    console.log("updatepanel's this.current:", this.current);
-    const [h, s, l, a = 1] = ColorFormat.rgbTohsl(this.current)
+    let color;
+    switch (this.mode) {
+      case 'rgb':
+        color = ColorFormat.rgbTohsl(this.current);
+        break;
+      case 'hex':
+        color = ColorFormat.hexTohsl(this.current);
+        break;
+      case 'hsl':
+        color = this.current;
+        break;
+    }
+    const [h, s, l, a = 1] = color
       .toLowerCase()
       .replace(/[hsl()/+]/g, "")
       .replace(/\s+/g, ",")
       .split(",");
 
-    const currentColor = new Color(h, s, l, a);
-
-    const colorTrack = this._picker.querySelector(".color-track");
+    const colorTrack = this._picker.querySelector(".color-track canvas");
     const hueTrack = this._picker.querySelector(".hue-track");
     const alphaTrack = this._picker.querySelector(".alpha-track");
     const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
     const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
     const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
-    this._paintCanvas(colorTrack.querySelector("canvas"), currentColor.toHsl());
-    Dom.setProperty(hueThumb, "--hue", h);
+    this._paintCanvas(colorTrack, h);
+    Dom.setProperty(hueTrack, "--hue", h);
     Dom.setProperty(alphaTrack, "--hue", h);
-    canvasThumb.style.left =
-      s * colorTrack.querySelector("canvas").offsetWidth + "px";
-    canvasThumb.style.top =
-      (1 - l) * colorTrack.querySelector("canvas").offsetHeight + "px";
-    hueThumb.style.left = (h / 360) * hueTrack.offsetWidth + "px";
-    alphaThumb.style.left = a * alphaTrack.offsetWidth + "px";
-    console.log(a, a * alphaTrack.offsetWidth);
-    Dom.setProperty(this._picker, "--picker-bg", this.current);
+
+    if ((h / 360) * hueTrack.offsetWidth >= hueTrack.offsetWidth) {
+      hueThumb.style.right = "0px";
+    } else {
+      hueThumb.style.left = (h / 360) * hueTrack.offsetWidth + "px";
+    }
+    if (a * alphaTrack.offsetWidth >= alphaTrack.offsetWidth) {
+      alphaThumb.style.right = '0px';
+    } else {
+      alphaThumb.style.left = a * alphaTrack.offsetWidth + "px";
+    }
+    Dom.setProperty(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
+  }
+
+  _convertColorMode(colorArr, mode = 'rgb') {
+    const modeType = mode.toLowerCase();
+    //go through每個color，依據各color色彩模式轉換:
+
+    if (!Array.isArray(colorArr)) {
+      colorArr = [colorArr];
+    }
+    let convertArr = colorArr.map((color) => {
+      let originMode = ColorFormat.getColorMode(color);
+      switch (originMode) {
+        case 'hsl':
+          switch (modeType) {
+            case 'rgb':
+              return ColorFormat.hslTorgb(color);
+            case 'hsl':
+              return color;
+            case 'hex':
+              return ColorFormat.hslTohex(color);
+          }
+          break;
+        case 'hex':
+          switch (modeType) {
+            case 'rgb':
+              return ColorFormat.hexTorgb(color);
+            case 'hsl':
+              return ColorFormat.hexTohsl(color);
+            case 'hex':
+              return color;
+          }
+          break;
+        case 'rgb':
+          switch (modeType) {
+            case 'rgb':
+              return color;
+            case 'hsl':
+              return ColorFormat.rgbTohsl(color);
+            case 'hex':
+              return ColorFormat.rgbTohex(color);
+          }
+          break;
+      }
+    });
+
+
+    if (convertArr.length === 1) return convertArr[0];
+    return convertArr;
   }
 }

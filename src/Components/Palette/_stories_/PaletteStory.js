@@ -56,6 +56,7 @@ export const createPalette = ({
   var defaultPickerConfig = {
     limits: 5, //maxium color number stored in container
     defaults: [...randomPalette.slice(0, 3)],
+    mode: colorMode
   };
 
   const picker = new ColorPicker(defaultPickerConfig);

@@ -37,15 +37,37 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .picker {
-    --picker-bg: hsl(0 100 0);
-    @apply max-w-[200px] p-2 rounded-xs shadow-xs bg-white absolute translate-x-[70%] -translate-y-[50%] invisible transition-all duration-75 [&_canvas]:w-full [&>div]:relative grid gap-2;
+    /* --picker-bg: hsl(0 100 0); */
+    @apply max-w-[300px] p-2 rounded-xs shadow-xs bg-white absolute translate-x-[50%] -translate-y-[50%] invisible transition-all duration-75 [&_canvas]:w-full [&_canvas]:cursor-crosshair [&>div]:relative grid gap-2;
   }
 
-  .picker > div:nth-child(2) {
+  .picker>div:nth-child(2) {
     @apply flex gap-2;
   }
+
   .current-picked-color {
-    @apply row-span-2 m-2 aspect-square rounded-full bg-(--picker-bg) [&+div]:w-full;
+    @apply relative m-2 aspect-square rounded-full bg-(--picker-bg) [&+div]:w-full;
+  }
+
+  .current-picked-color::after {
+    --cell: 8px;
+
+    background:
+      linear-gradient(45deg,
+        rgba(255, 255, 255, 0.5) 25%,
+        transparent 25% 75%,
+        rgba(255, 255, 255, 0.5) 75%),
+      linear-gradient(45deg,
+        rgba(255, 255, 255, 0.5) 25%,
+        transparent 25% 75%,
+        rgba(255, 255, 255, 0.5) 75%);
+    background-size:
+      calc(var(--cell) * 2) calc(var(--cell) * 2),
+      calc(var(--cell) * 2) calc(var(--cell) * 2);
+    background-position:
+      0 0,
+      var(--cell) var(--cell);
+    @apply content-[""] -z-1 rounded-full inline-block absolute w-full h-full bg-[#b1b1b1]
   }
 
   .picker .picker-btn {
@@ -69,18 +91,14 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
     background:
       linear-gradient(to right, transparent, var(--hue-color)),
-      linear-gradient(
-        45deg,
+      linear-gradient(45deg,
         rgba(255, 255, 255, 0.5) 25%,
         transparent 25% 75%,
-        rgba(255, 255, 255, 0.5) 75%
-      ),
-      linear-gradient(
-        45deg,
+        rgba(255, 255, 255, 0.5) 75%),
+      linear-gradient(45deg,
         rgba(255, 255, 255, 0.5) 25%,
         transparent 25% 75%,
-        rgba(255, 255, 255, 0.5) 75%
-      );
+        rgba(255, 255, 255, 0.5) 75%);
     background-size:
       100% 100%,
       calc(var(--cell) * 2) calc(var(--cell) * 2),
@@ -94,16 +112,14 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
   }
 
   .hue-track {
-    background: linear-gradient(
-      to right,
-      hsl(0 100% 50%),
-      hsl(60 100% 50%),
-      hsl(120 100% 50%),
-      hsl(180 100% 50%),
-      hsl(240 100% 50%),
-      hsl(300 100% 50%),
-      hsl(360 100% 50%)
-    );
+    background: linear-gradient(to right,
+        hsl(0 100% 50%),
+        hsl(60 100% 50%),
+        hsl(120 100% 50%),
+        hsl(180 100% 50%),
+        hsl(240 100% 50%),
+        hsl(300 100% 50%),
+        hsl(360 100% 50%));
     @apply [&_.picker-btn]:bg-[hsl(var(--hue)_100_50)];
   }
 }

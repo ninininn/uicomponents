@@ -215,7 +215,7 @@ function checkOffset(list, offset, callback) {
 //@ color
 export class Color {
   constructor(hue, saturation, lightness, alpha) {
-    this.base = { h: hue, s: saturation, l: lightness, a: alpha };
+    this.base = { h: hue, s: saturation, l: lightness, a: alpha ? alpha : 1 };
     this.luminance = ColorHelper.luminance(this.toRgb());
   }
 
@@ -238,6 +238,26 @@ export class Color {
 
 //@ formatter
 export class ColorFormat {
+  static isRgb(colorStr) {
+    const regex = /rgb/g;
+    return regex.test(colorStr.toLowerCase());
+  }
+
+  static isHex(colorStr) {
+    const regex = /#/g;
+    return regex.test(colorStr.toLowerCase());
+  }
+
+  static isHsl(colorStr) {
+    const regex = /hsl/g;
+    return regex.test(colorStr.toLowerCase());
+  }
+
+  static getColorMode(colorStr) {
+    if (ColorFormat.isRgb(colorStr)) return 'rgb';
+    if (ColorFormat.isHex(colorStr)) return 'hex';
+    if (ColorFormat.isHsl(colorStr)) return 'hsl';
+  }
   static hexTorgb(hexString) {
     let rgbResult = "";
     const Rstr = Array.from(hexString.slice(1, 3));
@@ -250,7 +270,7 @@ export class ColorFormat {
     let B = ColorHelper.tohexDigits(Bstr);
     let A = Math.round((ColorHelper.tohexDigits(Astr) / 255) * 100) / 100;
 
-    if (A == 1) {
+    if (A == 1 || !A) {
       rgbResult = `rgb(${R},${G},${B})`;
     } else {
       rgbResult = `rgb(${R},${G},${B},${A})`;
@@ -266,8 +286,8 @@ export class ColorFormat {
     let eachRgb = trimStr.map(
       (strNum) => Math.round((strNum / 255) * 100) / 100
     );
-    let [R, G, B, A] = eachRgb;
-
+    let [R, G, B] = eachRgb;
+    let A = trimStr[3];
     let max = Math.max(...eachRgb);
     let min = Math.min(...eachRgb);
     let delta = max - min;
@@ -299,9 +319,9 @@ export class ColorFormat {
 
     alpha = A ? A : 1;
     if (alpha !== 1) {
-      return `hsl(${Math.round(hue)},${saturation}%,${lightness}%/${alpha})`;
+      return `hsl(${Math.round(hue)} ${saturation} ${lightness} / ${alpha})`;
     }
-    return `hsl(${Math.round(hue)},${saturation}%,${lightness}%)`;
+    return `hsl(${Math.round(hue)} ${saturation} ${lightness})`;
   }
   static hslTorgb(hslString) {
     let trimStr = hslString
@@ -356,7 +376,11 @@ export class ColorFormat {
     return `#${hexResult.join("")}`;
   }
   static hslTohex(hslString) {
-    let turnRgb = ColorFormat.hslTorgb(hslString);
-    return ColorFormat.rgbTohex(turnRgb);
+    let buffer = ColorFormat.hslTorgb(hslString);
+    return ColorFormat.rgbTohex(buffer);
+  }
+  static hexTohsl(hexString) {
+    let buffer = ColorFormat.hexTorgb(hexString);
+    return ColorFormat.rgbTohsl(buffer);
   }
 }
