@@ -3,7 +3,6 @@ import { BaseComponent, Dom, findElem } from "../../Utils/Utils";
 import { Palette, ColorFormat, Color } from "../../Utils/Color";
 import addSvg from "../../../public/add.svg";
 
-
 function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
 }
@@ -11,7 +10,7 @@ function clamp(value, min = 0, max = 1) {
 var defaultPickerConfig = {
   limits: 5, //maxium color number stored in container
   defaults: ["#878787", "#474747"],
-  mode: 'hex'
+  mode: "hex",
 };
 
 export class ColorPicker extends BaseComponent {
@@ -24,11 +23,14 @@ export class ColorPicker extends BaseComponent {
     this.UItype = "ColorPicker";
     this._config = Object.assign({}, defaultPickerConfig, options);
     this.mode = this._config.mode;
-    this.defaultColors = this._convertColorMode(this._config.defaults, this.mode).slice(
-      0,
-      this._config.limits
-    );
-    this.colors = this._config.limits === 1 ? [this.defaultColors] : [...this.defaultColors];
+    this.defaultColors = this._convertColorMode(
+      this._config.defaults,
+      this.mode
+    ).slice(0, this._config.limits);
+    this.colors =
+      this._config.limits === 1
+        ? [this.defaultColors]
+        : [...this.defaultColors];
     this._current = this.getColorClass(this.colors[0]);
     this._picker = this._createPickerpanel();
     this._trigger = undefined;
@@ -47,23 +49,27 @@ export class ColorPicker extends BaseComponent {
 
   get current() {
     switch (this.mode) {
-      case 'rgb':
+      case "rgb":
         return this._current.toRgb();
-      case 'hsl':
+      case "hsl":
         return this._current.toHsl();
-      case 'hex':
+      case "hex":
         return this._current.toHex();
     }
   }
 
   //回傳Color類別物件
   getColorClass(value) {
-    const cl = this._convertColorMode(value, 'hsl')[0];
+    const cl = this._convertColorMode(value, "hsl")[0];
     //value會是色碼，要先轉成hsl帶入Color
-    const [hue, saturation, lightness, alpha = 1] = cl.toLowerCase()
-      .replace(/[hsl()/+]/g, "")
-      .replace(/\s+/g, ",")
-      .split(",").map(str => Number(str));
+    // const [hue, saturation, lightness, alpha = 1] = cl
+    //   .toLowerCase()
+    //   .replace(/[hsl()/+]/g, "")
+    //   .replace(/\s+/g, ",")
+    //   .split(",")
+    //   .map((str) => Number(str));
+    const nums = (cl.match(/[\d.]+/g) || []).map(Number);
+    const [hue, saturation, lightness, alpha = 1] = nums;
     return new Color(hue, saturation, lightness, alpha);
   }
 
@@ -85,24 +91,26 @@ export class ColorPicker extends BaseComponent {
       icon: addSvg,
       handler: () => {
         this._trigger = this._addBtn;
-        const panelComfirmBtn = this._picker.querySelector(" button:not(.picker-btn)");
+        const panelComfirmBtn = this._picker.querySelector(
+          " button:not(.picker-btn)"
+        );
         Dom.setText(panelComfirmBtn, "新增顏色");
         Dom.addClass(this._picker, ["visible"]);
 
         switch (this.mode) {
-          case 'rgb':
+          case "rgb":
             this.current = "rgb(255, 255, 255)";
             break;
-          case 'hsl':
+          case "hsl":
             this.current = "hsl(0 0 100)";
             break;
-          case 'hex':
+          case "hex":
             this.current = "#FFFFFF";
             break;
         }
 
         this._updatePanel();
-      }
+      },
     });
     this.getElem().appendChild(addBtn);
     this._addBtn = addBtn;
@@ -120,11 +128,13 @@ export class ColorPicker extends BaseComponent {
       if (e.target.classList.contains("color")) {
         this._trigger = e.target;
         const colorPicked = e.target.dataset.colorpick;
-        const panelComfirmBtn = this._picker.querySelector(" button:not(.picker-btn)");
+        const panelComfirmBtn = this._picker.querySelector(
+          " button:not(.picker-btn)"
+        );
         this.current = colorPicked;
 
         const colors = this.getElem().querySelectorAll(".color");
-        colors.forEach(color => {
+        colors.forEach((color) => {
           if (color === this._trigger) {
             Dom.addClass(color, ["main-color"]);
           } else {
@@ -150,7 +160,7 @@ export class ColorPicker extends BaseComponent {
       let satHSV = clamp((e.clientX - left) / width);
       let brightness = clamp(1 - (e.clientY - top) / height);
       let saturation = Math.round(satHSV * 100);
-      let lightness = Math.round(brightness * (1 - (satHSV / 2)) * 100);
+      let lightness = Math.round(brightness * (1 - satHSV / 2) * 100);
 
       this._current = new Color(h, saturation, lightness, a);
       this._updatePanel();
@@ -198,14 +208,13 @@ export class ColorPicker extends BaseComponent {
 
     //mainColor加上放大效果，其餘不變
     const colors = this.getElem().querySelectorAll(".color");
-    colors.forEach(color => {
+    colors.forEach((color) => {
       if (color.dataset.colorpick === this.current) {
         Dom.addClass(color, ["main-color"]);
       } else {
         Dom.removeClass(color, ["main-color"]);
       }
     });
-
   }
 
   //[內部控制]-建立pickerPanel
@@ -227,19 +236,23 @@ export class ColorPicker extends BaseComponent {
           // newColor.style.backgroundColor = this.current;
           //加上main-color class
           Dom.addClass(newColor, ["main-color"]);
-          this._addBtn.insertAdjacentElement('beforebegin', newColor);
-
+          this._addBtn.insertAdjacentElement("beforebegin", newColor);
         } else {
+          //this.colors array也要更新
+          const triggerIndex = Array.from(
+            this.getElem().querySelectorAll(".color")
+          ).indexOf(this._trigger);
+          this.colors[triggerIndex] = this.current;
+          console.log(this.colors, this.current, this._current);
           this._trigger.dataset.colorpick = this.current;
           // this._trigger.style.backgroundColor = this.current;
         }
-
 
         this._config.handler?.call(this, this.current);
         Dom.removeClass(this._picker, ["visible"]);
         this._render();
         this._updatePanel();
-      }
+      },
     });
     const trackContainer = document.createElement("div");
     const subTrackContainer = document.createElement("div");
@@ -310,7 +323,7 @@ export class ColorPicker extends BaseComponent {
 
     const { height } = colorTrack.getBoundingClientRect();
     //update Canvas-thumb position
-    let brightness = (l / 100) + (s / 100) * Math.min(l / 100, 1 - l / 100);
+    let brightness = l / 100 + (s / 100) * Math.min(l / 100, 1 - l / 100);
     canvasThumb.style.left = `${s}%`;
     canvasThumb.style.transform = `translateY(-${clamp(height * brightness, 0, height - canvasThumb.offsetWidth)}px)`;
 
@@ -318,14 +331,21 @@ export class ColorPicker extends BaseComponent {
     hueThumb.style.left = (h / 360) * hueTrack.offsetWidth + "px";
 
     //update Alpha-thumb position
-    alphaThumb.style.left = (a * alphaTrack.offsetWidth) - (alphaThumb.getBoundingClientRect().width) + "px";
+    alphaThumb.style.left =
+      a * alphaTrack.offsetWidth -
+      alphaThumb.getBoundingClientRect().width +
+      "px";
 
     // Dom.setProperty(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
-    Dom.setAttribute(this._picker, "currentpick", this._convertColorMode(this.current, this.mode));
+    Dom.setAttribute(
+      this._picker,
+      "currentpick",
+      this._convertColorMode(this.current, this.mode)
+    );
   }
 
   //[內部控制]-依據colorMode轉換色彩模式
-  _convertColorMode(colorArr, mode = 'rgb') {
+  _convertColorMode(colorArr, mode = "rgb") {
     const modeType = mode.toLowerCase();
     //go through每個color，依據各color色彩模式轉換:
 
@@ -335,33 +355,33 @@ export class ColorPicker extends BaseComponent {
     let convertArr = colorArr.map((color) => {
       let originMode = ColorFormat.getColorMode(color);
       switch (originMode) {
-        case 'hsl':
+        case "hsl":
           switch (modeType) {
-            case 'rgb':
+            case "rgb":
               return ColorFormat.hslTorgb(color);
-            case 'hsl':
+            case "hsl":
               return color;
-            case 'hex':
+            case "hex":
               return ColorFormat.hslTohex(color);
           }
           break;
-        case 'hex':
+        case "hex":
           switch (modeType) {
-            case 'rgb':
+            case "rgb":
               return ColorFormat.hexTorgb(color);
-            case 'hsl':
+            case "hsl":
               return ColorFormat.hexTohsl(color);
-            case 'hex':
+            case "hex":
               return color;
           }
           break;
-        case 'rgb':
+        case "rgb":
           switch (modeType) {
-            case 'rgb':
+            case "rgb":
               return color;
-            case 'hsl':
+            case "hsl":
               return ColorFormat.rgbTohsl(color);
-            case 'hex':
+            case "hex":
               return ColorFormat.rgbTohex(color);
           }
           break;
@@ -374,11 +394,11 @@ export class ColorPicker extends BaseComponent {
   //[外部控制]-取得當前色
   getColor() {
     switch (this.mode) {
-      case 'rgb':
+      case "rgb":
         return this.current.toRgb();
-      case 'hex':
+      case "hex":
         return this.current.toHex();
-      case 'hsl':
+      case "hsl":
         return this.current.toHsl();
     }
   }
