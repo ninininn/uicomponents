@@ -36,6 +36,15 @@ export default {
         type: { summary: "number" },
       },
     },
+    limits: {
+      control: { type: "number", min: 1 },
+      type: { required: true },
+      description: "選擇器最多儲存的顏色數量",
+      table: {
+        category: "configurations",
+        type: { summary: "number" },
+      },
+    },
     colorMode: {
       control: "select",
       description: "色碼模式",
@@ -137,6 +146,7 @@ export default {
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // 預設args
   args: {
+    limits: 5,
     colorCounts: 1,
     colorMode: 'hsl',
     alpha: 1,
@@ -151,6 +161,7 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Palette = {
   args: {
+    limits: 5,
     colorCounts: 10,
     colorMode: 'hsl',
     style: 'random',

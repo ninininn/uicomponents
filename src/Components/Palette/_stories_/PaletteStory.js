@@ -14,6 +14,7 @@ export const createPalette = ({
   lightnessFixed,
   saturation,
   lightness,
+  limits
 }) => {
   let parent = document.createElement("div");
   parent.className = "flex";
@@ -54,9 +55,9 @@ export const createPalette = ({
     parent.appendChild(palette);
   }
   var defaultPickerConfig = {
-    limits: 5, //maxium color number stored in container
-    defaults: [...randomPalette.slice(0, 3)],
-    mode: colorMode
+    limits: limits, //maxium color number stored in container
+    defaults: ["rgb(0,0,0,1)"],
+    mode: 'hex'
   };
 
   const picker = new ColorPicker(defaultPickerConfig);

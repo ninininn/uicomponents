@@ -3,9 +3,14 @@ import { BaseComponent, Dom, findElem } from "../../Utils/Utils";
 import { Palette, ColorFormat, Color } from "../../Utils/Color";
 import addSvg from "../../../public/add.svg";
 
+
+function clamp(value, min = 0, max = 1) {
+  return Math.min(max, Math.max(min, value));
+}
+
 var defaultPickerConfig = {
   limits: 5, //maxium color number stored in container
-  defaults: [],
+  defaults: ["#878787", "#474747"],
   mode: 'hex'
 };
 
@@ -19,13 +24,14 @@ export class ColorPicker extends BaseComponent {
     this.UItype = "ColorPicker";
     this._config = Object.assign({}, defaultPickerConfig, options);
     this.mode = this._config.mode;
-    this.defaultColors = this._convertColorMode([...this._config.defaults], this.mode).slice(
+    this.defaultColors = this._convertColorMode(this._config.defaults, this.mode).slice(
       0,
       this._config.limits
     );
-    this.colors = [...this.defaultColors];
-    this._current = this.colors[0];
+    this.colors = this._config.limits === 1 ? [this.defaultColors] : [...this.defaultColors];
+    this._current = this.getColorClass(this.colors[0]);
     this._picker = this._createPickerpanel();
+    this._trigger = undefined;
     this._init();
     this._render();
     this._bindEvent();
@@ -35,8 +41,30 @@ export class ColorPicker extends BaseComponent {
     return this._picker;
   }
 
+  set current(value) {
+    this._current = this.getColorClass(value);
+  }
+
   get current() {
-    return this._current;
+    switch (this.mode) {
+      case 'rgb':
+        return this._current.toRgb();
+      case 'hsl':
+        return this._current.toHsl();
+      case 'hex':
+        return this._current.toHex();
+    }
+  }
+
+  //回傳Color類別物件
+  getColorClass(value) {
+    const cl = this._convertColorMode(value, 'hsl')[0];
+    //value會是色碼，要先轉成hsl帶入Color
+    const [hue, saturation, lightness, alpha = 1] = cl.toLowerCase()
+      .replace(/[hsl()/+]/g, "")
+      .replace(/\s+/g, ",")
+      .split(",").map(str => Number(str));
+    return new Color(hue, saturation, lightness, alpha);
   }
 
   _init() {
@@ -44,7 +72,7 @@ export class ColorPicker extends BaseComponent {
     for (let color of this.defaultColors) {
       const colorDiv = document.createElement("div");
       Dom.addClass(colorDiv, ["color"]);
-      colorDiv.style.backgroundColor = color;
+      // colorDiv.style.backgroundColor = color;
       Dom.setAttribute(colorDiv, "colorpick", color);
       this.getElem().appendChild(colorDiv);
     }
@@ -52,12 +80,30 @@ export class ColorPicker extends BaseComponent {
     Dom.addClass(this._picker, ["picker"]);
 
     //加入新增顏色用的操作按鈕
-    const addBtn = document.createElement("button");
-    addBtn.type = "button";
-    const addImg = document.createElement("img");
-    addImg.src = addSvg;
-    addBtn.append(addImg);
-    Dom.addClass(addBtn, ["btn", "btn-sm", "btn-primary", "add-color-btn"]);
+    const addBtn = Dom.setButtons({
+      classes: ["btn", "btn-sm", "btn-primary", "add-color-btn"],
+      icon: addSvg,
+      handler: () => {
+        this._trigger = this._addBtn;
+        const panelComfirmBtn = this._picker.querySelector(" button:not(.picker-btn)");
+        Dom.setText(panelComfirmBtn, "新增顏色");
+        Dom.addClass(this._picker, ["visible"]);
+
+        switch (this.mode) {
+          case 'rgb':
+            this.current = "rgb(255, 255, 255)";
+            break;
+          case 'hsl':
+            this.current = "hsl(0 0 100)";
+            break;
+          case 'hex':
+            this.current = "#FFFFFF";
+            break;
+        }
+
+        this._updatePanel();
+      }
+    });
     this.getElem().appendChild(addBtn);
     this._addBtn = addBtn;
 
@@ -68,115 +114,60 @@ export class ColorPicker extends BaseComponent {
     const colorTrack = this._picker.querySelector(".color-track canvas");
     const hueTrack = this._picker.querySelector(".hue-track");
     const alphaTrack = this._picker.querySelector(".alpha-track");
-    const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
-    const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
-    const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
 
-    const syncCurrent = () => {
-      let buffer;
-      switch (this.mode) {
-        case 'hsl':
-          buffer = this.current;
-          break;
-        case 'rgb':
-          buffer = ColorFormat.rgbTohsl(this.current);
-          break;
-        case 'hex':
-          buffer = ColorFormat.hexTohsl(this.current);
-          break;
-      }
-      const currentPicked = buffer
-        .toLowerCase()
-        .replace(/[hsl()/+]/g, "")
-        .replace(/\s+/g, ",")
-        .split(",").map(str => Number(str));
-      // [hue, saturation, lightness, alpha = 1] = currentPicked;
-      return currentPicked;
-    };
-    // if (this._addBtn)
-    //   this.onevent(this._addBtn, "click", togglePicker.bind(this));
-
-    //pointer-down
-    // this.onevent(colorTrack, "pointerdown", (e) => {
-    //   syncCurrent();
-    //   colorTrack.setPointerCapture(e.pointerId);
-    //   updateCurrentColor.call(this);
-    //   e.preventDefault();
-    // });
-
-    const colorDivs = this.getElem().querySelectorAll(".color");
-    colorDivs.forEach(div => {
-      this.onevent(div, "click", (e) => {
+    this.onevent(this.getElem(), "click", (e) => {
+      e.stopPropagation();
+      if (e.target.classList.contains("color")) {
+        this._trigger = e.target;
         const colorPicked = e.target.dataset.colorpick;
-        this._current = colorPicked;
+        const panelComfirmBtn = this._picker.querySelector(" button:not(.picker-btn)");
+        this.current = colorPicked;
+
+        const colors = this.getElem().querySelectorAll(".color");
+        colors.forEach(color => {
+          if (color === this._trigger) {
+            Dom.addClass(color, ["main-color"]);
+          } else {
+            Dom.removeClass(color, ["main-color"]);
+          }
+        });
+
         //點擊打開picker面板
         Dom.addClass(this._picker, ["visible"]);
+        Dom.setText(panelComfirmBtn, "更改顏色");
         //傳入dataset.colorpick作為面板當前顏色
         Dom.setAttribute(this._picker, "currentpick", colorPicked);
         this._updatePanel();
-      });
-
+      }
     });
 
     //pointer-move
     dragging.call(this, colorTrack, (e) => {
-      let [hue, sat, lig, alp] = syncCurrent();
+      //取得當前_current Color物件
+      let { h, a } = this.syncColorBase();
       const { left, top, width, height } = colorTrack.getBoundingClientRect();
       //! canvas上的分布是HSV，要轉成HSL
       let satHSV = clamp((e.clientX - left) / width);
       let brightness = clamp(1 - (e.clientY - top) / height);
       let saturation = Math.round(satHSV * 100);
       let lightness = Math.round(brightness * (1 - (satHSV / 2)) * 100);
-      const updateColor = new Color(hue, saturation, lightness, alp);
-      switch (this.mode) {
-        case 'rgb':
-          this._current = updateColor.toRgb();
-          break;
-        case 'hsl':
-          this._current = updateColor.toHsl();
-          break;
-        case 'hex':
-          this._current = updateColor.toHex();
-          break;
-      }
-      updateCurrentColor.call(this);
+
+      this._current = new Color(h, saturation, lightness, a);
+      this._updatePanel();
     });
     dragging.call(this, hueTrack, (e) => {
-      let [hue, saturation, lightness, alp] = syncCurrent();
-      const { left, top, width, height } = hueTrack.getBoundingClientRect();
-      hue = clamp((e.clientX - left) / width) * 360;
-      const updateColor = new Color(hue, saturation, lightness, alp);
-      switch (this.mode) {
-        case 'rgb':
-          this._current = updateColor.toRgb();
-          break;
-        case 'hsl':
-          this._current = updateColor.toHsl();
-          break;
-        case 'hex':
-          this._current = updateColor.toHex();
-          break;
-      }
-      console.log("hue move:", hue);
-      updateCurrentColor.call(this);
+      let { s, l, a } = this.syncColorBase();
+      const { left, width } = hueTrack.getBoundingClientRect();
+      let hue = clamp((e.clientX - left) / width) * 360;
+      this._current = new Color(hue, s, l, a);
+      this._updatePanel();
     });
     dragging.call(this, alphaTrack, (e) => {
-      let [hue, saturation, lightness, alpha] = syncCurrent();
-      const { left, top, width, height } = alphaTrack.getBoundingClientRect();
-      alpha = clamp((e.clientX - left) / width);
-      const updateColor = new Color(hue, saturation, lightness, alpha);
-      switch (this.mode) {
-        case 'rgb':
-          this._current = updateColor.toRgb();
-          break;
-        case 'hsl':
-          this._current = updateColor.toHsl();
-          break;
-        case 'hex':
-          this._current = updateColor.toHex();
-          break;
-      }
-      updateCurrentColor.call(this);
+      let { h, s, l } = this.syncColorBase();
+      const { left, width } = alphaTrack.getBoundingClientRect();
+      let alpha = clamp((e.clientX - left) / width);
+      this._current = new Color(h, s, l, alpha);
+      this._updatePanel();
     });
 
     function dragging(target, onMove) {
@@ -194,57 +185,68 @@ export class ColorPicker extends BaseComponent {
       this.onevent(target, "pointerup", (e) => {
         if (!active) return;
         active = false;
-        updateCurrentColor.call(this);
+        this._updatePanel();
       });
-    }
-
-    function togglePicker() {
-      Dom.toggleClass(this._picker, ["visible"]);
-    }
-    function clamp(value, min = 0, max = 1) {
-      return Math.min(max, Math.max(min, value));
-    }
-
-    function updateCurrentColor() {
-      const [hue, saturation, lightness, alpha] = syncCurrent();
-      const updateColor = new Color(
-        Math.round(hue), saturation, lightness,
-        Math.round(alpha * 100) / 100
-      );
-      switch (this.mode) {
-        case 'rgb':
-          this._current = updateColor.toRgb();
-          break;
-        case 'hex':
-          this._current = updateColor.toHex();
-          break;
-        case 'hsl':
-          this._current = updateColor.toHsl();
-          break;
-      }
-      this._updatePanel();
-      //! 如果是點現有顏色來更改，應該要改回去該Div
     }
   }
 
   _render() {
-    this._updatePanel();
-    if (this.colors.length > this._config.limits) {
+    //!render不用更新pickerPanel，因為也還沒確定顏色
+    if (this.colors.length >= this._config.limits) {
       Dom.addClass(this._addBtn, ["hidden"]);
     }
+
+    //mainColor加上放大效果，其餘不變
+    const colors = this.getElem().querySelectorAll(".color");
+    colors.forEach(color => {
+      if (color.dataset.colorpick === this.current) {
+        Dom.addClass(color, ["main-color"]);
+      } else {
+        Dom.removeClass(color, ["main-color"]);
+      }
+    });
+
   }
 
+  //[內部控制]-建立pickerPanel
   _createPickerpanel() {
     const pickerContainer = document.createElement("div");
     const canvasContainer = document.createElement("div");
     const canvas = document.createElement("canvas");
 
+    const confirmBtn = Dom.setButtons({
+      classes: ["btn", "btn-primary"],
+      text: "更改顏色",
+      handler: () => {
+        //回傳當前顏色
+        if (this._trigger === this._addBtn) {
+          this.colors.push(this.current);
+          const newColor = document.createElement("div");
+          Dom.addClass(newColor, ["color"]);
+          newColor.dataset.colorpick = this.current;
+          // newColor.style.backgroundColor = this.current;
+          //加上main-color class
+          Dom.addClass(newColor, ["main-color"]);
+          this._addBtn.insertAdjacentElement('beforebegin', newColor);
+
+        } else {
+          this._trigger.dataset.colorpick = this.current;
+          // this._trigger.style.backgroundColor = this.current;
+        }
+
+
+        this._config.handler?.call(this, this.current);
+        Dom.removeClass(this._picker, ["visible"]);
+        this._render();
+        this._updatePanel();
+      }
+    });
     const trackContainer = document.createElement("div");
     const subTrackContainer = document.createElement("div");
     const currentColor = document.createElement("div");
     Dom.addClass(currentColor, ["current-picked-color"]);
 
-    Dom.setAttribute(pickerContainer, "currentpick", this.current);
+    Dom.setAttribute(pickerContainer, "currentpick", this.colors[0]);
     this._paintCanvas(canvas, 0);
     const canvasThumb = document.createElement("button");
     const hueThumb = document.createElement("button");
@@ -256,7 +258,7 @@ export class ColorPicker extends BaseComponent {
     hueTrack.append(hueThumb);
     subTrackContainer.append(hueTrack, alphaTrack);
     trackContainer.append(currentColor, subTrackContainer);
-    pickerContainer.append(canvasContainer, trackContainer);
+    pickerContainer.append(canvasContainer, trackContainer, confirmBtn);
     Dom.addClass(canvasContainer, ["color-track"]);
     Dom.addClass(alphaTrack, ["alpha-track"]);
     Dom.addClass(hueTrack, ["hue-track"]);
@@ -268,16 +270,11 @@ export class ColorPicker extends BaseComponent {
     return pickerContainer;
   }
 
+  //[內部控制]-更新canvas底色
   _paintCanvas(canvasElem, hue) {
     const w = canvasElem.width;
     const h = canvasElem.height;
     const context = canvasElem.getContext("2d");
-
-    // const [hue, sat, light] = fill
-    //   .toLowerCase()
-    //   .replace(/[hsl()/+]/g, "")
-    //   .replace(/\s+/g, ",")
-    //   .split(",");
 
     // Base hue fill
     context.fillStyle = `hsl(${hue},100%,50%)`;
@@ -297,24 +294,9 @@ export class ColorPicker extends BaseComponent {
     context.fillRect(0, 0, w, h);
   }
 
+  //[內部控制]-更新pickerPanel內部顏色位置
   _updatePanel() {
-    let color;
-    switch (this.mode) {
-      case 'rgb':
-        color = ColorFormat.rgbTohsl(this.current);
-        break;
-      case 'hex':
-        color = ColorFormat.hexTohsl(this.current);
-        break;
-      case 'hsl':
-        color = this.current;
-        break;
-    }
-    const [h, s, l, a = 1] = color
-      .toLowerCase()
-      .replace(/[hsl()/+]/g, "")
-      .replace(/\s+/g, ",")
-      .split(",");
+    const { h, s, l, a } = this.syncColorBase();
 
     const colorTrack = this._picker.querySelector(".color-track canvas");
     const hueTrack = this._picker.querySelector(".hue-track");
@@ -326,19 +308,23 @@ export class ColorPicker extends BaseComponent {
     Dom.setProperty(hueTrack, "--hue", h);
     Dom.setProperty(alphaTrack, "--hue", h);
 
-    if ((h / 360) * hueTrack.offsetWidth >= hueTrack.offsetWidth) {
-      hueThumb.style.right = "0px";
-    } else {
-      hueThumb.style.left = (h / 360) * hueTrack.offsetWidth + "px";
-    }
-    if (a * alphaTrack.offsetWidth >= alphaTrack.offsetWidth) {
-      alphaThumb.style.right = '0px';
-    } else {
-      alphaThumb.style.left = a * alphaTrack.offsetWidth + "px";
-    }
-    Dom.setProperty(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
+    const { height } = colorTrack.getBoundingClientRect();
+    //update Canvas-thumb position
+    let brightness = (l / 100) + (s / 100) * Math.min(l / 100, 1 - l / 100);
+    canvasThumb.style.left = `${s}%`;
+    canvasThumb.style.transform = `translateY(-${clamp(height * brightness, 0, height - canvasThumb.offsetWidth)}px)`;
+
+    //update Hue-thumb position
+    hueThumb.style.left = (h / 360) * hueTrack.offsetWidth + "px";
+
+    //update Alpha-thumb position
+    alphaThumb.style.left = (a * alphaTrack.offsetWidth) - (alphaThumb.getBoundingClientRect().width) + "px";
+
+    // Dom.setProperty(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
+    Dom.setAttribute(this._picker, "currentpick", this._convertColorMode(this.current, this.mode));
   }
 
+  //[內部控制]-依據colorMode轉換色彩模式
   _convertColorMode(colorArr, mode = 'rgb') {
     const modeType = mode.toLowerCase();
     //go through每個color，依據各color色彩模式轉換:
@@ -382,8 +368,32 @@ export class ColorPicker extends BaseComponent {
       }
     });
 
-
-    if (convertArr.length === 1) return convertArr[0];
     return convertArr;
   }
+
+  //[外部控制]-取得當前色
+  getColor() {
+    switch (this.mode) {
+      case 'rgb':
+        return this.current.toRgb();
+      case 'hex':
+        return this.current.toHex();
+      case 'hsl':
+        return this.current.toHsl();
+    }
+  }
+
+  //[外部控制]-設定主色
+  setMain(color) {
+    this.current = this._convertColorMode(color, this.mode);
+    this._updatePanel();
+  }
+
+  //[外部控制]-取得最新current並轉為hsl
+  syncColorBase() {
+    return this._current.base;
+  }
 }
+
+//掛到全域window上供外部使用
+window.ColorPicker = ColorPicker;

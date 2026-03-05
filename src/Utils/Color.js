@@ -363,10 +363,11 @@ export class ColorFormat {
     return `rgb(${r},${g},${b})`;
   }
   static rgbTohex(rgbString) {
+    //須注意rgb有a時要
     let colors = rgbString.replace(/[rgb()\s+]/g, "").split(",");
     let hexResult = colors.map((color) => {
       color = parseFloat(color);
-      if (color < 1) {
+      if (color <= 1) {
         color = Math.floor(color * 255);
       }
       let mod = color % 16;
