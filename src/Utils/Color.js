@@ -1,3 +1,4 @@
+import { clamp } from '../Utils/Utils';
 const COLOR_DIGITS = [
   "0",
   "1",
@@ -215,7 +216,9 @@ function checkOffset(list, offset, callback) {
 //@ color
 export class Color {
   constructor(hue, saturation, lightness, alpha) {
-    this.base = { h: hue, s: saturation, l: lightness, a: alpha ? alpha : 1 };
+    this.base = {
+      h: hue, s: clamp(saturation, 0, 100), l: clamp(lightness, 0, 100), a: clamp(alpha ?? 1, 0, 1)
+    };
     this.luminance = ColorHelper.luminance(this.toRgb());
   }
 
@@ -283,15 +286,13 @@ export class ColorFormat {
       .toLowerCase()
       .replace(/[rgb()\s+]/g, "")
       .split(",");
-    let eachRgb = trimStr.map(
-      (strNum) => Math.round((strNum / 255) * 100) / 100
-    );
+
+    let eachRgb = trimStr.slice(0, 3).map((strNum) => Number(strNum) / 255);
     let [R, G, B] = eachRgb;
     let A = trimStr[3];
     let max = Math.max(...eachRgb);
     let min = Math.min(...eachRgb);
     let delta = max - min;
-
     let hue, saturation, lightness, alpha;
     if (max === min) {
       hue = 0;
@@ -317,11 +318,11 @@ export class ColorFormat {
     saturation = saturation > 100 ? 100 : saturation;
     lightness = lightness * 100 > 100 ? 100 : lightness * 100;
 
-    alpha = A ? A : 1;
-    if (alpha !== 1) {
-      return `hsl(${Math.round(hue)} ${saturation} ${lightness} / ${alpha})`;
+    alpha = isFinite(A) ? A : 1;
+    if (alpha === 1) {
+      return `hsl(${Math.round(hue)} ${saturation} ${lightness})`;
     }
-    return `hsl(${Math.round(hue)} ${saturation} ${lightness})`;
+    return `hsl(${Math.round(hue)} ${saturation} ${lightness} / ${alpha})`;
   }
   static hslTorgb(hslString) {
     let trimStr = hslString
@@ -363,15 +364,16 @@ export class ColorFormat {
     return `rgb(${r},${g},${b})`;
   }
   static rgbTohex(rgbString) {
-    //須注意rgb有a時要
-    let colors = rgbString.replace(/[rgb()\s+]/g, "").split(",");
-    let hexResult = colors.map((color) => {
-      color = parseFloat(color);
-      if (color <= 1) {
-        color = Math.floor(color * 255);
-      }
-      let mod = color % 16;
-      let hexStr = `${DIGITs_MAP.get(Math.floor(color / 16))}${DIGITs_MAP.get(mod)}`;
+    //須注意rgb有a時要判斷最後一個數值
+    let colors = rgbString.replace(/[rgb()\s+]/g, "").split(",").map(Number);
+    const hexResult = colors.map((color, index) => {
+      const num = index === 3 ? Math.floor(color * 255) : color;
+      // color = parseFloat(color);
+      // if (color <= 1) {
+      //   color = Math.floor(color * 255);
+      // }
+      let mod = num % 16;
+      let hexStr = `${DIGITs_MAP.get(Math.floor(num / 16))}${DIGITs_MAP.get(mod)}`;
       return hexStr;
     });
     return `#${hexResult.join("")}`;

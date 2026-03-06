@@ -60,15 +60,9 @@ export class ColorPicker extends BaseComponent {
 
   //回傳Color類別物件
   getColorClass(value) {
-    const cl = this._convertColorMode(value, "hsl")[0];
     //value會是色碼，要先轉成hsl帶入Color
-    // const [hue, saturation, lightness, alpha = 1] = cl
-    //   .toLowerCase()
-    //   .replace(/[hsl()/+]/g, "")
-    //   .replace(/\s+/g, ",")
-    //   .split(",")
-    //   .map((str) => Number(str));
-    const nums = (cl.match(/[\d.]+/g) || []).map(Number);
+    const colorStr = this._convertColorMode(value, "hsl")[0];
+    const nums = (colorStr.match(/[\d.]+/g) || []).map(Number);
     const [hue, saturation, lightness, alpha = 1] = nums;
     return new Color(hue, saturation, lightness, alpha);
   }
@@ -158,9 +152,14 @@ export class ColorPicker extends BaseComponent {
       const { left, top, width, height } = colorTrack.getBoundingClientRect();
       //! canvas上的分布是HSV，要轉成HSL
       let satHSV = clamp((e.clientX - left) / width);
-      let brightness = clamp(1 - (e.clientY - top) / height);
-      let saturation = Math.round(satHSV * 100);
-      let lightness = Math.round(brightness * (1 - satHSV / 2) * 100);
+      let v = clamp(1 - (e.clientY - top) / height);
+      let l = v * (1 - satHSV / 2);
+      let satHSL = 0;
+      if (l !== 0 && l !== 1) {
+        satHSL = (v - l) / Math.min(l, 1 - l);
+      }
+      let lightness = Math.round(l * 100);
+      let saturation = Math.round(satHSL * 100);
 
       this._current = new Color(h, saturation, lightness, a);
       this._updatePanel();
@@ -228,6 +227,7 @@ export class ColorPicker extends BaseComponent {
       text: "更改顏色",
       handler: () => {
         //回傳當前顏色
+        //trigger為(+)，加入ColorCiv
         if (this._trigger === this._addBtn) {
           this.colors.push(this.current);
           const newColor = document.createElement("div");
@@ -238,12 +238,12 @@ export class ColorPicker extends BaseComponent {
           Dom.addClass(newColor, ["main-color"]);
           this._addBtn.insertAdjacentElement("beforebegin", newColor);
         } else {
+          //更新該colorDiv的值
           //this.colors array也要更新
           const triggerIndex = Array.from(
             this.getElem().querySelectorAll(".color")
           ).indexOf(this._trigger);
           this.colors[triggerIndex] = this.current;
-          console.log(this.colors, this.current, this._current);
           this._trigger.dataset.colorpick = this.current;
           // this._trigger.style.backgroundColor = this.current;
         }
@@ -317,24 +317,36 @@ export class ColorPicker extends BaseComponent {
     const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
     const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
     const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
-    this._paintCanvas(colorTrack, h);
+    this._paintCanvas(colorTrack, h);//如果hue沒變就不用重繪?
     Dom.setProperty(hueTrack, "--hue", h);
     Dom.setProperty(alphaTrack, "--hue", h);
 
-    const { height } = colorTrack.getBoundingClientRect();
     //update Canvas-thumb position
-    let brightness = l / 100 + (s / 100) * Math.min(l / 100, 1 - l / 100);
-    canvasThumb.style.left = `${s}%`;
-    canvasThumb.style.transform = `translateY(-${clamp(height * brightness, 0, height - canvasThumb.offsetWidth)}px)`;
+    let vHSV = (l / 100) + (s / 100) * Math.min(l / 100, 1 - l / 100);
+    const satHSV = vHSV === 0 ? 0 : 2 * (1 - (l / 100) / vHSV);
+    const ctrackW = colorTrack.clientWidth;
+    const ctrackH = colorTrack.clientHeight;
+    const cthumbW = canvasThumb.offsetWidth;
+    const cthumbH = canvasThumb.offsetHeight;
+
+    const cx = clamp(satHSV * ctrackW - cthumbW / 2, 0, ctrackW - cthumbW);
+    const cy = clamp((1 - vHSV) * ctrackH - cthumbH / 2, 0, ctrackH - cthumbH);
+
+    canvasThumb.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
 
     //update Hue-thumb position
-    hueThumb.style.left = (h / 360) * hueTrack.offsetWidth + "px";
+    const hueW = hueTrack.clientWidth;
+    const hueX = (h / 360) * hueW;
+    const htrackW = hueTrack.clientWidth;
+    const hthumbW = hueThumb.offsetWidth;
+    const hx = clamp((h / 360) * htrackW - hthumbW / 2, 0, htrackW - hthumbW);
+    hueThumb.style.transform = `translate3d(${hx}px, 0, 0)`;
 
     //update Alpha-thumb position
-    alphaThumb.style.left =
-      a * alphaTrack.offsetWidth -
-      alphaThumb.getBoundingClientRect().width +
-      "px";
+    const atrackW = alphaTrack.clientWidth;
+    const athumbW = alphaThumb.offsetWidth;
+    const ax = clamp(a * atrackW - athumbW / 2, 0, atrackW - athumbW);
+    alphaThumb.style.transform = `translate3d(${ax}px, 0, 0)`;
 
     // Dom.setProperty(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
     Dom.setAttribute(

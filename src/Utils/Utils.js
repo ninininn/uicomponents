@@ -391,11 +391,15 @@ export function useContext(provider) {
 }
 
 /**
- * compare number比較數字大小
- * @param {array} - number array
+ * clamp 檢視數值是否在目標區間
+ * @param {value} - number
+ * @param {min} - number
+ * @param {max} - number
  */
-function compareNum(array) {
-    return array[1] > array[0] ? array.reverse() : array;
+export function clamp(value, min = 0, max = 1) {
+    value = Number(value);
+    if (!Number.isFinite(value)) return min;
+    return Math.min(max, Math.max(min, value));
 }
 
 /**
@@ -445,6 +449,6 @@ export function ObjectWithsameVal(objA, objB) {
  */
 export const tools = {
     checkDevice: checkDevice,
-    compareNum: compareNum,
+    clamp: clamp,
     defineTypeof: defineTypeof,
 };
