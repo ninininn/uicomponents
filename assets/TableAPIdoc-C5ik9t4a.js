@@ -1,4 +1,4 @@
-import{u as n,j as e,M as c,T as l,P as r,C as i}from"./iframe-BVS5Mtot.js";import"./preload-helper-DLLWEBaG.js";function d(t){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...n(),...t.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{isTemplate:!0,title:"How to use Table"}),`
+import{u as n,j as e,M as c,T as l,P as r,C as i}from"./iframe-C3yz9raj.js";import"./preload-helper-DLLWEBaG.js";function d(t){const s={a:"a",blockquote:"blockquote",br:"br",code:"code",h1:"h1",h3:"h3",hr:"hr",li:"li",p:"p",pre:"pre",strong:"strong",ul:"ul",...n(),...t.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{isTemplate:!0,title:"How to use Table"}),`
 `,e.jsx(l,{}),`
 `,e.jsxs(s.p,{children:["常見表格資料表，可以載入資料並更新Table畫面 (此頁面測試用API來源 : ",e.jsx(s.a,{href:"https://jsonplaceholder.typicode.com/todos",rel:"nofollow",children:`公開API\r
 (https://jsonplaceholder.typicode.com/todos)`}),")"]}),`
