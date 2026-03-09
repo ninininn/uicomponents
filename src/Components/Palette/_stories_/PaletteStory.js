@@ -19,6 +19,10 @@ export const createPalette = ({
   let parent = document.createElement("div");
   parent.className = "flex";
 
+
+  let resetBtn = document.createElement("button");
+  resetBtn.textContent = 'RESET_COLOR';
+  parent.appendChild(resetBtn);
   let initOptions = {
     colorCounts: colorCounts,
     colorMode: colorMode,
@@ -56,12 +60,16 @@ export const createPalette = ({
   }
   var defaultPickerConfig = {
     limits: limits, //maxium color number stored in container
-    defaults: ["rgb(0,0,0,1)"],
-    mode: 'hex'
+    defaults: ["#00000090"],
+    mode: 'rgb'
   };
 
   const picker = new ColorPicker(defaultPickerConfig);
   console.log(picker);
   parent.appendChild(picker.getElem());
+
+  resetBtn.addEventListener("click", () => {
+    picker.reset();
+  });
   return parent;
 };

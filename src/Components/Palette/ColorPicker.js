@@ -127,14 +127,16 @@ export class ColorPicker extends BaseComponent {
         );
         this.current = colorPicked;
 
-        const colors = this.getElem().querySelectorAll(".color");
-        colors.forEach((color) => {
-          if (color === this._trigger) {
-            Dom.addClass(color, ["main-color"]);
-          } else {
-            Dom.removeClass(color, ["main-color"]);
-          }
-        });
+        if (this._config.limits > 1) {
+          const colors = this.getElem().querySelectorAll(".color");
+          colors.forEach((color) => {
+            if (color === this._trigger) {
+              Dom.addClass(color, ["main-color"]);
+            } else {
+              Dom.removeClass(color, ["main-color"]);
+            }
+          });
+        }
 
         //點擊打開picker面板
         Dom.addClass(this._picker, ["visible"]);
@@ -206,14 +208,16 @@ export class ColorPicker extends BaseComponent {
     }
 
     //mainColor加上放大效果，其餘不變
-    const colors = this.getElem().querySelectorAll(".color");
-    colors.forEach((color) => {
-      if (color.dataset.colorpick === this.current) {
-        Dom.addClass(color, ["main-color"]);
-      } else {
-        Dom.removeClass(color, ["main-color"]);
-      }
-    });
+    if (this._config.limits > 1) {
+      const colors = this.getElem().querySelectorAll(".color");
+      colors.forEach((color) => {
+        if (color.dataset.colorpick === this.current) {
+          Dom.addClass(color, ["main-color"]);
+        } else {
+          Dom.removeClass(color, ["main-color"]);
+        }
+      });
+    }
   }
 
   //[內部控制]-建立pickerPanel
@@ -424,6 +428,24 @@ export class ColorPicker extends BaseComponent {
   //[外部控制]-取得最新current並轉為hsl
   syncColorBase() {
     return this._current.base;
+  }
+
+  //[外部控制]-回復初始值
+  reset() {
+    this.colors = [...this.defaultColors];
+    this.current = this.colors[0];
+
+    this.getElem().querySelectorAll(".color").forEach((el, index) => {
+      el.dataset.colorpick = this.colors[index];
+    });
+    this._updatePanel();
+  }
+  //[外部控制]-重新設置(更新)預設值
+  updateDefaults(update) {
+    this.defaultColors = this._convertColorMode(
+      update,
+      this.mode
+    ).slice(0, this._config.limits);
   }
 }
 
