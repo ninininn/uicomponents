@@ -242,7 +242,7 @@ export class Color {
 //@ formatter
 export class ColorFormat {
   static isRgb(colorStr) {
-    const regex = /rgb/g;
+    const regex = /rgba?/g;
     return regex.test(colorStr.toLowerCase());
   }
 
@@ -256,6 +256,29 @@ export class ColorFormat {
     return regex.test(colorStr.toLowerCase());
   }
 
+  static withAlpha(colorStr) {
+    const colorMode = ColorFormat.getColorMode(colorStr);
+    let withAlpha;
+    switch (colorMode) {
+      case 'rgb':
+        withAlpha = colorStr
+          .toLowerCase()
+          .replace(/[rgba()\s+]/g, "")
+          .split(",")[3];
+        break;
+      case 'hex':
+        withAlpha = colorStr
+          .toLowerCase()
+          .replace(/#/g, "").slice(6, 8);
+        break;
+      case 'hsl':
+        withAlpha = colorStr
+          .toLowerCase()
+          .replace(/[hsla()\s+/]/g, "")[3];
+        break;
+    }
+    return Boolean(withAlpha);
+  }
   static getColorMode(colorStr) {
     if (ColorFormat.isRgb(colorStr)) return 'rgb';
     if (ColorFormat.isHex(colorStr)) return 'hex';
@@ -276,7 +299,7 @@ export class ColorFormat {
     if (A == 1 || !A) {
       rgbResult = `rgb(${R},${G},${B})`;
     } else {
-      rgbResult = `rgb(${R},${G},${B},${A})`;
+      rgbResult = `rgba(${R},${G},${B},${A})`;
     }
 
     return rgbResult;
@@ -284,7 +307,7 @@ export class ColorFormat {
   static rgbTohsl(rgbString) {
     let trimStr = rgbString
       .toLowerCase()
-      .replace(/[rgb()\s+]/g, "")
+      .replace(/[rgba()\s+]/g, "")
       .split(",");
 
     let eachRgb = trimStr.slice(0, 3).map((strNum) => Number(strNum) / 255);
@@ -356,16 +379,14 @@ export class ColorFormat {
     const g = Math.round((g1 + m) * 255);
     const b = Math.round((b1 + m) * 255);
 
-    if (a) {
-      if (a !== 1) {
-        return `rgb(${r},${g},${b},${a})`;
-      }
+    if (a && a !== 1) {
+      return `rgba(${r},${g},${b},${a})`;
     }
     return `rgb(${r},${g},${b})`;
   }
   static rgbTohex(rgbString) {
     //須注意rgb有a時要判斷最後一個數值
-    let colors = rgbString.replace(/[rgb()\s+]/g, "").split(",").map(Number);
+    let colors = rgbString.replace(/[rgba()\s+]/g, "").split(",").map(Number);
     const hexResult = colors.map((color, index) => {
       const num = index === 3 ? Math.floor(color * 255) : color;
       // color = parseFloat(color);
