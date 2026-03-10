@@ -1,11 +1,7 @@
-import { BaseComponent, Dom, findElem } from "../../Utils/Utils";
+import { BaseComponent, Dom, clamp, onClickOutside, positionFloat } from "../../Utils/Utils";
 
-import { Palette, ColorFormat, Color } from "../../Utils/Color";
+import { ColorFormat, Color } from "../../Utils/Color";
 import addSvg from "../../../public/add.svg";
-
-function clamp(value, min = 0, max = 1) {
-  return Math.min(max, Math.max(min, value));
-}
 
 var defaultPickerConfig = {
   limits: 5, //maxium color number stored in container
@@ -68,6 +64,8 @@ export class ColorPicker extends BaseComponent {
   }
 
   _init() {
+    this._theme = 'var(--color-primary-500)';
+    Dom.setProperty(this.getElem(), "--theme", this._theme);
     //預設顏色顯示
     for (let color of this.defaultColors) {
       const colorDiv = document.createElement("div");
@@ -89,6 +87,7 @@ export class ColorPicker extends BaseComponent {
           " button:not(.picker-btn)"
         );
         Dom.setText(panelComfirmBtn, "新增顏色");
+        positionFloat(this._picker, this._addBtn);
         Dom.addClass(this._picker, ["visible"]);
 
         switch (this.mode) {
@@ -139,6 +138,7 @@ export class ColorPicker extends BaseComponent {
         }
 
         //點擊打開picker面板
+        positionFloat(this._picker, e.target);
         Dom.addClass(this._picker, ["visible"]);
         Dom.setText(panelComfirmBtn, "更改顏色");
         //傳入dataset.colorpick作為面板當前顏色
@@ -179,6 +179,10 @@ export class ColorPicker extends BaseComponent {
       let alpha = clamp((e.clientX - left) / width);
       this._current = new Color(h, s, l, alpha);
       this._updatePanel();
+    });
+
+    onClickOutside(this.getElem(), () => {
+      Dom.removeClass(this._picker, ["visible"]);
     });
 
     function dragging(target, onMove) {
@@ -431,11 +435,13 @@ export class ColorPicker extends BaseComponent {
   }
 
   //[外部控制]-回復初始值
+  //(如果新增多個顏色則移除新加的顏色)
   reset() {
     this.colors = [...this.defaultColors];
     this.current = this.colors[0];
 
     this.getElem().querySelectorAll(".color").forEach((el, index) => {
+      if (!this.colors[index]) el.remove();
       el.dataset.colorpick = this.colors[index];
     });
     this._updatePanel();

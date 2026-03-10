@@ -1,14 +1,10 @@
-import { fn, expect } from "storybook/test";
-// import { withActions } from '@storybook/addon-actions/decorator';
-import { action } from "storybook/actions";
-
-import { createPalette } from './PaletteStory';
-import "../Palette.css";
-import PaletteAPIdoc from "./PaletteAPIdoc.mdx";
+import { createColorPicker, createPalette } from './ColorPickerStory';
+import "../ColorPicker.css";
+import ColorPickerAPIdoc from "./ColorPickerAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: "Components/Palette",
+  title: "Components/ColorPicker",
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -16,23 +12,16 @@ export default {
         format: true,
         language: "html",
       },
-      page: PaletteAPIdoc,
+      page: ColorPickerAPIdoc,
     },
-  },
-  // decorators: [withActions],
-  render: ({ ...args }) => {
-    // You can either use a function to create DOM elements or use a plain html string!
-    let instance = createPalette({ ...args });
-    return instance;
-
   },
   argTypes: {
     colorCounts: {
       control: { type: "number", min: 1 },
       type: { required: true },
-      description: "表格元素id",
+      description: "要產出的顏色數量",
       table: {
-        category: "configurations",
+        category: "palette config",
         type: { summary: "number" },
       },
     },
@@ -50,8 +39,27 @@ export default {
       description: "色碼模式",
       options: ['hex', 'rgb', 'hsl'],
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "-" },
+        type: { summary: "string" },
+      },
+    },
+    mode: {
+      control: "select",
+      description: "色碼模式",
+      options: ['hex', 'rgb', 'hsl'],
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "hex" },
+        type: { summary: "string" },
+      },
+    },
+    defaults: {
+      control: "array",
+      description: "預設顏色",
+      table: {
+        category: "configurations",
+        defaultValue: { summary: "['#878787','474747']" },
         type: { summary: "string" },
       },
     },
@@ -60,7 +68,7 @@ export default {
       options: ['random', 'same', 'contrast'],
       description: "色系樣式",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "random" },
         type: { summary: "string" },
       },
@@ -70,7 +78,7 @@ export default {
       options: ['red', 'yellow', 'green', 'cyan', 'blue', 'purple'],
       description: "指定色系",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "null" },
         type: { summary: "string" },
       },
@@ -79,7 +87,7 @@ export default {
       control: { type: "number", min: 1 },
       description: "偏移量",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "-" },
         type: { summary: "number" },
       },
@@ -88,7 +96,7 @@ export default {
       control: { type: "number", min: 0, max: 1 },
       description: "透明度",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "1" },
         type: { summary: "number" },
       },
@@ -97,7 +105,7 @@ export default {
       control: "boolean",
       description: "是否固定飽和度",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "false" },
         type: { summary: "number | boolean" },
       },
@@ -107,7 +115,7 @@ export default {
       control: { type: "number", min: 0, max: 100 },
       description: "飽和度固定值",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "random(20~90)" },
         type: { summary: "number" },
       },
@@ -116,7 +124,7 @@ export default {
       control: "boolean",
       description: "是否固定明度",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "false" },
         type: { summary: "number | boolean" },
       },
@@ -126,7 +134,7 @@ export default {
       control: { type: "number", min: 0, max: 100 },
       description: "明度固定值",
       table: {
-        category: "configurations",
+        category: "palette config",
         defaultValue: { summary: "random(20~90)" },
         type: { summary: "number" },
       },
@@ -146,22 +154,64 @@ export default {
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // 預設args
   args: {
-    limits: 5,
-    colorCounts: 1,
-    colorMode: 'hsl',
-    alpha: 1,
-    style: 'random',
-    offset: 10,
-    tone: 'red',
-    saturationFixed: false,
-    lightnessFixed: false,
+    // limits: 5,
+    // colorCounts: 1,
+    // colorMode: 'hsl',
+    // mode:'hex',
+    // defaults:["#878787","#474747"],
+    // alpha: 1,
+    // style: 'random',
+    // offset: 10,
+    // tone: 'red',
+    // saturationFixed: false,
+    // lightnessFixed: false,
   },
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Palette = {
+// export const Defaults = {
+//   args: {
+//     limits: 5,
+//     colorCounts: 1,
+//     colorMode: 'hsl',
+//     mode: 'hex',
+//     defaults: ["#878787", "#474747"],
+//     alpha: 1,
+//     style: 'random',
+//     offset: 10,
+//     tone: 'red',
+//     saturationFixed: false,
+//     lightnessFixed: false,
+//   },
+//   // play: async ({ args, canvas, userEvent }) => {
+//   //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');
+//   //   await userEvent.click(canvas.getByLabelText('一般勾選框'));
+//   //   await expect(args.handlers).toHaveBeenCalled();
+//   // }
+// };
+export const ColorPicker = {
+  parameters: {
+    controls: { include: ['limits', 'mode', 'defaults'] },
+  },
+  render: (args) => createColorPicker(args),
   args: {
     limits: 5,
+    mode: 'hex',
+    defaults: ["#878787", "#474747"],
+  },
+  // play: async ({ args, canvas, userEvent }) => {
+  //   await userEvent.type(canvas.getByText('一般勾選框'), '勾選框');
+  //   await userEvent.click(canvas.getByLabelText('一般勾選框'));
+  //   await expect(args.handlers).toHaveBeenCalled();
+  // }
+};
+// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
+export const Palette = {
+  parameters: {
+    controls: { include: ['colorCounts', 'colorMode', 'alpha', 'style', 'tone', 'offset', 'saturationFixed', 'saturation', 'lightnessFixed', 'lightness'] },
+  },
+  render: (args) => createPalette(args),
+  args: {
     colorCounts: 10,
     colorMode: 'hsl',
     style: 'random',

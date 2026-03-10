@@ -1,0 +1,306 @@
+import {
+  Meta,
+  Title,
+  Primary,
+  Controls,
+  Story,
+  Source,
+  Unstyled,
+} from "@storybook/addon-docs/blocks";
+import * as ColorPickerStories from './ColorPicker.stories';
+
+<Meta isTemplate title="How to use ColorPicker" />
+
+# ColorPicker
+顏色選擇器元件
+
+<Story of={ColorPickerStories.ColorPicker} />
+
+# Controls
+<Controls of={ColorPickerStories.ColorPicker} />  
+
+---
+
+# Usage API
+
+使用 `new` 關鍵字初始化 `ColorPicker()`，並帶入`config`設定參數。  
+
+```javascript
+let colorA = new ColorPicker(config);
+```  
+
+> ### parameters 參數設定
+
+- <span className="sb-unstyled font-black">config</span>
+<span className="sb-unstyled data-type">object</span>  
+各屬性的型別及說明可參考上方**Controls區塊**。  
+
+  ```javascript
+    const initConfig = {
+      limits: 1,                              //選擇器可以儲存數量
+      mode: "hsl",                            //色彩模式(hsl/rgb/hex)
+      defaults : ["#878787","#474747"]    //預設顏色
+    };
+  ```  
+<br/>
+
+> ### properties 內部屬性  
+> 可以操作的屬性皆須使用methods來更改
+    <div className="sb-unstyled table-container">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>property</td>
+            <td>default</td>
+            <td>type</td>
+            <td>descriptions</td>
+            <td>options</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="font-bold text-center">mode</td>
+            <td className="text-center">hex</td>
+            <td className="text-center">string</td>
+            <td>色彩模式</td>
+            <td>hsl | rgb | hex</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">defaultColors</td>
+            <td className="text-center">-</td>
+            <td className="text-center">array</td>
+            <td>預設顏色</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">colors</td>
+            <td className="text-center">-</td>
+            <td className="text-center">array</td>
+            <td>目前所有色碼</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">current</td>
+            <td className="text-center">-</td>
+            <td className="text-center">string</td>
+            <td>目前選定的顏色</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">_config <span class="sb-unstyled data-type readonly">Read-only</span></td>
+            <td className="text-center">-</td>
+            <td className="text-center">object</td>
+            <td>設定值</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">_picker <span class="sb-unstyled data-type readonly">Read-only</span></td>
+            <td className="text-center">-</td>
+            <td className="text-center">HTMLElement</td>
+            <td>pickerPanel元素節點</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+<br/>
+
+> ### methods 方法  
+> 提供外部控制方法調整內部屬性值  
+
+<p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td><td>descriptions</td><td>inherit</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>`.getElem()`</td><td>回傳此元件 DOM 節點元素</td><td>`BaseComponent`</td></tr>
+      <tr><td>`.getColorClass(value)`</td><td>回傳一個新的`Color`類別物件</td></tr>
+      <tr><td>`.syncColorBase()`</td><td>取得最新current屬性並轉為hsl</td></tr>
+      <tr><td>`.reset()`</td><td>回復初始值(如果新增多個顏色則會一併移除新加的顏色)</td></tr>
+      <tr><td>`.updateDefaults(update)`</td><td>重新設置(更新)預設值</td></tr>
+    </tbody>
+  </table>
+</div>  
+
+<br/>
+
+# Palette
+隨機產生指定數量的色碼組
+<br/>
+<Story of={ColorPickerStories.Palette} />  
+<br/>
+
+### Palette Controls
+<Controls of={ColorPickerStories.Palette} />  
+
+### Usage API  
+直接使用`Palette()`函式，並帶入`config`設定參數。  
+
+```javascript
+let palette = Palette(config);
+```  
+> ### parameters 參數設定  
+- <span className="sb-unstyled font-black">config</span>
+<span className="sb-unstyled data-type">object</span>  
+各屬性的型別及說明可參考上方**Controls區塊**。  
+
+  ```javascript
+    const initConfig = {
+      colorCounts: 1,                              //需要的色碼數量
+      colorMode: "hsl",                            //色彩模式(hsl/rgb/hex)
+      alpha: 1,                                   //透明度
+      style: "random",                            //樣式
+      tone:null,                                  //指定色系
+      saturationFixed: false,                     //是否固定飽和度
+      lightnessFixed: false,                      //是否固定明度
+      offset: 10,                                 //偏移量(暫時先不要用)
+    };
+  ```  
+<br/>
+    <div className="sb-unstyled table-container">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>property</td>
+            <td>default</td>
+            <td>type</td>
+            <td>descriptions</td>
+            <td>options</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="font-bold text-center">colorCounts</td>
+            <td className="text-center">1</td>
+            <td className="text-center">number</td>
+            <td>需要的色碼數量</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">colorMode</td>
+            <td className="text-center">hsl</td>
+            <td className="text-center">string</td>
+            <td>色彩模式</td>
+            <td>hsl | rgb | hex</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">alpha</td>
+            <td className="text-center">1</td>
+            <td className="text-center">number</td>
+            <td>透明度(0~1)</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">style</td>
+            <td className="text-center">random</td>
+            <td className="text-center">string</td>
+            <td>色彩樣式</td>
+            <td>random(隨機) | same(同色系) | contrast(對比色系)</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">tone</td>
+            <td className="text-center">-</td>
+            <td className="text-center">string</td>
+            <td>指定色系</td>
+            <td>red | yellow | green | cyan | blue | purple</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">saturationFixed</td>
+            <td className="text-center">false</td>
+            <td className="text-center">boolean | number</td>
+            <td>是否統一飽和度</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">lightnessFixed</td>
+            <td className="text-center">false</td>
+            <td className="text-center">boolean | number</td>
+            <td>是否統一明度</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+<br />
+
+---
+# ColorFormat方法
+
+> 顏色格式切換相關方法
+
+各模式標準表示方式如下:
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>模式</td>
+        <td>表示範例</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RGB</td>
+        <td>rgb(rr,gg,bb) | rgba(rr,gg,bb,aa)</td>
+      </tr>
+      <tr>
+        <td>HSL</td>
+        <td>hsl(h s l / a)</td>
+      </tr>
+      <tr>
+        <td>HEX</td>
+        <td>#RRGGBBFF</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>`.hexTorgb(hexString)`</td>
+        <td>HEX->RGB</td>
+      </tr>
+      <tr>
+        <td>`.rgbTohsl(rgbString)`</td>
+        <td>RGB->HSL</td>
+      </tr>
+      <tr>
+        <td>`.hslTorgb(hslString)`</td>
+        <td>HSL->RGB</td>
+      </tr>
+      <tr>
+        <td>`.rgbTohex(rgbString)`</td>
+        <td>RGB->HEX</td>
+      </tr>
+      <tr>
+        <td>`.hslTohex(hslString)`</td>
+        <td>HSL->HEX</td>
+      </tr>
+      <tr>
+        <td>`.isRgb(colorString)`</td>
+        <td>判斷是否為RGB模式色碼</td>
+      </tr>
+      <tr>
+        <td>`.isHsl(colorString)`</td>
+        <td>判斷是否為HSL模式色碼</td>
+      </tr>
+      <tr>
+        <td>`.isHex(colorString)`</td>
+        <td>判斷是否為HEX模式色碼</td>
+      </tr>
+      <tr>
+        <td>`.withAlpha(colorString)`</td>
+        <td>判斷是否帶有ALPHA(透明度)值</td>
+      </tr>
+      <tr>
+        <td>`.getColorMode(colorString)`</td>
+        <td>判斷傳入色碼的色彩模式</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

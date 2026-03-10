@@ -55,7 +55,7 @@ export class Dom {
                     </svg>`;
                     break;
                 default:
-                    classes.push("icon-text-btn");
+                    // classes.push("icon-text-btn");
                     let img = document.createElement("img");
                     Dom.addClass(img, ["icon"]);
                     img.src = `${icon}`;
@@ -443,6 +443,62 @@ export function setUUID() {
 export function ObjectWithsameVal(objA, objB) {
 
 }
+/**
+ * 定位浮動元素，自動偵測視窗邊界並翻轉方向
+ * 手機版（< 768px）直接置中於螢幕
+ * @param {HTMLElement} floatElem - 要定位的浮動元素（需為 position:fixed）
+ * @param {HTMLElement} anchor - 觸發的錨點元素
+ */
+export function positionFloat(floatElem, anchor) {
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+  if (isMobile) {
+    // 手機版：一次性設定，top/left 用百分比置中
+    floatElem.style.top = '50%';
+    floatElem.style.left = '50%';
+    floatElem.style.transform = 'translate(-50%, -50%)';
+    return;
+  }
+
+  const anchorRect = anchor.getBoundingClientRect();
+  const fw = floatElem.offsetWidth;
+  const fh = floatElem.offsetHeight;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const gap = 8;
+
+  // 預設：anchor 下方，左對齊
+  let x = anchorRect.left;
+  let y = anchorRect.bottom + gap;
+
+  // 超出右邊界 → 靠右對齊 anchor
+  if (x + fw > vw) x = anchorRect.right - fw;
+
+  // 超出下邊界 → anchor 上方
+  if (y + fh > vh) y = anchorRect.top - fh - gap;
+
+  // 桌機版：只改 transform，不碰 top/left，避免 layout reflow
+  floatElem.style.top = '0';
+  floatElem.style.left = '0';
+  floatElem.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+/**
+ * 點擊指定元素外部時觸發 callback
+ * @param {HTMLElement} target - 監聽範圍的目標元素
+ * @param {Function} callback - 點擊外部時執行的callback
+ * @returns {Function} - 呼叫後可移除此監聽器
+ */
+export function onClickOutside(target, callback) {
+  function handler(e) {
+    if (!target.contains(e.target)) {
+      callback(e);
+    }
+  }
+  document.addEventListener('click', handler);
+  return () => document.removeEventListener('click', handler);
+}
+
 /**
  * shared object
  * 包裝共用函式，方便未來import元件模組
