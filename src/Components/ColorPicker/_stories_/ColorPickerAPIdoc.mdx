@@ -12,7 +12,7 @@ import * as ColorPickerStories from './ColorPicker.stories';
 <Meta isTemplate title="How to use ColorPicker" />
 
 # ColorPicker
-顏色選擇器元件
+顏色選擇器元件 `ColorPicker.js`
 
 <Story of={ColorPickerStories.ColorPicker} />
 
@@ -95,6 +95,12 @@ let colorA = new ColorPicker(config);
             <td className="text-center">HTMLElement</td>
             <td>pickerPanel元素節點</td>
           </tr>
+          <tr>
+            <td className="font-bold text-center">_current <span class="sb-unstyled data-type readonly">Read-only</span></td>
+            <td className="text-center">-</td>
+            <td className="text-center">`Color`</td>
+            <td colspan="2">以Color物件儲存h,s,l,a等數值，取用`.current`屬性時會以設定模式轉換為對應色碼</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -124,11 +130,11 @@ let colorA = new ColorPicker(config);
 <br/>
 
 # Palette
-隨機產生指定數量的色碼組
+隨機產生指定數量的色碼組 `Color.js`
 <br/>
 <Story of={ColorPickerStories.Palette} />  
 <br/>
-
+---
 ### Palette Controls
 <Controls of={ColorPickerStories.Palette} />  
 
@@ -219,9 +225,62 @@ let palette = Palette(config);
 <br />
 
 ---
-# ColorFormat方法
+# Color 類別
+```javascript
+  let color = new Color(h,s,l,a);
+```  
+> ### properties 內部屬性  
+> 可以操作的屬性皆須使用methods來更改
+    <div className="sb-unstyled table-container">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>property</td>
+            <td>default</td>
+            <td>type</td>
+            <td>descriptions</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="font-bold text-center">base</td>
+            <td className="text-center">`{}`</td>
+            <td className="text-center">object</td>
+            <td>紀錄h,s,l,a數值</td>
+          </tr>
+          <tr>
+            <td className="font-bold text-center">luminance</td>
+            <td className="text-center">-</td>
+            <td className="text-center">number</td>
+            <td>視覺(相對)亮度</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+<br/>
 
-> 顏色格式切換相關方法
+>### methods
+
+<p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td><td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>`.toRgb()`</td><td>轉換為RGB色碼並回傳</td></tr>
+      <tr><td>`.toHsl()`</td><td>轉換為HSL色碼並回傳</td></tr>
+      <tr><td>`.toHex()`</td><td>轉換為HEX色碼並回傳</td></tr>
+    </tbody>
+  </table>
+</div>  
+
+---
+# ColorFormat方法 
+
+> 顏色格式切換相關方法 `Color.js`
 
 各模式標準表示方式如下:
 
