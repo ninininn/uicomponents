@@ -376,21 +376,6 @@ export function bindState(initState) {
 }
 
 /**
- * Context 共享數據機制
- * 1. createContext 建立共享Context，紀錄數據
- * 2. useContext 使用共享數據
- */
-// window.CoreContexts = new Map();
-export function createContext(provider, defaultContext) {
-    window.CoreContexts.set(provider, defaultContext);
-    return window.CoreContexts;
-}
-
-export function useContext(provider) {
-    return window.CoreContexts.get(provider);
-}
-
-/**
  * clamp 檢視數值是否在目標區間
  * @param {value} - number
  * @param {min} - number
