@@ -28,83 +28,82 @@ import { Meta, Title } from "@storybook/addon-docs/blocks";
       </table>
     </div>
 
-<span className="sb-unstyled methods">.addClass(element, classes)</span>-
-**Parameters** - **element<span className="text-red-600">*</span>** DOM元素
-<span className="sb-unstyled data-type element">HTMLElement</span>- **classes
+<span className="sb-unstyled methods">.addClass(element, classes)</span> 在指定DOM節點上加入指定classes  
+
+- **Parameters** 
+  - **element<span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **classes
 <span className="text-red-600">*</span>** 要加入的 classes
 <span className="sb-unstyled data-type arr">array</span>
 
-在指定DOM節點上加入指定classes
 
 ```javascript
 Dom.addClass(this._elem, ["container", "absolute"]);
 ```
 
-<span className="sb-unstyled methods">.removeClass(element, classes)</span>-
-**Parameters** - **element<span className="text-red-600">*</span>** DOM元素
-<span className="sb-unstyled data-type element">HTMLElement</span>- **classes
-<span className="text-red-600">*</span>** 要移除的 classes
-<span className="sb-unstyled data-type arr">array</span>
-
-在指定DOM節點上移除指定classes
+<span className="sb-unstyled methods">.removeClass(element, classes)</span> 在指定DOM節點上移除指定classes  
+- **Parameters** 
+  - **element<span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **classes
+  <span className="text-red-600">*</span>** 要移除的 classes
+  <span className="sb-unstyled data-type arr">array</span>
 
 ```javascript
 Dom.removeClass(this._elem, ["container", "absolute"]);
 ```
 
-<span className="sb-unstyled methods">
-  .clearClass(element, excludeClasses)
-</span>
-- **Parameters** - **element<span className="text-red-600">*</span>** DOM元素
-<span className="sb-unstyled data-type element">HTMLElement</span>-
-**excludeClasses** 除外classes
-<span className="sb-unstyled data-type arr">array</span>
+<span className="sb-unstyled methods">.clearClass(element, excludeClasses)</span> 移除指定節點上的所有classes(除了指定excludeClasses)  
+- **Parameters** 
+  - **element<span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **excludeClasses** 除外classes
+  <span className="sb-unstyled data-type arr">array</span>
 
-移除指定節點上的所有classes(除了指定excludeClasses)
+
 
 ```javascript
 Dom.clearClass(this._elem, ["name_id"]);
 ```
 
-<span className="sb-unstyled methods">.setText(element, text)</span>-
-**Parameters** - **element<span className="text-red-600">*</span>** DOM元素
-<span className="sb-unstyled data-type element">HTMLElement</span>- **text
-<span className="text-red-600">*</span>** 文字內容
-<span className="sb-unstyled data-type str">string</span>
+<span className="sb-unstyled methods">.setText(element, text)</span> 設定指定DOM節點的textContent內容  
+- **Parameters** 
+  - **element<span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **text
+  <span className="text-red-600">*</span>** 文字內容
+  <span className="sb-unstyled data-type str">string</span>
 
-設定指定DOM節點的textContent內容
 
 ```javascript
 Dom.setText(this._elem, "測試文字");
 ```
 
-<span className="sb-unstyled methods">
-  .setAttribute(element, attributeName, attributeValue)
-</span>
-- **Parameters** - **element<span className="text-red-600">*</span>** DOM元素
-<span className="sb-unstyled data-type element">HTMLElement</span>-
-**attributeName<span className="text-red-600">*</span>** 屬性名稱
-<span className="sb-unstyled data-type str">string</span>- **attributeValue
+<span className="sb-unstyled methods">.setAttribute(element, attributeName, attributeValue)
+</span> 設定指定DOM節點的自訂`data-`屬性  
+- **Parameters** 
+  - **element<span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **attributeName<span className="text-red-600">*</span>** 屬性名稱
+  <span className="sb-unstyled data-type str">string</span>- **attributeValue
 <span className="text-red-600">*</span>** 要設定的值
 <span className="sb-unstyled data-type str">string</span>
-
-設定指定DOM節點的自訂`data-`屬性
 
 ```javascript
 Dom.setAttribute(this._elem, "initialize", "true");
 ```
 
-<span className="sb-unstyled methods">
-  .setProperty(element, propertyName, propertyValue)
-</span>
-- **Parameters** - **element<span className="text-red-600">*</span>** DOM元素
-<span className="sb-unstyled data-type element">HTMLElement</span>-
-**propertyName<span className="text-red-600">*</span>** CSS propertyName
-<span className="sb-unstyled data-type str">string</span>- **propertyValue
-<span className="text-red-600">*</span>** 要設定的值
-<span className="sb-unstyled data-type str">string</span>
+<span className="sb-unstyled methods">.setProperty(element, propertyName, propertyValue)</span> 設定指定DOM節點的自訂css-property屬性  
+- **Parameters** 
+  - **element<span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **propertyName<span className="text-red-600">*</span>** CSS propertyName
+  <span className="sb-unstyled data-type str">string</span>- **propertyValue
+  <span className="text-red-600">*</span>** 要設定的值
+  <span className="sb-unstyled data-type str">string</span>
 
-設定指定DOM節點的自訂css-property屬性
+
 
 ```javascript
 Dom.setProperty(this._elem, "--theme", "#878787");
@@ -112,16 +111,25 @@ Dom.setProperty(this._elem, "--theme", "#878787");
 
 ### 其他類別
 
-<span className="sb-unstyled methods">function compareNum(arrayNum)</span>-
-**Parameters** - **arrayNum<span className="text-red-600">*</span>** 數組
-<span className="sb-unstyled data-type arr">array</span>- **Returns**
-回傳已排序的數組參數
+<span className="sb-unstyled methods">function clamp(value, min = 0, max = 1)</span>
+檢視數值是否在目標區間  
+- **Parameters** 
+  - **value<span className="text-red-600">*</span>** 目標值
+  <span className="sb-unstyled data-type arr">number</span>
+  - **min** 區間最小值
+  <span className="sb-unstyled data-type arr">number</span>
+  - **max** 區間最大值
+  <span className="sb-unstyled data-type arr">number</span>
+- **Returns**  
+如果目標值在 min, max 區間則回傳該目標值；小於 min 則回傳 min、大於 max 則回傳 max
 
 ```javascript
-let sortNumArr = compareNum([15, 13]); //[13, 15]
+let clampNum = clamp(0.56); //0.56
+let clampNum2 = clamp(1.5,0,1); //1
 ```
 
-<span className="sb-unstyled methods">function checkDevice()</span>- **Returns**
+<span className="sb-unstyled methods">function checkDevice()</span>
+- **Returns**
 判斷裝置尺寸
 
 ```javascript
@@ -133,24 +141,9 @@ checkDevice();
 
 <span className="sb-unstyled methods">function Palette(config)</span>
 > 隨機產生一組/單一色碼，色碼模式可以是 hsl | rgb | hex `Color.js` 
- - **Parameters**  
-    - **config<span className="text-red-600">*</span>** 色彩設定 <span className="sb-unstyled data-type obj">object</span>
-      ```javascript
-        const paletteConfig = {
-          colorCounts: 1, //顏色數量
-          alpha: 1, //透明度
-          colorMode: 'hsl', //色碼模式
-          style: 'random', //隨機(random)、相近色(same)、對比色(contrast)
-          tone: 'red', //指定色系(red,yellow,green,cyan,blue,purple)
-          offset: 20 //偏移
-        }
-      ```
-    
- - **Returns**  
- 回傳一組(或一個)指定模式色碼(預設為HSL)
 
-<span className="sb-unstyled methods">ColorFormat</span>> 顏色相關轉換函式
-`Color.js`
+<span className="sb-unstyled methods">ColorFormat</span>
+> 顏色相關轉換函式 `Color.js`
 
 <div className="sb-unstyled table-container overflow-hidden">
   <table className="sb-unstyled table-content">
@@ -185,8 +178,8 @@ checkDevice();
   </table>
 </div>
 
-<span className="sb-unstyled methods">ColorHelper</span>> 顏色相關輔助函式
-`Color.js`
+<span className="sb-unstyled methods">ColorHelper</span>
+> 顏色相關輔助函式 `Color.js`
 
 <div className="sb-unstyled table-container overflow-hidden">
   <table className="sb-unstyled table-content">
