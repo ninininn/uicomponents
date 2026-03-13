@@ -2,7 +2,6 @@
 /**
  * 工具Functions
  */
-
 export class Dom {
     static setStyle(element, property, styleValue) {
         element.style[property] = styleValue;
@@ -141,6 +140,18 @@ export class Dom {
     }
 }
 
+
+/**
+ * 轉換id/class selector 尋找元素是否存在
+ * @param {*} id
+ * @returns DOMs
+ */
+export function findElem(selector) {
+    if (!selector) console.error("請放入有效的容器元素");
+
+    return document.querySelector(selector);
+}
+
 /**
  * 通用處理傳入參數判斷
  * @param {any[]} args
@@ -166,50 +177,61 @@ export function defineArgs(args, tagName = "div") {
 }
 
 export function defineContainer(container, type = null) {
-    let result;
-    //如果有指定tagType
-    if (type) {
-        //如果是DOM點
-        if (container instanceof HTMLElement) {
-            //但是type不符合條件
-            if (container.nodeName !== type.toUpperCase()) {
-                result = document.createElement(type);
-                result.appendChild(container);
-                return result;
-            } else {
-                result = container;
-                return result;
-            }
-        } else if (
-            document.querySelector(container) ||
-            document.getElementById(container)
-        ) {
-            //如果不是DOM節點，但找的到querySelector/Id
-            //檢查type
-            if (container.nodeName !== type.toUpperCase()) {
-                result = document.createElement(type);
-                result.appendChild(container);
-                return result;
-            } else {
-                result = container;
-                return result;
-            }
-        } else {
-            console.error("請放入有效的容器");
+    //如果是直接傳入DOM節點
+    if (container instanceof HTMLElement) return checkNodeName(container, type);
+
+    //如果傳入的container是selector str
+    let validElem = document.querySelector(container) || document.getElementById(container);
+
+    if (validElem) return checkNodeName(container, type);
+
+    return document.createElement("div");
+
+    function checkNodeName(elem, nodeType) {
+        if (elem.nodeName !== nodeType.toUpperCase()) {
+            let container = document.createElement(nodeType);
+            container.appendChild(elem);
+            return container;
         }
-    }
+        return elem;
+    };
 }
+// export function defineContainer(container, type = null) {
+//     let result;
+//     //如果有指定tagType
+//     if (type) {
+//         //如果是DOM點
+//         if (container instanceof HTMLElement) {
+//             //但是type不符合條件
+//             if (container.nodeName !== type.toUpperCase()) {
+//                 result = document.createElement(type);
+//                 result.appendChild(container);
+//                 return result;
+//             } else {
+//                 result = container;
+//                 return result;
+//             }
+//         } else if (
+//             document.querySelector(container) ||
+//             document.getElementById(container)
+//         ) {
+//             //如果不是DOM節點，但找的到querySelector/Id
+//             //檢查type
+//             if (container.nodeName !== type.toUpperCase()) {
+//                 result = document.createElement(type);
+//                 result.appendChild(container);
+//                 return result;
+//             } else {
+//                 result = container;
+//                 return result;
+//             }
+//         } else {
+//             console.error("請放入有效的容器");
+//         }
+//     }
+// }
 
-/**
- * 轉換id/class selector 尋找元素是否存在
- * @param {*} id
- * @returns DOMs
- */
-export function findElem(selector) {
-    if (!selector) console.error("請放入有效的容器元素");
 
-    return document.querySelector(selector);
-}
 
 /**
  * 父類別
@@ -284,10 +306,10 @@ export class BaseComponent {
 
     appendElem(elem) {
         this._elem.appendChild(elem);
-        dom.addClass(elem, ["opacity-0", "transition-all"]);
+        Dom.addClass(elem, ["opacity-0", "transition-all"]);
 
         setTimeout(() => {
-            dom.addClass(elem, ["opacity-100"]);
+            Dom.addClass(elem, ["opacity-100"]);
         }, 100);
     }
 }
@@ -435,37 +457,37 @@ export function ObjectWithsameVal(objA, objB) {
  * @param {HTMLElement} anchor - 觸發的錨點元素
  */
 export function positionFloat(floatElem, anchor) {
-  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
-  if (isMobile) {
-    // 手機版：一次性設定，top/left 用百分比置中
-    floatElem.style.top = '50%';
-    floatElem.style.left = '50%';
-    floatElem.style.transform = 'translate(-50%, -50%)';
-    return;
-  }
+    if (isMobile) {
+        // 手機版：一次性設定，top/left 用百分比置中
+        floatElem.style.top = '50%';
+        floatElem.style.left = '50%';
+        floatElem.style.transform = 'translate(-50%, -50%)';
+        return;
+    }
 
-  const anchorRect = anchor.getBoundingClientRect();
-  const fw = floatElem.offsetWidth;
-  const fh = floatElem.offsetHeight;
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const gap = 8;
+    const anchorRect = anchor.getBoundingClientRect();
+    const fw = floatElem.offsetWidth;
+    const fh = floatElem.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const gap = 8;
 
-  // 預設：anchor 下方，左對齊
-  let x = anchorRect.left;
-  let y = anchorRect.bottom + gap;
+    // 預設：anchor 下方，左對齊
+    let x = anchorRect.left;
+    let y = anchorRect.bottom + gap;
 
-  // 超出右邊界 → 靠右對齊 anchor
-  if (x + fw > vw) x = anchorRect.right - fw;
+    // 超出右邊界 → 靠右對齊 anchor
+    if (x + fw > vw) x = anchorRect.right - fw;
 
-  // 超出下邊界 → anchor 上方
-  if (y + fh > vh) y = anchorRect.top - fh - gap;
+    // 超出下邊界 → anchor 上方
+    if (y + fh > vh) y = anchorRect.top - fh - gap;
 
-  // 桌機版：只改 transform，不碰 top/left，避免 layout reflow
-  floatElem.style.top = '0';
-  floatElem.style.left = '0';
-  floatElem.style.transform = `translate(${x}px, ${y}px)`;
+    // 桌機版：只改 transform，不碰 top/left，避免 layout reflow
+    floatElem.style.top = '0';
+    floatElem.style.left = '0';
+    floatElem.style.transform = `translate(${x}px, ${y}px)`;
 }
 
 /**
@@ -475,14 +497,16 @@ export function positionFloat(floatElem, anchor) {
  * @returns {Function} - 呼叫後可移除此監聽器
  */
 export function onClickOutside(target, callback) {
-  function handler(e) {
-    if (!target.contains(e.target)) {
-      callback(e);
+    function handler(e) {
+        if (!target.contains(e.target)) {
+            callback(e);
+        }
     }
-  }
-  document.addEventListener('click', handler);
-  return () => document.removeEventListener('click', handler);
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
 }
+
+
 
 /**
  * shared object
