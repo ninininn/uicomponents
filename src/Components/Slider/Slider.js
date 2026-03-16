@@ -1,9 +1,14 @@
-import {
-  Dom,
-  BaseComponent,
-  defineArgs,
-  bindState,
-} from "../../Utils/Utils";
+// import {
+//   Dom,
+//   BaseComponent,
+//   defineArgs,
+//   bindState,
+// } from "../../Utils/Utils";
+
+import {Dom,defineArgs} from '../../Utils/Dom';
+import {BaseComponent} from '../BaseCompo';
+import {createSignal,createEffect}from '../../Utils/Reactive'
+
 
 // custom Slider components
 // props:
@@ -34,17 +39,13 @@ export class Slider extends BaseComponent {
     this._checkRange();
 
     // 設定value state
-    const [getValue, setValue, subscribeValue] = bindState(
-      this.options.initValue,
-    );
+    const { get: getValue, set: setValue } = createSignal(this.options.initValue);
     this.getValue = getValue;
-    this.setValue = setValue; //避免傳入子元件造成data更新變亂(統一由父元件來控制)
-    this.subscribeValue = subscribeValue; //傳遞下去子元件，讓子元件也能綁定該狀態
+    this.setValue = setValue;
 
-    const [getTheme, setTheme, subscribeTheme] = bindState(defaultTheme);
+    const { get: getTheme, set: setTheme } = createSignal(defaultTheme);
     this.getTheme = getTheme;
     this.setTheme = setTheme;
-    this.subscribeTheme = subscribeTheme;
 
     // callback handlers
     if (this.options.handlers) {
@@ -52,44 +53,18 @@ export class Slider extends BaseComponent {
     }
 
     // 初始化UI相關
-    this.bar = new SliderBar(
-      this.getValue(),
-      this.subscribeValue,
-      this._theme,
-      this.subscribeTheme,
-    );
+    this.bar = new SliderBar(getValue, getTheme);
     if (this.options.range) {
-      let v = this.getValue();
       this.thumb = [
-        new SliderThumb(
-          v[0],
-          this.subscribeValue,
-          this.options.thumbImg,
-          this._theme,
-          this.subscribeTheme,
-          0,
-        ),
-        new SliderThumb(
-          v[1],
-          this.subscribeValue,
-          this.options.thumbImg,
-          this._theme,
-          this.subscribeTheme,
-          1,
-        ),
+        new SliderThumb(getValue, getTheme, this.options.thumbImg, 0),
+        new SliderThumb(getValue, getTheme, this.options.thumbImg, 1),
       ];
       this.childrens = [
         ...this.thumb.map((t) => t.getElem()),
         this.bar.getElem(),
       ];
     } else {
-      this.thumb = new SliderThumb(
-        this.getValue(),
-        this.subscribeValue,
-        this.options.thumbImg,
-        this._theme,
-        this.subscribeTheme,
-      );
+      this.thumb = new SliderThumb(getValue, getTheme, this.options.thumbImg);
       this.childrens = [this.thumb.getElem(), this.bar.getElem()];
     }
 
@@ -131,7 +106,7 @@ export class Slider extends BaseComponent {
     this._checkRange();
     Dom.addClass(this.getElem(), this.options.classes);
     this.options.range &&
-      Dom.setAttribute(this.getElem(), "slider", "range");
+      Dom.setDataAttr(this.getElem(), "slider", "range");
 
     //2. 判斷操作與否(僅操作DOM相關動作)
     if (this.disabled) {
@@ -160,8 +135,8 @@ export class Slider extends BaseComponent {
   _onPointerDown(event, index) {
     event.preventDefault();
     this._draggingIndex = index;
-    this.onevent(event.currentTarget, "pointermove", this.onPointerMove);
-    this.onevent(event.currentTarget, "pointerup", this.onPointerUp);
+    this._removePointerMove = this.onevent(event.currentTarget, "pointermove", this.onPointerMove);
+    this._removePointerUp   = this.onevent(event.currentTarget, "pointerup",   this.onPointerUp);
   }
 
   _onPointerMove(event) {
@@ -171,9 +146,9 @@ export class Slider extends BaseComponent {
   }
 
   _onPointerUp(event) {
-    this.draggingIndex = null;
-    this.offevent(event.currentTarget, "pointermove", this.onPointerMove);
-    this.offevent(event.currentTarget, "pointerup", this.onPointerUp);
+    this._draggingIndex = null;
+    this.offevent(this._removePointerMove);
+    this.offevent(this._removePointerUp);
   }
 
   _bindEvents() {
@@ -243,27 +218,19 @@ export class Slider extends BaseComponent {
 }
 
 class SliderThumb extends BaseComponent {
-  constructor(
-    value,
-    subscribeValue,
-    thumbImg = null,
-    theme,
-    subscribeTheme,
-    index = 0,
-  ) {
+  constructor(getValue, getTheme, thumbImg = null, index = 0) {
     const thumb = document.createElement("div");
-    super(thumb, theme);
+    super(thumb, getTheme());
     this._thumbIndex = index;
-    this._thumbValue = Array.isArray(value) ? value[index] : [value];
     this._thumbImg = thumbImg;
     this._init();
 
-    subscribeValue((value) => {
-      value = Array.isArray(value) ? value[index] : value;
-      this._setThumbValue(value);
+    createEffect(() => {
+      const value = getValue();
+      this._setThumbValue(Array.isArray(value) ? value[index] : value);
     });
-    subscribeTheme((theme) => {
-      super.setTheme(theme);
+    createEffect(() => {
+      super.setTheme(getTheme());
     });
   }
 
@@ -273,11 +240,11 @@ class SliderThumb extends BaseComponent {
 
   render() {
     Dom.addClass(this.getElem(), ["slider-thumb"]);
-    Dom.setProperty(this.getElem(), "--bgColor", this._theme);
+    Dom.setProp(this.getElem(), "--bgColor", this._theme);
 
     //是否有傳入客製圖標路徑
     if (this._thumbImg) {
-      this.getElem().style.setProperty("--tmb-img", `url(${this._thumbImg})`);
+      Dom.setProp(this.getElem(),"--tmb-img", `url(${this._thumbImg})`);
       Dom.addClass(this.getElem(), ["custom-thumb"]);
     }
   }
@@ -289,23 +256,22 @@ class SliderThumb extends BaseComponent {
 }
 
 class SliderBar extends BaseComponent {
-  constructor(value, subscribeValue, theme, subscribeTheme) {
+  constructor(getValue, getTheme) {
     const bar = document.createElement("div");
     const mask = document.createElement("span");
     mask.classList.add("mask");
-    super(bar, theme);
+    super(bar, getTheme());
     this.mask = mask;
-    this._barValue = value;
-    this.startValue = value[0];
     this.options = { ...this.defaultOptions };
     this._init();
-    subscribeValue((value) => {
-      this.startValue = value[0] ?? value;
-      value = Array.isArray(value) ? value[1] - value[0] : value;
-      this._setBarValue(value);
+
+    createEffect(() => {
+      const value = getValue();
+      this.startValue = Array.isArray(value) ? value[0] : value;
+      this._setBarValue(Array.isArray(value) ? value[1] - value[0] : value);
     });
-    subscribeTheme((theme) => {
-      super.setTheme(theme);
+    createEffect(() => {
+      super.setTheme(getTheme());
     });
   }
 
@@ -321,12 +287,14 @@ class SliderBar extends BaseComponent {
   }
   render() {
     Dom.addClass(this.getElem(), this.options.classes);
-    Dom.setProperty(this.mask, "--bgColor", this._theme);
+    Dom.setProp(this.mask, "--bgColor", this._theme);
   }
-
+  
   _setBarValue(value) {
     this._barValue = value;
-    this.mask.style.setProperty("--slider-width", `${value}%`);
-    this.mask.style.setProperty("--start-point", `${this.startValue}%`);
+    Dom.setProp(this.mask, "--slider-width", `${value}%`);
+    Dom.setProp(this.mask, "--start-point", `${this.startValue}%`);
+    // this.mask.style.setProperty("--slider-width", `${value}%`);
+    // this.mask.style.setProperty("--start-point", `${this.startValue}%`);
   }
 }

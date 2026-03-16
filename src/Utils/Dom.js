@@ -197,15 +197,15 @@ export function checkContainer(container, type = null) {
  * @returns {{element:HTMLElement,options:Object}}
  */
 export function defineArgs(args, tagName = "div") {
-    let elem;
+    let element;
     let options = {};
 
     if (args[0] instanceof HTMLElement) {
-        elem = args[0];
+        element = args[0];
         options = args[1] || {};
     } else {
-        elem = document.createElement(tagName);
+        element = document.createElement(tagName);
         options = args[0] || {};
     }
-    return { elem, options };
+    return { element, options };
 }

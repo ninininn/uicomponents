@@ -1,4 +1,7 @@
-import { BaseComponent, Dom, clamp, onClickOutside, positionFloat } from "../../Utils/Utils";
+// import { BaseComponent, Dom, clamp, onClickOutside, positionFloat } from "../../Utils/Utils";
+import { clamp, positionFloat } from "../../Utils/Utils";
+import {Dom} from '../../Utils/Dom';
+import {BaseComponent} from '../BaseCompo';
 
 import { ColorFormat, Color } from "../../Utils/Color";
 import addSvg from "../../../public/add.svg";
@@ -181,7 +184,7 @@ export class ColorPicker extends BaseComponent {
       this._updatePanel();
     });
 
-    onClickOutside(this.getElem(), () => {
+    super.onClickOutside(this.getElem(), () => {
       Dom.removeClass(this._picker, ["visible"]);
     });
 

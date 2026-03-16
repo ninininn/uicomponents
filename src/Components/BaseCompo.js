@@ -37,9 +37,9 @@ export class BaseComponent {
     }
 
 
-    onClickOutSide(target,callback){
-        return this.onEvent(document,'click',(e)=>{
-            if(!target.contains(e.target) callback(e));
+    onClickOutside(target,callback){
+        return this.onevent(document,'click',(e)=>{
+            if(!target.contains(e.target)) callback(e);
         })
     }
 }

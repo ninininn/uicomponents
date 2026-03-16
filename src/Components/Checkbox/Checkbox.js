@@ -1,4 +1,6 @@
-import { Dom, BaseComponent, defineArgs, bindState } from "../../Utils/Utils";
+// import { Dom, BaseComponent, defineArgs } from "../../Utils/Utils";
+import {Dom} from '../../Utils/Dom';
+import {BaseComponent} from '../BaseCompo';
 
 export class Checkbox extends BaseComponent {
   constructor(...args) {
