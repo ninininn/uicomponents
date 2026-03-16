@@ -68,20 +68,20 @@ export class ColorPicker extends BaseComponent {
 
   _init() {
     this._theme = 'var(--color-primary-500)';
-    Dom.setProperty(this.getElem(), "--theme", this._theme);
+    Dom.setProp(this.getElem(), "--theme", this._theme);
     //預設顏色顯示
     for (let color of this.defaultColors) {
       const colorDiv = document.createElement("div");
       Dom.addClass(colorDiv, ["color"]);
       // colorDiv.style.backgroundColor = color;
-      Dom.setAttribute(colorDiv, "colorpick", color);
+      Dom.setDataAttr(colorDiv, "colorpick", color);
       this.getElem().appendChild(colorDiv);
     }
 
     Dom.addClass(this._picker, ["picker"]);
 
     //加入新增顏色用的操作按鈕
-    const addBtn = Dom.setButtons({
+    const addBtn = Dom.setBtn({
       classes: ["btn", "btn-sm", "btn-primary", "add-color-btn"],
       icon: addSvg,
       handler: () => {
@@ -145,7 +145,7 @@ export class ColorPicker extends BaseComponent {
         Dom.addClass(this._picker, ["visible"]);
         Dom.setText(panelComfirmBtn, "更改顏色");
         //傳入dataset.colorpick作為面板當前顏色
-        Dom.setAttribute(this._picker, "currentpick", colorPicked);
+        Dom.setDataAttr(this._picker, "currentpick", colorPicked);
         this._updatePanel();
       }
     });
@@ -233,7 +233,7 @@ export class ColorPicker extends BaseComponent {
     const canvasContainer = document.createElement("div");
     const canvas = document.createElement("canvas");
 
-    const confirmBtn = Dom.setButtons({
+    const confirmBtn = Dom.setBtn({
       classes: ["btn", "btn-primary"],
       text: "更改顏色",
       handler: () => {
@@ -270,7 +270,7 @@ export class ColorPicker extends BaseComponent {
     const currentColor = document.createElement("div");
     Dom.addClass(currentColor, ["current-picked-color"]);
 
-    Dom.setAttribute(pickerContainer, "currentpick", this.colors[0]);
+    Dom.setDataAttr(pickerContainer, "currentpick", this.colors[0]);
     this._paintCanvas(canvas, 0);
     const canvasThumb = document.createElement("button");
     const hueThumb = document.createElement("button");
@@ -329,8 +329,8 @@ export class ColorPicker extends BaseComponent {
     const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
     const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
     this._paintCanvas(colorTrack, h);//如果hue沒變就不用重繪?
-    Dom.setProperty(hueTrack, "--hue", h);
-    Dom.setProperty(alphaTrack, "--hue", h);
+    Dom.setProp(hueTrack, "--hue", h);
+    Dom.setProp(alphaTrack, "--hue", h);
 
     //update Canvas-thumb position
     let vHSV = (l / 100) + (s / 100) * Math.min(l / 100, 1 - l / 100);
@@ -359,8 +359,8 @@ export class ColorPicker extends BaseComponent {
     const ax = clamp(a * atrackW - athumbW / 2, 0, atrackW - athumbW);
     alphaThumb.style.transform = `translate3d(${ax}px, 0, 0)`;
 
-    // Dom.setProperty(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
-    Dom.setAttribute(
+    // Dom.setProp(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
+    Dom.setDataAttr(
       this._picker,
       "currentpick",
       this._convertColorMode(this.current, this.mode)
