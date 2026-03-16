@@ -154,7 +154,7 @@ export const Dom = {
  * 確認元素是否存在
  * @param {string|HTMLElement} selector 
  */
-export function fidElem(selector) {
+export function findElem(selector) {
     if (selector instanceof HTMLElement) return selector;
     return document.querySelector(selector);
 

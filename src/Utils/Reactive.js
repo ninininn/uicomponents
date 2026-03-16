@@ -49,15 +49,15 @@ function createBasicProxy(initialState, effectfn) {
  * Trackable {Node} subs 訂閱清單(誰訂閱我) = 自身有更新時要通知的對象
  */
 
-function createSignal(initials) {
-    const node = new Node(type = 'signal', initials);
+export function createSignal(initials) {
+    const node = new Node('signal', initials);
     //Read
     const get = () => {
         track(node);
         return node.value;
     };
 
-    //update
+    //update signal value
     const set = (next) => {
         const nextVal = typeof next === 'function' ? next(node.value) : next;
         const isEqual = Object.is(node.value, nextVal);
@@ -66,17 +66,18 @@ function createSignal(initials) {
 
         for (const sub of node.subs) {
             if (sub.type === 'effect') weakMapRegistry.get(sub)?.schedule();
+            if(sub.type==='computed') markStale(sub); //只標記，不重算
         }
     };
 
 
     //手動把某個 Observer 掛到某個 signal 上，回傳取消訂閱
-    const subscribe = (observerNode) => {
-        if (observerNode.type === 'signal') {
-            throw new Error('A signal cannot subscribr to another node');
+    const subscribe = (observer) => {
+        if (observer.type === 'signal') {
+            throw new Error('A signal cannot subscribe to another node');
         }
-        bind(observerNode, node);
-        return () => unBind(observerNode, node);
+        bind(observer, node);
+        return () => unBind(observer, node);
 
     };
 
@@ -112,10 +113,10 @@ function track(dependenceNode) {
  */
 class Node {
     constructor(type, value) {
-        this.type = type;//'signal' | 'compute' | 'effect'
+        this.type = type;//'signal' | 'computed' | 'effect'
 
         switch (this.type) {
-            case 'compute':
+            case 'computed':
                 this.subs = new Set();
                 this.deps = new Set();
                 break;
@@ -158,42 +159,11 @@ function unBind(from, to) {
 }
 
 
-//型別
-//EffectInstanceLike{schedule()}
-//EffectCarrier{[EffectSlot]?: EffectInstanceLike}
-//EffectRegistry{
-// get(EffectCarrierNode),set(EffectCarrierNode),delete(EffectCarrierNode)
-//}
-// const EffectSlot = Symbol("EffectSlot");
-
-// class EffectCarrier {
-//     constructor() {
-//         [EffectSlot] = EffectInstanceLike;
-//     }
-// }
-
-// //if([EffectSlot]) will has schedule() method
-// const SymbolRegistry = {
-//     get(EffectCarrierNode) {
-//         return EffectCarrierNode[EffectSlot];
-//     },
-//     set(EffectCarrierNode, inst) {
-//         Object.defineProperty(EffectCarrierNode, EffectSlot, {
-//             value: inst,
-//             enumerable: false,
-//             configurable: true
-//         });
-//     },
-//     delete(EffectCarrierNode) {
-//         Reflect.deleteProperty(EffectCarrierNode, EffectSlot);
-//     }
-// };
-
 const mapTable = new WeakMap();
 const weakMapRegistry = {
-    get: (EffectCarrierNode) => mapTable.get(EffectCarrierNode),
-    set: (EffectCarrierNode, inst) => mapTable.set(EffectCarrierNode, inst),
-    delete: (EffectCarrierNode) => mapTable.delete(EffectCarrierNode)
+    get: (effectNode) => mapTable.get(effectNode),
+    set: (effectNode, effect) => mapTable.set(effectNode, effect),
+    delete: (effectNode) => mapTable.delete(effectNode)
 };
 
 function drainCleanups(list, onError) {
@@ -212,9 +182,9 @@ function drainCleanups(list, onError) {
 // microtask 合併
 const pending = new Set();
 let scheduled = false;
-function schedule(inst) {
-    if (inst.disposed) return;
-    pending.add(inst);
+function schedule(effect) {
+    if (effect.disposed) return;
+    pending.add(effect);
     if (!scheduled) {
         scheduled = true;
         queueMicrotask(() => {
@@ -226,35 +196,34 @@ function schedule(inst) {
     }
 }
 
-//activeEffect型別: EffectInstance | null
+//activeEffect型別: Effect | null
 let activeEffect = null;
 function onCleanup(cb) {
     if (activeEffect) activeEffect.cleanups.push(cb);
 }
 
-class EffectInstance {
-    #fn;
+class Effect {
     constructor(fn) {
         this.node = new Node('effect');
         this.cleanups = [];
         this.disposed = false;
-        this.#fn = fn;
-        weakMapRegistry.set(this.node, this); // 只碰 Registry
+        this._fn = fn;
+        weakMapRegistry.set(this.node, this); //把這個effectNode記錄到registry
     }
 
     run() {
         if (this.disposed) return;
 
-        // 1) 清理上次
+        // 1) 清理上次:run cleanups
         drainCleanups(this.cleanups);
 
-        // 2) 解除舊依賴
-        for (const dep of [...this.node.deps]) unlink(this.node, dep);
+        // 2) 解除舊依賴:unbind old deps
+        for (const dep of [...this.node.deps]) unBind(this.node, dep);
 
-        // 3) 追蹤上下文執行，收集新依賴；支援回傳 cleanup
+        // 3) 先 unbind 舊依賴再用 withObserver 收集新依賴，避免訂閱集合不斷增長
         activeEffect = this;
         try {
-            const ret = withObserver(this.node, this.#fn);
+            const ret = withObserver(this.node, this._fn);
             if (typeof ret === 'function') this.cleanups.push(ret);
         } finally {
             activeEffect = null;
@@ -280,8 +249,69 @@ class EffectInstance {
  * @param {*} fn 
  */
 
-function createEffect(fn) {
-    const inst = new EffectInstance(fn);
-    inst.run(); // 先跑一次收集依賴
-    return () => inst.dispose();
+export function createEffect(fn) {
+    const effect = new Effect(fn);
+    effect.run(); // Effect.run()，先跑一次收集依賴(透過withObserver())
+    return () => effect.dispose();
+}
+
+
+/**Computed
+ * 
+ */
+
+function markStale(node){
+    if(node.type!=='computed') return;
+    const compute = node;
+    if(compute.stale) return;
+    compute.stale = true;
+
+    for(const sub of node.subs){
+        if(sub.type==='computed'){
+            markStale(sub);
+        }else if(sub.type==='effect'){
+            weakMapRegistry.get(sub)?.schedule();//把effect排入排程
+        }
+    }
+}
+
+export function computed(fn){
+    const node = new Node('computed');
+    node.value = undefined;
+    node.stale = true;//第一次讀取要計入
+    node.computing = false;
+
+    function recompute(){
+        if(node.computing) throw new Error('Cycle detected in Computed');
+        node.computing = true;
+
+        //解除舊的依賴
+        for(const dep of [...node.deps]) unBind(node,dep);
+
+        //重新綁定
+        const next = withObserver(node,fn);
+        if(!Object.is(node.value,next)){
+            node.value = next;
+        }
+        node.stale = false;
+        node.computing = false;
+    }
+
+    const get = ()=>{
+        track(node);
+        if(node.stale)recompute();
+        return node.value;
+    }
+
+    const dispose = ()=>{
+        //解除所有上下游關係
+        for(const dep of [...node.deps]) unBind(node,dep);
+        for(const sub of [...node.subs]) unBind(sub,node);
+        node.deps.clear();
+        node.subs.clear();
+
+        node.stale = true;
+    }
+
+    return {get,dispose};
 }

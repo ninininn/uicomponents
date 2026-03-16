@@ -4,53 +4,49 @@ export class EventManager{
         this._targets = new WeakMap();
     }
 
+
+    // 回傳 cleanup fn（移除這個 handler）
     on(target,event,handler,options={}){
         const capture = Boolean(options.capture);
         const key = `${event}:${capture}`;
 
         let evtMap =this._targets.get(target);
+if (!evtMap) {
+            evtMap = new Map();
+            this._targets.set(target, evtMap);
+        }
 
-    }
-}
+        if (!evtMap.has(key)) {
+            const handlers = new Set();
+            const dispatcher = (e) => handlers.forEach(h => h(e));
+            target.addEventListener(event, dispatcher, {
+                signal: this._ac.signal,
+                capture,
+                passive: options.passive,           // ← passive 等 hint 在建立時套用
+            });
+            evtMap.set(key, { dispatcher, handlers, capture });
+        }
 
-
-//Observable Patterns
-class Observable{
-    constructor(initVal){
-        this.subscribers = new Set();
-    }
-
-    subscribe(fn){
-        this.subscribers.add(fn);
-        retrun ()=>this.subscribers.delete(fn);
-    }
-
-    update(val){
-        this.subscribers.forEach((fn)=>fn(val));
-    }
-}
-
-
-let subscribers = null;
-//Signals
-class Signal{
-    constructor(initVal){
-        this.subscriptions = new Set();
-        this._val = initVal;
+        evtMap.get(key).handlers.add(handler);
+        return () => this._off(target, event, handler, capture);
     }
 
-    get value(){
-        return this._val
+    _off(target,event,handler,capture=false){
+const key = `${event}:${capture}`;
+        const eventsMap = this._targets.get(target);
+        if (!eventsMap) return;
+        const entry = eventsMap.get(key);
+        if (!entry) return;
+
+        entry.handlers.delete(handler);
+        if (entry.handlers.size === 0) {
+            target.removeEventListener(event, entry.dispatcher, { capture });
+            eventsMap.delete(key);
+        }
     }
 
-    set value(updateVal){
-        this._val = updateVal;
+    destroy(){
+        this._ac.abort();//執行中止
+        this._ac = new AbortController();//重新賦予新的控制器
     }
-}
-//Effects
-
-function effect(fn){
-    subscribers = fn;
-    fn();
-    subscriber = null;
 }
