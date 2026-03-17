@@ -66,7 +66,7 @@ export function createSignal(initials) {
 
         for (const sub of node.subs) {
             if (sub.type === 'effect') weakMapRegistry.get(sub)?.schedule();
-            if(sub.type==='computed') markStale(sub); //只標記，不重算
+            if (sub.type === 'computed') markStale(sub); //只標記，不重算
         }
     };
 
@@ -81,7 +81,7 @@ export function createSignal(initials) {
 
     };
 
-    return { get, set, subscribe };
+    return [get, set, subscribe];
 }
 
 
@@ -180,19 +180,40 @@ function drainCleanups(list, onError) {
 }
 
 // microtask 合併
-const pending = new Set();
+const queue = new Set();
 let scheduled = false;
-function schedule(effect) {
-    if (effect.disposed) return;
-    pending.add(effect);
-    if (!scheduled) {
+let batchDepth = 0;//batch機制
+function scheduleJob(schedule) {
+    if (schedule.disposed) return;
+    queue.add(schedule);
+    if (!scheduled && batchDepth === 0) {
         scheduled = true;
-        queueMicrotask(() => {
-            scheduled = false;
-            const list = Array.from(pending);
-            pending.clear();
-            for (const ef of list) ef.run();
-        });
+        queueMicrotask(flushJobs);
+    }
+}
+
+export function batch(fn) {
+    batchDepth++;
+    try { return fn(); }
+    finally {
+        batchDepth--;
+        if (batchDepth === 0) flushJobs();
+    }
+}
+
+export function flushSync() {
+    if (!scheduled && queue.size === 0) return;
+    flushJobs();
+}
+
+function flushJobs() {
+    scheduled = false;
+    let guard = 0;
+    while (queue.size) {
+        const list = Array.from(queue);
+        queue.clear();
+        for (const job of list) job.run();
+        if (++guard > 10000) throw new Error('Inffinite update loop');
     }
 }
 
@@ -230,7 +251,7 @@ class Effect {
         }
     }
 
-    schedule() { schedule(this); }
+    schedule() { scheduleJob(this); }
 
     dispose() {
         if (this.disposed) return;
@@ -260,58 +281,58 @@ export function createEffect(fn) {
  * 
  */
 
-function markStale(node){
-    if(node.type!=='computed') return;
+function markStale(node) {
+    if (node.type !== 'computed') return;
     const compute = node;
-    if(compute.stale) return;
+    if (compute.stale) return;
     compute.stale = true;
 
-    for(const sub of node.subs){
-        if(sub.type==='computed'){
+    for (const sub of node.subs) {
+        if (sub.type === 'computed') {
             markStale(sub);
-        }else if(sub.type==='effect'){
+        } else if (sub.type === 'effect') {
             weakMapRegistry.get(sub)?.schedule();//把effect排入排程
         }
     }
 }
 
-export function computed(fn){
+export function computed(fn) {
     const node = new Node('computed');
     node.value = undefined;
     node.stale = true;//第一次讀取要計入
     node.computing = false;
 
-    function recompute(){
-        if(node.computing) throw new Error('Cycle detected in Computed');
+    function recompute() {
+        if (node.computing) throw new Error('Cycle detected in Computed');
         node.computing = true;
 
         //解除舊的依賴
-        for(const dep of [...node.deps]) unBind(node,dep);
+        for (const dep of [...node.deps]) unBind(node, dep);
 
         //重新綁定
-        const next = withObserver(node,fn);
-        if(!Object.is(node.value,next)){
+        const next = withObserver(node, fn);
+        if (!Object.is(node.value, next)) {
             node.value = next;
         }
         node.stale = false;
         node.computing = false;
     }
 
-    const get = ()=>{
+    const get = () => {
         track(node);
-        if(node.stale)recompute();
+        if (node.stale) recompute();
         return node.value;
-    }
+    };
 
-    const dispose = ()=>{
+    const dispose = () => {
         //解除所有上下游關係
-        for(const dep of [...node.deps]) unBind(node,dep);
-        for(const sub of [...node.subs]) unBind(sub,node);
+        for (const dep of [...node.deps]) unBind(node, dep);
+        for (const sub of [...node.subs]) unBind(sub, node);
         node.deps.clear();
         node.subs.clear();
 
         node.stale = true;
-    }
+    };
 
-    return {get,dispose};
+    return { get, dispose };
 }
