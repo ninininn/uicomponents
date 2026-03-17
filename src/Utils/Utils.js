@@ -2,143 +2,143 @@
 /**
  * 工具Functions
  */
-export class Dom {
-    static setStyle(element, property, styleValue) {
-        element.style[property] = styleValue;
-    }
-    static addClass(element, classes) {
-        element.classList.add(...classes);
-    }
-    static toggleClass(element, classes) {
-        element.classList.toggle(...classes);
-    }
-    static removeClass(element, classes) {
-        element.classList.remove(...classes);
-    }
-    //清除所有class(除了指定的以外)
-    static clearClass(element, excludeClasses = []) {
-        let newClassName = [];
-        for (let cls of excludeClasses) {
-            newClassName.push(cls);
-        }
-        element.className = newClassName.join(" ");
-    }
-    static setText(element, text) {
-        element.textContent = text;
-    }
-    static setTextnode(element, text) {
-        let textNode = document.createTextNode(text);
-        element.appendChild(textNode);
-    }
-    static setAttribute(element, attributeName, attributeValue = "") {
-        element.setAttribute(`data-${attributeName}`, attributeValue);
-    }
-    static removeAttribute(element, attributeName) {
-        element.removeAttribute(attributeName);
-    }
-    static setProperty(element, propertyName, propertyValue) {
-        element.style.setProperty(propertyName, propertyValue);
-    }
+// export class Dom {
+//     static setStyle(element, property, styleValue) {
+//         element.style[property] = styleValue;
+//     }
+//     static addClass(element, classes) {
+//         element.classList.add(...classes);
+//     }
+//     static toggleClass(element, classes) {
+//         element.classList.toggle(...classes);
+//     }
+//     static removeClass(element, classes) {
+//         element.classList.remove(...classes);
+//     }
+//     //清除所有class(除了指定的以外)
+//     static clearClass(element, excludeClasses = []) {
+//         let newClassName = [];
+//         for (let cls of excludeClasses) {
+//             newClassName.push(cls);
+//         }
+//         element.className = newClassName.join(" ");
+//     }
+//     static setText(element, text) {
+//         element.textContent = text;
+//     }
+//     static setTextnode(element, text) {
+//         let textNode = document.createTextNode(text);
+//         element.appendChild(textNode);
+//     }
+//     static setAttribute(element, attributeName, attributeValue = "") {
+//         element.setAttribute(`data-${attributeName}`, attributeValue);
+//     }
+//     static removeAttribute(element, attributeName) {
+//         element.removeAttribute(attributeName);
+//     }
+//     static setProperty(element, propertyName, propertyValue) {
+//         element.style.setProperty(propertyName, propertyValue);
+//     }
 
-    static setButtons(btnConfig) {
-        let btn = document.createElement("button");
-        let { classes = [], icon, text, handler } = btnConfig;
-        if (icon) {
-            switch (icon) {
-                case "close":
-                    classes.push("icon-btn");
-                    btn.innerHTML = `<svg class="icon text-blue-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M6 18 17.94 6M18 18 6.06 6" />
-                    </svg>`;
-                    break;
-                default:
-                    // classes.push("icon-text-btn");
-                    let img = document.createElement("img");
-                    Dom.addClass(img, ["icon"]);
-                    img.src = `${icon}`;
-                    btn.appendChild(img);
-                    break;
-            }
-        }
-        //設定按鈕文字
-        if (text) Dom.setTextnode(btn, text);
-        //設定按鈕其他相關
-        Dom.addClass(btn, ["btn", ...classes]);
-        btn.type = "button";
+//     static setButtons(btnConfig) {
+//         let btn = document.createElement("button");
+//         let { classes = [], icon, text, handler } = btnConfig;
+//         if (icon) {
+//             switch (icon) {
+//                 case "close":
+//                     classes.push("icon-btn");
+//                     btn.innerHTML = `<svg class="icon text-blue-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+//                     height="24" fill="none" viewBox="0 0 24 24">
+//                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+//                     d="M6 18 17.94 6M18 18 6.06 6" />
+//                     </svg>`;
+//                     break;
+//                 default:
+//                     // classes.push("icon-text-btn");
+//                     let img = document.createElement("img");
+//                     Dom.addClass(img, ["icon"]);
+//                     img.src = `${icon}`;
+//                     btn.appendChild(img);
+//                     break;
+//             }
+//         }
+//         //設定按鈕文字
+//         if (text) Dom.setTextnode(btn, text);
+//         //設定按鈕其他相關
+//         Dom.addClass(btn, ["btn", ...classes]);
+//         btn.type = "button";
 
-        if (handler) {
-            btn.addEventListener("click", function (e) {
-                handler.call(btn, e, btnConfig);
-            });
-        }
+//         if (handler) {
+//             btn.addEventListener("click", function (e) {
+//                 handler.call(btn, e, btnConfig);
+//             });
+//         }
 
-        return btn;
-    }
+//         return btn;
+//     }
 
-    static setBtnGroup(btns, container) {
-        let buttons = btns.map((btnConfig) => Dom.setButtons(btnConfig));
-        if (container) {
-            container.append(...buttons);
-            return container;
-        }
-        return buttons;
-    }
+//     static setBtnGroup(btns, container) {
+//         let buttons = btns.map((btnConfig) => Dom.setBtn(btnConfig));
+//         if (container) {
+//             container.append(...buttons);
+//             return container;
+//         }
+//         return buttons;
+//     }
 
-    static setPosition(element, position, excludeClasses = []) {
-        Dom.clearClass(element, excludeClasses);
-        switch (position) {
-            case "right-top":
-                Dom.addClass(element, ["right-[5rem]", "top-[2rem]"]);
-                break;
-            case "right-bottom":
-                Dom.addClass(element, ["right-[5rem]", "bottom-[2rem]"]);
-                break;
-            case "left-top":
-                Dom.addClass(element, ["left-[5rem]", "top-[2rem]"]);
-                break;
-            case "left-bottom":
-                Dom.addClass(element, ["left-[5rem]", "bottom-[2rem]"]);
-                break;
-            case "center-top":
-                Dom.addClass(element, [
-                    "left-[50%]",
-                    "top-[2rem]",
-                    "-translate-x-[50%]",
-                ]);
-                break;
-            case "center-bottom":
-                Dom.addClass(element, [
-                    "left-[50%]",
-                    "bottom-[2rem]",
-                    "-translate-x-[50%]",
-                ]);
-                break;
-            case "center":
-                //center
-                Dom.addClass(element, [
-                    "top-[50%]",
-                    "left-[50%]",
-                    "translate-[-50%]",
-                ]);
-                break;
-            default:
-                //自訂位置
-                try {
-                    let xposition = position[0];
-                    let yposition = position[1];
-                    Dom.addClass(element, [
-                        `top-[${xposition}]`,
-                        `left-[${yposition}]`,
-                    ]);
-                } catch (error) {
-                    console.error(error);
-                }
-                break;
-        }
-    }
-}
+//     static setPosition(element, position, excludeClasses = []) {
+//         Dom.clearClass(element, excludeClasses);
+//         switch (position) {
+//             case "right-top":
+//                 Dom.addClass(element, ["right-[5rem]", "top-[2rem]"]);
+//                 break;
+//             case "right-bottom":
+//                 Dom.addClass(element, ["right-[5rem]", "bottom-[2rem]"]);
+//                 break;
+//             case "left-top":
+//                 Dom.addClass(element, ["left-[5rem]", "top-[2rem]"]);
+//                 break;
+//             case "left-bottom":
+//                 Dom.addClass(element, ["left-[5rem]", "bottom-[2rem]"]);
+//                 break;
+//             case "center-top":
+//                 Dom.addClass(element, [
+//                     "left-[50%]",
+//                     "top-[2rem]",
+//                     "-translate-x-[50%]",
+//                 ]);
+//                 break;
+//             case "center-bottom":
+//                 Dom.addClass(element, [
+//                     "left-[50%]",
+//                     "bottom-[2rem]",
+//                     "-translate-x-[50%]",
+//                 ]);
+//                 break;
+//             case "center":
+//                 //center
+//                 Dom.addClass(element, [
+//                     "top-[50%]",
+//                     "left-[50%]",
+//                     "translate-[-50%]",
+//                 ]);
+//                 break;
+//             default:
+//                 //自訂位置
+//                 try {
+//                     let xposition = position[0];
+//                     let yposition = position[1];
+//                     Dom.addClass(element, [
+//                         `top-[${xposition}]`,
+//                         `left-[${yposition}]`,
+//                     ]);
+//                 } catch (error) {
+//                     console.error(error);
+//                 }
+//                 break;
+//         }
+//     }
+// }
 
 
 /**
@@ -237,82 +237,82 @@ export function defineContainer(container, type = null) {
  * 父類別
  * 共用原型方法
  */
-export class BaseComponent {
-    constructor(elem, theme) {
-        this._elem = elem; //子類別instance的渲染DOM節點
-        this._theme = theme || "light";
-        this._eventListeners = []; // record eventListeners
-    }
+// export class BaseComponent {
+//     constructor(elem, theme) {
+//         this._elem = elem; //子類別instance的渲染DOM節點
+//         this._theme = theme || "light";
+//         this._eventListeners = []; // record eventListeners
+//     }
 
-    // 資料初始化
-    _init() {
-        this.render();
-    }
+//     // 資料初始化
+//     _init() {
+//         this.render();
+//     }
 
-    // DOM節點渲染
-    render() { }
+//     // DOM節點渲染
+//     render() { }
 
-    // 新增監聽器
-    onevent(target, event, handler, options) {
-        //避免重複綁定//但是.bind產生的fn還是會認為是不同的
-        let recordObj = { target, event, handler };
-        let checkListeners = this._eventListeners.filter((listener) => {
-            return (
-                listener.event === event &&
-                listener.target === target &&
-                listener.handler === handler
-            );
-        });
+//     // 新增監聽器
+//     onevent(target, event, handler, options) {
+//         //避免重複綁定//但是.bind產生的fn還是會認為是不同的
+//         let recordObj = { target, event, handler };
+//         let checkListeners = this._eventListeners.filter((listener) => {
+//             return (
+//                 listener.event === event &&
+//                 listener.target === target &&
+//                 listener.handler === handler
+//             );
+//         });
 
-        if (checkListeners.length === 0) {
-            target.addEventListener(event, handler, options);
-            this._eventListeners.push(recordObj);
-        }
-    }
+//         if (checkListeners.length === 0) {
+//             target.addEventListener(event, handler, options);
+//             this._eventListeners.push(recordObj);
+//         }
+//     }
 
-    //移除指定監聽器
-    offevent(target, event, handler) {
-        this._eventListeners = this._eventListeners.filter((listener) => {
-            const removeTarget =
-                listener.target === target &&
-                listener.event === event &&
-                listener.handler === handler;
+//     //移除指定監聽器
+//     offevent(target, event, handler) {
+//         this._eventListeners = this._eventListeners.filter((listener) => {
+//             const removeTarget =
+//                 listener.target === target &&
+//                 listener.event === event &&
+//                 listener.handler === handler;
 
-            if (removeTarget) {
-                listener.target.removeEventListener(listener.event, listener.handler);
-            }
+//             if (removeTarget) {
+//                 listener.target.removeEventListener(listener.event, listener.handler);
+//             }
 
-            return !removeTarget; // 回傳沒有被移除監聽器的事件
-        });
-    }
+//             return !removeTarget; // 回傳沒有被移除監聽器的事件
+//         });
+//     }
 
-    //清除狀態及監聽器
-    destroy() {
-        this._eventListeners.forEach(({ target, event, handler }) => {
-            target.removeEventListener(event, handler);
-        });
-        this._eventListeners = [];
-    }
+//     //清除狀態及監聽器
+//     destroy() {
+//         this._eventListeners.forEach(({ target, event, handler }) => {
+//             target.removeEventListener(event, handler);
+//         });
+//         this._eventListeners = [];
+//     }
 
-    //提供可以取得實際渲染DOM節點的入口
-    getElem() {
-        return this._elem;
-    }
+//     //提供可以取得實際渲染DOM節點的入口
+//     getElem() {
+//         return this._elem;
+//     }
 
-    setTheme(themeValue) {
-        this._theme = themeValue;
-        this.render();
-    }
+//     setTheme(themeValue) {
+//         this._theme = themeValue;
+//         this.render();
+//     }
 
-    appendElem(elem) {
-        this._elem.appendChild(elem);
-        Dom.addClass(elem, ["opacity-0", "transition-all"]);
+//     appendElem(elem) {
+//         this._elem.appendChild(elem);
+//         Dom.addClass(elem, ["opacity-0", "transition-all"]);
 
-        setTimeout(() => {
-            Dom.addClass(elem, ["opacity-100"]);
-        }, 100);
-    }
-}
+//         setTimeout(() => {
+//             Dom.addClass(elem, ["opacity-100"]);
+//         }, 100);
+//     }
+// }
 /**
  * 判斷變數型別用
  * @param {*} variable 

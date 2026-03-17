@@ -1,4 +1,5 @@
-import { BaseComponent, Dom, findElem, defineTypeof } from "../../Utils/Utils";
+import { Dom } from "../../Utils/Dom";
+import { BaseComponent } from "../BaseCompo";
 
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Dropdown } from "../Dropdown/Dropdown";
@@ -45,23 +46,23 @@ export class Pagination extends BaseComponent {
   _render() {
     this._elem.innerHTML = ``; //清空
     super.setTheme(this._theme);
-    Dom.setProperty(this._elem, "--theme", this._theme);
+    Dom.setProp(this._elem, "--theme", this._theme);
 
     let pageFragment = document.createDocumentFragment();
     for (let i = 0; i < this.pages.length; i++) {
       let pageBtn = document.createElement("button");
       pageBtn.type = "button";
       let isCurrent = this.pages[i].current;
-      if (isCurrent) Dom.setAttribute(pageBtn, DATA_ATTR_CUR_PAGE);
+      if (isCurrent) Dom.setDataAttr(pageBtn, DATA_ATTR_CUR_PAGE);
       Dom.addClass(pageBtn, ["page-item"]);
       switch (this.pages[i].type) {
         case "prev-page":
           Dom.setText(pageBtn, "<<");
-          Dom.setAttribute(pageBtn, DATA_ATTR_PREV);
+          Dom.setDataAttr(pageBtn, DATA_ATTR_PREV);
           break;
         case "next-page":
           Dom.setText(pageBtn, ">>");
-          Dom.setAttribute(pageBtn, DATA_ATTR_NEXT);
+          Dom.setDataAttr(pageBtn, DATA_ATTR_NEXT);
           break;
         case "start-ellipsis":
           Dom.setText(pageBtn, "...");

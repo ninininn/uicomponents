@@ -1,10 +1,6 @@
-import {
-  BaseComponent,
-  Dom,
-  findElem,
-  defineTypeof,
-  dataSorter,
-} from "../../Utils/Utils";
+import { defineTypeof, dataSorter } from "../../Utils/Utils";
+import { Dom, findElem } from "../../Utils/Dom";
+import { BaseComponent } from "../BaseCompo";
 
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Pagination } from "../Pagination/Pagination";
@@ -104,7 +100,7 @@ export class Table extends BaseComponent {
     }
     this.selectedRows = {};
     super.setTheme(this.config.theme);
-    Dom.setProperty(this._elem, "--theme", this._theme);
+    Dom.setProp(this._elem, "--theme", this._theme);
 
     //組裝
     this.table.id = this.id;
@@ -246,7 +242,7 @@ export class Table extends BaseComponent {
             popover.appendChild(colsCheck.container);
           }
 
-          btn = Dom.setButtons({
+          btn = Dom.setBtn({
             classes: ["btn-sm", "outline-btn", "relative"],
             icon: "./filter.svg",
             handler: (e) => {
@@ -294,7 +290,7 @@ export class Table extends BaseComponent {
             };
             Exporter(exportObj);
           };
-          btn = Dom.setButtons({
+          btn = Dom.setBtn({
             classes: ["btn-sm", "outline-btn"],
             icon: "./export.svg",
             handler: btnHandler,
@@ -321,7 +317,7 @@ export class Table extends BaseComponent {
             table.append(tableHeader, rowFragment);
             Printer(table, selectedRows, "table");
           };
-          btn = Dom.setButtons({
+          btn = Dom.setBtn({
             classes: ["btn-sm", "outline-btn"],
             icon: "./print.svg",
             handler: btnHandler,
@@ -333,7 +329,7 @@ export class Table extends BaseComponent {
           const searchInput = document.createElement("input");
           searchInput.type = "text";
 
-          btn = Dom.setButtons({
+          btn = Dom.setBtn({
             classes: ["btn-sm", "outline-btn", "relative"],
             icon: "./search.svg",
             handler: (e) => {
@@ -348,7 +344,7 @@ export class Table extends BaseComponent {
           toolBar.appendChild(searchGroup);
           break;
         default:
-          toolBar.appendChild(Dom.setButtons(feature));
+          toolBar.appendChild(Dom.setBtn(feature));
           break;
       }
       toolBar.appendChild(btn);
@@ -360,7 +356,7 @@ export class Table extends BaseComponent {
   //建立TableRow
   _createRow(data, index, colConfig, printMode = false) {
     const tr = document.createElement("tr");
-    Dom.setAttribute(tr, DATA_ATTR_INDEX, index);
+    Dom.setDataAttr(tr, DATA_ATTR_INDEX, index);
 
     if (!printMode) {
       if (this.config.selection === "checkbox") {
@@ -398,7 +394,7 @@ export class Table extends BaseComponent {
         break;
     }
 
-    Dom.setAttribute(td, DATA_ATTR_FIELD, field);
+    Dom.setDataAttr(td, DATA_ATTR_FIELD, field);
     //TODO template function - 傳入自訂函式來建立內容
 
     if (data?.data[field]) {
@@ -465,7 +461,7 @@ export class Table extends BaseComponent {
 
       if (checkbox) checkbox.checked = isChecked;
       if (isChecked) {
-        Dom.setAttribute(row, DATA_ATTR_ROWSELECTED);
+        Dom.setDataAttr(row, DATA_ATTR_ROWSELECTED);
       } else {
         delete row.dataset[DATA_ATTR_ROWSELECTED];
       }
@@ -631,7 +627,7 @@ class TableHeader extends BaseComponent {
   _init() {
     if (this.selection.UItype === "Checkbox") {
       const th = document.createElement("th");
-      Dom.setAttribute(th, "print", "print");
+      Dom.setDataAttr(th, "print", "print");
       th.appendChild(this.selection.getElem());
       this._elem.querySelector("tr").appendChild(th);
     }
@@ -695,7 +691,7 @@ class TableHeader extends BaseComponent {
 
     let th = document.createElement("th");
     let sortIcon = document.createElement("span");
-    Dom.setAttribute(th, DATA_ATTR_FIELD, field);
+    Dom.setDataAttr(th, DATA_ATTR_FIELD, field);
     Dom.setText(th, title);
     switch (align) {
       case "right":
@@ -712,11 +708,11 @@ class TableHeader extends BaseComponent {
     if (minWidth) th.style.minWidth = `${minWidth}px`;
     if (sort) {
       if (defineTypeof(sort, "func")) {
-        Dom.setAttribute(th, DATA_ATTR_SORT, "custom"); //初始沒有排序
+        Dom.setDataAttr(th, DATA_ATTR_SORT, "custom"); //初始沒有排序
         th.setAttribute("aria-sort", "none"); //for accessibility
       } else {
         const sortAttr = defineTypeof(sort, "boolean") ? "none" : sort;
-        Dom.setAttribute(th, DATA_ATTR_SORT, sortAttr);
+        Dom.setDataAttr(th, DATA_ATTR_SORT, sortAttr);
         th.setAttribute("aria-sort", sortAttr);
         sortIcon.innerHTML += `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M14 17.25C14.4142 17.25 14.75 17.5858 14.75 18C14.75 18.4142 14.4142 18.75 14 18.75H11C10.5858 18.75 10.25 18.4142 10.25 18C10.25 17.5858 10.5858 17.25 11 17.25H14ZM16 13.25C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H11C10.5858 14.75 10.25 14.4142 10.25 14C10.25 13.5858 10.5858 13.25 11 13.25H16ZM18 9.25C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H11C10.5858 10.75 10.25 10.4142 10.25 10C10.25 9.58579 10.5858 9.25 11 9.25H18ZM21 5.25C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H11C10.5858 6.75 10.25 6.41421 10.25 6C10.25 5.58579 10.5858 5.25 11 5.25H21Z" fill="currentColor"/>
@@ -735,7 +731,7 @@ class TableHeader extends BaseComponent {
       th.appendChild(resizer);
     }
     if (!print) {
-      Dom.setAttribute(th, "print", "print");
+      Dom.setDataAttr(th, "print", "print");
     }
 
     // th.appendChild(td);
@@ -746,7 +742,7 @@ class TableHeader extends BaseComponent {
       const otherTh = this.getElem().querySelectorAll("th");
       otherTh.forEach((th) => {
         if (th !== e.currentTarget && th.dataset) {
-          Dom.setAttribute(th, DATA_ATTR_SORT, "none");
+          Dom.setDataAttr(th, DATA_ATTR_SORT, "none");
           th.setAttribute("aria-sort", "none");
         }
       });
@@ -771,7 +767,7 @@ class TableHeader extends BaseComponent {
           updateSort = "ascending";
           break;
       }
-      Dom.setAttribute(e.currentTarget, DATA_ATTR_SORT, updateSort); //set to the toggle one.
+      Dom.setDataAttr(e.currentTarget, DATA_ATTR_SORT, updateSort); //set to the toggle one.
       e.currentTarget.setAttribute("aria-sort", updateSort);
       this.table._rowSort(field, updateSort);
     }
@@ -795,7 +791,7 @@ class TableHeader extends BaseComponent {
             const checkbox = row.querySelector("input[type='checkbox']");
             checkbox.checked = checked;
             if (checked) {
-              Dom.setAttribute(row, DATA_ATTR_ROWSELECTED);
+              Dom.setDataAttr(row, DATA_ATTR_ROWSELECTED);
             } else {
               delete row.dataset[DATA_ATTR_ROWSELECTED];
             }

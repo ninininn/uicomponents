@@ -1,4 +1,5 @@
-import { BaseComponent, setUUID, defineTypeof } from "../../Utils/Utils";
+import { setUUID, defineTypeof } from "../../Utils/Utils";
+import { BaseComponent } from "../BaseCompo";
 
 import { Notification } from "../Notification/Notification";
 

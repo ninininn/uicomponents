@@ -136,7 +136,7 @@ export class Notification extends BaseComponent {
     if (btnList) {
       let actionbtnDiv = this._elem.querySelector(".notify-actionbtns");
       for (let btnConfig of btnList) {
-        let btn = Dom.setButtons(btnConfig);
+        let btn = Dom.setBtn(btnConfig);
         actionbtnDiv.appendChild(btn);
       }
     }
@@ -160,14 +160,14 @@ export class Notification extends BaseComponent {
     //主題色
     let themeColor = this._theme === "dark" ? "#1e222789" : "#F3F4F6";
     let textColor = this._theme === "dark" ? "#F3F4F6" : "#1F2937";
-    Dom.setProperty(this._elem, "--theme", themeColor);
-    Dom.setProperty(this._elem, "--text", textColor);
+    Dom.setProp(this._elem, "--theme", themeColor);
+    Dom.setProp(this._elem, "--text", textColor);
 
 
     //尺寸設定
-    Dom.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
-    Dom.setProperty(this._elem, "--w", this.options.area[0]);
-    Dom.setProperty(this._elem, "--h", this.options.area[1]);
+    Dom.setProp(this._elem, "--maxWidth", this.options.maxWidth);
+    Dom.setProp(this._elem, "--w", this.options.area[0]);
+    Dom.setProp(this._elem, "--h", this.options.area[1]);
     // Dom.addClass(this._elem, ["hidden"]);
   }
 
@@ -205,7 +205,7 @@ export class Notification extends BaseComponent {
     btnConfig.actionType !== "confirm" && btnClasses.push("outline-btn");
     Dom.addClass(btn, btnClasses);
     Dom.setText(btn, btnConfig.btnTxt);
-    Dom.setAttribute(btn, `${btnConfig.actionType}btn`);
+    Dom.setDataAttr(btn, `${btnConfig.actionType}btn`);
     btnsblock.appendChild(btn);
     return btn;
   }
@@ -282,7 +282,7 @@ class ToastMsg {
   }
 
   _init() {
-    Dom.setAttribute(this.msgContainer, "notifytoast");
+    Dom.setDataAttr(this.msgContainer, "notifytoast");
     this._bindEvent();
   }
 
@@ -331,7 +331,7 @@ class ToastItem extends Dismiss {
   }
 
   _init() {
-    Dom.setAttribute(this._targetEl, "notifytoast");
+    Dom.setDataAttr(this._targetEl, "notifytoast");
     // garbage collection...
   }
 
@@ -372,7 +372,7 @@ class ModalMsg extends Modal {
   }
 
   _init() {
-    Dom.setAttribute(this._targetEl, "notifymodal");
+    Dom.setDataAttr(this._targetEl, "notifymodal");
     // this.confirmBtn.forEach((btn) => {
     //   btn.addEventListener("click", this.bindHandler);
     // });
@@ -403,7 +403,7 @@ class PopoverMsg extends Popover {
   }
 
   _init() {
-    Dom.setAttribute(this._targetEl, "notifypopover");
+    Dom.setDataAttr(this._targetEl, "notifypopover");
   }
   get config() {
     return this._options;
@@ -438,7 +438,7 @@ class DefaultMsg {
     this._render();
   }
   _render() {
-    Dom.setAttribute(this._targetEl, "notifymsg");
+    Dom.setDataAttr(this._targetEl, "notifymsg");
   }
   onShow() {
     Dom.removeClass(this._targetEl, ["hidden", "opacity-0"]);

@@ -5,10 +5,23 @@
 //   bindState,
 // } from "../../Utils/Utils";
 
-import {Dom,defineArgs} from '../../Utils/Dom';
-import {BaseComponent} from '../BaseCompo';
-import {createSignal,createEffect}from '../../Utils/Reactive'
+import { Dom, defineArgs } from '../../Utils/Dom';
+import { BaseComponent } from '../BaseCompo';
+import { createSignal, createEffect } from '../../Utils/Reactive';
 
+var sliderDefaultConfig = {
+  min: 0, //最小值
+  max: 100, //最大值
+  initValue: 0, //初始預設值
+  step: 1, //間隔
+  input: false, //是否顯示輸入框
+  range: false, //範圍功能
+  theme: "var(--color-yellow-500)", //預設顏色
+  thumbImg: null, //thumb圖標
+  classes: ["slider"],
+  handlers: null,
+  disabled: false,
+};
 
 // custom Slider components
 // props:
@@ -27,7 +40,7 @@ export class Slider extends BaseComponent {
       : options.theme || "var(--color-yellow-500)";
     super(element, defaultTheme);
     this.UItype = "Slider";
-    this.options = { ...this._defaultOptions, ...options };
+    this.options = Object.assign({},sliderDefaultConfig,options);
     this.disabled = this.options.disabled;
     this.defaultTheme = options.theme || defaultTheme;
     //events
@@ -39,11 +52,11 @@ export class Slider extends BaseComponent {
     this._checkRange();
 
     // 設定value state
-    const { get: getValue, set: setValue } = createSignal(this.options.initValue);
+    const [getValue, setValue] = createSignal(this.options.initValue);
     this.getValue = getValue;
     this.setValue = setValue;
 
-    const { get: getTheme, set: setTheme } = createSignal(defaultTheme);
+    const [getTheme, setTheme] = createSignal(defaultTheme);
     this.getTheme = getTheme;
     this.setTheme = setTheme;
 
@@ -69,23 +82,6 @@ export class Slider extends BaseComponent {
     }
 
     this._init();
-  }
-
-  // 封裝基本(預設)設定
-  get _defaultOptions() {
-    return {
-      min: 0, //最小值
-      max: 100, //最大值
-      initValue: 0, //初始預設值
-      step: 1, //間隔
-      input: false, //是否顯示輸入框
-      range: false, //範圍功能
-      theme: "var(--color-yellow-500)", //預設顏色
-      thumbImg: null, //thumb圖標
-      classes: ["slider"],
-      handlers: null,
-      disabled: false,
-    };
   }
 
   // 元件初始化
@@ -136,7 +132,7 @@ export class Slider extends BaseComponent {
     event.preventDefault();
     this._draggingIndex = index;
     this._removePointerMove = this.onevent(event.currentTarget, "pointermove", this.onPointerMove);
-    this._removePointerUp   = this.onevent(event.currentTarget, "pointerup",   this.onPointerUp);
+    this._removePointerUp = this.onevent(event.currentTarget, "pointerup", this.onPointerUp);
   }
 
   _onPointerMove(event) {
@@ -244,7 +240,7 @@ class SliderThumb extends BaseComponent {
 
     //是否有傳入客製圖標路徑
     if (this._thumbImg) {
-      Dom.setProp(this.getElem(),"--tmb-img", `url(${this._thumbImg})`);
+      Dom.setProp(this.getElem(), "--tmb-img", `url(${this._thumbImg})`);
       Dom.addClass(this.getElem(), ["custom-thumb"]);
     }
   }
@@ -289,7 +285,7 @@ class SliderBar extends BaseComponent {
     Dom.addClass(this.getElem(), this.options.classes);
     Dom.setProp(this.mask, "--bgColor", this._theme);
   }
-  
+
   _setBarValue(value) {
     this._barValue = value;
     Dom.setProp(this.mask, "--slider-width", `${value}%`);

@@ -1,5 +1,13 @@
 import { Dropdown as flowbiteDropdown } from "flowbite";
 
+var dropDefaultConfig = {
+  placement: "bottom",
+  triggerType: "click",
+  offsetSkidding: 0,
+  offsetDistance: 10,
+  ignoreClickOutsideClass: false,
+};
+
 export class Dropdown extends flowbiteDropdown {
   constructor(target, trigger, bindFilteroption = null, changeHandler = null) {
     let bindtarget, bindtrigger;
@@ -25,7 +33,7 @@ export class Dropdown extends flowbiteDropdown {
     }
     super(bindtarget, bindtrigger);
     this.dropdownChildren = this._targetEl.children;
-    this._options = { ...this._options, ...this.config };
+    this._options = Object.assign({}, dropDefaultConfig, this._options);
     this.bindSelect =
       this._targetEl.nextElementSibling ||
       this._createBindSelect(target, trigger); //綁定的下拉選單
@@ -102,17 +110,6 @@ export class Dropdown extends flowbiteDropdown {
       this.ifMap = true;
       this.ifAll = true;
     }
-  }
-
-  //預設option設定
-  get config() {
-    return {
-      placement: "bottom",
-      triggerType: "click",
-      offsetSkidding: 0,
-      offsetDistance: 10,
-      ignoreClickOutsideClass: false,
-    };
   }
 
   //內部控制-dropdown監聽器

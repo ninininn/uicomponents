@@ -7,6 +7,7 @@ export class BaseComponent {
         this._em = new EventManager();
     }
 
+    render() { }
     getElem() { return this._elem; } //看要不要統一用getter:get elem(){retrun this._elem}
 
     setTheme(themeVal) {
@@ -24,22 +25,22 @@ export class BaseComponent {
     }
 
 
-    onevent(target,event,handler,options){
-        return this._em.on(target,event,handler,options);
+    onevent(target, event, handler, options) {
+        return this._em.on(target, event, handler, options);
     }
 
-    offevent(cleanup){
+    offevent(cleanup) {
         cleanup?.();
     }
 
-    destroy(){
+    destroy() {
         this._em.destroy();
     }
 
 
-    onClickOutside(target,callback){
-        return this.onevent(document,'click',(e)=>{
-            if(!target.contains(e.target)) callback(e);
-        })
+    onClickOutside(target, callback) {
+        return this.onevent(document, 'click', (e) => {
+            if (!target.contains(e.target)) callback(e);
+        });
     }
 }

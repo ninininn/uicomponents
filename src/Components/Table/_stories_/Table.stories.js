@@ -1,11 +1,10 @@
 import { fn, expect } from "storybook/test";
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from "storybook/actions";
-
+import {Dom} from '../../../Utils/Dom'
 import { createTable } from "./TableStory";
 import "../Table.css";
 import TableAPIdoc from "./TableAPIdoc.mdx";
-import { Dom } from "../../../Utils/Utils";
 import { Notification } from "../../Notification/Notification";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

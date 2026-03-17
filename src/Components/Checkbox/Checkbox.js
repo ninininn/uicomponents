@@ -1,6 +1,17 @@
 // import { Dom, BaseComponent, defineArgs } from "../../Utils/Utils";
-import {Dom} from '../../Utils/Dom';
-import {BaseComponent} from '../BaseCompo';
+import { Dom, defineArgs } from '../../Utils/Dom';
+import { BaseComponent } from '../BaseCompo';
+
+var checkboxDefaultConfig = {
+  style: "default", //樣式
+  title: "", //文字
+  value: "", //<input/>的value attribute
+  checked: true,
+  theme: "var(--color-yellow-500)", //預設顏色
+  checkImg: null, //check圖標
+  classes: ["checkbox"],
+  disabled: false,
+};
 
 export class Checkbox extends BaseComponent {
   constructor(...args) {
@@ -40,7 +51,7 @@ export class Checkbox extends BaseComponent {
     // 把 inputElem 傳入作為 this._elem
     super(inputElem, defaultTheme);
     this.UItype = "Checkbox";
-    this.options = { ...this._defaultOptions, ...options };
+    this.options = Object.assign({}, checkboxDefaultConfig,options);
     this.defaultTheme = options.theme || defaultTheme;
     this.inputValue = this._defineInputValue(
       this.options.style,
@@ -68,20 +79,6 @@ export class Checkbox extends BaseComponent {
     this._init();
   }
 
-  // 封裝基本(預設)設定
-  get _defaultOptions() {
-    return {
-      style: "default", //樣式
-      title: "", //文字
-      value: "", //<input/>的value attribute
-      checked: true,
-      theme: "var(--color-yellow-500)", //預設顏色
-      checkImg: null, //check圖標
-      classes: ["checkbox"],
-      disabled: false,
-    };
-  }
-
   // 元件初始化
   _init() {
     this.render();
@@ -96,9 +93,9 @@ export class Checkbox extends BaseComponent {
     this._elem.checked = this.options.checked;
     this._elem.value = this.inputValue;
     Dom.addClass(this._elem, this.options.classes);
-    Dom.setAttribute(this._elem, "checkstyle", this.options.style || "default");
+    Dom.setDataAttr(this._elem, "checkstyle", this.options.style || "default");
     // 2. theme設定
-    Dom.setProperty(this.label, "--themeColor", this._theme);
+    Dom.setProp(this.label, "--themeColor", this._theme);
     //3. 判斷樣式
     switch (this.options.style) {
       case "switch":
@@ -114,7 +111,7 @@ export class Checkbox extends BaseComponent {
         this.label.replaceChild(titlenode, this.label.childNodes[1]);
         break;
       case "toggle":
-        Dom.setProperty(this.label, "--toggle-img", `url(${this.activeImg})`);
+        Dom.setProp(this.label, "--toggle-img", `url(${this.activeImg})`);
         break;
       case "tag":
         //label classes:input-label,input-tag-group

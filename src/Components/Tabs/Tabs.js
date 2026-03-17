@@ -1,8 +1,6 @@
-import {
-  BaseComponent,
-  Dom,
-  findElem, defineTypeof
-} from "../../Utils/Utils";
+import { defineTypeof } from "../../Utils/Utils";
+import { Dom, findElem } from "../../Utils/Dom";
+import { BaseComponent } from "../BaseCompo";
 
 var defaultTabsConfig = {
   orientation: 'vertical',//horizontal,vertical
@@ -36,7 +34,7 @@ export class Tabs extends BaseComponent {
     return activeIndex < 0 ? 1 : ++activeIndex;
   }
   _createTabs() {
-    Dom.setProperty(this.getElem(), '--theme', this._theme);
+    Dom.setProp(this.getElem(), '--theme', this._theme);
     const isVertical = this._config.orientation === 'vertical';
     const isFront = this._config.placement === 'start' || this._config.placement === 'top';
 

@@ -1,5 +1,7 @@
 import { Dismiss, Modal, Popover } from "flowbite";
-import { BaseComponent, Dom, debounce } from "../../Utils/Utils";
+import { debounce } from "../../Utils/Utils";
+import { Dom } from "../../Utils/Dom";
+import { BaseComponent } from "../BaseCompo";
 
 //TODO 1.點擊trigger觸發時要做debounce(點太多次只認一次)
 //TODO 2.清除重複的通知元素/關閉後要清掉該元素或是替換成新內容
@@ -129,7 +131,7 @@ class BaseMsg extends BaseComponent {
     if (btnList) {
       let actionbtnDiv = this._elem.querySelector(".notify-actionbtns");
       for (let btnConfig of btnList) {
-        let btn = Dom.setButtons(btnConfig);
+        let btn = Dom.setBtn(btnConfig);
         actionbtnDiv.appendChild(btn);
       }
     }
@@ -151,13 +153,13 @@ class BaseMsg extends BaseComponent {
     //主題色
     let themeColor = this._theme === "dark" ? "#1e222789" : "#F3F4F6";
     let textColor = this._theme === "dark" ? "#F3F4F6" : "#1F2937";
-    Dom.setProperty(this._elem, "--theme", themeColor);
-    Dom.setProperty(this._elem, "--text", textColor);
+    Dom.setProp(this._elem, "--theme", themeColor);
+    Dom.setProp(this._elem, "--text", textColor);
 
     //尺寸設定
-    Dom.setProperty(this._elem, "--maxWidth", this.options.maxWidth);
-    Dom.setProperty(this._elem, "--w", this.options.area[0]);
-    Dom.setProperty(this._elem, "--h", this.options.area[1]);
+    Dom.setProp(this._elem, "--maxWidth", this.options.maxWidth);
+    Dom.setProp(this._elem, "--w", this.options.area[0]);
+    Dom.setProp(this._elem, "--h", this.options.area[1]);
     // Dom.addClass(this._elem, ["hidden"]);
 
     if (this.options.type !== "toast" && this.options.type !== "popover") {
@@ -180,12 +182,12 @@ class BaseMsg extends BaseComponent {
     btnConfig.actionType !== "confirm" && btnClasses.push("outline-btn");
     // Dom.addClass(btn, btnClasses);
     // Dom.setText(btn, btnConfig.btnTxt);
-    let btn = Dom.setButtons({
+    let btn = Dom.setBtn({
       classes: btnClasses,
       text: btnTxt,
       handler: handler,
     });
-    Dom.setAttribute(btn, `${btnConfig.actionType}btn`);
+    Dom.setDataAttr(btn, `${btnConfig.actionType}btn`);
     btnsblock.appendChild(btn);
     return btn;
   }
@@ -214,7 +216,7 @@ class ToastItem extends BaseComponent {
       timing: timing || "ease-out",
     };
     let itemContainer = Notification._createTargetContainer();
-    let dismissBtn = Dom.setButtons({ icon: "close", classes: ["text-btn"] });
+    let dismissBtn = Dom.setBtn({ icon: "close", classes: ["text-btn"] });
     itemContainer.querySelector(".notify-header").appendChild(dismissBtn);
     super(itemContainer, options.theme || "light");
 
@@ -229,20 +231,20 @@ class ToastItem extends BaseComponent {
   _init() {
     //設定對應顏色
     if (this._base.options.icon) {
-      Dom.setProperty(
+      Dom.setProp(
         this._elem,
         "--style",
         `var(--${this._base.options.icon})`
       );
     } else {
-      Dom.setProperty(this._elem, "--style", "var(--graystyle)");
+      Dom.setProp(this._elem, "--style", "var(--graystyle)");
     }
     switch (this.style) {
       case "bordered":
-        Dom.setAttribute(this._elem, `toast-${this.style}`);
+        Dom.setDataAttr(this._elem, `toast-${this.style}`);
         break;
       case "accent":
-        Dom.setAttribute(this._elem, `toast-${this.style}`);
+        Dom.setDataAttr(this._elem, `toast-${this.style}`);
         break;
     }
     // Dom.addClass(this._elem, ["animate-msgIn"]);
@@ -360,7 +362,7 @@ class ModalMsg extends BaseComponent {
     document.body.append(this._elem);
     this.onShow();
     this._bindEvent();
-    Dom.setAttribute(this._elem, "notifymodal");
+    Dom.setDataAttr(this._elem, "notifymodal");
   }
   onShow() {
     this.modal.show();
@@ -406,7 +408,7 @@ class PopoverMsg extends BaseComponent {
 
   _init() {
     document.body.append(this._elem);
-    Dom.setAttribute(this._elem, "notifypopover");
+    Dom.setDataAttr(this._elem, "notifypopover");
     this._bindEvent();
   }
   get config() {
@@ -451,7 +453,7 @@ class DefaultMsg extends BaseComponent {
   }
   _init() {
     document.body.append(this._elem);
-    Dom.setAttribute(this._elem, "notifymsg");
+    Dom.setDataAttr(this._elem, "notifymsg");
     this._bindEvent(this._options.countdown);
   }
   _bindEvent(countdown) {

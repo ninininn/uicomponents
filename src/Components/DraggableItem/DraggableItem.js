@@ -1,4 +1,4 @@
-import { BaseComponent, Dom } from "../../Utils/Utils";
+import { BaseComponent } from "../BaseCompo";
 import Sortable from 'sortablejs/modular/sortable.complete.esm.js';
 
 export class DraggableItem extends BaseComponent {
