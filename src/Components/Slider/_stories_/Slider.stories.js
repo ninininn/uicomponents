@@ -26,7 +26,7 @@ export default {
     let container = document.createElement("div");
     container.classList.add("w-70");
     let slider = createSlider({ ...args });
-    container.appendChild(slider.getElem());
+    container.appendChild(slider.el);
     return container;
   },
   argTypes: {

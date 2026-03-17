@@ -68,14 +68,14 @@ export class ColorPicker extends BaseComponent {
 
   _init() {
     this._theme = 'var(--color-primary-500)';
-    Dom.setProp(this.getElem(), "--theme", this._theme);
+    Dom.setProp(this.el, "--theme", this._theme);
     //預設顏色顯示
     for (let color of this.defaultColors) {
       const colorDiv = document.createElement("div");
       Dom.addClass(colorDiv, ["color"]);
       // colorDiv.style.backgroundColor = color;
       Dom.setDataAttr(colorDiv, "colorpick", color);
-      this.getElem().appendChild(colorDiv);
+      this.el.appendChild(colorDiv);
     }
 
     Dom.addClass(this._picker, ["picker"]);
@@ -108,10 +108,10 @@ export class ColorPicker extends BaseComponent {
         this._updatePanel();
       },
     });
-    this.getElem().appendChild(addBtn);
+    this.el.appendChild(addBtn);
     this._addBtn = addBtn;
 
-    this.getElem().appendChild(this._picker);
+    this.el.appendChild(this._picker);
   }
 
   _bindEvent() {
@@ -119,7 +119,7 @@ export class ColorPicker extends BaseComponent {
     const hueTrack = this._picker.querySelector(".hue-track");
     const alphaTrack = this._picker.querySelector(".alpha-track");
 
-    this.onevent(this.getElem(), "click", (e) => {
+    this.onevent(this.el, "click", (e) => {
       e.stopPropagation();
       if (e.target.classList.contains("color")) {
         this._trigger = e.target;
@@ -130,7 +130,7 @@ export class ColorPicker extends BaseComponent {
         this.current = colorPicked;
 
         if (this._config.limits > 1) {
-          const colors = this.getElem().querySelectorAll(".color");
+          const colors = this.el.querySelectorAll(".color");
           colors.forEach((color) => {
             if (color === this._trigger) {
               Dom.addClass(color, ["main-color"]);
@@ -184,7 +184,7 @@ export class ColorPicker extends BaseComponent {
       this._updatePanel();
     });
 
-    super.onClickOutside(this.getElem(), () => {
+    super.onClickOutside(this.el, () => {
       Dom.removeClass(this._picker, ["visible"]);
     });
 
@@ -216,7 +216,7 @@ export class ColorPicker extends BaseComponent {
 
     //mainColor加上放大效果，其餘不變
     if (this._config.limits > 1) {
-      const colors = this.getElem().querySelectorAll(".color");
+      const colors = this.el.querySelectorAll(".color");
       colors.forEach((color) => {
         if (color.dataset.colorpick === this.current) {
           Dom.addClass(color, ["main-color"]);
@@ -252,7 +252,7 @@ export class ColorPicker extends BaseComponent {
           //更新該colorDiv的值
           //this.colors array也要更新
           const triggerIndex = Array.from(
-            this.getElem().querySelectorAll(".color")
+            this.el.querySelectorAll(".color")
           ).indexOf(this._trigger);
           this.colors[triggerIndex] = this.current;
           this._trigger.dataset.colorpick = this.current;
@@ -443,7 +443,7 @@ export class ColorPicker extends BaseComponent {
     this.colors = [...this.defaultColors];
     this.current = this.colors[0];
 
-    this.getElem().querySelectorAll(".color").forEach((el, index) => {
+    this.el.querySelectorAll(".color").forEach((el, index) => {
       if (!this.colors[index]) el.remove();
       el.dataset.colorpick = this.colors[index];
     });

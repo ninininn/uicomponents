@@ -17,7 +17,7 @@ export const createColorPicker = ({ limits, mode, defaults }) => {
   resetBtn.addEventListener("click", () => {
     picker.reset();
   });
-  parent.append(picker.getElem() ,resetBtn);
+  parent.append(picker.el ,resetBtn);
 
   return parent;
 };

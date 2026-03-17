@@ -1,4 +1,4 @@
-import { Dom, debounce } from "../../../Utils/Utils";
+
 import { Pagination } from "../Pagination";
 import "../Pagination.css";
 import "../../Checkbox/Checkbox.css";
@@ -69,7 +69,7 @@ export const createPagination = ({
   // let notification_instance = new Notification(trigger, initOptions, type);
 
   // notification_instance.show();
-  // layerpage_instance.getElem().addEventListener("change", (e) => {
+  // layerpage_instance.el.addEventListener("change", (e) => {
   //     const payload = {
   //         checked: e.target.checked,
   //         value: e.target.value,

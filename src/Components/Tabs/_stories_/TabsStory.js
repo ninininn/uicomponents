@@ -1,4 +1,3 @@
-import { Dom, debounce } from "../../../Utils/Utils";
 import { Tabs } from "../Tabs";
 // import { Checkbox } from "../../Checkbox/Checkbox";
 import "../Tabs.css";
@@ -29,11 +28,11 @@ export const createTabs = ({
   };
 
   const tabInstance = new Tabs(initOptions, TABS_EX);
-  parent.appendChild(tabInstance.getElem());
+  parent.appendChild(tabInstance.el);
   // let notification_instance = new Notification(trigger, initOptions, type);
 
   // notification_instance.show();
-  // layerpage_instance.getElem().addEventListener("change", (e) => {
+  // layerpage_instance.el.addEventListener("change", (e) => {
   //     const payload = {
   //         checked: e.target.checked,
   //         value: e.target.value,

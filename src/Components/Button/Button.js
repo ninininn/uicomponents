@@ -37,8 +37,8 @@ export class Button extends BaseComponent {
   }
   // overwrite render()
   render() {
-    Dom.addClass(this.getElem(), this.options.classes);
-    Dom.setText(this.getElem(), this.options.text);
+    Dom.addClass(this.el, this.options.classes);
+    Dom.setText(this.el, this.options.text);
   }
 
   // overwrite bindEvents()

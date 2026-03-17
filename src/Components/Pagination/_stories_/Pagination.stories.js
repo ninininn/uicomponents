@@ -5,7 +5,7 @@ import { action } from "storybook/actions";
 import { createPagination } from "./PaginationStory";
 import "../Pagination.css";
 import PaginationAPIdoc from "./PaginationAPIdoc.mdx";
-import { Dom } from "../../../Utils/Utils";
+import { Dom } from "../../../Utils/Dom";
 import { Notification } from "../../Notification/Notification";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

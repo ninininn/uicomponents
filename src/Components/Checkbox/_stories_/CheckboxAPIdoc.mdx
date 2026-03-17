@@ -178,7 +178,7 @@ new Checkbox(element, (options = {}));
           </tr>
         </thead>
         <tbody>
-          <tr><td>`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
+          <tr><td>`.el`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
           <tr><td>`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
           <tr><td>`.setDisabled(boolean)`</td><td>更改顯示/操作與否</td></tr>
           <tr><td>`.getValue()`</td><td>回傳`<input/>` value值</td></tr>
@@ -189,11 +189,11 @@ new Checkbox(element, (options = {}));
       </table>
     </div>
 
-<span className="sb-unstyled methods">.getElem()</span>
+<span className="sb-unstyled methods">.el</span>
  - **Returns**  
 回傳主元件的DOM節點(HTMLElement) - `<input/>`  
 ``` javascript 
-Checkbox.getElem(); 
+Checkbox.el; 
 ```  
 <span className="sb-unstyled methods">.changeTheme(HEXstring)</span>
  - **Parameters**  
@@ -318,18 +318,18 @@ new CheckboxGroup(name, container);
           </tr>
         </thead>
         <tbody>
-          <tr><td>`.getElem()`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
+          <tr><td>`.el`</td><td>取得該元件渲染的DOM節點元素</td><td>`BaseComponent`</td></tr>
           <tr><td>`.getValue(name)`</td><td>取得群組內對應name屬性的`<input/>`value-pair 物件</td></tr>
           <tr><td>`.addCheckItems(item)`</td><td>在群組內加入新的Checkbox元件</td></tr>
         </tbody>
       </table>
     </div>
 
-<span className="sb-unstyled methods">.getElem()</span>
+<span className="sb-unstyled methods">.el</span>
  - **Returns**  
 回傳主元件的DOM節點(HTMLElement) - `<ul/>`  
 ``` javascript 
-CheckboxGroup.getElem(); 
+CheckboxGroup.el; 
 ```  
 
 <span className="sb-unstyled methods">.getValue(name)</span>

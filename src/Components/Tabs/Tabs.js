@@ -34,30 +34,30 @@ export class Tabs extends BaseComponent {
     return activeIndex < 0 ? 1 : ++activeIndex;
   }
   _createTabs() {
-    Dom.setProp(this.getElem(), '--theme', this._theme);
+    Dom.setProp(this.el, '--theme', this._theme);
     const isVertical = this._config.orientation === 'vertical';
     const isFront = this._config.placement === 'start' || this._config.placement === 'top';
 
     if (!isVertical) {//水平樣式時
-      this.getElem().classList.add("flex");
+      this.el.classList.add("flex");
       if (!isFront) {
-        this.getElem().classList.add("flex-row-reverse");
+        this.el.classList.add("flex-row-reverse");
       }
     } else {
       if (!isFront) {
-        this.getElem().classList.add("flex-col-reverse");
+        this.el.classList.add("flex-col-reverse");
       } else {
-        this.getElem().classList.add("flex-col");
+        this.el.classList.add("flex-col");
       }
     }
 
     this.setActiveTab(this.activeTabIndex);
 
-    this.getElem().setAttribute("aria-orientation", this._config.orientation);
+    this.el.setAttribute("aria-orientation", this._config.orientation);
     const tablist = document.createElement("div");
     tablist.classList.add("tab-list");
-    tablist.append(...this.tablist.map(tab => tab.getElem()));
-    this.getElem().append(tablist, this.panel.getElem());
+    tablist.append(...this.tablist.map(tab => tab.el));
+    this.el.append(tablist, this.panel.el);
   }
 
   _bindEvent() {
@@ -68,7 +68,7 @@ export class Tabs extends BaseComponent {
         this.setActiveTab(activeIndex);
       }
     }
-    this.getElem().addEventListener("click", switchPanel.bind(this));
+    this.el.addEventListener("click", switchPanel.bind(this));
   }
 
   setActiveTab(index) {
@@ -78,11 +78,11 @@ export class Tabs extends BaseComponent {
       const isSelected = tab.tabIndex == index;
       tab.activeState = isSelected;
       if (isSelected) {
-        tab.getElem().dataset.tabselected = "";
-        tab.getElem().setAttribute("aria-selected", "true");
+        tab.el.dataset.tabselected = "";
+        tab.el.setAttribute("aria-selected", "true");
       } else {
-        delete tab.getElem().dataset.tabselected;
-        tab.getElem().setAttribute("aria-selected", "false");
+        delete tab.el.dataset.tabselected;
+        tab.el.setAttribute("aria-selected", "false");
       }
     });
 
@@ -111,7 +111,7 @@ class TabItem extends BaseComponent {
   }
 
   _createTab() {
-    const tab = this.getElem();
+    const tab = this.el;
     const tabTitle = document.createElement("div");
     tab.classList.add("tab-item");
     tab.setAttribute("role", "tab");
@@ -148,7 +148,7 @@ class Panel extends BaseComponent {
     this._createPanel();
   }
   _createPanel() {
-    let panelContainer = this.getElem();
+    let panelContainer = this.el;
     panelContainer.classList.add("panel-container");
     panelContainer.append(...this.panels);
     return panelContainer;

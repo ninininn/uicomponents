@@ -1,4 +1,4 @@
-import { Dom, debounce } from "../../../Utils/Utils";
+
 import { Notification } from "../Notification";
 import "../Notification.css";
 
@@ -48,7 +48,7 @@ export const createNotification = ({ type, area, theme, maxWidth, msgContent, ic
     // let notification_instance = new Notification(trigger, initOptions, type);
 
     // notification_instance.show();
-    // layerpage_instance.getElem().addEventListener("change", (e) => {
+    // layerpage_instance.el.addEventListener("change", (e) => {
     //     const payload = {
     //         checked: e.target.checked,
     //         value: e.target.value,

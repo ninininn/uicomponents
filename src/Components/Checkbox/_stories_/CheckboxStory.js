@@ -29,7 +29,7 @@ export const createCheckbox = ({
   };
   let checkbox_instance = new Checkbox(initOptions);
 
-  checkbox_instance.getElem().addEventListener("change", (e) => {
+  checkbox_instance.el.addEventListener("change", (e) => {
     const payload = {
       checked: e.target.checked,
       value: e.target.value,

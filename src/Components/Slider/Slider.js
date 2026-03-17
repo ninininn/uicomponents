@@ -16,7 +16,7 @@ var sliderDefaultConfig = {
   step: 1, //間隔
   input: false, //是否顯示輸入框
   range: false, //範圍功能
-  theme: "var(--color-yellow-500)", //預設顏色
+  theme: "var(--color-primary-500)", //預設顏色
   thumbImg: null, //thumb圖標
   classes: ["slider"],
   handlers: null,
@@ -37,17 +37,14 @@ export class Slider extends BaseComponent {
     const { element, options } = defineArgs(args, "div");
     const defaultTheme = options.disabled
       ? "var(--color-gray-500)"
-      : options.theme || "var(--color-yellow-500)";
+      : options.theme || "var(--color-primary-500)";
     super(element, defaultTheme);
     this.UItype = "Slider";
-    this.options = Object.assign({},sliderDefaultConfig,options);
+    this.options = Object.assign({}, sliderDefaultConfig, options);
     this.disabled = this.options.disabled;
     this.defaultTheme = options.theme || defaultTheme;
     //events
     this._draggingIndex = null;
-    this.onPointerMove = this._onPointerMove.bind(this);
-    this.onPointerUp = this._onPointerUp.bind(this);
-    // this.onPointerDown = this._onPointerDown.bind(this);
     // 檢查是否為雙向
     this._checkRange();
 
@@ -73,12 +70,12 @@ export class Slider extends BaseComponent {
         new SliderThumb(getValue, getTheme, this.options.thumbImg, 1),
       ];
       this.childrens = [
-        ...this.thumb.map((t) => t.getElem()),
-        this.bar.getElem(),
+        ...this.thumb.map((t) => t.el),
+        this.bar.el,
       ];
     } else {
       this.thumb = new SliderThumb(getValue, getTheme, this.options.thumbImg);
-      this.childrens = [this.thumb.getElem(), this.bar.getElem()];
+      this.childrens = [this.thumb.el, this.bar.el];
     }
 
     this._init();
@@ -89,7 +86,7 @@ export class Slider extends BaseComponent {
     this.render();
     //加入children:
     for (let child of this.childrens) {
-      this.getElem().appendChild(child);
+      this.el.appendChild(child);
     }
     this._bindEvents();
     this.setDisabled(this.disabled);
@@ -100,15 +97,15 @@ export class Slider extends BaseComponent {
   render() {
     //1. 判斷是否為雙向
     this._checkRange();
-    Dom.addClass(this.getElem(), this.options.classes);
+    Dom.addClass(this.el, this.options.classes);
     this.options.range &&
-      Dom.setDataAttr(this.getElem(), "slider", "range");
+      Dom.setDataAttr(this.el, "slider", "range");
 
     //2. 判斷操作與否(僅操作DOM相關動作)
     if (this.disabled) {
-      Dom.addClass(this.getElem(), ["disabled"]);
+      Dom.addClass(this.el, ["disabled"]);
     } else {
-      Dom.removeClass(this.getElem(), ["disabled"]);
+      Dom.removeClass(this.el, ["disabled"]);
     }
   }
 
@@ -128,23 +125,23 @@ export class Slider extends BaseComponent {
   }
 
   //內部控制方法
-  _onPointerDown(event, index) {
-    event.preventDefault();
-    this._draggingIndex = index;
-    this._removePointerMove = this.onevent(event.currentTarget, "pointermove", this.onPointerMove);
-    this._removePointerUp = this.onevent(event.currentTarget, "pointerup", this.onPointerUp);
-  }
-
-  _onPointerMove(event) {
+  _onPointerMove = (event) => {
     event.preventDefault();
     if (this._draggingIndex === null) return;
     this._setPointValue(event);
-  }
+  };
 
-  _onPointerUp(event) {
+  _onPointerUp = () => {
     this._draggingIndex = null;
     this.offevent(this._removePointerMove);
     this.offevent(this._removePointerUp);
+  };
+
+  _onPointerDown(event, index) {
+    event.preventDefault();
+    this._draggingIndex = index;
+    this._removePointerMove = this.onevent(event.currentTarget, "pointermove", this._onPointerMove);
+    this._removePointerUp = this.onevent(event.currentTarget, "pointerup", this._onPointerUp);
   }
 
   _bindEvents() {
@@ -154,18 +151,18 @@ export class Slider extends BaseComponent {
         // this=Slider{}
         this._onPointerDown(e, index);
       };
-      this.onevent(thumb.getElem(), "pointerdown", handler);
+      this.onevent(thumb.el, "pointerdown", handler);
     });
     this.onevent(
-      this.bar.getElem(),
+      this.bar.el,
       "pointerdown",
-      this._setPointValue.bind(this),
+      (e) => this._setPointValue(e),
     );
   }
 
   _setPointValue(event) {
     const originVal = this.getValue();
-    const rect = this.getElem().getBoundingClientRect();
+    const rect = this.el.getBoundingClientRect();
     const percentage = ((event.clientX - rect.left) / rect.width) * 100;
     const moveSteps =
       Math.round(percentage / this.options.step) * this.options.step;
@@ -205,10 +202,10 @@ export class Slider extends BaseComponent {
     //1. disabled更新要切換監聽器綁定
     if (this.disabled) {
       super.destroy(); //clear all pointer listener
-      Dom.addClass(this.getElem(), ["disabled"]);
+      Dom.addClass(this.el, ["disabled"]);
     } else {
       this._bindEvents();
-      Dom.removeClass(this.getElem(), ["disabled"]);
+      Dom.removeClass(this.el, ["disabled"]);
     }
   }
 }
@@ -235,19 +232,19 @@ class SliderThumb extends BaseComponent {
   }
 
   render() {
-    Dom.addClass(this.getElem(), ["slider-thumb"]);
-    Dom.setProp(this.getElem(), "--bgColor", this._theme);
+    Dom.addClass(this.el, ["slider-thumb"]);
+    Dom.setProp(this.el, "--bgColor", this._theme);
 
     //是否有傳入客製圖標路徑
     if (this._thumbImg) {
-      Dom.setProp(this.getElem(), "--tmb-img", `url(${this._thumbImg})`);
-      Dom.addClass(this.getElem(), ["custom-thumb"]);
+      Dom.setProp(this.el, "--tmb-img", `url(${this._thumbImg})`);
+      Dom.addClass(this.el, ["custom-thumb"]);
     }
   }
   _setThumbValue(value) {
     this._thumbValue = value;
     let offset = 5; //圖標定位點偏移(%)
-    this.getElem().style.left = `${value - offset}%`;
+    this.el.style.left = `${value - offset}%`;
   }
 }
 
@@ -279,10 +276,10 @@ class SliderBar extends BaseComponent {
 
   _init() {
     this.render();
-    this.getElem().appendChild(this.mask);
+    this.el.appendChild(this.mask);
   }
   render() {
-    Dom.addClass(this.getElem(), this.options.classes);
+    Dom.addClass(this.el, this.options.classes);
     Dom.setProp(this.mask, "--bgColor", this._theme);
   }
 

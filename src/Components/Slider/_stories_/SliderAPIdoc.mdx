@@ -96,7 +96,7 @@ new Slider(parentDOM, (options = {}));
       </tr>
     </thead>
     <tbody>
-      <tr><td>`.getElem()`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
+      <tr><td>`.el`</td><td>回傳該元件渲染的 DOM 節點元素</td><td>`BaseComponent`</td></tr>
       <tr><td>`.getValue()`</td><td>回傳該元件的 slider 數值</td></tr>
       <tr><td>`.setValue(val)`</td><td>傳入要設定的 slider 數值，如果是 range-type 則傳入 `[ startVal, endVal ]`</td></tr>
       <tr><td>`.changeTheme(HEXstring)`</td><td>更改主題色</td></tr>
@@ -106,11 +106,11 @@ new Slider(parentDOM, (options = {}));
   </table>
 </div>
 
-  <span className="sb-unstyled methods">.getElem()</span>
+  <span className="sb-unstyled methods">.el</span>
    - **Returns**  
    回傳主元件的DOM節點(HTMLElement) - `<input/>`  
   ``` javascript
-    let sliderElem = Slider.getElem(); // return an DOM HTMLElement
+    let sliderElem = Slider.el; // return an DOM HTMLElement
   ```
   <span className="sb-unstyled methods">.getValue()</span>  
     - **Returns**  

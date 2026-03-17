@@ -5,7 +5,6 @@ import { action } from "storybook/actions";
 import { createTabs } from "./TabsStory";
 import "../Tabs.css";
 import TabsAPIdoc from "./TabsAPIdoc.mdx";
-import { Dom } from "../../../Utils/Utils";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {

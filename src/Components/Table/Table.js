@@ -93,7 +93,7 @@ export class Table extends BaseComponent {
   //初始化
   //資料改變應在邏輯層進行，然後再呼叫 _render()
   _init() {
-    this.table.appendChild(this.tableHeader.getElem());
+    this.table.appendChild(this.tableHeader.el);
     //建立工具列
     if (this.config.tools) {
       this._createToolBar(this.config.tools);
@@ -118,10 +118,10 @@ export class Table extends BaseComponent {
     if (this.tools) {
       container.appendChild(this.tools);
     }
-    container.appendChild(this.getElem());
+    container.appendChild(this.el);
 
     //放入分頁元件
-    this._elem.after(this._pagination.getElem());
+    this._elem.after(this._pagination.el);
 
     this._render();
     this._bindEvent();
@@ -135,7 +135,7 @@ export class Table extends BaseComponent {
     }
     if (!this.data && this.config.url) {
       //渲染完成前顯示skeleton;
-      this.tableBody.appendChild(this.skeleton.getElem());
+      this.tableBody.appendChild(this.skeleton.el);
       this.skeleton.show();
 
       try {
@@ -298,7 +298,7 @@ export class Table extends BaseComponent {
           break;
         case "print":
           btnHandler = () => {
-            const tableHeader = this.tableHeader.getElem().cloneNode(true);
+            const tableHeader = this.tableHeader.el.cloneNode(true);
             const selectedRows = this.getSelectedRows();
             const table = document.createElement("table");
             let rowFragment = document.createDocumentFragment();
@@ -628,7 +628,7 @@ class TableHeader extends BaseComponent {
     if (this.selection.UItype === "Checkbox") {
       const th = document.createElement("th");
       Dom.setDataAttr(th, "print", "print");
-      th.appendChild(this.selection.getElem());
+      th.appendChild(this.selection.el);
       this._elem.querySelector("tr").appendChild(th);
     }
     this._elem.querySelector("tr").appendChild(this._createHead());
@@ -636,7 +636,7 @@ class TableHeader extends BaseComponent {
 
   _render() {
     const oldFragment = document.createDocumentFragment();
-    const existNodes = this.getElem().querySelectorAll("th");
+    const existNodes = this.el.querySelectorAll("th");
     oldFragment.append(...existNodes);
 
     //!把節點放到新的片段中組裝
@@ -727,7 +727,7 @@ class TableHeader extends BaseComponent {
     if (resize) {
       let resizer = document.createElement("div");
       Dom.addClass(resizer, ["table-resizer"]);
-      resizer.style.height = `${this.table.getElem().offsetHeight}px`;
+      resizer.style.height = `${this.table.el.offsetHeight}px`;
       th.appendChild(resizer);
     }
     if (!print) {
@@ -739,7 +739,7 @@ class TableHeader extends BaseComponent {
     //add sorting handler
     function setSortCursor(e) {
       e.stopPropagation();
-      const otherTh = this.getElem().querySelectorAll("th");
+      const otherTh = this.el.querySelectorAll("th");
       otherTh.forEach((th) => {
         if (th !== e.currentTarget && th.dataset) {
           Dom.setDataAttr(th, DATA_ATTR_SORT, "none");

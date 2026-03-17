@@ -8,14 +8,14 @@ export class BaseComponent {
     }
 
     render() { }
-    getElem() { return this._elem; } //看要不要統一用getter:get elem(){retrun this._elem}
+    get el() { return this._elem; }
 
     setTheme(themeVal) {
         this._theme = themeVal;
         this.render();
     }
 
-    appendinMotion(elem, time = 100) {
+    appendMotion(elem, time = 100) {
         this._elem.appendChild(elem);
         Dom.addClass(elem, ['opacity-0', 'transition-all']);
 
