@@ -9,6 +9,7 @@
 /* @import "../src/Components/styles/Datepicker.css"; */
 /* @import "../src/stories/Components/styles/Slider.css"; */
 @import "./Components/Button/Button.css";
+@import './tokens.css';
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
