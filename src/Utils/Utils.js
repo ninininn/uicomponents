@@ -373,29 +373,29 @@ export function dataSorter({ key, rule, data }) {
  * 2. 更新 state 並通知所有監聽者
  * 3. 讓某個函式可以在 state 變動時收到通知
  */
-export function bindState(initState) {
-    let state = initState;
-    const relateListeners = new Set(); //用 set 避免重複加入同樣的監聽函式
+// export function bindState(initState) {
+//     let state = initState;
+//     const relateListeners = new Set(); //用 set 避免重複加入同樣的監聽函式
 
-    function getState() {
-        return state;
-    }
+//     function getState() {
+//         return state;
+//     }
 
-    function setState(newState) {
-        state = newState;
-        for (const listener of relateListeners) {
-            listener(state); //把這個 state 傳給所有相關監聽者
-        }
-    }
+//     function setState(newState) {
+//         state = newState;
+//         for (const listener of relateListeners) {
+//             listener(state); //把這個 state 傳給所有相關監聽者
+//         }
+//     }
 
-    function subscribe(fn) {
-        relateListeners.add(fn);
-        fn(state); // 初始時先執行一次，取得初始 state
-        return () => relateListeners.delete(fn); // 取消綁定避免監聽器疊加
-    }
+//     function subscribe(fn) {
+//         relateListeners.add(fn);
+//         fn(state); // 初始時先執行一次，取得初始 state
+//         return () => relateListeners.delete(fn); // 取消綁定避免監聽器疊加
+//     }
 
-    return [getState, setState, subscribe];
-}
+//     return [getState, setState, subscribe];
+// }
 
 /**
  * clamp 檢視數值是否在目標區間

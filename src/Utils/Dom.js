@@ -13,20 +13,12 @@ export const Dom = {
         elem.classList.add(...targetClass);
     },
     toggleClass: function (elem, classes) {
-        let isMultiple = Array.isArray(classes);
-        if (!isMultiple) {
-            elem.classList.toggle(classes);
-        } else {
-            elem.classList.toggle(...classes);
-        }
+        let targetClass = Array.isArray(classes) ? classes : [classes];
+        elem.classList.toggle(...targetClass);
     },
     removeClass: function (elem, classes) {
-        let isMultiple = Array.isArray(classes);
-        if (!isMultiple) {
-            elem.classList.remove(classes);
-        } else {
-            elem.classList.remove(...classes);
-        }
+        let targetClass = Array.isArray(classes) ? classes : [classes];
+        elem.classList.remove(...targetClass);
     },
     clearClass: function (elem, excluded = []) {
         let newClassName = [];

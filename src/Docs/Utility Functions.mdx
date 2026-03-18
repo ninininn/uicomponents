@@ -1,0 +1,271 @@
+import { Meta, Title } from "@storybook/addon-docs/blocks";
+
+<Meta title="Utility Functions" /># 工具函式
+提供多種共用functions，方便在各種情境使用。
+
+# Dom
+
+> 共同控制DOM UI樣式的工具函式
+
+    <p className="sb-unstyled font-bold text-yellow-500">Quick reference</p>
+
+    <div className="sb-unstyled table-container overflow-hidden">
+      <table className="sb-unstyled table-content">
+        <thead>
+          <tr className="text-center">
+            <td>methods</td><td>descriptions</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>`.create(tag)`</td><td>create指定標籤類型的HTMLElement</td></tr>
+          <tr><td>`.setStyle(el,styleProp,value)`</td><td>inline方式更改元素樣式</td></tr>
+          <tr><td>`.addClass(el, classes)`</td><td>在指定DOM節點上加入指定classes</td></tr>
+          <tr><td>`.toggleClass(el, classes)`</td><td>在指定DOM節點上移除指定classes</td></tr>
+          <tr><td>`.removeClass(el, classes)`</td><td>在指定DOM節點上移除指定classes</td></tr>
+          <tr><td>`.clearClass(el, excludeClasses)`</td><td>移除指定節點上的所有classes(除了指定excludeClasses)</td></tr>
+          <tr><td>`.setText(el, text)`</td><td>設定指定DOM節點的textContent</td></tr>
+          <tr><td>`.setTextnode(el, text)`</td><td>在指定DOM節點內加入文字節點</td></tr>
+          <tr><td>`.setDataAttr(el, attrName, value)`</td><td>設定指定DOM節點的自訂`data-`屬性</td></tr>
+          <tr><td>`.setAttr(el, attrName, value)`</td><td>設定指定DOM節點的自訂屬性</td></tr>
+          <tr><td>`.removeAttr(el, attrName)`</td><td>移除DOM節點的指定屬性</td></tr>
+          <tr><td>`.setProp(el, propName, value)`</td><td>設定指定DOM節點的自訂css-property屬性</td></tr>
+          <tr><td>`.setBtn(btnConfig)`</td><td>建立自訂btn</td></tr>
+          <tr><td>`.setBtnGroup(btnConfigs, container)`</td><td>建立自訂btn群組</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+<span className="sb-unstyled methods">.addClass(el, classes)</span> **在指定DOM節點上加入指定classes**
+
+- **Parameters**
+  - **el<span className="text-red-600">\*</span>** DOM元素
+    <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **classes
+    <span className="text-red-600">*</span>** 要加入的 classes
+    <span className="sb-unstyled data-type arr">array</span>
+
+```javascript
+Dom.addClass(this._elem, ["container", "absolute"]);
+```
+
+<span className="sb-unstyled methods">.removeClass(el, classes)</span> **在指定DOM節點上移除指定classes**
+- **Parameters** 
+  - **el<span className="text-red-600">*</span>** DOM元素<span className="sb-unstyled data-type element">HTMLElement</span>
+  - **classes
+<span className="text-red-600">*</span>** 要移除的 classes
+<span className="sb-unstyled data-type arr">array</span>
+
+```javascript
+Dom.removeClass(this._elem, ["container", "absolute"]);
+```
+
+<span className="sb-unstyled methods">.clearClass(el, excludeClasses)</span> **移除指定節點上的所有classes(除了指定excludeClasses)** 
+ - **Parameters** 
+    - **el<span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+    - **excludeClasses** 除外classes
+  <span className="sb-unstyled data-type arr">array</span>
+
+```javascript
+Dom.clearClass(this._elem, ["name_id"]);
+```
+
+<span className="sb-unstyled methods">.setText(el, text)</span> **設定指定DOM節點的textContent內容**   
+
+<span className="sb-unstyled methods">.setTextnode(el, text)</span> **在指定DOM節點內加入文字節點** 
+- **Parameters** 
+  - **el
+  <span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **text
+  <span className="text-red-600">*</span>** 文字內容
+  <span className="sb-unstyled data-type str">string</span>
+
+```javascript
+Dom.setText(this._elem, "測試文字");
+Dom.setTextnode(this._elem, "測試文字");
+```
+
+<span className="sb-unstyled methods">.setDataAttr(el, attrName, value)</span> **設定指定DOM節點的自訂`data-`屬性**   
+
+<span className="sb-unstyled methods">.setAttr(el, attrName, value)</span> **設定指定DOM節點的自訂屬性** 
+- **Parameters** 
+  - **el
+  <span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **attrName<span className="text-red-600">*</span>** 屬性名稱
+  <span className="sb-unstyled data-type str">string</span>
+  - **value
+  <span className="text-red-600">*</span>** 要設定的值
+  <span className="sb-unstyled data-type str">string</span>
+
+```javascript
+Dom.setDataAttr(this._elem, "initialize", "true");
+Dom.setAttr(this._elem, "is-mobile");
+```
+
+<span className="sb-unstyled methods">.setProp(el, propName, value)</span> **設定指定DOM節點的自訂css-property屬性**
+- **Parameters** 
+  - **el
+  <span className="text-red-600">*</span>** DOM元素
+  <span className="sb-unstyled data-type element">HTMLElement</span>
+  - **propName<span className="text-red-600">*</span>** CSS propertyName
+  <span className="sb-unstyled data-type str">string</span>
+  - **value
+  <span className="text-red-600">*</span>** 要設定的值
+  <span className="sb-unstyled data-type str">string</span>
+
+```javascript
+Dom.setProp(this._elem, "--theme", "#878787");
+```
+---
+
+# 其他類別
+### clamp
+<span className="sb-unstyled methods">clamp(value, min = 0, max = 1)</span> **檢視數值是否在目標區間**  
+- **Parameters** 
+  - **value
+  <span className="text-red-600">*</span>** 目標值
+  <span className="sb-unstyled data-type num">number</span>
+  - **min** 區間最小值
+  <span className="sb-unstyled data-type num">number</span>
+  - **max** 區間最大值
+  <span className="sb-unstyled data-type num">number</span>
+- **Returns**  
+如果目標值在 min, max 區間則回傳該目標值；小於 min 則回傳 min、大於 max 則回傳 max
+
+```javascript
+let clampNum = clamp(0.56); //0.56
+let clampNum2 = clamp(1.5, 0, 1); //1
+```
+
+### checkDevice
+<span className="sb-unstyled methods">checkDevice()</span> **判斷裝置尺寸**
+- **Returns**  <span className="sb-unstyled data-type obj">object</span>  
+`{ device, size }`
+
+```javascript
+// other opereations...
+checkDevice();
+```
+---
+
+# 色彩相關
+### Color class
+<span className="sb-unstyled methods">Color</span> 以HSLA屬性分別儲存數值之物件類別 `Color.js`    
+- **Properties** 
+  - **base** <span className="sb-unstyled data-type object">object</span>   
+    - **h
+    <span className="text-red-600">*</span>** Hue
+    <span className="sb-unstyled data-type num">number</span>
+    - **s** Saturation
+    <span className="sb-unstyled data-type num">number</span>
+    - **l** Lightness
+    <span className="sb-unstyled data-type num">number</span>
+    - **a** Alpha
+    <span className="sb-unstyled data-type num">number</span>
+  - **luminance** 視覺亮度
+  <span className="sb-unstyled data-type num">number</span>  
+- **Methods** 
+  - **.toRgb()** 回傳對應RGB模式色碼
+  - **.toHex()** 回傳對應HEX模式色碼
+  - **.toHsl()** 回傳對應HSL模式色碼  
+
+### Palette
+<span className="sb-unstyled methods">Palette(config)</span> 隨機產生一組/單一色碼，色碼模式可以是 hsl | rgb | hex `Color.js`
+
+### ColorFormat
+<span className="sb-unstyled methods">ColorFormat</span> 顏色相關轉換函式 `Color.js`
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>`.isRgb(colorStr)`</td>
+        <td>判斷色碼是否為RGB(A)模式</td>
+      </tr>
+      <tr>
+        <td>`.isHsl(colorStr)`</td>
+        <td>判斷色碼是否為HSL模式</td>
+      </tr>
+      <tr>
+        <td>`.isHex(colorStr)`</td>
+        <td>判斷色碼是否為HEX模式</td>
+      </tr>
+      <tr>
+        <td>`.withAlpha(colorStr)`</td>
+        <td>判斷色碼是否帶有透明度</td>
+      </tr>
+      <tr>
+        <td>`.getColorMode(colorStr)`</td>
+        <td>判斷色碼模式</td>
+      </tr>
+      <tr>
+        <td>`.hexTorgb(hexString)`</td>
+        <td>HEX色碼(#FFFFFAAA)轉為RGB(rgb(R,G,B))</td>
+      </tr>
+      <tr>
+        <td>`.rgbTohsl(rgbString)`</td>
+        <td>RGB轉換為HSL(hsl(h s l))</td>
+      </tr>
+      <tr>
+        <td>`.hslTorgb(hslString)`</td>
+        <td>HSL轉換為RGB</td>
+      </tr>
+      <tr>
+        <td>`.rgbTohex(rgbString)`</td>
+        <td>RGB轉換為HEX</td>
+      </tr>
+      <tr>
+        <td>`.hslTohex(hslString)`</td>
+        <td>HSL轉換為HEX</td>
+      </tr>
+      <tr>
+        <td>`.hexTohsl(hexString)`</td>
+        <td>HEX轉換為HSL</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### ColorHelper
+<span className="sb-unstyled methods">ColorHelper</span> 顏色相關輔助函式 `Color.js`
+
+<div className="sb-unstyled table-container overflow-hidden">
+  <table className="sb-unstyled table-content">
+    <thead>
+      <tr className="text-center">
+        <td>methods</td>
+        <td>descriptions</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>`.getRandomNum(min, max)`</td>
+        <td>隨機取得一個在指定區間min~max的數字</td>
+      </tr>
+      <tr>
+        <td>`.randomDigit()`</td>
+        <td>隨機取得一個16進制數字</td>
+      </tr>
+      <tr>
+        <td>`.randomHexColor()`</td>
+        <td>隨機取得一個HEX色碼</td>
+      </tr>
+      <tr>
+        <td>`.tohexDigits(strDigit)`</td>
+        <td>將一個十進制數字轉換為十六進制</td>
+      </tr>
+      <tr>
+        <td>`.circular_distance(a,b)`</td>
+        <td>以圓形計算兩值之間差值(ex.359-1=2)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
