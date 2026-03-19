@@ -1,4 +1,4 @@
-@reference "../../style.css";
+@reference "../../Styles/style.css";
 
 @layer base {
   @property --theme {
@@ -56,9 +56,11 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
     --themeActive: color-mix(in srgb, var(--theme) 10%, var(--color-black) 90%);
     @apply relative cursor-pointer [&_.icon]:w-6 [&_.icon]:h-6 [&_.icon]:text-(--themeColor) aria-[sort='descending']:[&_.icon]:rotate-x-180 aria-[sort='descending']:[&_.icon]:transition-all aria-[sort='descending']:[&_.icon]:duration-75 hover:[&_.icon]:text-(--themeActive) [&_span]:absolute [&_span]:right-0 [&_span]:top-1/2 [&_span]:-translate-y-1/2 hover:[&_span]:visible [&_svg]:pointer-events-none;
   }
-  .table thead th[data-sort][aria-sort='none']{
+
+  .table thead th[data-sort][aria-sort='none'] {
     @apply [&_span]:invisible hover:[&_span]:visible
   }
+
   .table tbody {
     @apply w-full h-full min-h-50 [&_.table-empty]:text-center;
   }

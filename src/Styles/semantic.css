@@ -1,0 +1,16 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --stx-system-surface: #f5f5f5;
+  --stx-system-text-disable: var(--stx-ref-gray-600);
+  --stx-system-text-danger: var(--stx-ref-danger-600);
+  --stx-system-text-link: var(--stx-ref-default-700);
+  --stx-system-text-primary: var(--stx-ref-black);
+  --stx-system-container-primary: var(--stx-ref-primary-500);
+  --stx-system-container-active: var(--stx-ref-primary-700);
+  --stx-system-container-hover: var(--stx-ref-primary-50);
+  --stx-system-container-press: var(--stx-ref-primary-800);
+  --stx-system-container-disable: var(--stx-ref-gray-200);
+}

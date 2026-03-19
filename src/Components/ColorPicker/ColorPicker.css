@@ -1,4 +1,4 @@
-@reference "../../style.css";
+@reference "../../Styles/style.css";
 
 @layer base {
   @property --theme {
@@ -57,7 +57,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   .picker {
     --picker-bg: attr(data-currentpick type(<color>));
-    @apply max-w-[300px] p-2 rounded-xs shadow-xs bg-white fixed z-50 top-0 left-0 invisible transition-[visibility,opacity] duration-75 [&_canvas]:w-full [&_canvas]:cursor-crosshair [&>div]:relative [&>div]:overflow-hidden grid gap-2;
+    @apply max-w-[300px] p-2 rounded-xs shadow-xs bg-white fixed z-50 top-0 left-0 invisible transition-[visibility, opacity] duration-75 [&_canvas]:w-full [&_canvas]:cursor-crosshair [&>div]:relative [&>div]:overflow-hidden grid gap-2;
   }
 
   .picker>div:nth-child(2) {

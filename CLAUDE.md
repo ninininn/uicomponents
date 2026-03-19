@@ -43,16 +43,16 @@ uicomponents/
 │	│ │  
 │	│ └── ...  
 │  
-├── styles/  
-│ ├── tokens.css  
-│ ├── base.css  
-│ └── index.css  
+├── Styles/  
+│ ├── primitive.css #reference design  token 
+│ ├── semantic.css  #system design token
+│ └── style.css  #import tailwindcss
 │  
 └── index.js
 │
 ├─ .storybook/
 │  ├─ main.js
-│  └─ preview.js                 # import ../src/styles/index.css
+│  └─ preview.js                 # import ../src/styles/style.css
 │
 ├─ dist/                         # ✅ build output（發佈到 npm 的）
 │  ├─ index.js

@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
-@reference "../../style.css";
+@reference "../../Styles/style.css";
 
 @layer components {
+
   /* dropdown 相關 */
   .dropdown-item {
     @apply hidden;

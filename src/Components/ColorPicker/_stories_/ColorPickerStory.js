@@ -1,4 +1,3 @@
-import { Dom, BaseComponent } from "../../../Utils/Utils";
 import { ColorPicker } from "../ColorPicker";
 import { Palette } from "../../../Utils/Color";
 import "../ColorPicker.css";

@@ -1,4 +1,4 @@
-@reference "../../style.css";
+@reference "../../Styles/style.css";
 
 @layer base {
   @property --theme {

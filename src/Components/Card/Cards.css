@@ -1,4 +1,4 @@
-@reference "../../style.css";
+@reference "../../Styles/style.css";
 
 @layer components {
   .card .data-title {
@@ -19,7 +19,7 @@
   }
 
   .result-data-block .card {
-    @apply grid grid-cols-[100%] grid-rows-[0fr_auto] items-baseline transition-all duration-75 ease-[cubic-bezier(0.7,0.03,1,1.15)]
+    @apply grid grid-cols-[100%] grid-rows-[0fr_auto] items-baseline transition-all duration-75 ease-[cubic-bezier(0.7,_0.03,_1,_1.15)]
   }
 
   .card[data-minimize="mini"] {

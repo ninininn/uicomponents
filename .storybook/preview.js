@@ -4,7 +4,7 @@ import * as prettier from 'prettier/standalone';
 // import * as prettierPluginBabel from 'prettier/plugins/babel';
 import * as prettierPluginHtml from 'prettier/plugins/html';
 // import * as prettierPluginEstree from 'prettier/plugins/estree';
-import "../src/style.css";
+import "../src/Styles/style.css";
 import { themes, ensure } from "storybook/internal/theming";
 const preview = {
   decorators: [

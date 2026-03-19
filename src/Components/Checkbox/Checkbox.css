@@ -1,15 +1,16 @@
-@reference "../../style.css";
+@reference "../../Styles/style.css";
 
 @layer base {
- @property --themeColor{
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #f39386;
- }
+  @property --themeColor {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: #f39386;
+  }
 
- label,input{
-  @apply not-[&.disabled]:cursor-pointer text-gray-700
- }
+  label,
+  input {
+    @apply not-[&.disabled]:cursor-pointer text-gray-700
+  }
 
   /* input 標籤基本設定 */
   input:not([type="range"], [type="radio"], [type="checkbox"]),
@@ -23,7 +24,7 @@
 
   /* 調整操作效果 */
   input[type="checkbox"][data-checkstyle] {
-    @apply text-gray-700 checked:border-0 checked:text-[var(--themeColor)] focus:outline-none hover:ring-2 hover:ring-[var(--themeColor)]/40 hover:text-[var(--themeColor)] transition-all 
+    @apply text-gray-700 checked:border-0 checked:text-[var(--themeColor)] focus:outline-none hover:ring-2 hover:ring-[var(--themeColor)]/40 hover:text-[var(--themeColor)] transition-all
   }
 
   input[type="checkbox"][id=false] {
@@ -64,7 +65,7 @@
   }
 
   label:has(input[data-checkstyle="switch"]) {
-    --themeHover:color-mix(in srgb,var(--themeColor) 85%,#1a1a1a 15%);
+    --themeHover: color-mix(in srgb, var(--themeColor) 85%, #1a1a1a 15%);
     @apply relative inline-block h-full min-h-7 min-w-12 cursor-pointer rounded-full bg-gray-100 py-0.5 pr-10 pl-0.5 transition duration-75 hover:bg-gray-200;
   }
 
@@ -101,7 +102,7 @@
   }
 
   .disabled {
-    --themeColor:var(--color-gray-300,#D1D5DB);
+    --themeColor: var(--color-gray-300, #D1D5DB);
     @apply hover:cursor-not-allowed;
   }
 
@@ -147,7 +148,8 @@
   }
 
   .label:has(input[type="checkbox"][data-checkstyle="switch"]:checked) {
-    --themeBorder:color-mix(in srgb,var(--themeColor) 90%,#1a1a1a 10%);
+    --themeBorder: color-mix(in srgb, var(--themeColor) 90%, #1a1a1a 10%);
+
     &::before {
       @apply left-auto right-1 border-[var(--themeBorder)];
     }

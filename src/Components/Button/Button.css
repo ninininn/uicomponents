@@ -1,5 +1,4 @@
-/* @reference "../../style.css"; */
-@import "tailwindcss";
+@reference "../../Styles/component.css";
 
 @layer base {
 
@@ -15,13 +14,14 @@
     /* 按鈕樣式 */
     /* Button 預設是 filled 樣式 */
     .btn {
-        --theme-hover-light: var(--custom-bg, var(--color-blue-100));
-        --theme-text-color: var(--theme-text-color, var(--color-white));
+        --theme-hover-light: var(--custom-bg, var(--stx-system-container-hover));
+        --theme-text-color: var(--stx-btn-primary-text);
         --theme-border-color: var(var(--theme), transparent);
+        --theme-active:var(--stx-ref-Primary-100);
         --size: 1;
         padding-inline: --spacing(4);
         padding-block: --spacing(2);
-        @apply cursor-pointer rounded-md bg-[var(--theme)] text-sm font-medium text-[var(--theme-text-color,var(--color-white))] transition-colors duration-75 hover:bg-[var(--theme-hover)] active:ring-2 active:ring-[var(--theme-active)] active:outline-none border-[--(theme-border-color)] text-nowrap;
+        @apply cursor-pointer rounded-md bg-(--theme) text-sm font-medium text-(--theme-text-color) transition-colors duration-75 hover:bg-(--theme-hover) active:ring-2 active:ring-(--theme-active) active:outline-none border-(--theme-border-color) text-nowrap;
     }
 
     .btn-xs {
@@ -53,15 +53,15 @@
     }
 
     .outline-btn {
-        --theme-text-color: var(--theme, var(--color-blue-400));
-        --theme: var(--theme, var(--color-blue-400));
-        @apply border border-[var(--theme)] bg-transparent text-[var(--theme-text-color)] hover:bg-[var(--theme-hover-light)]/70 active:ring-2 active:ring-[var(--theme-active)] active:outline-none;
+        --theme-text-color: var(--theme, var(--stx-btn-outline-text));
+        --theme: var(--theme, var(--stx-btn-outline-border));
+        @apply border border-(--theme) bg-transparent text-[var(--theme-text-color)] hover:bg-(--theme-hover-light)/70 active:ring-2 active:ring-[var(--theme-active)] active:outline-none;
     }
 
     .text-btn {
-        --theme-text-color: var(--theme, var(--color-blue-400));
-        --theme-active: var(--theme, var(--color-blue-400));
-        @apply border-0 bg-transparent text-[var(--theme-text-color)] hover:bg-[var(--theme-hover-light)] active:ring-2 active:ring-[var(--theme-active)] active:outline-none;
+        --theme-text-color: var(--theme, var(---stx-btn-clear-text));
+        --theme-active: var(--theme, var(--stx-ref-Primary-100));
+        @apply border-0 bg-transparent text-(--theme-text-color) hover:bg-(--theme-hover-light) active:ring-2 active:ring-(--theme-active) active:outline-none;
     }
 
     .radius-btn {
@@ -74,7 +74,7 @@
     }
 
     .icon-text-btn {
-        @apply w-fit flex items-center justify-center gap-2  text-sm bg-transparent [&_.icon]:text-[var(--theme)];
+        @apply w-fit flex items-center justify-center gap-2 text-sm bg-transparent [&_.icon]:text-[var(--theme)];
     }
 
     .btn.icon-btn .icon,
