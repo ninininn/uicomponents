@@ -47,7 +47,7 @@ Retrieved 2025-11-28, License - CC BY-SA 4.0
 
   .table thead {
     --themeColor: color-mix(in srgb, var(--theme) 50%, var(--color-black) 50%);
-    @apply w-full sticky top-0 overflow-hidden [&_th]:bg-[var(--theme)] [&_th:is(:first-child)]:rounded-l-xs [&_th:is(:last-child)]:rounded-r-xs tracking-[1px] text-white select-none text-nowrap hidden md:table-header-group;
+    @apply w-full sticky top-0 overflow-hidden [&_th]:bg-(--theme) [&_th:is(:first-child)]:rounded-l-xs [&_th:is(:last-child)]:rounded-r-xs tracking-[1px] text-white select-none text-nowrap md:table-header-group;
   }
 
   .table thead th[data-sort] {
