@@ -3,11 +3,15 @@
  */
 
 :root {
-  --stx-system-surface: #f5f5f5;
+  --stx-system-foreground: #f5f5f5;
   --stx-system-text-disable: var(--stx-ref-gray-600);
   --stx-system-text-danger: var(--stx-ref-danger-600);
-  --stx-system-text-link: var(--stx-ref-default-700);
+  --stx-system-text-link: var(--stx-ref-info-700);
+  --stx-system-text-danger-hover: var(--stx-ref-danger-900);
+  --stx-system-text-link-hover: var(--stx-ref-info-900);
+  --stx-system-text-disable-hover: var(--stx-ref-gray-900);
   --stx-system-text-primary: var(--stx-ref-black);
+  --stx-system-text-primary-hover: var(--stx-ref-primary-900);
   --stx-system-container-primary: var(--stx-ref-primary-500);
   --stx-system-container-active: var(--stx-ref-primary-700);
   --stx-system-container-hover: var(--stx-ref-primary-50);

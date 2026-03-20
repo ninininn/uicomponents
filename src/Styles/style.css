@@ -11,7 +11,7 @@
 /* @import "../src/Components/styles/Checkbox.css"; */
 /* @import "../src/Components/styles/Datepicker.css"; */
 /* @import "../src/stories/Components/styles/Slider.css"; */
-@import "../Components/Button/Button.css";
+/* @import "../Components/Button/Button.css"; */
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -116,7 +116,7 @@
   --color-disabled-800: var(--stx-ref-gray-800);
   --color-disabled-900: var(--stx-ref-gray-900);
   /*system-colors-token*/
-  --color-surface: var(--stx-ref-white-500);
+  --color-surface: var(--stx-ref-white);
 
   /* --font-rounded: "Huninn"; */
   --font-sans: "Inter",

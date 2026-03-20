@@ -1,4 +1,5 @@
-@reference "../../Styles/component.css";
+/* @reference "../../Styles/component.css"; */
+@reference "../../Styles/style.css";
 
 @layer base {
 
@@ -14,54 +15,56 @@
     /* 按鈕樣式 */
     /* Button 預設是 filled 樣式 */
     .btn {
+        --theme: var(--stx-btn-bg-primary);
         --theme-hover-light: var(--custom-bg, var(--stx-system-container-hover));
-        --theme-text-color: var(--stx-btn-primary-text);
-        --theme-border-color: var(var(--theme), transparent);
-        --theme-active:var(--stx-ref-Primary-100);
+        --theme-hover:var(--stx-btn-bg-contained-hover);
+        --theme-text-color: var(--stx-btn-text-contained);
+        --theme-border-color: var(--theme, transparent);
+        --theme-active: var(--stx-btn-shadow);
         --size: 1;
         padding-inline: --spacing(4);
         padding-block: --spacing(2);
-        @apply cursor-pointer rounded-md bg-(--theme) text-sm font-medium text-(--theme-text-color) transition-colors duration-75 hover:bg-(--theme-hover) active:ring-2 active:ring-(--theme-active) active:outline-none border-(--theme-border-color) text-nowrap;
+        @apply h-(--stx-btn-md) cursor-pointer rounded-md bg-(--theme) text-sm font-medium text-(--theme-text-color) transition-all hover:bg-(--theme-hover) active:ring-3 active:ring-(--theme-active) active:outline-none border-(--theme-border-color) text-nowrap;
     }
 
     .btn-xs {
         --size: 0.5;
         padding-inline: calc(--spacing(2) * var(--size));
         padding-block: calc(--spacing(1) * var(--size));
-        @apply text-xs rounded-xs;
+        @apply text-xs rounded-xs h-(--stx-btn-xs);
     }
 
     .btn-sm {
         --size: 0.8;
         padding-inline: calc(--spacing(2) * var(--size));
         padding-block: calc(--spacing(1) * var(--size));
-        @apply text-sm rounded-sm;
+        @apply text-sm rounded-sm h-(--stx-btn-sm);
     }
 
     .btn-lg {
         --size: 1.2;
         padding-inline: calc(--spacing(4) * var(--size));
         padding-block: calc(--spacing(2) * var(--size));
-        @apply text-lg;
+        @apply text-lg h-(--stx-btn-lg);
     }
 
     .btn-xl {
         --size: 1.5;
         padding-inline: calc(--spacing(4) * var(--size));
         padding-block: calc(--spacing(2) * var(--size));
-        @apply text-xl;
+        @apply text-xl h-(--stx-btn-xl);
     }
 
     .outline-btn {
-        --theme-text-color: var(--theme, var(--stx-btn-outline-text));
-        --theme: var(--theme, var(--stx-btn-outline-border));
-        @apply border border-(--theme) bg-transparent text-[var(--theme-text-color)] hover:bg-(--theme-hover-light)/70 active:ring-2 active:ring-[var(--theme-active)] active:outline-none;
+        --theme-text-color: var(--theme, var(--stx-btn-text-outline));
+        --theme: var(--theme, var(--stx-btn-bg-primary));
+        @apply border border-(--theme) bg-transparent text-[var(--theme-text-color)] hover:bg-(--theme-hover-light)/70 active:ring-3 active:ring-(--theme-active) active:outline-none;
     }
 
     .text-btn {
-        --theme-text-color: var(--theme, var(---stx-btn-clear-text));
-        --theme-active: var(--theme, var(--stx-ref-Primary-100));
-        @apply border-0 bg-transparent text-(--theme-text-color) hover:bg-(--theme-hover-light) active:ring-2 active:ring-(--theme-active) active:outline-none;
+        --theme-text-color: var(--theme, var(--stx-btn-clear-text));
+        --theme-active: var(--stx-ref-primary-100);
+        @apply border-0 bg-transparent text-(--theme-text-color) hover:bg-(--theme-hover-light) active:ring-3 active:ring-(--theme-active) active:outline-none;
     }
 
     .radius-btn {
@@ -105,27 +108,27 @@
     }
 
     .btn-danger {
-        --theme: var(--color-red-500);
-        --theme-hover: var(--color-red-600);
-        --theme-hover-light: var(--color-red-100);
-        --theme-active: var(--color-red-300);
+        --theme: var(--stx-ref-danger-500);
+        --theme-hover: var(--stx-ref-danger-600);
+        --theme-hover-light: var(--stx-ref-danger-100);
+        --theme-active: var(--stx-ref-danger-300);
     }
 
     .btn-success {
-        --theme: var(--color-green-600);
-        --theme-hover: var(--color-green-800);
-        --theme-hover-light: var(--color-green-100);
-        --theme-active: var(--color-green-300);
+        --theme: var(--stx-ref-success-600);
+        --theme-hover: var(--stx-ref-success-800);
+        --theme-hover-light: var(--stx-ref-success-100);
+        --theme-active: var(--stx-ref-success-300);
     }
 
     /* 0825 */
-    .btn-success-drawing {
+    /* .btn-success-drawing {
         --theme: var(--color-green-500);
         --theme-hover: var(--color-green-600);
         --theme-hover-light: var(--color-green-100);
         --theme-active: var(--color-green-300);
         margin: 2px;
-    }
+    } */
 
     .btn-success-query {
         --theme: var(--color-blue-400);
@@ -136,10 +139,11 @@
     }
 
     .btn[disabled] {
-        --theme: var(--color-gray-300);
-        --theme-hover: var(--color-gray-800);
+        --theme: var(--stx-btn-bg-contained-disabled);
+        /* --theme-hover: var(--color-gray-800);
         --theme-hover-light: var(--color-gray-100);
-        --theme-active: var(--color-gray-300);
+        --theme-active: var(--color-gray-300); */
+        --theme-text-color:var(--stx-btn-text-disable);
         @apply pointer-events-none cursor-not-allowed;
     }
 

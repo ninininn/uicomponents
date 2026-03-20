@@ -37,10 +37,11 @@ export class Button extends BaseComponent {
   }
   // overwrite render()
   render() {
+    if (this.options.disabled) this.el.disabled = true;
     Dom.addClass(this.el, this.options.classes);
     Dom.setText(this.el, this.options.text);
   }
 
   // overwrite bindEvents()
-  bindEvents() {}
+  bindEvents() { }
 }

@@ -76,10 +76,8 @@ StyleDictionary.registerTransform({
   name: 'name/kebab/no-component-prefix',
   type: 'name',
   transform: (token, options) => {
-    if (token.path[0] === 'component') {
-      return [options.prefix, ...token.path.slice(1)].join('-');
-    }
-    return [options.prefix, ...token.path].join('-');
+    const path = token.path[0] === 'component' ? token.path.slice(1) : token.path;
+    return [options.prefix, ...path].join('-').toLowerCase();
   },
 });
 StyleDictionary.registerTransformGroup({

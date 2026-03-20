@@ -4,6 +4,7 @@ import { Button } from "../Button";
 export const createButton = ({
   variant = 'filled',
   size = 'medium',
+  disabled,
   backgroundColor,
   label,
   onClick,
@@ -11,6 +12,7 @@ export const createButton = ({
   const btn = new Button("primary-btn",
     {
       text: label,
+      disabled: disabled,
     }
   );
 

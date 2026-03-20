@@ -1,6 +1,7 @@
 import { ColorPicker } from "../ColorPicker";
 import { Palette } from "../../../Utils/Color";
 import "../ColorPicker.css";
+import "../../Button/Button.css";
 
 export const createColorPicker = ({ limits, mode, defaults }) => {
   let parent = document.createElement("div");

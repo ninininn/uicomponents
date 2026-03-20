@@ -31,7 +31,7 @@ export const createTable = ({
   trigger.textContent = "create Table";
   let clear = document.createElement("button");
   clear.className = "btn btn-danger outline-btn mb-3";
-  clear.textContent = "clear Selected";
+  clear.textContent = "searchInFilter('女')";
 
   let tableTarget = document.createElement("div");
   tableTarget.className = "table-test-target";
