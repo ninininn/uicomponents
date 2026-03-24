@@ -1,7 +1,7 @@
 // import { BaseComponent, Dom, clamp, onClickOutside, positionFloat } from "../../Utils/Utils";
 import { clamp, positionFloat } from "../../Utils/Utils";
-import {Dom} from '../../Utils/Dom';
-import {BaseComponent} from '../BaseCompo';
+import { Dom } from '../../Utils/Dom';
+import { BaseComponent } from '../BaseCompo';
 
 import { ColorFormat, Color } from "../../Utils/Color";
 import addSvg from "../../../public/add.svg";
@@ -199,11 +199,13 @@ export class ColorPicker extends BaseComponent {
       this.onevent(target, "pointermove", (e) => {
         if (!active) return;
         onMove(e);
+        this._config.handler?.call(this, this.current);
       });
       this.onevent(target, "pointerup", (e) => {
         if (!active) return;
         active = false;
         this._updatePanel();
+        this._config.handler?.call(this, this.current);
       });
     }
   }
