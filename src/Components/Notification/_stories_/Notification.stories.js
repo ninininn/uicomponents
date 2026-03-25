@@ -4,6 +4,7 @@ import { action } from "storybook/actions";
 
 import { createNotification } from './NotificationStory';
 import "../Notification.css";
+import "../../../Styles/style.css";
 import NotificationAPIdoc from "./NotificationAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

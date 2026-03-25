@@ -24,7 +24,6 @@ export class BaseComponent {
         }, time);
     }
 
-
     onevent(target, event, handler, options) {
         return this._em.on(target, event, handler, options);
     }
@@ -36,7 +35,6 @@ export class BaseComponent {
     destroy() {
         this._em.destroy();
     }
-
 
     onClickOutside(target, callback) {
         return this.onevent(document, 'click', (e) => {

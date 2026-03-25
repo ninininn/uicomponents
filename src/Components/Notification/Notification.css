@@ -5,12 +5,12 @@
 @layer components {
   .notify-container {
     --theme: var(--theme, var(--color-gray-100));
-    --text: var(--text, var(color-gray-800));
+    --text: var(--text, var(--color-gray-800));
     --maxWidth: var(--maxWidth, auto);
     --w: var(--w, auto);
     --h: var(--h, auto);
     srollbar-gutter: both-edges;
-    @apply rounded-sm px-3 py-2 absolute z-50 bg-[var(--theme)] text-[var(--text)] transition-all duration-100 max-w-[var(--maxWidth)] w-[var(--w)] h-[var(--h)] min-w-[300px] min-h-[100px] overflow-auto overscroll-contain shadow-sm;
+    @apply rounded-sm px-3 py-2 absolute z-50 bg-(--theme) text-(--text) transition-all duration-100 max-w-(--maxWidth) w-(--w) h-(--h) min-w-[300px] min-h-[100px] overflow-auto overscroll-contain shadow-sm;
   }
 
 
@@ -42,11 +42,11 @@
   }
 
   .toast-container .notify-container[data-toast-bordered] {
-    @apply border border-[var(--style)];
+    @apply border border-(--style);
   }
 
   .toast-container .notify-container[data-toast-accent] {
-    @apply border-t-4 border-[var(--style)]/90;
+    @apply border-t-4 border-(--style)/90;
   }
 
   .toast-container .notify-header {

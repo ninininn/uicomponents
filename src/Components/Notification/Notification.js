@@ -98,14 +98,14 @@ class BaseMsg extends BaseComponent {
     } = this.options;
     //icon
     if (icon) {
-      let header = this._elem.querySelector(".notify-header");
+      let header = this.el.querySelector(".notify-header");
       let msgIcon = document.createElement("img");
       msgIcon.src = `notify-icons/${icon}.svg`;
       header.appendChild(msgIcon);
     }
     //是否需要標題
     if (msgTitle && msgTitle.toLowerCase() !== "false") {
-      let header = this._elem.querySelector(".notify-header");
+      let header = this.el.querySelector(".notify-header");
 
       //直接傳入DOM元素
       let notifyTitle = document.createElement("h3");
@@ -115,12 +115,12 @@ class BaseMsg extends BaseComponent {
 
     //msgContent
     if (msgContent) {
-      let contentDiv = this._elem.querySelector(".notify-content");
+      let contentDiv = this.el.querySelector(".notify-content");
       Dom.setText(contentDiv, msgContent);
     }
     //是否有自製內容innerHTML
     if (customContent) {
-      let contentDiv = this._elem.querySelector(".notify-content");
+      let contentDiv = this.el.querySelector(".notify-content");
       if (customContent instanceof HTMLElement) {
         contentDiv.appendChild(customContent);
       } else {
@@ -129,7 +129,7 @@ class BaseMsg extends BaseComponent {
     }
     //是否有btnList要設定[預設會有一組(confirm&cancel actions)]
     if (btnList) {
-      let actionbtnDiv = this._elem.querySelector(".notify-actionbtns");
+      let actionbtnDiv = this.el.querySelector(".notify-actionbtns");
       for (let btnConfig of btnList) {
         let btn = Dom.setBtn(btnConfig);
         actionbtnDiv.appendChild(btn);
@@ -153,14 +153,14 @@ class BaseMsg extends BaseComponent {
     //主題色
     let themeColor = this._theme === "dark" ? "#1e222789" : "#F3F4F6";
     let textColor = this._theme === "dark" ? "#F3F4F6" : "#1F2937";
-    Dom.setProp(this._elem, "--theme", themeColor);
-    Dom.setProp(this._elem, "--text", textColor);
+    Dom.setProp(this.el, "--theme", themeColor);
+    Dom.setProp(this.el, "--text", textColor);
 
     //尺寸設定
-    Dom.setProp(this._elem, "--maxWidth", this.options.maxWidth);
-    Dom.setProp(this._elem, "--w", this.options.area[0]);
-    Dom.setProp(this._elem, "--h", this.options.area[1]);
-    // Dom.addClass(this._elem, ["hidden"]);
+    Dom.setProp(this.el, "--maxWidth", this.options.maxWidth);
+    Dom.setProp(this.el, "--w", this.options.area[0]);
+    Dom.setProp(this.el, "--h", this.options.area[1]);
+    // Dom.addClass(this.el, ["hidden"]);
 
     if (this.options.type !== "toast" && this.options.type !== "popover") {
       this._setPosition(this.options.placement);
@@ -176,7 +176,7 @@ class BaseMsg extends BaseComponent {
   //[內部控制]-設定確認及取消按鈕
   _setBtns(btnConfig) {
     const { btnTxt, handler } = btnConfig;
-    let btnsblock = this._elem.querySelector(".notify-actionbtns");
+    let btnsblock = this.el.querySelector(".notify-actionbtns");
     // let btn = document.createElement("button");
     let btnClasses = ["btn", "btn-primary"];
     btnConfig.actionType !== "confirm" && btnClasses.push("outline-btn");
@@ -194,7 +194,7 @@ class BaseMsg extends BaseComponent {
 
   //[內部控制]-設定位置
   _setPosition(position) {
-    Dom.setPosition(this._elem, position, [
+    Dom.setPosition(this.el, position, [
       "notify-container",
       ...this.options.classes,
     ]);
@@ -223,8 +223,8 @@ class ToastItem extends BaseComponent {
     //TODO options的btn要改成小的?
     this.UIType = "ToastItem";
     this.style = options.style || "accent";
-    this._base = new BaseMsg(this._elem, options);
-    this.dismiss = new Dismiss(this._elem, dismissBtn, dismissOptions);
+    this._base = new BaseMsg(this.el, options);
+    this.dismiss = new Dismiss(this.el, dismissBtn, dismissOptions);
     this._init();
   }
 
@@ -232,22 +232,22 @@ class ToastItem extends BaseComponent {
     //設定對應顏色
     if (this._base.options.icon) {
       Dom.setProp(
-        this._elem,
+        this.el,
         "--style",
         `var(--${this._base.options.icon})`
       );
     } else {
-      Dom.setProp(this._elem, "--style", "var(--graystyle)");
+      Dom.setProp(this.el, "--style", "var(--graystyle)");
     }
     switch (this.style) {
       case "bordered":
-        Dom.setDataAttr(this._elem, `toast-${this.style}`);
+        Dom.setDataAttr(this.el, `toast-${this.style}`);
         break;
       case "accent":
-        Dom.setDataAttr(this._elem, `toast-${this.style}`);
+        Dom.setDataAttr(this.el, `toast-${this.style}`);
         break;
     }
-    // Dom.addClass(this._elem, ["animate-msgIn"]);
+    // Dom.addClass(this.el, ["animate-msgIn"]);
 
     this._bindEvent();
   }
@@ -275,7 +275,7 @@ class ToastItem extends BaseComponent {
 
       await delay(2000);
       //再移除
-      this._elem.remove();
+      this.el.remove();
     }
     clearDOM.bind(this)();
   }
@@ -359,20 +359,20 @@ class ModalMsg extends BaseComponent {
   }
 
   _init() {
-    document.body.append(this._elem);
+    document.body.append(this.el);
     this.onShow();
     this._bindEvent();
-    Dom.setDataAttr(this._elem, "notifymodal");
+    Dom.setDataAttr(this.el, "notifymodal");
   }
   onShow() {
     this.modal.show();
-    Dom.removeClass(this._elem, ["flex"]); //flowbite會自動加入flex，所以要移除
+    Dom.removeClass(this.el, ["flex"]); //flowbite會自動加入flex，所以要移除
   }
   onHide() {
     this.modal.hide();
     //FIX 關閉每個modal應該也要destroy(保留一段時間後再刪除)
     setTimeout(() => {
-      this._elem.remove();
+      this.el.remove();
     }, 3000);
   }
 
@@ -407,8 +407,8 @@ class PopoverMsg extends BaseComponent {
   }
 
   _init() {
-    document.body.append(this._elem);
-    Dom.setDataAttr(this._elem, "notifypopover");
+    document.body.append(this.el);
+    Dom.setDataAttr(this.el, "notifypopover");
     this._bindEvent();
   }
   get config() {
@@ -452,8 +452,8 @@ class DefaultMsg extends BaseComponent {
     };
   }
   _init() {
-    document.body.append(this._elem);
-    Dom.setDataAttr(this._elem, "notifymsg");
+    document.body.append(this.el);
+    Dom.setDataAttr(this.el, "notifymsg");
     this._bindEvent(this._options.countdown);
   }
   _bindEvent(countdown) {
@@ -466,10 +466,10 @@ class DefaultMsg extends BaseComponent {
 
       await delay(countdown);
       //先隱藏
-      Dom.addClass(this._elem, ["opacity-0"]);
+      Dom.addClass(this.el, ["opacity-0"]);
       await delay(1000);
       //再移除
-      this._elem.remove();
+      this.el.remove();
     }
     clearDOM.bind(this)();
   }
