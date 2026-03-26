@@ -16,7 +16,7 @@ export class Tabs extends BaseComponent {
     tabsContainer.setAttribute("role", "tablist");
     tabsContainer.setAttribute("tabindex", "0 ");
     super(tabsContainer, config.theme);
-    this.UItype = "tabs";
+    this.UItype = "Tabs";
     this._config = Object.assign({}, defaultTabsConfig, config);
     this.tablist = tabs.map((tab, index) => new TabItem(tab, index));
     this.panel = new Panel(tabs.reduce((acc, cur) => {

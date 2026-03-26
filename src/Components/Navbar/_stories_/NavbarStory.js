@@ -1,10 +1,10 @@
-import { Tabs } from "../Tabs";
+import { NavBar } from "../NavBar";
 // import { Checkbox } from "../../Checkbox/Checkbox";
-import "../Tabs.css";
+import "../NavBar.css";
 // import "../Checkbox/Checkbox.css";
 // import "../Dropdown/Dropdown.css";
 
-export const createTabs = ({
+export const createNavBar = ({
   orientation,
   placement,
   theme,
@@ -16,19 +16,14 @@ export const createTabs = ({
   let parent = document.createElement("div");
   parent.className = "mx-auto grid place-items-center";
 
-  const TABS_EX = [
-    { title: "Tab 1", content: "Content 1" },
-    { title: title, content: content, active: active },
-    { title: "Tab 3", content: "Content 3" },
-  ];
   let initOptions = {
     orientation: orientation,
     placement: placement,
     theme: theme,
   };
 
-  const tabInstance = new Tabs(initOptions, TABS_EX);
-  parent.appendChild(tabInstance.el);
+  const NavBarInstance = new NavBar(initOptions);
+  parent.appendChild(NavBarInstance.el);
   // let notification_instance = new Notification(trigger, initOptions, type);
 
   // notification_instance.show();

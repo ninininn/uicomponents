@@ -2,13 +2,13 @@ import { fn, expect } from "storybook/test";
 // import { withActions } from '@storybook/addon-actions/decorator';
 import { action } from "storybook/actions";
 
-import { createTabs } from "./MenuStory";
-import "../Tabs.css";
-import TabsAPIdoc from "./TabsAPIdoc.mdx";
+import { createNavBar } from "./NavBarStory";
+import "../NavBar.css";
+import NavBarAPIdoc from "./NavBarAPIdoc.mdx";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: "Components/Tabs",
+  title: "Components/NavBar",
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -16,13 +16,13 @@ export default {
         format: true,
         language: "html",
       },
-      page: TabsAPIdoc,
+      page: NavBarAPIdoc,
     },
   },
   // decorators: [withActions],
   render: ({ ...args }) => {
     // You can either use a function to create DOM elements or use a plain html string!
-    let instance = createTabs({ ...args });
+    let instance = createNavBar({ ...args });
     return instance;
   },
   argTypes: {
@@ -108,7 +108,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Tabs = {
+export const NavBar = {
   args: {
     orientation: "vertical",
     placement: "top",
