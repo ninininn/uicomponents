@@ -27,22 +27,27 @@ export const Dom = {
         }
         elem.className = newClassName.join(" ");
     },
-    setText: function (elem, text) { elem.textContent = text; },
+    setText: function (elem, text) { elem.textContent = text; return elem;},
     setTextnode: function (elem, text) {
         let textNode = document.createTextNode(text);
         elem.appendChild(textNode);
+        return elem;
     },
     setDataAttr: function (elem, attrName, attrValue = "") {
         elem.setAttribute(`data-${attrName}`, attrValue);
+        return elem;
     },
     setAttr: function (elem, attrName, attrValue = "") {
         elem.setAttribute(attrName, attrValue);
+        return elem;
     },
     removeAttr: function (elem, attrName) {
         elem.removeAttribute(attrName);
+        return elem;
     },
     setProp: function (elem, propName, propValue) {
         elem.style.setProperty(propName, propValue);
+        return elem;
     },
     setBtn: function (btnConfig) {
         let btn = document.createElement("button");

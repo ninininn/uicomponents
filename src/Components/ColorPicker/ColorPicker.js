@@ -22,24 +22,24 @@ export class ColorPicker extends BaseComponent {
     this.UItype = "ColorPicker";
     this._config = Object.assign({}, defaultPickerConfig, options);
     this.mode = this._config.mode;
-    this.defaultColors = this._convertColorMode(
+    this.defaults = this._convertColorMode(
       this._config.defaults,
       this.mode
     ).slice(0, this._config.limits);
     this.colors =
       this._config.limits === 1
-        ? [this.defaultColors]
-        : [...this.defaultColors];
+        ? [this.defaults]
+        : [...this.defaults];
     this._current = this.getColorClass(this.colors[0]);
-    this._picker = this._createPickerpanel();
+    this._panel = this._createPickerpanel();
     this._trigger = undefined;
     this._init();
     this._render();
     this._bindEvent();
   }
 
-  get picker() {
-    return this._picker;
+  get panel() {
+    return this._panel;
   }
 
   set current(value) {
@@ -70,7 +70,7 @@ export class ColorPicker extends BaseComponent {
     this._theme = 'var(--color-primary-500)';
     Dom.setProp(this.el, "--theme", this._theme);
     //預設顏色顯示
-    for (let color of this.defaultColors) {
+    for (let color of this.defaults) {
       const colorDiv = document.createElement("div");
       Dom.addClass(colorDiv, ["color"]);
       // colorDiv.style.backgroundColor = color;
@@ -78,7 +78,7 @@ export class ColorPicker extends BaseComponent {
       this.el.appendChild(colorDiv);
     }
 
-    Dom.addClass(this._picker, ["picker"]);
+    Dom.addClass(this._panel, ["picker"]);
 
     //加入新增顏色用的操作按鈕
     const addBtn = Dom.setBtn({
@@ -86,12 +86,13 @@ export class ColorPicker extends BaseComponent {
       icon: addSvg,
       handler: () => {
         this._trigger = this._addBtn;
-        const panelComfirmBtn = this._picker.querySelector(
-          " button:not(.picker-btn)"
+        const panelComfirmBtn = this._panel.querySelector(
+          " button:not(.picker-btn):last-child"
         );
+    
         Dom.setText(panelComfirmBtn, "新增顏色");
-        positionFloat(this._picker, this._addBtn);
-        Dom.addClass(this._picker, ["visible"]);
+        positionFloat(this._panel, this._addBtn);
+        Dom.addClass(this._panel, ["visible"]);
 
         switch (this.mode) {
           case "rgb":
@@ -111,21 +112,21 @@ export class ColorPicker extends BaseComponent {
     this.el.appendChild(addBtn);
     this._addBtn = addBtn;
 
-    this.el.appendChild(this._picker);
+    this.el.appendChild(this._panel);
   }
 
   _bindEvent() {
-    const colorTrack = this._picker.querySelector(".color-track canvas");
-    const hueTrack = this._picker.querySelector(".hue-track");
-    const alphaTrack = this._picker.querySelector(".alpha-track");
+    const colorTrack = this._panel.querySelector(".color-track canvas");
+    const hueTrack = this._panel.querySelector(".hue-track");
+    const alphaTrack = this._panel.querySelector(".alpha-track");
 
     this.onevent(this.el, "click", (e) => {
       e.stopPropagation();
       if (e.target.classList.contains("color")) {
         this._trigger = e.target;
         const colorPicked = e.target.dataset.colorpick;
-        const panelComfirmBtn = this._picker.querySelector(
-          " button:not(.picker-btn)"
+        const panelComfirmBtn = this._panel.querySelector(
+          " button:not(.picker-btn):last-child"
         );
         this.current = colorPicked;
 
@@ -141,11 +142,11 @@ export class ColorPicker extends BaseComponent {
         }
 
         //點擊打開picker面板
-        positionFloat(this._picker, e.target);
-        Dom.addClass(this._picker, ["visible"]);
+        positionFloat(this._panel, e.target);
+        Dom.addClass(this._panel, ["visible"]);
         Dom.setText(panelComfirmBtn, "更改顏色");
         //傳入dataset.colorpick作為面板當前顏色
-        Dom.setDataAttr(this._picker, "currentpick", colorPicked);
+        Dom.setDataAttr(this._panel, "currentpick", colorPicked);
         this._updatePanel();
       }
     });
@@ -185,7 +186,9 @@ export class ColorPicker extends BaseComponent {
     });
 
     super.onClickOutside(this.el, () => {
-      Dom.removeClass(this._picker, ["visible"]);
+      Dom.removeClass(this._panel, ["visible"]);
+      // this.reset();
+      this._config.handler?.call(this, this.current);
     });
 
     function dragging(target, onMove) {
@@ -200,21 +203,21 @@ export class ColorPicker extends BaseComponent {
         if (!active) return;
         onMove(e);
         this._config.handler?.call(this, this.current);
+        this._trigger.dataset.colorpick = this.current;
       });
       this.onevent(target, "pointerup", (e) => {
         if (!active) return;
         active = false;
         this._updatePanel();
         this._config.handler?.call(this, this.current);
+        this._trigger.dataset.colorpick = this.current;
       });
     }
   }
 
   _render() {
     //!render不用更新pickerPanel，因為也還沒確定顏色
-    if (this.colors.length >= this._config.limits) {
-      Dom.addClass(this._addBtn, ["hidden"]);
-    }
+    this._checkLimits();
 
     //mainColor加上放大效果，其餘不變
     if (this._config.limits > 1) {
@@ -229,29 +232,41 @@ export class ColorPicker extends BaseComponent {
     }
   }
 
+  //檢視是否超出限制儲存數量
+  _checkLimits() {
+    if (this.colors.length >= this._config.limits) {
+      Dom.addClass(this._addBtn, "hidden");
+    } else {
+      Dom.removeClass(this._addBtn, "hidden");
+    }
+  }
+
   //[內部控制]-建立pickerPanel
   _createPickerpanel() {
     const pickerContainer = document.createElement("div");
     const canvasContainer = document.createElement("div");
     const canvas = document.createElement("canvas");
 
-    const confirmBtn = Dom.setBtn({
+    const actionGroup = document.createElement("div");
+
+    const comfirmConfig = {
       classes: ["btn", "btn-primary"],
       text: "更改顏色",
       handler: () => {
         //回傳當前顏色
-        //trigger為(+)，加入ColorCiv
+        //1.trigger為(+)，加入ColorCiv
         if (this._trigger === this._addBtn) {
           this.colors.push(this.current);
+          this.defaults.push(this.current);
           const newColor = document.createElement("div");
           Dom.addClass(newColor, ["color"]);
           newColor.dataset.colorpick = this.current;
-          // newColor.style.backgroundColor = this.current;
+
           //加上main-color class
           Dom.addClass(newColor, ["main-color"]);
           this._addBtn.insertAdjacentElement("beforebegin", newColor);
         } else {
-          //更新該colorDiv的值
+          //2.更新該colorDiv的值
           //this.colors array也要更新
           const triggerIndex = Array.from(
             this.el.querySelectorAll(".color")
@@ -262,11 +277,56 @@ export class ColorPicker extends BaseComponent {
         }
 
         this._config.handler?.call(this, this.current);
-        Dom.removeClass(this._picker, ["visible"]);
+        Dom.removeClass(this._panel, ["visible"]);
         this._render();
         this._updatePanel();
       },
-    });
+    };
+    const cancelConfig = {
+      classes: ["btn", "btn-primary", "outline-btn"],
+      text: "取消",
+      handler: () => {
+        this.undoColors();
+        Dom.removeClass(this._panel, ["visible"]);
+      }
+    };
+    // const confirmBtn = Dom.setBtn({
+    //   classes: ["btn", "btn-primary"],
+    //   text: "更改顏色",
+    //   handler: () => {
+    //     //回傳當前顏色
+    //     //trigger為(+)，加入ColorCiv
+    //     if (this._trigger === this._addBtn) {
+    //       this.colors.push(this.current);
+    //       const newColor = document.createElement("div");
+    //       Dom.addClass(newColor, ["color"]);
+    //       newColor.dataset.colorpick = this.current;
+
+    //       //加上main-color class
+    //       Dom.addClass(newColor, ["main-color"]);
+    //       this._addBtn.insertAdjacentElement("beforebegin", newColor);
+    //     } else {
+    //       //更新該colorDiv的值
+    //       //this.colors array也要更新
+    //       const triggerIndex = Array.from(
+    //         this.el.querySelectorAll(".color")
+    //       ).indexOf(this._trigger);
+    //       this.colors[triggerIndex] = this.current;
+    //       this._trigger.dataset.colorpick = this.current;
+    //       // this._trigger.style.backgroundColor = this.current;
+    //     }
+
+    //     this._config.handler?.call(this, this.current);
+    //     Dom.removeClass(this._panel, ["visible"]);
+    //     this._render();
+    //     this._updatePanel();
+    //   },
+    // });
+
+    // const cancelBtn = Dom.setBtn({
+    //   classes: ["btn", "btn-primary", "outline-btn"],
+    //   text: "取消",
+    // });
     const trackContainer = document.createElement("div");
     const subTrackContainer = document.createElement("div");
     const currentColor = document.createElement("div");
@@ -284,7 +344,9 @@ export class ColorPicker extends BaseComponent {
     hueTrack.append(hueThumb);
     subTrackContainer.append(hueTrack, alphaTrack);
     trackContainer.append(currentColor, subTrackContainer);
-    pickerContainer.append(canvasContainer, trackContainer, confirmBtn);
+    // pickerContainer.append(canvasContainer, trackContainer, confirmBtn);
+    pickerContainer.append(canvasContainer, trackContainer, Dom.setBtnGroup([cancelConfig, comfirmConfig], actionGroup));
+
     Dom.addClass(canvasContainer, ["color-track"]);
     Dom.addClass(alphaTrack, ["alpha-track"]);
     Dom.addClass(hueTrack, ["hue-track"]);
@@ -324,12 +386,12 @@ export class ColorPicker extends BaseComponent {
   _updatePanel() {
     const { h, s, l, a } = this.syncColorBase();
 
-    const colorTrack = this._picker.querySelector(".color-track canvas");
-    const hueTrack = this._picker.querySelector(".hue-track");
-    const alphaTrack = this._picker.querySelector(".alpha-track");
-    const hueThumb = this._picker.querySelector(".hue-track .picker-btn");
-    const alphaThumb = this._picker.querySelector(".alpha-track .picker-btn");
-    const canvasThumb = this._picker.querySelector(".color-track .picker-btn");
+    const colorTrack = this._panel.querySelector(".color-track canvas");
+    const hueTrack = this._panel.querySelector(".hue-track");
+    const alphaTrack = this._panel.querySelector(".alpha-track");
+    const hueThumb = this._panel.querySelector(".hue-track .picker-btn");
+    const alphaThumb = this._panel.querySelector(".alpha-track .picker-btn");
+    const canvasThumb = this._panel.querySelector(".color-track .picker-btn");
     this._paintCanvas(colorTrack, h);//如果hue沒變就不用重繪?
     Dom.setProp(hueTrack, "--hue", h);
     Dom.setProp(alphaTrack, "--hue", h);
@@ -361,9 +423,9 @@ export class ColorPicker extends BaseComponent {
     const ax = clamp(a * atrackW - athumbW / 2, 0, atrackW - athumbW);
     alphaThumb.style.transform = `translate3d(${ax}px, 0, 0)`;
 
-    // Dom.setProp(this._picker, "--picker-bg", this._convertColorMode(this.current, this.mode));
+    // Dom.setProp(this._panel, "--picker-bg", this._convertColorMode(this.current, this.mode));
     Dom.setDataAttr(
-      this._picker,
+      this._panel,
       "currentpick",
       this._convertColorMode(this.current, this.mode)
     );
@@ -442,7 +504,7 @@ export class ColorPicker extends BaseComponent {
   //[外部控制]-回復初始值
   //(如果新增多個顏色則移除新加的顏色)
   reset() {
-    this.colors = [...this.defaultColors];
+    this.colors = [...this.defaults];
     this.current = this.colors[0];
 
     this.el.querySelectorAll(".color").forEach((el, index) => {
@@ -450,10 +512,21 @@ export class ColorPicker extends BaseComponent {
       el.dataset.colorpick = this.colors[index];
     });
     this._updatePanel();
+    this._checkLimits();
   }
+
+  //[外部控制]-回復預設原始值
+  //如果是可以addColor的情況下，後面新增的color只有加入this.colors而不是this.defaults
+  undoColors() {
+    const targetIndex = Array.from(this.el.querySelectorAll(".color")).indexOf(this._trigger);
+    this.current = this.colors[targetIndex];
+    this._trigger.dataset.colorpick = this.current;
+    this._updatePanel();
+  }
+
   //[外部控制]-重新設置(更新)預設值
   updateDefaults(update) {
-    this.defaultColors = this._convertColorMode(
+    this.defaults = this._convertColorMode(
       update,
       this.mode
     ).slice(0, this._config.limits);
