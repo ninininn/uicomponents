@@ -1,0 +1,21 @@
+@reference "../../Styles/style.css";
+
+@layer base {
+    @property --theme {
+        syntax: '<color>';
+        inherits: true;
+        initial-value: var(--color-primary-500);
+    }
+
+    /*
+Source - https://stackoverflow.com/a
+Posted by Alex Char, modified by community. See post 'Timeline' for change history
+Retrieved 2025-11-28, License - CC BY-SA 4.0
+*/
+
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+}
+
+@layer components {}
