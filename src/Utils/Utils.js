@@ -516,4 +516,7 @@ export const tools = {
     checkDevice: checkDevice,
     clamp: clamp,
     defineTypeof: defineTypeof,
+    dataSorter: dataSorter,
+    debounce: debounce,
+    
 };

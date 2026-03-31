@@ -61,7 +61,7 @@ export const Manual = {
 };
 
 /** 使用 Breadcrumbs.fromElement() — 自動從巢狀 DOM 的 data-route 屬性產生路徑 */
-export const FromElement = {
+export const ThroughPath = {
     render: () => createBreadcrumbsFromElement(),
     args: {},
 };

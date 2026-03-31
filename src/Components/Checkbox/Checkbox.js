@@ -1,4 +1,5 @@
 // import { Dom, BaseComponent, defineArgs } from "../../Utils/Utils";
+import "./Checkbox.css";
 import { Dom, defineArgs } from '../../Utils/Dom';
 import { BaseComponent } from '../BaseCompo';
 

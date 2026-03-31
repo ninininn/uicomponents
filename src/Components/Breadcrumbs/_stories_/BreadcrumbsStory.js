@@ -11,11 +11,12 @@ export const createBreadcrumbs = ({ paths, theme }) => {
     const instance = new Breadcrumbs({ paths, theme });
     parent.appendChild(instance.el);
 
+    console.log("instance:", instance);
     return parent;
 };
 
 /**
- * 示範 fromElement + onNavigate — 不使用 href，點擊麵包屑切換顯示的區塊
+ * 示範 throughPath + onNavigate — 不使用 href，點擊麵包屑切換顯示的區塊
  *
  * 巢狀結構：
  * sectionA[data-route="首頁"]
@@ -49,7 +50,7 @@ export const createBreadcrumbsFromElement = () => {
     status.className = "text-sm mt-2 text-gray-500";
     status.textContent = "當前：產品詳細頁面";
 
-    const instance = Breadcrumbs.fromElement(sectionD, {
+    const instance = Breadcrumbs.throughPath(sectionD, {
         onNavigate: (el) => {
             status.textContent = `切換到：${el.getAttribute("data-route")}`;
         },
@@ -58,5 +59,6 @@ export const createBreadcrumbsFromElement = () => {
     wrapper.appendChild(instance.el);
     wrapper.appendChild(status);
 
+    console.log(instance);
     return wrapper;
 };

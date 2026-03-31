@@ -1,3 +1,4 @@
+import "./Notification.css";
 import { Dismiss, Modal, Popover } from "flowbite";
 import { debounce } from "../../Utils/Utils";
 import { Dom } from "../../Utils/Dom";

@@ -5,6 +5,7 @@
 //   bindState,
 // } from "../../Utils/Utils";
 
+import "./Slider.css";
 import { Dom, defineArgs } from '../../Utils/Dom';
 import { BaseComponent } from '../BaseCompo';
 import { createSignal, createEffect } from '../../Utils/Reactive';

@@ -23,6 +23,7 @@ UICompos is an UI library for our own team project, without using any framworks(
 - `src/Components/**/_stories_` - Storybook relate files
 - `src/Doc/` - Global storyconfig
 - `src/Utils/` - Utility functions
+- `src/Styles` - css, css-variables and design tokens
   
 ## Architecture
 uicomponents/
@@ -44,9 +45,10 @@ uicomponents/
 │	│ └── ...  
 │  
 ├── Styles/  
-│ ├── primitive.css #reference design  token 
+│ ├── primitive.css #reference design token
 │ ├── semantic.css  #system design token
-│ └── style.css  #import tailwindcss
+│ ├── component.css  #component design token
+│ └── style.css  #import tailwindcss, variables and main styles
 │  
 └── index.js
 │

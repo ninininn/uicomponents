@@ -5,6 +5,7 @@ const defaultBreadConfig = {
     paths: [], // [{ label, href?, handler? }] - 三者互斥：href → <a>、handler → <button>、兩者都沒有 → 當前頁純文字
     theme: 'var(--stx-system-primary)',
     size: 'md',
+    separator: '/', //分隔符號
 };
 
 export class Breadcrumbs extends BaseComponent {
@@ -28,7 +29,7 @@ export class Breadcrumbs extends BaseComponent {
      * @param {string} [options.attr='data-route'] - 識別導覽節點的 data attribute
      * @param {function} [options.onNavigate] - 點擊非當前頁時的 callback，接收對應的 HTMLElement
      */
-    static fromElement(currentEl, { attr = 'data-route', onNavigate } = {}) {
+    static throughPath(currentEl, { attr = 'data-route', onNavigate } = {}) {
         const nodes = [];
         let current = currentEl;
 

@@ -1,3 +1,4 @@
+import "./Table.css";
 import { defineTypeof, dataSorter } from "../../Utils/Utils";
 import { Dom, findElem } from "../../Utils/Dom";
 import { BaseComponent } from "../BaseCompo";

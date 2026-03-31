@@ -1,3 +1,4 @@
+import "./Dropdown.css";
 import { Dropdown as flowbiteDropdown } from "flowbite";
 
 var dropDefaultConfig = {

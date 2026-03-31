@@ -1,3 +1,4 @@
+import "./Tabs.css";
 import { defineTypeof } from "../../Utils/Utils";
 import { Dom, findElem } from "../../Utils/Dom";
 import { BaseComponent } from "../BaseCompo";

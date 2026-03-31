@@ -48,5 +48,6 @@ export class EventManager {
     destroy() {
         this._ac.abort();//執行中止
         this._ac = new AbortController();//重新賦予新的控制器
+        this._targets = new WeakMap();//清空舊的 target 紀錄
     }
 }

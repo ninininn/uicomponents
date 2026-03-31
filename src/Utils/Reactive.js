@@ -24,13 +24,12 @@ function createBasicProxy(initialState, effectfn) {
             const result = Reflect.get(target, prop);
             if (effectfn) {
                 let currentSubscribers = _dependentsMap.get(prop);
-                console.log(currentSubscribers);
                 if (!currentSubscribers) currentSubscribers = [];
                 if (effectfn in currentSubscribers) return;
                 currentSubscribers.push(effectfn);
                 _dependentsMap.set(prop, currentSubscribers);
             }
-            console.log("_dependentsMap:", _dependentsMap);
+
             return result;
         },
 
@@ -130,7 +129,6 @@ class Node {
         // this.deps = new Set();//依賴清單(自身依賴的對象)(effect / computed）
         // this.subs = new Set();//訂閱清單(依賴自身的對象=對象's依賴清單會有自己)signal / computed）
         this.value = value;
-        console.log("thisNode:", this);
     }
 }
 
