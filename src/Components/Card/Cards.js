@@ -3,32 +3,46 @@ import { BaseComponent } from "../BaseCompo";
 
 import { Notification } from "../Notification/Notification";
 
+var defaultCardConfig = {
+  cardSize: 1,//卡片尺寸
+  closable: true,//關閉功能
+  minimize: true//縮小功能
+};
+
 export class Card extends BaseComponent {
-  constructor(title, cardSize) {
+  constructor(title, { cardSize, closable, minimize }) {
     let cardContainer = document.createElement("div");
     cardContainer.classList.add("card");
-    cardContainer.innerHTML = ` <div class="card-header">
+
+    cardContainer.innerHTML = `<div class="card-header">
             <div class="data-title">${title}</div>
-            <div class="flex flex-row-reverse">
-              <button type="button" class="closeBtn btn icon-btn text-btn" data-modal-target="close-data-modal">
-                <svg class="icon text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+        </div>`;
+
+    if (closable || minimize) {
+      const actionContainer = document.createElement("div");
+      actionContainer.classList.add("flex");
+      cardContainer.querySelector(".card-header").appendChild(actionContainer);
+      if (minimize) {
+        actionContainer.innerHTML += `<button type="button" class="miniBtn btn icon-btn text-btn" >
+                <svg class="icon text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+</svg></button>`;
+      }
+      if (closable) {
+        actionContainer.innerHTML += `<button type="button" class="closeBtn btn icon-btn text-btn" data-modal-target="close-data-modal">
+                <svg class="icon text-gray-800" width="24" height="24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
-              </button>
-              <button type="button" class="miniBtn btn icon-btn text-btn" >
-                <svg class="icon text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-</svg>
-
-              </button>
-            </div>     
-        </div>`;
+              </button>`;
+      }
+    }
     super(cardContainer);
     this.UItype = "Card";
+    this._config = Object.assign({}, defaultCardConfig, { cardSize, closable, minimize });
     this.cardContainer = this._elem;
     this.title = title;
-    this._cardsize = this._setCardSize(cardSize); //設定卡片尺寸
+    this._cardsize = this._setCardSize(this._config.cardSize); //設定卡片尺寸
     this.minimize = false;
     this._bindEvent();
   }
@@ -47,11 +61,14 @@ export class Card extends BaseComponent {
   }
 
   _bindEvent() {
-    this.onevent(
-      this.cardContainer.querySelector(".miniBtn"),
-      "click",
-      miniCard.bind(this)
-    );
+    const { minimize, closable } = this._config;
+    if (minimize) {
+      this.onevent(
+        this.cardContainer.querySelector(".miniBtn"),
+        "click",
+        miniCard.bind(this)
+      );
+    }
 
     function miniCard() {
       this.minimize = !this.minimize;
@@ -67,30 +84,37 @@ export class Card extends BaseComponent {
 </svg>`;
       this.cardContainer.querySelector(".miniBtn").innerHTML = icon;
     }
-    this.cardContainer
-      .querySelector(".closeBtn")
-      .addEventListener("click", closeNotify.bind(this));
 
-    function closeNotify() {
-      Notification.modal(this.cardContainer.querySelector(".closeBtn"), {
-        msgContent: "確定關閉此資料區塊? 關閉後須重新查詢",
-        placement: "center",
-        confirm: [
-          "確定關閉",
-          () => {
-            this.cardContainer.remove();
-          },
-        ],
-        cancel: "取消",
-        backdropClasses: "bg-gray-800/50",
-      });
+    if (closable) {
+      this.cardContainer
+        .querySelector(".closeBtn")
+        .addEventListener("click", closeNotify.bind(this));
+
+      function closeNotify() {
+        Notification.modal(this.cardContainer.querySelector(".closeBtn"), {
+          msgContent: "確定關閉此資料區塊? 關閉後須重新查詢",
+          placement: "center",
+          confirm: [
+            "確定關閉",
+            () => {
+              this.cardContainer.remove();
+            },
+          ],
+          cancel: "取消",
+          backdropClasses: "bg-gray-800/50",
+        });
+      }
     }
   }
 }
 
 export class BasicInfoCard extends Card {
-  constructor(title, infoList, cardSize = 1) {
-    super(title, cardSize);
+  constructor(title, infoList, config = defaultCardConfig) {
+    let _config;
+    if (typeof (config) === 'number') _config.cardSize = config;
+    _config = Object.assign({}, defaultCardConfig, config);
+
+    super(title, _config);
     this._infoStruct = new Info(infoList);
     this.infoList = this._infoStruct.infos;
     // this.infoList = infoList; // 傳進來的 infoListTemp

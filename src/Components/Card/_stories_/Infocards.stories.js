@@ -44,6 +44,27 @@ export default {
         type: { summary: "number" },
       },
     },
+    minimize: {
+      control: "boolean",
+      description: "縮小功能",
+      table: {
+        category: "parameters",
+        subcategory: "Inherits Card 類別",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
+      },
+    },
+    closable: {
+      control: "boolean",
+      // type: { required: true },
+      description: "關閉功能",
+      table: {
+        category: "parameters",
+        subcategory: "Inherits Card 類別",
+        defaultValue: { summary: "true" },
+        type: { summary: "boolean" },
+      },
+    },
     infoList: {
       control: "array",
       // type: { required: true },
@@ -177,6 +198,8 @@ export const defaultInfocard = {
     customInner: `<div class="border-2 border-gray-400 rounded-sm p-2">自訂義區塊</div>`,
     title: "測試面板", //文字
     cardSize: 1,
+    closable: true,
+    minimize: true,
     btn: [],
     text: "開始查詢",
     class: ["btn-secondary"],

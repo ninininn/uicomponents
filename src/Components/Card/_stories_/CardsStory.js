@@ -9,6 +9,8 @@ export const createCards = ({
   customInner,
   title,
   cardSize,
+  minimize,
+  closable,
   btn,
   text,
   handlers,
@@ -50,7 +52,7 @@ export const createCards = ({
       btngroupClass: "mt-3",
     },
   ];
-  let realpriceCard = new BasicInfoCard(title, infoList, cardSize);
+  let realpriceCard = new BasicInfoCard(title, infoList, { cardSize: cardSize, minimize: minimize, closable: closable });
   parent.appendChild(realpriceCard.cardContainer);
   console.log("realpriceCard:", realpriceCard);
   realpriceCard.updateLabel(label, "更新資料欄位內容A");
