@@ -1,0 +1,186 @@
+import { Meta, Title } from "@storybook/addon-docs/blocks";
+
+<Meta title="Symbols" /># ArcGIS Symbols工具函式
+包裝 ArcGIS 相關類別，方便調用。
+
+# Symbols
+
+[ArcGIS SymbolUnion 類別](https://developers.arcgis.com/javascript/latest/references/core/symbols/types/#SymbolUnion)
+
+### Symbol2DUnion
+> 用於 2D 場景的圖標類別
+
+![Symbol2DUnion](.storybook\Symbol2DUnion.png)
+
+<p className="sb-unstyled font-bold text-yellow-500">TextSymbol</p>
+`GetTextSymbol(p_color, p_text, p_halocolor, p_halosize, p_xoffset, p_yoffset, p_size, p_family, p_weight)`
+
+```javascript
+let defText = {
+    type: 'text',
+    color: p_color,
+    text: p_text,
+    haloColor: p_halocolor, 
+    haloSize: p_halosize,   
+    xoffset: p_xoffset,
+    yoffset: p_yoffset,
+    font: {
+        size: p_size,
+        family: p_family,
+        weight: p_weight
+    }
+};
+```
+
+<p className="sb-unstyled font-bold text-yellow-500">SimpleMarkerSymbol</p>
+`GetSimpleMarkerSymbol(p_color, p_style, p_size, p_olcolor, p_olwidth, p_olstyle)`
+
+```javascript
+let defSimMrk = {
+    type: 'simple-marker',
+    style: p_style,
+    color: p_color,
+    size: p_size,
+    outline: {
+        width: p_olwidth,
+        color: p_olcolor,
+        style: p_olstyle
+    }
+}; 
+```
+
+<p className="sb-unstyled font-bold text-yellow-500">PictureMarkerSymbol</p>
+`GetPictureMarkerSymbol(p_url, p_width, p_height)`
+
+```javascript
+let defPicMrk = {
+    type: 'picture-marker',
+    url: p_url,
+    width: p_width,
+    height: p_height,
+};
+```
+
+<p className="sb-unstyled font-bold text-yellow-500">SimpleLineSymbol</p>
+`GetSimpleLineSymbol(p_style, p_color, p_width)`
+
+```javascript
+let defSimLine = {
+    type: 'simple-line',
+    style: p_style,
+    color: p_color,
+    width: p_width
+};
+```
+
+<p className="sb-unstyled font-bold text-yellow-500">SimpleFillSymbol</p>
+`GetSimpleFillSymbol(p_color, p_style, p_olcolor, p_olwidth, p_olstyle)`
+
+```javascript
+let defSimFill = {
+    type: 'simple-fill',
+    style: p_style,
+    color: p_color,
+    outline: {
+        width: p_olwidth,
+        color: p_olcolor,
+        style: p_olstyle
+    }
+};
+```
+
+
+---
+
+### Symbol3DUnion
+> 用於 3D 場景的圖標類別
+
+![Symbol3DUnion](.storybook\Symbol3DUnion.png)
+
+<p className="sb-unstyled font-bold text-yellow-500">PolygonSymbol3D</p>
+`GetPolygonSymbol3D(p_type, p_size, p_color)`
+
+```javascript
+let def3DPolygon = {
+    type: 'polygon-3d',
+    symbolLayers: [{     
+        type: p_type,
+        size: p_size,
+        material: { color: p_color }
+    }]
+};
+```
+
+<p className="sb-unstyled font-bold text-yellow-500">LabelSymbol3D</p>
+`GetLabelSymbol3D(p_symtype, p_text, p_size, p_matcolor, p_hacolor, p_hasize, p_family, p_weight, p_fontsty, p_scrlen, p_maxwdlen, p_minwdlen, p_couttype, p_coutsize, p_coutcolor, p_coutbdcolor)`
+
+```javascript
+let def3DLabel = {
+    type: p_symtype,   
+    symbolLayers: [{
+        type: 'text',
+        text: p_text,
+        size: p_size,
+        material: { color: p_matcolor },          
+        halo: {
+            color: p_hacolor, 
+            size: p_hasize
+        },
+        font: {
+            family: p_family,
+            weight: p_weight,  
+            style: p_fontsty    
+        }
+    }],
+    verticalOffset: {
+        screenLength: p_scrlen,
+        maxWorldLength: p_maxwdlen,
+        minWorldLength: p_minwdlen
+    },
+    callout: new LineCallout3D({
+        type:p_couttype,
+        size: p_coutsize,
+        color: p_coutcolor,
+        border: { color: p_coutbdcolor }
+    })
+};
+```
+
+#### <p className="sb-unstyled font-bold text-yellow-500">PointSymbol3D</p>
+`GetPointSymbol3D_icon( p_size, p_source, p_matcolor, p_anchor, p_olcolor, p_olsize, p_scrlen, p_maxwdlen, p_minwdlen, p_couttype, p_coutsize, p_coutcolor, p_coutbdcolor)`
+
+```javascript
+let def3DPoint = {
+    type: p_symtype,   
+    symbolLayers: [{
+        type: 'text',
+        text: p_text,
+        size: p_size,
+        material: { color: p_matcolor },          
+        halo: {
+            color: p_hacolor, 
+            size: p_hasize
+        },
+        font: {
+            family: p_family,
+            weight: p_weight,  
+            style: p_fontsty    
+        }
+    }],
+    verticalOffset: {
+        screenLength: p_scrlen,
+        maxWorldLength: p_maxwdlen,
+        minWorldLength: p_minwdlen
+    },
+    callout: new LineCallout3D({
+        type:p_couttype,
+        size: p_coutsize,
+        color: p_coutcolor,
+        border: { color: p_coutbdcolor }
+    })
+};
+```
+
+---
+
+### WebStyleSymbol

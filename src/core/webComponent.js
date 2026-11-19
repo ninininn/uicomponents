@@ -26,7 +26,7 @@ class customTable extends HTMLElement {
     //Invoked when one of the custom element's attributes is added, removed, or changed.
     attributeChangedCallback(attrName, oldValue, newValue) {
         console.log(
-            `Attribute ${name} has changed from ${oldValue} to ${newValue}.`,
+            `Attribute ${attrName} has changed from ${oldValue} to ${newValue}.`,
         );
     }
 

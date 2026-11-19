@@ -16,7 +16,9 @@ import {
 <Primary />
 
 # Controls
-Table 元件由多個子元件所組成，但其餘子元件之設定在使用時都不會直接操作到，所以僅示意`config`參數。
+DraggableItem 控制參數
+
+主要引用自 [Sortable](https://sortablejs.github.io/Sortable/)
 
 <Controls />
 
@@ -24,7 +26,7 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
 
 # Usage API
 
-使用`new`關鍵字初始化一個`Table`元件，並帶入`config`設定參數。
+使用`new`關鍵字初始化一個`DraggableItem`元件，並帶入`config`設定參數。
 
 ```javascript
   let dragList = new DraggableItem(elem, config);
@@ -37,17 +39,14 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
   各屬性的型別及說明可參考上方**Controls區塊**，各類別的私有屬性則可以參考**子類別**區塊的各個說明，此處僅列出共同設定的屬性。
     ```javascript
       const initConfig = {
-        id: id,                 //tableId
-        name: name,             //自定義table名稱
-        limits: limits,         //單頁顯示筆數限制
-        container: parent,      //要放入的DOM元素(容器)
-        cols:cols,              //欄位設定
-        tools: tools,           //是否顯示工具列
-        selection: selection,   //是否開啟勾選列
-        classes: classes,       //自定義class
-        complete: complete,     //渲染完成後要執行的fn
-        error: error,           //渲染失敗執行的fn
-        handler: handler,       //渲染時執行的fn(非同步)
+        sort: true,
+        direction: 'horizontal',
+        group: 'draggable-group',
+        ghostClass: 'drag-indicator',// Class name for the drop placeholder (default sortable-ghost).
+        dataIdAttr: 'data-drag',
+        filter: '.ignore-dragging',
+        chosenClass: "sortable-chosen",  // Class name for the chosen item
+        dragClass: "sortable-drag",
       };
     ```  
   <br/>
@@ -154,169 +153,3 @@ Table 元件由多個子元件所組成，但其餘子元件之設定在使用�
       </tbody>
     </table>
   </div>
----
-# Pagination 元件  
-
-<div className="sb-unstyled note-msg">詳細說明可參考Pagination元件說明頁(尚未建置...)</div>  
-- **properties 屬性**  
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-            <td>inherits</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold">UItype</td>
-            <td>Pagination</td>
-            <td>string</td>
-            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-            <td>`BaseComponent`</td>
-          </tr>
-          <tr>
-            <td className="font-bold">currentPage</td>
-            <td>1</td>
-            <td>number</td>
-            <td>當前頁數</td>
-          </tr>
-          <tr>
-            <td className="font-bold">total</td>
-            <td>-</td>
-            <td>number</td>
-            <td>資料總數</td>
-          </tr>
-          <tr>
-            <td className="font-bold">pages</td>
-            <td>[]</td>
-            <td>array</td>
-            <td>全部頁數(page)</td>
-          </tr>
-          <tr>
-            <td className="font-bold">handler</td>
-            <td>-</td>
-            <td>function</td>
-            <td>點擊各頁籤要執行的function</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-<br/>  
----  
-
-# 子元件  
-<div className="sb-unstyled alert-msg">不會直接操作，僅列出參考用</div>  
-<br/>
-><h3 id="TableHeader">TableHeader</h3>
-- **properties 屬性**  
-  <div className="sb-unstyled table-container overflow-hidden">
-    <table className="sb-unstyled table-content">
-      <thead>
-        <tr className="text-center">
-          <td>property</td>
-          <td>default</td>
-          <td>type</td>
-          <td>descriptions</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td className="font-bold text-center">UItype</td>
-          <td className="text-center">TableHeader</td>
-          <td className="text-center">string</td>
-          <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-        </tr>
-        <tr>
-          <td className="font-bold text-center">cols</td>
-          <td className="text-center">-</td>
-          <td className="text-center">string</td>
-          <td>各欄位設定陣列(= cols 傳入參數)</td>
-        </tr>
-        <tr>
-          <td className="font-bold text-center">selection</td>
-          <td className="text-center">checkbox</td>
-          <td className="text-center">string</td>
-          <td>勾選功能，可用 checkbox / radio，其餘視為靜態 table</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-<br/>
----
-><h3 id="TableRow">TableRow</h3>
-
-- **properties 屬性**  
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold text-center">UItype</td>
-            <td className="text-center">TableRow</td>
-            <td className="text-center">string</td>
-            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">popover</td>
-            <td className="text-center">flowbite `Popover`物件</td>
-            <td className="text-center">object</td>
-            <td><span className="sb-unstyled data-type inherits">related to flowbite <a href="https://flowbite.com/docs/components/popover/" className="linkout">Popover</a></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-<br/>  
-
-- **options 參數可設定的私有屬性**  
-  - `triggerType` 觸發動作類型，可以選擇hover|click|none
-  - `offset` 距離triggerElem的距離  
-<br/>  
----
-><h3 id="TableCell">TableCell</h3>
-
-- **properties 屬性**  
-
-    <div className="sb-unstyled table-container overflow-hidden">
-      <table className="sb-unstyled table-content">
-        <thead>
-          <tr className="text-center">
-            <td>property</td>
-            <td>default</td>
-            <td>type</td>
-            <td>descriptions</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="font-bold text-center">UItype</td>
-            <td className="text-center">TableCell</td>
-            <td className="text-center">string</td>
-            <td>繼承自`BaseComponent`的屬性，代表該元件名稱</td>
-          </tr>
-          <tr>
-            <td className="font-bold text-center">dataValue</td>
-            <td className="text-center">-</td>
-            <td className="text-center">string/number</td>
-            <td>資料格的資料內容</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-<br/>
-- **options 參數可設定的私有屬性**  
-  - `backdrop` 遮罩類型，可分為static|dynamic，是否可以點擊螢幕任一處關閉
-  - `backdropClasses` 遮罩classes
-  - `closable` 是否可以點擊鍵盤`esc`鍵關閉modal

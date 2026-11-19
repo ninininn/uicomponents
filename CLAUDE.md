@@ -14,9 +14,9 @@ UICompos is an UI library for our own team project, without using any framworks(
 
 ## Technology Stack
 - Vanilla JavaScript
-- Tailwindcss 4.1.11
-- Storybook 9.1.4
-- Vite 7.0.4
+- Tailwindcss 4.3.5
+- Storybook 10.6.7
+- Vite 8.3.8
 
 ## Key Directories
 - `src/Components/` - components

@@ -1,5 +1,5 @@
 import { fn, expect } from "storybook/test";
-// import { withActions } from '@storybook/addon-actions/decorator';
+// import { withActions } from 'storybook/actions/decorator';
 import { action } from "storybook/actions";
 
 import { createPagination } from "./PaginationStory";

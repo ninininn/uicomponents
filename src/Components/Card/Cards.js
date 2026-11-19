@@ -66,6 +66,7 @@ export class Card extends BaseComponent {
       this.onevent(
         this.cardContainer.querySelector(".miniBtn"),
         "click",
+        
         miniCard.bind(this)
       );
     }

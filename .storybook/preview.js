@@ -5,7 +5,7 @@ import * as prettier from 'prettier/standalone';
 import * as prettierPluginHtml from 'prettier/plugins/html';
 // import * as prettierPluginEstree from 'prettier/plugins/estree';
 import "../src/Styles/style.css";
-import { themes, ensure } from "storybook/internal/theming";
+import { themes } from "storybook/theming";
 const preview = {
   decorators: [
     (Story) => {
@@ -33,7 +33,7 @@ const preview = {
       page: DocumentationTemplate,
       codePanel: true,
       toc: { disable: false, title: 'Reference', headingSelector: 'h1, h2, h3' },
-      themes: ensure(themes.dark),
+      theme: themes.dark,
       source: {
         transform: async (source) => {
           try {

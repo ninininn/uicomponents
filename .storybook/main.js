@@ -7,11 +7,8 @@ const config = {
   ],
   addons: [
     "@storybook/addon-docs",
-    "@storybook/addon-essentials",
     "@chromatic-com/storybook",
-    "@storybook/addon-interactions",
-    "@storybook/addon-themes",
-    "@storybook/addon-styling-webpack",
+    "@storybook/addon-themes"
   ],
   framework: {
     name: "@storybook/html-vite",

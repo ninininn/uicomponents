@@ -2,9 +2,10 @@ import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss()],
-  // server: {
-  //     host: "172.20.10.2"
-  // }
+  server: {
+    // host: "172.20.10.2"
+    port: 3000
+  },
   root: ".",
   publicDir: false,
   build: {
@@ -15,7 +16,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: "uicompos",
     },
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         assetFileNames: "[name].[ext]",
       },
