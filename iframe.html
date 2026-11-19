@@ -1,54 +1,22 @@
 <!doctype html>
 <!--suppress HtmlUnknownTarget -->
 <html lang="en">
-  <head><script type="module" src="/vite-inject-mocker-entry.js"></script>
+  <head><script type="module" src="./vite-inject-mocker-entry.js"></script>
     <meta charset="utf-8" />
     <title>Storybook</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <style>
-      @font-face {
-        font-family: 'Nunito Sans';
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-        src: url('./sb-common-assets/nunito-sans-regular.woff2') format('woff2');
-      }
-
-      @font-face {
-        font-family: 'Nunito Sans';
-        font-style: italic;
-        font-weight: 400;
-        font-display: swap;
-        src: url('./sb-common-assets/nunito-sans-italic.woff2') format('woff2');
-      }
-
-      @font-face {
-        font-family: 'Nunito Sans';
-        font-style: normal;
-        font-weight: 700;
-        font-display: swap;
-        src: url('./sb-common-assets/nunito-sans-bold.woff2') format('woff2');
-      }
-
-      @font-face {
-        font-family: 'Nunito Sans';
-        font-style: italic;
-        font-weight: 700;
-        font-display: swap;
-        src: url('./sb-common-assets/nunito-sans-bold-italic.woff2') format('woff2');
-      }
-    </style>
+    <style>@font-face{font-family:Nunito Sans;font-style:normal;font-weight:400;font-display:swap;src:url(./sb-common-assets/nunito-sans-regular.woff2)format("woff2")}@font-face{font-family:Nunito Sans;font-style:italic;font-weight:400;font-display:swap;src:url(./sb-common-assets/nunito-sans-italic.woff2)format("woff2")}@font-face{font-family:Nunito Sans;font-style:normal;font-weight:700;font-display:swap;src:url(./sb-common-assets/nunito-sans-bold.woff2)format("woff2")}@font-face{font-family:Nunito Sans;font-style:italic;font-weight:700;font-display:swap;src:url(./sb-common-assets/nunito-sans-bold-italic.woff2)format("woff2")}</style>
 
     <script>
       window.CONFIG_TYPE = 'PRODUCTION';
       window.LOGLEVEL = 'info';
       window.FRAMEWORK_OPTIONS = {};
       window.CHANNEL_OPTIONS = {};
-      window.FEATURES = {"argTypeTargetsV7":true,"legacyDecoratorFileOrder":false,"disallowImplicitActionsInRenderV8":true,"viewport":true,"highlight":true,"controls":true,"interactions":true,"actions":true,"backgrounds":true,"outline":true,"measure":true};
+      window.FEATURES = {"actions":true,"argTypeTargetsV7":true,"babelRemoveBugfixes":false,"backgrounds":true,"changeDetection":true,"componentsManifest":false,"controls":true,"disallowImplicitActionsInRenderV8":true,"highlight":true,"interactions":true,"legacyDecoratorFileOrder":false,"measure":true,"outline":true,"menuOnboardingChecklist":true,"sidebarOnboardingChecklist":true,"viewport":true};
       window.STORIES = [{"titlePrefix":"","directory":"./src/docs","files":"**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src[\\\\/]docs(?:[\\\\/](?!\\.)(?:(?:(?!(?:^|[\\\\/])\\.).)*?)[\\\\/]|[\\\\/]|$)(?!\\.)(?=.)[^\\\\/]*?\\.mdx)$"},{"titlePrefix":"","directory":"./src/Components","files":"**/_stories_/**/*.stories.@(js|jsx|mjs|ts|tsx)","importPathMatcher":"^\\.[\\\\/](?:src[\\\\/]Components(?:[\\\\/](?!\\.)(?:(?:(?!(?:^|[\\\\/])\\.).)*?)[\\\\/]|[\\\\/]|$)_stories_(?:[\\\\/](?!\\.)(?:(?:(?!(?:^|[\\\\/])\\.).)*?)[\\\\/]|[\\\\/]|$)(?!\\.)(?=.)[^\\\\/]*?\\.stories\\.(js|jsx|mjs|ts|tsx))$"},{"titlePrefix":"","directory":"./src/Components","files":"**/_stories_/**/*.mdx","importPathMatcher":"^\\.[\\\\/](?:src[\\\\/]Components(?:[\\\\/](?!\\.)(?:(?:(?!(?:^|[\\\\/])\\.).)*?)[\\\\/]|[\\\\/]|$)_stories_(?:[\\\\/](?!\\.)(?:(?:(?!(?:^|[\\\\/])\\.).)*?)[\\\\/]|[\\\\/]|$)(?!\\.)(?=.)[^\\\\/]*?\\.mdx)$"}];
       window.DOCS_OPTIONS = {"defaultName":"API Docs"};
-      window.TAGS_OPTIONS = {"dev-only":{"excludeFromDocsStories":true},"docs-only":{"excludeFromSidebar":true},"test-only":{"excludeFromSidebar":true,"excludeFromDocsStories":true}};
+      window.TAGS_OPTIONS = {};
 
       
 
@@ -169,7 +137,13 @@
     margin: auto;
     padding: 30px;
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.03);
+    background: rgb(247, 247, 247);
+    color: rgb(46, 52, 56);
+  }
+
+  .sb-nopreview_main * {
+    background: rgb(247, 247, 247);
+    color: rgb(46, 52, 56);
   }
 
   .sb-nopreview_heading {
@@ -183,49 +157,6 @@
     width: 100vw;
     min-height: 100vh;
     box-sizing: border-box;
-
-    & ol {
-      padding-left: 18px;
-      margin: 0;
-    }
-
-    & h1 {
-      font-family: Nunito Sans;
-      font-size: 22px;
-      font-weight: 400;
-      line-height: 30px;
-      font-weight: normal;
-      margin: 0;
-
-      &::before {
-        content: '';
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        background: #ff4400;
-        border-radius: 50%;
-        margin-right: 8px;
-      }
-    }
-
-    & p,
-    & ol {
-      font-family: Nunito Sans;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 19px;
-      margin: 0;
-    }
-
-    & li + li {
-      margin: 0;
-      padding: 0;
-      padding-top: 12px;
-    }
-
-    & a {
-      color: currentColor;
-    }
   }
 
   .sb-errordisplay_main {
@@ -239,12 +170,68 @@
     width: 100%;
     border-radius: 6px;
     background: white;
+    color: black;
     border: 1px solid #ff0000;
     box-shadow: 0 0 64px rgba(0, 0, 0, 0.1);
     gap: 24px;
   }
 
-  .sb-errordisplay_code {
+  .sb-errordisplay_main ol {
+    padding-left: 18px;
+    margin: 0;
+  }
+
+  /* Redefine colors to ensure readability regardless of user-provided * selectors. */
+  .sb-errordisplay_main * {
+    background: white;
+    color: black;
+  }
+
+  /* Exclude error code block from the universal reset to preserve ANSI colors and dark theme */
+  .sb-errordisplay_main .sb-errordisplay_code,
+  .sb-errordisplay_main .sb-errordisplay_code * {
+    background: #242424;
+    color: #c6c6c6;
+  }
+
+  .sb-errordisplay_main h1 {
+    font-family: inherit;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 30px;
+    margin: 0;
+  }
+
+  .sb-errordisplay_main h1::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #ff4400;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  .sb-errordisplay_main p,
+  .sb-errordisplay_main ol {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 19px;
+    margin: 0;
+  }
+
+  .sb-errordisplay_main li + li {
+    margin: 0;
+    padding: 0;
+    padding-top: 12px;
+  }
+
+  .sb-errordisplay_main a {
+    color: currentColor;
+  }
+
+  .sb-errordisplay_main .sb-errordisplay_code {
     padding: 10px;
     flex: 1;
     background: #242424;
@@ -263,9 +250,13 @@
     overflow: auto;
   }
 
-  .sb-errordisplay pre {
+  .sb-errordisplay_main .sb-errordisplay_code code {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  .sb-errordisplay_main .sb-errordisplay_code {
     white-space: pre-wrap;
-    white-space: revert;
   }
 
   @-webkit-keyframes sb-rotate360 {
@@ -709,9 +700,21 @@
         gap: 1rem;
     }
 </style>
-    <script type="module" crossorigin src="/uicomponents/assets/iframe-DdUmkkDc.js"></script>
-    <link rel="modulepreload" crossorigin href="/uicomponents/assets/preload-helper-DLLWEBaG.js">
-    <link rel="stylesheet" crossorigin href="/uicomponents/assets/iframe-DJcvi3k9.css">
+    <script type="module" crossorigin src="/uicomponents/assets/iframe-CzQOJ469.js"></script>
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/rolldown-runtime-sJBDdmOt.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/preload-helper-DjWT1_-H.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/chunk-DRQKCCAG-CCU5JLR1.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/react-DlPsW1c0.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/theming-CU2lwCF8.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/chunk-242VQQM5-CQUR7y2g.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/chunk-W22LQPXL-BFH_Bymq.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/components-CAe3acXZ.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/react-DITjJg24.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/chunk-QQBDHPVZ-DGKYZDIn.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/blocks-gwT75y1v.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/chunk-UAWMPV5J-BrGPyIDv.js">
+    <link rel="modulepreload" crossorigin href="/uicomponents/assets/iframe-EfQV_tKJ.js">
+    <link rel="stylesheet" crossorigin href="/uicomponents/assets/iframe-Bnageb4-.css">
   </head>
 
   <body>
@@ -843,10 +846,10 @@
         if (hostname !== 'localhost' && globalThis.CONFIG_TYPE === 'DEVELOPMENT') {
           const message = `Failed to load the Storybook preview file 'vite-app.js':
 
-It looks like you're visiting the Storybook development server on another hostname than localhost: '${hostname}', but you haven't configured the necessary security features to support this.
-Please re-run your Storybook development server with the '--host ${hostname}' flag, or manually configure your Vite allowedHosts configuration with viteFinal.
+      It looks like you're visiting the Storybook development server on another hostname than localhost: '${hostname}', but you haven't configured the necessary security features to support this.
+      Please re-run your Storybook development server with the '--host ${hostname}' flag, or manually configure your Vite allowedHosts configuration with viteFinal.
 
-See:`;
+      See:`;
           const docs = [
             'https://storybook.js.org/docs/api/cli-options#dev',
             'https://storybook.js.org/docs/api/main-config/main-config-vite-final',
@@ -858,7 +861,7 @@ See:`;
             `<p style="color: red; max-width: 70ch">${message.replaceAll(
               '\n',
               '<br/>'
-            )}<ul>${docs.map((doc) => `<li><a href='${doc}' target='_blank'>${doc}</a></li>`).join('')}<ul></p>`;
+            )}<ul>${docs.map((doc) => `<li><a href='${doc}' target='_blank'>${doc}</a></li>`).join('')}</ul></p>`;
           return;
         }
       }
